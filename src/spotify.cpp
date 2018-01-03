@@ -18,13 +18,15 @@ Spotify::Spotify(QObject *parent) : QObject(parent)
     o2Spotify = NULL;
 }
 
-void Spotify::doO2Auth() {
+void Spotify::doO2Auth(const QString &scope) {
     if(o2Spotify == NULL) {
         // redirect URL will be http://127.0.0.1:8888/
         o2Spotify = new O2Spotify(this);
         o2Spotify->setClientId(O2_CONSUMER_KEY);
         o2Spotify->setClientSecret(O2_CONSUMER_SECRET);
         o2Spotify->setLocalPort(localPort);
+        if(scope.length() > 0)
+            o2Spotify->setScope(scope);
 
         // Create a store object for writing the received tokens
         O0SettingsStore *store = new O0SettingsStore(O2_ENCRYPTION_KEY);
@@ -44,6 +46,18 @@ void Spotify::doO2Auth() {
     qDebug() << "Starting OAuth...";
     o2Spotify->unlink();  // ??
     o2Spotify->link();
+}
+
+QString Spotify::getUserName() {
+    if(o2Spotify)
+        return o2Spotify->username();
+    return "";
+}
+
+QString Spotify::getToken() {
+    if(o2Spotify)
+        return o2Spotify->token();
+    return "";
 }
 
 void Spotify::onOpenBrowser(const QUrl &url) {

@@ -17,7 +17,9 @@ signals:
     void linkingSucceeded();
 
 public slots:
-     Q_INVOKABLE void doO2Auth();
+    Q_INVOKABLE void doO2Auth(const QString &scope);
+    Q_INVOKABLE QString getUserName();
+    Q_INVOKABLE QString getToken();
 
 private slots:
     void onLinkedChanged();
