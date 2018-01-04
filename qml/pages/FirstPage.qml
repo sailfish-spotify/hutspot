@@ -67,6 +67,23 @@ Page {
                     }
                 })
             }
+            Button {
+                text: "My PlayLists"
+                onClicked: Spotify.getUserPlaylists({},function(data) {
+                    if(data) {
+                        console.log(data)
+                        var myPlayLists
+                        try {
+                            myPlayLists = data.items
+                            console.log("number of playlists: " + myPlayLists.length)
+                        } catch (err) {
+                            console.log(err)
+                        }
+                    } else {
+                        console.log("No Data for getUserPlaylists")
+                    }
+                })
+            }
         }
     }
 

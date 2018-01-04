@@ -9,7 +9,18 @@ var _baseUri = 'https://api.spotify.com/v1';
 var _accessToken = null;
 var _username = null;
 
-var _scope = "streaming user-read-recently-played user-read-private user-read-email user-modify-playback-state user-read-playback-state user-read-recently-played";
+var scopes_array = [
+  "streaming",
+  "playlist-read-collaborative",
+  "playlist-read-private",
+  "user-read-recently-played",
+  "user-read-private",
+  "user-read-email",
+  "user-modify-playback-state",
+  "user-read-playback-state",
+  "user-read-recently-played"
+];
+var _scope = scopes_array.join(" ");
 
 
 //
@@ -118,5 +129,21 @@ function getMyDevices(callback) {
     url: _baseUri + '/me/player/devices'
   };
   return _checkParamsAndPerformRequest(requestData, {}, callback);
+}
+
+function getUserPlaylists(userId, options, callback) {
+  var requestData;
+  if (typeof userId === 'string') {
+    requestData = {
+      url: _baseUri + '/users/' + encodeURIComponent(userId) + '/playlists'
+    };
+  } else {
+    requestData = {
+      url: _baseUri + '/me/playlists'
+    };
+    callback = options;
+    options = userId;
+  }
+  return _checkParamsAndPerformRequest(requestData, options, callback);
 }
 
