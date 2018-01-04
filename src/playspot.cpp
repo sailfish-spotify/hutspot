@@ -51,6 +51,10 @@ int main(int argc, char *argv[])
     QGuiApplication * app = SailfishApp::application(argc,argv);
     QQuickView * view = SailfishApp::createView();
 
+    QCoreApplication::setOrganizationName("wdehoog");
+    QCoreApplication::setOrganizationDomain("wdehoog");
+    QCoreApplication::setApplicationName("playspot");
+
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
 

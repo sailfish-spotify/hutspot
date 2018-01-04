@@ -123,7 +123,15 @@ function _checkParamsAndPerformRequest(requestData, options, callback, optionsAl
 // Spotify API
 //
 
-// needs scope: user-read-playback-state
+/**
+ * Get information about a userâ€™s available devices.
+ * See [Get a Userâ€™s Available Devices](https://developer.spotify.com/web-api/get-a-users-available-devices/) on
+ * the Spotify Developer site for more information about the endpoint.
+ *
+ * @param {function(Object,Object)} callback An optional callback that receives 2 parameters. The first
+ * one is the error object (null if no error), and the second is the value if the request succeeded.
+ * @return {Object} Null if a callback is provided, a `Promise` object otherwise
+ */
 function getMyDevices(callback) {
   var requestData = {
     url: _baseUri + '/me/player/devices'
@@ -131,6 +139,19 @@ function getMyDevices(callback) {
   return _checkParamsAndPerformRequest(requestData, {}, callback);
 }
 
+/**
+ * Fetches a list of the current user's playlists.
+ * See [Get a List of a User's Playlists](https://developer.spotify.com/web-api/get-list-users-playlists/) on
+ * the Spotify Developer site for more information about the endpoint.
+ *
+ * @param {string} userId An optional id of the user. If you know the Spotify URI it is easy
+ * to find the id (e.g. spotify:user:<here_is_the_id>). If not provided, the id of the user that granted
+ * the permissions will be used.
+ * @param {Object} options A JSON object with options that can be passed
+ * @param {function(Object,Object)} callback An optional callback that receives 2 parameters. The first
+ * one is the error object (null if no error), and the second is the value if the request succeeded.
+ * @return {Object} Null if a callback is provided, a `Promise` object otherwise
+ */
 function getUserPlaylists(userId, options, callback) {
   var requestData;
   if (typeof userId === 'string') {
@@ -144,6 +165,23 @@ function getUserPlaylists(userId, options, callback) {
     callback = options;
     options = userId;
   }
+  return _checkParamsAndPerformRequest(requestData, options, callback);
+}
+
+/**
+ * Get tracks from the current userâ€™s recently played tracks.
+ * See [Get Current Userâ€™s Recently Played Tracks](https://developer.spotify.com/web-api/web-api-personalization-endpoints/get-recently-played/) on
+ * the Spotify Developer site for more information about the endpoint.
+ *
+ * @param {Object} options A JSON object with options that can be passed
+ * @param {function(Object,Object)} callback An optional callback that receives 2 parameters. The first
+ * one is the error object (null if no error), and the second is the value if the request succeeded.
+ * @return {Object} Null if a callback is provided, a `Promise` object otherwise
+ */
+function getMyRecentlyPlayedTracks(options, callback) {
+  var requestData = {
+    url: _baseUri + '/me/player/recently-played'
+  };
   return _checkParamsAndPerformRequest(requestData, options, callback);
 }
 

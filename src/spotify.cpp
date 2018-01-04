@@ -33,7 +33,7 @@ void Spotify::doO2Auth(const QString &scope) {
         store->setGroupKey("spotify");
         o2Spotify->setStore(store);
 
-        o2Spotify->setReplyContent("<html><body><h4>spotify-for-sailfish: auth redirected</h4></body></html>");
+        o2Spotify->setReplyContent("<html><body><h1>spotify-for-sailfish: auth redirected</h1></body></html>");
 
         // Connect signals
         connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
@@ -44,7 +44,7 @@ void Spotify::doO2Auth(const QString &scope) {
     }
 
     qDebug() << "Starting OAuth...";
-    o2Spotify->unlink();  // ??
+    //o2Spotify->unlink();  // ??
     o2Spotify->link();
 }
 
@@ -66,6 +66,7 @@ void Spotify::onOpenBrowser(const QUrl &url) {
 }
 
 void Spotify::onCloseBrowser() {
+    // don't know how to close the broser tab/window and switch to ourselves
     qDebug() << "Spotify::onCloseBrowser()";
 }
 

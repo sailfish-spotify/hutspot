@@ -15,76 +15,103 @@ Page {
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
-    // To enable PullDownMenu, place our content in a SilicaFlickable
-    SilicaFlickable {
-        anchors.fill: parent
+    ListModel {
+        id: itemsModel
+    }
 
-        // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
+    SilicaListView {
+        id: genreView
+        model: itemsModel
+        anchors.fill: parent
+        anchors {
+            topMargin: 0
+            bottomMargin: 0
+        }
+
         PullDownMenu {
             MenuItem {
-                text: qsTr("Show Page 2")
-                onClicked: pageStack.push(Qt.resolvedUrl("SecondPage.qml"))
-            }
-        }
-
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
-
-        // Place our content in a Column.  The PageHeader is always placed at the top
-        // of the page, followed by our content.
-        Column {
-            id: column
-
-            width: page.width
-            spacing: Theme.paddingLarge
-            PageHeader {
-                title: qsTr("UI Template")
-            }
-            Label {
-                x: Theme.horizontalPageMargin
-                text: qsTr("Hello Sailors")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
-            }
-            Button {
-                text: "Login"
+                text: qsTr("Login")
                 onClicked: spotify.doO2Auth(Spotify._scope)
             }
-            Button {
-                text: "My Devices"
-                onClicked: Spotify.getMyDevices(function(data) {
-                    if(data) {
-                        console.log(data)
-                        var mydevs
-                        try {
-                            mydevs = data.devices
-                            console.log("number of devices: " + mydevs.length)
-                        } catch (err) {
-                            console.log(err)
-                        }
-                    } else {
-                        console.log("No Data for getMyDevices")
-                    }
-                })
-            }
-            Button {
-                text: "My PlayLists"
-                onClicked: Spotify.getUserPlaylists({},function(data) {
-                    if(data) {
-                        console.log(data)
-                        var myPlayLists
-                        try {
-                            myPlayLists = data.items
-                            console.log("number of playlists: " + myPlayLists.length)
-                        } catch (err) {
-                            console.log(err)
-                        }
-                    } else {
-                        console.log("No Data for getUserPlaylists")
-                    }
-                })
+            MenuItem {
+                text: qsTr("Reload")
+                onClicked: reload()
             }
         }
+
+        header: Column {
+            id: lvColumn
+
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            anchors.bottomMargin: Theme.paddingLarge
+            spacing: Theme.paddingLarge
+
+            PageHeader {
+                id: pHeader
+                title: qsTr("Items")
+                BusyIndicator {
+                    id: busyThingy
+                    parent: pHeader.extraContent
+                    anchors.left: parent.left
+                    //running: showBusy
+                }
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        section.property: "type"
+        section.delegate : Component {
+            id: sectionHeading
+            Item {
+                width: parent.width - 2*Theme.paddingMedium
+                x: Theme.paddingMedium
+                height: childrenRect.height
+
+                Text {
+                    text: {
+                        switch(section) {
+                        case "0": return qsTr("Playlists")
+                        case "1": return qsTr("Recently Played Tracks")
+                        case "2": return qsTr("Devices")
+                        }
+                    }
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeMedium
+                    color: Theme.highlightColor
+                }
+            }
+        }
+
+        delegate: ListItem {
+            id: delegate
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+
+            Item {
+                width: parent.width
+
+                Label {
+                    id: nameLabel
+                    color: Theme.primaryColor
+                    textFormat: Text.StyledText
+                    truncationMode: TruncationMode.Fade
+                    //width: parent.width - countLabel.width
+                    text: name ? name : qsTr("No Name")
+                }
+            }
+        }
+
+        Label {
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignBottom
+            visible: parent.count == 0
+            text: qsTr("No Items")
+            color: Theme.secondaryColor
+        }
+
+        VerticalScrollDecorator {}
     }
 
     Connections {
@@ -107,6 +134,64 @@ Page {
             Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
         }
+    }
+
+    property var myPlayLists: []
+    property var myDevices: []
+    property var myRecentlyPlayedTracks: []
+
+    function reload() {
+        var i
+        itemsModel.clear()
+
+        myPlayLists = []
+        Spotify.getUserPlaylists({},function(data) {
+            if(data) {
+                try {
+                    myPlayLists = data.items
+                    console.log("number of playlists: " + myPlayLists.length)
+                    for(i=0;i<myPlayLists.length;i++)
+                        itemsModel.append({type: 0, name: myPlayLists[i].name, index: i})
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getUserPlaylists")
+            }
+        })
+
+        myRecentlyPlayedTracks = []
+        Spotify.getMyRecentlyPlayedTracks({},function(data) {
+            if(data) {
+                try {
+                    myRecentlyPlayedTracks = data.items
+                    console.log("number of RecentlyPlayedTracks: " + myRecentlyPlayedTracks.length)
+                    for(i=0;i<myRecentlyPlayedTracks.length;i++)
+                        itemsModel.append({type: 1, name: myRecentlyPlayedTracks[i].track.name, index: i})
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getUserPlaylists")
+            }
+        })
+
+        myDevices = []
+        Spotify.getMyDevices(function(data) {
+            if(data) {
+                try {
+                    myDevices = data.devices
+                    console.log("number of devices: " + myDevices.length)
+                    for(i=0;i<myDevices.length;i++)
+                        itemsModel.append({type: 2, name: myDevices[i].name, index: i})
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMyDevices")
+            }
+        })
+
     }
 }
 
