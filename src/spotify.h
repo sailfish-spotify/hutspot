@@ -20,6 +20,7 @@ public slots:
     Q_INVOKABLE void doO2Auth(const QString &scope);
     Q_INVOKABLE QString getUserName();
     Q_INVOKABLE QString getToken();
+    Q_INVOKABLE void refreshToken();
 
 private slots:
     void onLinkedChanged();

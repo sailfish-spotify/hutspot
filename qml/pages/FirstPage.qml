@@ -30,6 +30,10 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Refresh Token")
+                onClicked: spotify.refreshToken()
+            }
+            MenuItem {
                 text: qsTr("Login")
                 onClicked: spotify.doO2Auth(Spotify._scope)
             }
@@ -265,5 +269,7 @@ Page {
 
         })
     }
+
+    Component.onCompleted: spotify.doO2Auth(Spotify._scope)
 }
 

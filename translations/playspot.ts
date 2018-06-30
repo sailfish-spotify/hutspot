@@ -58,6 +58,14 @@
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Search</name>

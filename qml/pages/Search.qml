@@ -137,21 +137,21 @@ Page {
                     for(i=0;i<data.artists.items.length;i++) {
                         searchModel.append({type: 1,
                                             name: data.artists.items[i].name,
-                                            artists: data.artists.items[i]})
+                                            artist: data.artists.items[i]})
                     }
 
                     // playlists
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
-                                            artists: data.playlists.items[i]})
+                                            playlist: data.playlists.items[i]})
                     }
 
                     // tracks
                     for(i=0;i<data.tracks.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.tracks.items[i].name,
-                                            artists: data.tracks.items[i]})
+                                            track: data.tracks.items[i]})
                     }
 
                 } catch (err) {
