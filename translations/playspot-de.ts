@@ -23,14 +23,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No Items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
@@ -40,6 +32,30 @@
     </message>
     <message>
         <source>Devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set as Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

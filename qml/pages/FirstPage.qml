@@ -20,7 +20,7 @@ Page {
     }
 
     SilicaListView {
-        id: genreView
+        id: listView
         model: itemsModel
         anchors.fill: parent
         anchors {
@@ -74,6 +74,8 @@ Page {
                         case "0": return qsTr("Playlists")
                         case "1": return qsTr("Recently Played Tracks")
                         case "2": return qsTr("Devices")
+                        case "3": return qsTr("Tracks")
+                        case "4": return qsTr("Albums")
                         }
                     }
                     font.bold: true
@@ -99,7 +101,27 @@ Page {
                     //width: parent.width - countLabel.width
                     text: name ? name : qsTr("No Name")
                 }
+
             }
+            menu: contextMenu
+
+            Component {
+                id: contextMenu
+                ContextMenu {
+                    //enabled: (listView.model.get(index).type === "Item")
+                    MenuItem {
+                        enabled: type === 1 || type === 3
+                        text: qsTr("Play")
+                        onClicked: play(index)
+                    }
+                    MenuItem {
+                        enabled: type === 2
+                        text: qsTr("Set as Current")
+                        onClicked: setDevice(index)
+                    }
+                }
+            }
+
         }
 
         Label {
@@ -139,6 +161,8 @@ Page {
     property var myPlayLists: []
     property var myDevices: []
     property var myRecentlyPlayedTracks: []
+    property var mySavedTracks: []
+    property var mySavedAlbums: []
 
     function reload() {
         var i
@@ -161,7 +185,7 @@ Page {
         })
 
         myRecentlyPlayedTracks = []
-        Spotify.getMyRecentlyPlayedTracks({},function(data) {
+        Spotify.getMyRecentlyPlayedTracks({}, function(data) {
             if(data) {
                 try {
                     myRecentlyPlayedTracks = data.items
@@ -172,7 +196,39 @@ Page {
                     console.log(err)
                 }
             } else {
-                console.log("No Data for getUserPlaylists")
+                console.log("No Data for getMyRecentlyPlayedTracks")
+            }
+        })
+
+        mySavedTracks = []
+        Spotify.getMySavedTracks({}, function(data) {
+            if(data) {
+                try {
+                    mySavedTracks = data.items
+                    console.log("number of SavedTracks: " + mySavedTracks.length)
+                    for(i=0;i<mySavedTracks.length;i++)
+                        itemsModel.append({type: 3, name: mySavedTracks[i].track.name, index: i})
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMySavedTracks")
+            }
+        })
+
+        mySavedAlbums = []
+        Spotify.getMySavedAlbums({}, function(data) {
+            if(data) {
+                try {
+                    mySavedAlbums = data.items
+                    console.log("number of SavedAlbums: " + mySavedAlbums.length)
+                    for(i=0;i<mySavedAlbums.length;i++)
+                        itemsModel.append({type: 4, name: mySavedAlbums[i].track.name, index: i})
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMySavedAlbums")
             }
         })
 
@@ -192,6 +248,18 @@ Page {
             }
         })
 
+    }
+
+    property var device;
+    function setDevice(index) {
+        device = myDevices[index]
+    }
+
+    function play(index) {
+        var track = myRecentlyPlayedTracks[index]
+        Spotify.play({'device_id': device.id, 'uris': [track.track.uri]}, function(data){
+
+        })
     }
 }
 
