@@ -41,6 +41,8 @@ void Spotify::doO2Auth(const QString &scope) {
         connect(o2Spotify, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
         connect(o2Spotify, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
         connect(o2Spotify, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+
+        o2Spotify->unlink();  // for expired token
     }
 
     qDebug() << "Starting OAuth...";
