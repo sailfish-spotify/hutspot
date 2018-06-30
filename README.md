@@ -9,15 +9,9 @@ and for the API code from https://github.com/JMPerez/spotify-web-api-js is used.
 O2 and spotify-web-api-js have ther own license. For playspot it is MIT.
 
 
-## Major Issues
-  * No idea what needs to be done in order to play a track
-  * There is no way to enumerate the devices running libspotify (raspotify) and make them play a track. For example see:
-
-    + https://github.com/spotify/web-api/issues/540
-    + https://developer.spotify.com/web-api/working-with-connect/#devices-not-appearing-on-device-list
-
-## Minor Issues
-
+## Issues
+  * No idea what needs to be done in order to play a track in a Qt player.
+  * I managed to [build Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) and it even sometimes occurs on the list of devices so it can be used to play tracks. 
   * No idea how to close the browser tab when O2 emits ```onCloseBrowser```
 
 

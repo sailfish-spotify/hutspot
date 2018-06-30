@@ -34,6 +34,10 @@ Page {
                 onClicked: spotify.doO2Auth(Spotify._scope)
             }
             MenuItem {
+                text: qsTr("Search")
+                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
+            }
+            MenuItem {
                 text: qsTr("Reload")
                 onClicked: reload()
             }

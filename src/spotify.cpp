@@ -9,6 +9,7 @@
 #include "o2/o2requestor.h"
 #include "o2/o0settingsstore.h"
 
+//#error Setup your Spotify application "https://beta.developer.spotify.com/dashboard/applications"
 const char O2_CONSUMER_KEY[] = "388f2d2f105b45ef95e159ac87ef5733";
 const char O2_CONSUMER_SECRET[] = "c926747234ef4fc8aefb2759f2c3d571";
 const int localPort = 8888;
@@ -33,7 +34,7 @@ void Spotify::doO2Auth(const QString &scope) {
         store->setGroupKey("spotify");
         o2Spotify->setStore(store);
 
-        o2Spotify->setReplyContent("<html><body><h1>spotify-for-sailfish: auth redirected</h1></body></html>");
+        o2Spotify->setReplyContent("<html><body><h1>spotify-for-sailfish: auth redirected</h1><h1>You can close this window. Return to the App.</h1></body></html>");
 
         // Connect signals
         connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));

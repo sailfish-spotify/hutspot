@@ -27,13 +27,14 @@ SOURCES += src/playspot.cpp \
 DISTFILES += qml/playspot.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
-    qml/pages/SecondPage.qml \
     rpm/playspot.changes.in \
     rpm/playspot.changes.run.in \
     rpm/playspot.spec \
     rpm/playspot.yaml \
     translations/*.ts \
-    playspot.desktop
+    playspot.desktop \
+    qml/pages/Search.qml \
+    qml/components/SearchResultListItem.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128
 

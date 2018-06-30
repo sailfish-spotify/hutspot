@@ -43,10 +43,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -58,16 +54,47 @@
         <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>SecondPage</name>
+    <name>Search</name>
     <message>
-        <source>Nested Page</source>
-        <translation>Unterseite</translation>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Item</source>
-        <translation>Element</translation>
+        <source>Search text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SearchResultListItem</name>
+    <message>
+        <source>No Name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
