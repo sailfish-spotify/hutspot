@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Willem-Jan de Hoog
+ * Copyright (C) 2018 Willem-Jan de Hoog
  *
  * License: MIT
  */
@@ -258,16 +258,12 @@ Page {
 
     }
 
-    property var device;
     function setDevice(index) {
-        device = myDevices[index]
+        app.setDevice(myDevices[index])
     }
 
     function play(index) {
-        var track = myRecentlyPlayedTracks[index]
-        Spotify.play({'device_id': device.id, 'uris': [track.track.uri]}, function(data){
-
-        })
+        app.playTrack(myRecentlyPlayedTracks[index])
     }
 
     Component.onCompleted: spotify.doO2Auth(Spotify._scope)

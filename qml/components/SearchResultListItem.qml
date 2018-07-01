@@ -89,8 +89,10 @@ Row {
             // ToDo look for the best image
             if(images.length >= 2)
                 url = images[1].url
-            else
+            else if(images.length > 0)
                 url = images[0].url
+            else
+                 url = ""
         }
         return url
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Willem-Jan de Hoog
+ * Copyright (C) 2018 Willem-Jan de Hoog
  *
  * License: MIT
  */
@@ -97,12 +97,37 @@ Page {
             width: parent.width - 2*Theme.paddingMedium
             height: searchResultListItem.height
             x: Theme.paddingMedium
-            contentHeight: childrenRect.height
+            //contentHeight: childrenRect.height
 
             SearchResultListItem {
                 id: searchResultListItem
             }
 
+            menu: contextMenu
+            Component {
+                id: contextMenu
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Play")
+                        onClicked: {
+                            switch(type) {
+                            case 0:
+                                app.playContext(album)
+                                break;
+                            case 1:
+                                app.playContext(artist)
+                                break;
+                            case 2:
+                                app.playContext(playlist)
+                                break;
+                            case 3:
+                                app.playTrack(track)
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             //onClicked: app.loadStation(model.id, Shoutcast.createInfo(model), tuneinBase)
         }
 
