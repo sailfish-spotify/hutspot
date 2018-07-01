@@ -5,7 +5,7 @@
  */
 
 
-import QtQuick 2.0
+import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 import "../components"
@@ -93,11 +93,11 @@ Page {
         }
 
         delegate: ListItem {
-            id: delegate
+            id: listItem
             width: parent.width - 2*Theme.paddingMedium
-            height: searchResultListItem.height
             x: Theme.paddingMedium
-            //contentHeight: childrenRect.height
+            //height: searchResultListItem.height
+            contentHeight: Theme.itemSizeLarge
 
             SearchResultListItem {
                 id: searchResultListItem

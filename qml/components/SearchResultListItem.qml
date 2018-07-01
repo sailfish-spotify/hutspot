@@ -2,15 +2,16 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Row {
+    id: row
 
     width: parent.width
-    height: column.height
+    //height: column.height
     spacing: Theme.paddingMedium
 
     Image {
         id: image
-        width: 120
-        height: width
+        width: height
+        height: column.height
         anchors {
             verticalCenter: parent.verticalCenter
         }
