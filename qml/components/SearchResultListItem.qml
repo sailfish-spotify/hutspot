@@ -37,25 +37,25 @@ Row {
         }
 
         Label {
-            id: metaLabel
+            id: meta1Label
             width: parent.width
             color: Theme.primaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             truncationMode: TruncationMode.Fade
-            text: getMetaString(model)
-            enabled: type === 3
+            text: getMeta1String(model)
+            enabled: text.length > 0
             visible: enabled
         }
 
         Label {
-            id: artistsLabel
+            id: meta2Label
             width: parent.width
             color: Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
-            text: getArtistsString(model)
-            enabled: type === 3
+            text: getMeta2String(model)
+            enabled: text.length > 0
             visible: enabled
         }
     }
@@ -95,30 +95,62 @@ Row {
         return url
     }
 
-    function getMetaString(model) {
-        if(type !== 3)
+    function getMeta1String(model) {
+        var items = []
+        switch(type) {
+        case 0:
+            if(album.artists)
+                items = album.artists
+            return createItemsString(items, qsTr("no artist known"))
+        case 1:
+            if(artist.genres)
+                items = artist.genres
+            return createItemsString(items, qsTr("no genre known"))
+        case 2:
+            var ts = ""
+            if(playlist.tracks && playlist.tracks.total)
+                ts += qsTr("tracks: ") + playlist.tracks.total
+            if(playlist.owner)
+                ts += ", " + playlist.owner.id
+            return ts
+        case 3:
+            if(track.artists)
+                items = track.artists
+            else if(track.album && track.album.artists)
+                items = track.album.artists
+            return createItemsString(items, qsTr("no artist known"))
+        default:
             return ""
-        if(track.album)
-            return track.album.name
+        }
     }
 
-    function getArtistsString(model) {
-        if(type !== 3)
+    function getMeta2String(model) {
+        switch(type) {
+        case 0:
+            return album.release_date
+        case 3:
+            if(track.album)
+                return track.album.name
+            break;
+        default:
             return ""
+        }
+    }
+
+    function createItemsString(items, noneString) {
+        if(items.length === 0)
+            return noneString
         var i
-        var artists = []
-        if(track.artists)
-            artists = track.artists
-        else if(track.album && track.album.artists)
-            artists = track.album.artists
-        if(artists.length === 0)
-            return qStr("no artists known")
         var str = ""
-        for(i=0;i<artists.length;i++) {
+        for(i=0;i<items.length;i++) {
             if(i>0)
                 str += ", "
-            str += artists[i].name
+            if(items[i].name)
+                str += items[i].name
+            else
+                str += items[i]
         }
         return str
     }
+
 }

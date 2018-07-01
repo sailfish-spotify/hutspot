@@ -75,6 +75,7 @@ Page {
                 height: childrenRect.height
 
                 Text {
+                    width: parent.width
                     text: {
                         switch(section) {
                         case "0": return qsTr("Albums")
@@ -86,6 +87,7 @@ Page {
                     font.bold: true
                     font.pixelSize: Theme.fontSizeMedium
                     color: Theme.highlightColor
+                    horizontalAlignment: Text.AlignRight
                 }
             }
         }

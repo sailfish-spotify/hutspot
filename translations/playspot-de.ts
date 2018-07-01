@@ -104,5 +104,17 @@
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>no artist known</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no genre known</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tracks: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
