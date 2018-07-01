@@ -15,6 +15,8 @@ import "pages"
 ApplicationWindow {
     id: app
 
+    property string connectionText: qsTr("connecting")
+
     initialPage: Component { FirstPage { } }
     allowedOrientations: defaultAllowedOrientations
 
@@ -27,6 +29,9 @@ ApplicationWindow {
         device = newDevice
         deviceId.value = device.id
         deviceName.value = device.name
+        Spotify.transferMyPlayback([deviceId.value],{}, function(data) {
+
+        })
     }
 
     function playTrack(track) {

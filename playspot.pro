@@ -34,7 +34,10 @@ DISTFILES += qml/playspot.qml \
     translations/*.ts \
     playspot.desktop \
     qml/pages/Search.qml \
-    qml/components/SearchResultListItem.qml
+    qml/components/SearchResultListItem.qml \
+    qml/pages/MyStuff.qml \
+    qml/pages/Album.qml \
+    qml/pages/Playlist.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128
 

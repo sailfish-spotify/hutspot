@@ -114,7 +114,7 @@ Row {
             if(playlist.tracks && playlist.tracks.total)
                 ts += qsTr("tracks: ") + playlist.tracks.total
             if(playlist.owner)
-                ts += ", " + playlist.owner.id
+                ts += ", " + playlist.owner.display_name
             return ts
         case 3:
             if(track.artists)

@@ -38,12 +38,16 @@ Page {
                 onClicked: spotify.doO2Auth(Spotify._scope)
             }
             MenuItem {
+                text: qsTr("Devices")
+                onClicked: reload()
+            }
+            MenuItem {
                 text: qsTr("Search")
                 onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
             }
             MenuItem {
-                text: qsTr("Reload")
-                onClicked: reload()
+                text: qsTr("My Stuff")
+                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
             }
         }
 
@@ -58,13 +62,26 @@ Page {
             PageHeader {
                 id: pHeader
                 title: qsTr("Items")
-                BusyIndicator {
-                    id: busyThingy
-                    parent: pHeader.extraContent
-                    anchors.left: parent.left
-                    //running: showBusy
-                }
                 anchors.horizontalCenter: parent.horizontalCenter
+                Row {
+                    parent: pHeader.extraContent
+                    BusyIndicator {
+                        id: busyThingy
+                        //anchors.left: parent.left
+                        //running: showBusy
+                    }
+
+                    Label {
+                        id: connected
+                        width: parent.width - busyThingy.width - 2 * Theme.paddingMedium
+                        //x: busyThingy.x + busyThingy.width + Theme.paddingMedium
+                        color: Theme.secondaryColor
+                        font.pixelSize: Theme.fontSizeExtraSmall
+                        textFormat: Text.StyledText
+                        truncationMode: TruncationMode.Fade
+                        text: app.connectionText
+                    }
+                }
             }
         }
 
@@ -155,90 +172,25 @@ Page {
 
         onLinkingFailed: {
             console.log("Connections.onLinkingFailed")
+            app.connectionText = qsTr("Disconnected")
         }
 
         onLinkingSucceeded: {
             console.log("Connections.onLinkingSucceeded")
-            console.log("username: " + spotify.getUserName())
-            console.log("token   : " + spotify.getToken())
+            //console.log("username: " + spotify.getUserName())
+            //console.log("token   : " + spotify.getToken())
             Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
+            app.connectionText = qsTr("Connected")
         }
+
     }
 
-    property var myPlayLists: []
     property var myDevices: []
-    property var myRecentlyPlayedTracks: []
-    property var mySavedTracks: []
-    property var mySavedAlbums: []
 
     function reload() {
         var i
         itemsModel.clear()
-
-        myPlayLists = []
-        Spotify.getUserPlaylists({},function(data) {
-            if(data) {
-                try {
-                    myPlayLists = data.items
-                    console.log("number of playlists: " + myPlayLists.length)
-                    for(i=0;i<myPlayLists.length;i++)
-                        itemsModel.append({type: 0, name: myPlayLists[i].name, index: i})
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getUserPlaylists")
-            }
-        })
-
-        myRecentlyPlayedTracks = []
-        Spotify.getMyRecentlyPlayedTracks({}, function(data) {
-            if(data) {
-                try {
-                    myRecentlyPlayedTracks = data.items
-                    console.log("number of RecentlyPlayedTracks: " + myRecentlyPlayedTracks.length)
-                    for(i=0;i<myRecentlyPlayedTracks.length;i++)
-                        itemsModel.append({type: 1, name: myRecentlyPlayedTracks[i].track.name, index: i})
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyRecentlyPlayedTracks")
-            }
-        })
-
-        mySavedTracks = []
-        Spotify.getMySavedTracks({}, function(data) {
-            if(data) {
-                try {
-                    mySavedTracks = data.items
-                    console.log("number of SavedTracks: " + mySavedTracks.length)
-                    for(i=0;i<mySavedTracks.length;i++)
-                        itemsModel.append({type: 3, name: mySavedTracks[i].track.name, index: i})
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMySavedTracks")
-            }
-        })
-
-        mySavedAlbums = []
-        Spotify.getMySavedAlbums({}, function(data) {
-            if(data) {
-                try {
-                    mySavedAlbums = data.items
-                    console.log("number of SavedAlbums: " + mySavedAlbums.length)
-                    for(i=0;i<mySavedAlbums.length;i++)
-                        itemsModel.append({type: 4, name: mySavedAlbums[i].track.name, index: i})
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMySavedAlbums")
-            }
-        })
 
         myDevices = []
         Spotify.getMyDevices(function(data) {

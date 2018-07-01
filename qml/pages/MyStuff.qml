@@ -12,8 +12,8 @@ import "../components"
 import "../Spotify.js" as Spotify
 
 Page {
-    id: searchPage
-    objectName: "SearchPage"
+    id: myStuffPage
+    objectName: "MyStuffPage"
 
     property int searchInType: 0
     property bool showBusy: false
@@ -31,6 +31,13 @@ Page {
         anchors.fill: parent
         anchors.topMargin: 0
 
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Reload")
+                onClicked: refresh()
+            }
+        }
+
         header: Column {
             id: lvColumn
 
@@ -42,7 +49,7 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Search")
+                title: qsTr("My Stuff")
                 BusyIndicator {
                     id: busyThingy
                     parent: pHeader.extraContent
@@ -50,18 +57,6 @@ Page {
                     running: showBusy;
                 }
                 anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            SearchField {
-                id: searchField
-                width: parent.width
-                placeholderText: qsTr("Search text")
-                Binding {
-                    target: searchPage
-                    property: "searchString"
-                    value: searchField.text.toLowerCase().trim()
-                }
-                EnterKey.onClicked: refresh()
             }
 
         }
@@ -96,7 +91,6 @@ Page {
             id: listItem
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
-            //height: searchResultListItem.height
             contentHeight: Theme.itemSizeLarge
 
             SearchResultListItem {
@@ -160,49 +154,99 @@ Page {
 
     function refresh() {
         var i;
-        if(searchString === "")
-            return
-        showBusy = true
+        //showBusy = true
         searchModel.clear()
-        Spotify.search(searchString, ['album', 'artist', 'playlist', 'track'], {}, function(data, error) {
+
+        Spotify.getMySavedAlbums({}, function(data) {
             if(data) {
                 try {
-                    // albums
-                    for(i=0;i<data.albums.items.length;i++) {
+                    console.log("number of SavedAlbums: " + data.items.length)
+                    for(i=0;i<data.items.length;i++)
                         searchModel.append({type: 0,
-                                            name: data.albums.items[i].name,
-                                            album: data.albums.items[i]})
-                    }
-
-                    // artists
-                    for(i=0;i<data.artists.items.length;i++) {
-                        searchModel.append({type: 1,
-                                            name: data.artists.items[i].name,
-                                            artist: data.artists.items[i]})
-                    }
-
-                    // playlists
-                    for(i=0;i<data.playlists.items.length;i++) {
-                        searchModel.append({type: 2,
-                                            name: data.playlists.items[i].name,
-                                            playlist: data.playlists.items[i]})
-                    }
-
-                    // tracks
-                    for(i=0;i<data.tracks.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            name: data.tracks.items[i].name,
-                                            track: data.tracks.items[i]})
-                    }
-
+                                            name: data.items[i].name,
+                                            album: data.items[i]})
                 } catch (err) {
                     console.log(err)
                 }
             } else {
-                console.log("Search for: " + searchString + " returned no results.")
+                console.log("No Data for getMySavedAlbums")
             }
-            showBusy = false
         })
+
+        Spotify.getUserPlaylists({},function(data) {
+            if(data) {
+                try {
+                    console.log("number of playlists: " + data.items.length)
+                    for(i=0;i<data.items.length;i++) {
+                        var useless = JSON.stringify(data.items[i])
+                        searchModel.append({type: 2,
+                                            name: data.items[i].name,
+                                            playlist: data.items[i]})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getUserPlaylists")
+            }
+        })
+
+        Spotify.getMyRecentlyPlayedTracks({}, function(data) {
+            if(data) {
+                try {
+                    console.log("number of RecentlyPlayedTracks: " + data.items.length)
+                    for(i=0;i<data.items.length;i++) {
+                        // Todo: without this useless stringify the model
+                        // does not get the 'track' entry, eventhough
+                        // name works. wtf is going on?
+                        var useless = JSON.stringify(data.items[i].track)
+                        searchModel.append({type: 3,
+                                            name: data.items[i].track.name,
+                                            track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMyRecentlyPlayedTracks")
+            }
+        })
+
+        Spotify.getMySavedTracks({}, function(data) {
+            if(data) {
+                try {
+                    console.log("number of SavedTracks: " + data.items.length)
+                    for(i=0;i<data.items.length;i++) {
+                        searchModel.append({type: 3,
+                                            name: data.items[i].track.name,
+                                            track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMySavedTracks")
+            }
+        })
+
+        /*Spotify.getMyTopArtists({}, function(data) {
+            if(data) {
+                try {
+                    console.log("number of TopArtists: " + data.items.length)
+                    for(i=0;i<data.items.length;i++) {
+                        searchModel.append({type: 1,
+                                            name: data.items[i].track.name,
+                                            track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMyTopArtists")
+            }
+        })*/
+
     }
 
+    Component.onCompleted: refresh()
 }
