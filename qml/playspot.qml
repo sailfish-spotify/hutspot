@@ -9,14 +9,18 @@ import Sailfish.Silica 1.0
 import org.nemomobile.configuration 1.0
 
 import "Spotify.js" as Spotify
+import "cover"
 import "pages"
 
 ApplicationWindow {
     id: app
 
     initialPage: Component { FirstPage { } }
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
+
+    cover: CoverPage {
+        id: cover
+    }
 
     property var device;
     function setDevice(newDevice) {
@@ -28,12 +32,14 @@ ApplicationWindow {
     function playTrack(track) {
         Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(data) {
             playing = true
+            refreshPlayingInfo()
         })
     }
 
     function playContext(context) {
         Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(data) {
             playing = true
+            refreshPlayingInfo()
         })
     }
 
@@ -41,7 +47,7 @@ ApplicationWindow {
     function pause() {
         if(playing) {
             // pause
-            Spotify.pause({'device_id': deviceId.value}, function(data) {
+            Spotify.pause({}, function(data) {
                 playing = false
             })
         } else {
@@ -53,14 +59,24 @@ ApplicationWindow {
     }
 
     function next() {
-        Spotify.skipToNext({'device_id': deviceId.value}, function(data) {
-
+        Spotify.skipToNext({}, function(data) {
+            refreshPlayingInfo()
         })
     }
 
     function previous() {
-        Spotify.skipToPrevious({'device_id': deviceId.value}, function(data) {
+        Spotify.skipToPrevious({}, function(data) {
+            refreshPlayingInfo()
+        })
+    }
 
+    function refreshPlayingInfo() {
+        Spotify.getMyCurrentPlayingTrack({}, function(data) {
+            if(data) {
+                //item.track_number item.duration_ms
+                var uri = data.item.album.images[0].url
+                cover.updateDisplayData(uri, data.item.name)
+            }
         })
     }
 
