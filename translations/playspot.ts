@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name></name>
+    <message id="Simple Spotify Controller">
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Album</name>
     <message>
         <source>Reload</source>
@@ -288,6 +295,10 @@
     <name>playspot</name>
     <message>
         <source>connecting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

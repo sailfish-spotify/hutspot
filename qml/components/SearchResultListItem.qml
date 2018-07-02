@@ -107,11 +107,11 @@ Row {
         case 0:
             if(album.artists)
                 items = album.artists
-            return createItemsString(items, qsTr("no artist known"))
+            return Util.createItemsString(items, qsTr("no artist known"))
         case 1:
             if(artist.genres)
                 items = artist.genres
-            return createItemsString(items, qsTr("no genre known"))
+            return Util.createItemsString(items, qsTr("no genre known"))
         case 2:
             if(playlist.owner.display_name)
                 return playlist.owner.display_name
@@ -124,7 +124,7 @@ Row {
                 items = track.artists
             else if(track.album && track.album.artists)
                 items = track.album.artists
-            return ts + createItemsString(items, qsTr("no artist known"))
+            return ts + Util.createItemsString(items, qsTr("no artist known"))
         default:
             return ""
         }
@@ -145,22 +145,6 @@ Row {
         default:
             return ""
         }
-    }
-
-    function createItemsString(items, noneString) {
-        if(items.length === 0)
-            return noneString
-        var i
-        var str = ""
-        for(i=0;i<items.length;i++) {
-            if(i>0)
-                str += ", "
-            if(items[i].name)
-                str += items[i].name
-            else
-                str += items[i]
-        }
-        return str
     }
 
 }

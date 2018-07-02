@@ -129,7 +129,16 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTr("Play")
-                        onClicked: app.playTrack(track)
+                        onClicked: {
+                            switch(type) {
+                            case 0:
+                                app.playContext(album)
+                                break;
+                            case 1:
+                                app.playContext(artist)
+                                break;
+                            }
+                        }
                     }
                     MenuItem {
                         text: qsTr("View")
@@ -177,7 +186,6 @@ Page {
                         searchModel.append({type: 0,
                                             name: data.items[i].name,
                                             album: data.items[i]})
-                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
@@ -196,7 +204,6 @@ Page {
                         searchModel.append({type: 1,
                                             name: data.artists[i].name,
                                             artist: data.artists[i]})
-                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)

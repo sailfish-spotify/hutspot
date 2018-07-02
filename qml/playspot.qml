@@ -7,8 +7,10 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import org.nemomobile.configuration 1.0
+import org.nemomobile.mpris 1.0
 
 import "Spotify.js" as Spotify
+import "Util.js" as Util
 import "cover"
 import "pages"
 
@@ -76,18 +78,80 @@ ApplicationWindow {
         })
     }
 
+    onPlayingChanged: {
+        var status = playing ?  Mpris.Playing : Mpris.Paused
+
+        // it seems that in order to use the play button on the Lock screen
+        // when canPlay is true so should canPause be.
+        mprisPlayer.canPlay = status !== Mpris.Playing
+        mprisPlayer.canPause = status !== Mpris.Stopped
+        mprisPlayer.playbackStatus = status
+    }
+
     function refreshPlayingInfo() {
         Spotify.getMyCurrentPlayingTrack({}, function(data) {
             if(data) {
                 //item.track_number item.duration_ms
                 var uri = data.item.album.images[0].url
                 cover.updateDisplayData(uri, data.item.name)
+
+                var metaData = {}
+                metaData['title'] = data.item.name
+                if(data.item.artists)
+                    metaData['artist'] = Util.createItemsString(data.item.artists, qsTr("no artist known"))
+                else
+                    metaData['artist'] = ''
+                mprisPlayer.metaData = metaData
             }
         })
     }
 
     Component.onCompleted: {
         spotify.doO2Auth(Spotify._scope)
+    }
+
+    property string mprisServiceName: "playspot"
+
+    MprisPlayer {
+        id: mprisPlayer
+        serviceName: mprisServiceName
+
+        property var metaData
+
+        identity: qsTrId("Simple Spotify Controller")
+
+        canControl: true
+
+        canPause: playing
+        canPlay: !playing
+
+        canGoNext: true
+        canGoPrevious: true
+
+        canSeek: false
+
+        playbackStatus: Mpris.Stopped
+
+        onPauseRequested: app.pause()
+
+        onPlayRequested: app.pause()
+
+        onPlayPauseRequested: app.pause()
+
+        onNextRequested: app.next()
+
+        onPreviousRequested: app.previous()
+
+        onMetaDataChanged: {
+            var metadata = {}
+
+            if (metaData && 'artist' in metaData)
+                metadata[Mpris.metadataToString(Mpris.Artist)] = [metaData['artist']] // List of strings
+            if (metaData && 'title' in metaData)
+                metadata[Mpris.metadataToString(Mpris.Title)] = metaData['title'] // String
+
+            mprisPlayer.metadata = metadata
+        }
     }
 
     ConfigurationValue {

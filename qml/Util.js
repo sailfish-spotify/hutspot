@@ -19,3 +19,19 @@ function getDurationString(d) {
       return minutes + ":" + seconds.substr(-2);
     }
 }
+
+function createItemsString(items, noneString) {
+    if(items.length === 0)
+        return noneString
+    var i
+    var str = ""
+    for(i=0;i<items.length;i++) {
+        if(i>0)
+            str += ", "
+        if(items[i].name)
+            str += items[i].name
+        else
+            str += items[i]
+    }
+    return str
+}

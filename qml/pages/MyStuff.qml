@@ -165,7 +165,6 @@ Page {
                         searchModel.append({type: 0,
                                             name: data.items[i].name,
                                             album: data.items[i]})
-                    searchModel.sync()
                 } catch (err) {
                     console.log(err)
                 }
@@ -182,7 +181,6 @@ Page {
                         searchModel.append({type: 2,
                                             name: data.items[i].name,
                                             playlist: data.items[i]})
-                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
@@ -200,7 +198,6 @@ Page {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
-                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
@@ -218,7 +215,6 @@ Page {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
-                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
