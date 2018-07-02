@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+import "../Util.js" as Util
+
 Row {
     id: row
 
@@ -100,6 +102,7 @@ Row {
 
     function getMeta1String(model) {
         var items = []
+        var ts = ""
         switch(type) {
         case 0:
             if(album.artists)
@@ -110,18 +113,19 @@ Row {
                 items = artist.genres
             return createItemsString(items, qsTr("no genre known"))
         case 2:
-            var ts = ""
             if(playlist.tracks && playlist.tracks.total)
                 ts += qsTr("tracks: ") + playlist.tracks.total
             if(playlist.owner)
                 ts += ", " + playlist.owner.display_name
             return ts
         case 3:
+            if(track.duration_ms)
+                ts += Util.getDurationString(track.duration_ms) + " "
             if(track.artists)
                 items = track.artists
             else if(track.album && track.album.artists)
                 items = track.album.artists
-            return createItemsString(items, qsTr("no artist known"))
+            return ts + createItemsString(items, qsTr("no artist known"))
         default:
             return ""
         }

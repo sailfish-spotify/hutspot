@@ -60,7 +60,14 @@ CoverBackground {
                 duration: 3000
             }
         }
-
+        /*
+        NumberAnimation on x { from: 0; to: -text.width; duration: 6000; loops: Animation.Infinite }
+        NumberAnimation {
+            target: ball
+            properties: "x"
+            to: anim.xMove
+            duration: 20
+        }*/
         CoverActionList {
             id: coverAction
 

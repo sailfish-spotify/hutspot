@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: albumPage
@@ -85,15 +86,28 @@ Page {
             x: Theme.paddingMedium
             //contentHeight: Theme.itemSizeLarge
 
-            Label {
-                id: nameLabel
-                color: Theme.primaryColor
-                textFormat: Text.StyledText
-                truncationMode: TruncationMode.Fade
+            Column {
                 width: parent.width
-                text: name ? name : qsTr("No Name")
+                Label {
+                    id: nameLabel
+                    color: Theme.primaryColor
+                    textFormat: Text.StyledText
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    text: name ? name : qsTr("No Name")
+                }
+
+                Label {
+                    id: meta1Label
+                    width: parent.width
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    truncationMode: TruncationMode.Fade
+                    text: track.track_number + ", " + Util.getDurationString(track.duration_ms)
+                    enabled: text.length > 0
+                    visible: enabled
+                }
             }
-            // duration_ms
 
             menu: contextMenu
             Component {
