@@ -218,6 +218,5 @@ Page {
         app.playTrack(myRecentlyPlayedTracks[index])
     }
 
-    Component.onCompleted: spotify.doO2Auth(Spotify._scope)
 }
 

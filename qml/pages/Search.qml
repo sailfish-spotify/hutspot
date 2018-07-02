@@ -18,6 +18,9 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
     property string searchString: ""
+    //property alias searchField: listView.header.searchField
+    property int offset: 0
+    property int limit: 20
 
     allowedOrientations: Orientation.All
 
@@ -52,6 +55,46 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
+            PullDownMenu {
+                MenuItem {
+                    text: qsTr("Load Next Set")
+                    enabled: searchString.length >= 1
+                    onClicked: {
+                        offset += limit
+                        refresh()
+                    }
+                }
+               MenuItem {
+                    text: qsTr("Load Previous Set")
+                    enabled: searchString.length >= 1
+                             && offset >= limit
+                    onClicked: {
+                        offset -= limit
+                        refresh()
+                    }
+                }
+            }
+
+            PushUpMenu {
+                MenuItem {
+                    text: qsTr("Load Next Set")
+                    enabled: searchString.length >= 1
+                    onClicked: {
+                        offset += limit
+                        refresh()
+                    }
+                }
+                MenuItem {
+                     text: qsTr("Load Previous Set")
+                     enabled: searchString.length >= 1
+                              && offset >= limit
+                     onClicked: {
+                         offset -= limit
+                         refresh()
+                     }
+                 }
+            }
+
             SearchField {
                 id: searchField
                 width: parent.width
@@ -62,6 +105,7 @@ Page {
                     value: searchField.text.toLowerCase().trim()
                 }
                 EnterKey.onClicked: refresh()
+                Component.onCompleted: searchField.forceActiveFocus()
             }
 
         }
@@ -164,8 +208,11 @@ Page {
             return
         showBusy = true
         searchModel.clear()
-        Spotify.search(searchString, ['album', 'artist', 'playlist', 'track'], {}, function(data, error) {
+        Spotify.search(searchString, ['album', 'artist', 'playlist', 'track'],
+                       {offset: offset, limit: limit}, function(data, error) {
             if(data) {
+                // for now assume offset is the same for all 4 catagories
+                offset = data.albums.offset
                 try {
                     // albums
                     for(i=0;i<data.albums.items.length;i++) {

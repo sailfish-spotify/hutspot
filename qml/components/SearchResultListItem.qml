@@ -120,7 +120,7 @@ Row {
             return ts
         case 3:
             if(track.duration_ms)
-                ts += Util.getDurationString(track.duration_ms) + " "
+                ts += Util.getDurationString(track.duration_ms) + ", "
             if(track.artists)
                 items = track.artists
             else if(track.album && track.album.artists)

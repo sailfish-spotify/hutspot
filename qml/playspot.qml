@@ -85,6 +85,10 @@ ApplicationWindow {
         })
     }
 
+    Component.onCompleted: {
+        spotify.doO2Auth(Spotify._scope)
+    }
+
     ConfigurationValue {
             id: deviceId
             key: "/playspot/device_id"

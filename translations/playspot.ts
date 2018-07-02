@@ -194,6 +194,14 @@
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Load Previous Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load Next Set</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SearchResultListItem</name>
