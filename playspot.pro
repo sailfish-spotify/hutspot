@@ -37,7 +37,8 @@ DISTFILES += qml/playspot.qml \
     qml/components/SearchResultListItem.qml \
     qml/pages/MyStuff.qml \
     qml/pages/Album.qml \
-    qml/pages/Playlist.qml
+    qml/pages/Playlist.qml \
+    qml/pages/Artist.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128
 

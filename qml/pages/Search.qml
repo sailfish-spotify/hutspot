@@ -172,11 +172,14 @@ Page {
                     }
                     MenuItem {
                         text: qsTr("View")
-                        enabled: type === 0 || type === 2
+                        enabled: type === 0 || type === 1 || type === 2
                         onClicked: {
                             switch(type) {
                             case 0:
                                 pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
+                                break;
+                            case 1:
+                                pageStack.push(Qt.resolvedUrl("Artist.qml"), {artist: artist})
                                 break;
                             case 2:
                                 pageStack.push(Qt.resolvedUrl("Playlist.qml"), {playlist: playlist})
