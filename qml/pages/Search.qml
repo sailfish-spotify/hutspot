@@ -20,7 +20,7 @@ Page {
     property string searchString: ""
     //property alias searchField: listView.header.searchField
     property int offset: 0
-    property int limit: 20
+    property int limit: app.searchLimit.value
 
     allowedOrientations: Orientation.All
 

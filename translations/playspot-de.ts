@@ -97,6 +97,10 @@
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MyStuff</name>
@@ -219,6 +223,17 @@
     </message>
     <message>
         <source>tracks: </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings</name>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search Limit (number of results per request)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

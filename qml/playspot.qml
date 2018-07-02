@@ -16,6 +16,7 @@ ApplicationWindow {
     id: app
 
     property string connectionText: qsTr("connecting")
+    property alias searchLimit: searchLimit
 
     initialPage: Component { FirstPage { } }
     allowedOrientations: defaultAllowedOrientations
@@ -100,5 +101,13 @@ ApplicationWindow {
             key: "/playspot/device_name"
             defaultValue: ""
     }
+
+    ConfigurationValue {
+        id: searchLimit
+        key: "/playspot/search_limit"
+        defaultValue: 20
+    }
+
+
 }
 

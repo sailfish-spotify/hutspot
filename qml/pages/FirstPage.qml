@@ -30,12 +30,8 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Refresh Token")
-                onClicked: spotify.refreshToken()
-            }
-            MenuItem {
-                text: qsTr("Login")
-                onClicked: spotify.doO2Auth(Spotify._scope)
+                text: qsTr("Settings")
+                onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
             MenuItem {
                 text: qsTr("Devices")
@@ -50,6 +46,17 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
             }
         }
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Login")
+                onClicked: spotify.doO2Auth(Spotify._scope)
+            }
+            MenuItem {
+                text: qsTr("Refresh Token")
+                onClicked: spotify.refreshToken()
+            }
+       }
 
         header: Column {
             id: lvColumn
