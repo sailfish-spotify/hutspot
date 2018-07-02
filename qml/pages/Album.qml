@@ -17,7 +17,6 @@ Page {
     objectName: "AlbumPage"
 
     property string defaultImageSource : "image://theme/icon-l-music"
-    property string imageItemSource : defaultImageSource
     property bool showBusy: false
     property var album
 
@@ -63,7 +62,8 @@ Page {
 
             Image {
                 id: imageItem
-                source: imageItemSource ? imageItemSource : defaultImageSource
+                source:  (album && album.images)
+                         ? album.images[0].url : defaultImageSource
                 width: parent.width
                 height: width
                 fillMode: Image.PreserveAspectFit
@@ -71,6 +71,15 @@ Page {
                        anchors.fill: parent
                        onClicked: app.playContext(album)
                 }
+            }
+
+            Label {
+                id: nameLabel
+                color: Theme.primaryColor
+                textFormat: Text.StyledText
+                truncationMode: TruncationMode.Fade
+                width: parent.width
+                text: album ? album.name : qsTr("No Name")
             }
 
             Rectangle {
@@ -141,7 +150,6 @@ Page {
         var i;
         //showBusy = true
         searchModel.clear()        
-        imageItemSource = album.images ? album.images[0].url : defaultImageSource
 
         Spotify.getAlbumTracks(album.id, {}, function(data) {
             if(data) {

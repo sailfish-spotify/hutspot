@@ -165,6 +165,7 @@ Page {
                         searchModel.append({type: 0,
                                             name: data.items[i].name,
                                             album: data.items[i]})
+                    searchModel.sync()
                 } catch (err) {
                     console.log(err)
                 }
@@ -178,10 +179,10 @@ Page {
                 try {
                     console.log("number of playlists: " + data.items.length)
                     for(i=0;i<data.items.length;i++) {
-                        var useless = JSON.stringify(data.items[i])
                         searchModel.append({type: 2,
                                             name: data.items[i].name,
                                             playlist: data.items[i]})
+                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
@@ -196,13 +197,10 @@ Page {
                 try {
                     console.log("number of RecentlyPlayedTracks: " + data.items.length)
                     for(i=0;i<data.items.length;i++) {
-                        // Todo: without this useless stringify the model
-                        // does not get the 'track' entry, eventhough
-                        // name works. wtf is going on?
-                        var useless = JSON.stringify(data.items[i].track)
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
+                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)
@@ -220,6 +218,7 @@ Page {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
+                        searchModel.sync()
                     }
                 } catch (err) {
                     console.log(err)

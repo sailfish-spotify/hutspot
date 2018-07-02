@@ -45,7 +45,7 @@ Row {
             color: Theme.primaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             truncationMode: TruncationMode.Fade
-            text: getMeta1String(model)
+            text: getMeta1String()
             enabled: text.length > 0
             visible: enabled
         }
@@ -57,7 +57,7 @@ Row {
             font.pixelSize: Theme.fontSizeExtraSmall
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
-            text: getMeta2String(model)
+            text: getMeta2String()
             enabled: text.length > 0
             visible: enabled
         }
@@ -100,7 +100,7 @@ Row {
         return url
     }
 
-    function getMeta1String(model) {
+    function getMeta1String() {
         var items = []
         var ts = ""
         switch(type) {
@@ -113,11 +113,10 @@ Row {
                 items = artist.genres
             return createItemsString(items, qsTr("no genre known"))
         case 2:
-            if(playlist.tracks && playlist.tracks.total)
-                ts += qsTr("tracks: ") + playlist.tracks.total
-            if(playlist.owner)
-                ts += ", " + playlist.owner.display_name
-            return ts
+            if(playlist.owner.display_name)
+                return playlist.owner.display_name
+            else
+                return qsTr("Id") + ": " + playlist.owner.id
         case 3:
             if(track.duration_ms)
                 ts += Util.getDurationString(track.duration_ms) + ", "
@@ -131,10 +130,14 @@ Row {
         }
     }
 
-    function getMeta2String(model) {
+    function getMeta2String() {
         switch(type) {
         case 0:
             return album.release_date
+        case 1:
+            return artist.followers.total + " " + qsTr("followers")
+        case 2:
+            return playlist.tracks.total + " " + qsTr("tracks")
         case 3:
             if(track.album)
                 return track.album.name

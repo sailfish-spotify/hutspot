@@ -50,6 +50,14 @@
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Related Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -186,6 +194,10 @@
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No Name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Search</name>
@@ -249,7 +261,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>tracks: </source>
+        <source>followers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Id</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
