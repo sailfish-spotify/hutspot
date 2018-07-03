@@ -34,7 +34,7 @@ Page {
 
             TextField {
                 id: searchLimit
-                label: qsTr("Search Limit (number of results per request)")
+                label: qsTr("Number of results per request (limit)")
                 inputMethodHints: Qt.ImhDigitsOnly
                 width: parent.width
                 onTextChanged: app.searchLimit.value = text

@@ -35,10 +35,6 @@
 <context>
     <name>Album</name>
     <message>
-        <source>Reload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Album</source>
         <translation type="unfinished"></translation>
     </message>
@@ -57,10 +53,6 @@
 </context>
 <context>
     <name>Artist</name>
-    <message>
-        <source>Reload</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Artist</source>
         <translation type="unfinished"></translation>
@@ -169,6 +161,28 @@
     </message>
     <message>
         <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LoadPullMenus</name>
+    <message>
+        <source>Load Next Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load Previous Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LoadPushMenus</name>
+    <message>
+        <source>Load Next Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load Previous Set</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -319,7 +333,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search Limit (number of results per request)</source>
+        <source>Number of results per request (limit)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

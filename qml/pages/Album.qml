@@ -19,6 +19,8 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
     property var album
+    property int offset: 0
+    property int limit: app.searchLimit.value
 
     allowedOrientations: Orientation.All
 
@@ -31,13 +33,6 @@ Page {
         model: searchModel
         anchors.fill: parent
         anchors.topMargin: 0
-
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Reload")
-                onClicked: refresh()
-            }
-        }
 
         header: Column {
             id: lvColumn
@@ -59,6 +54,9 @@ Page {
                 }
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+
+            LoadPullMenus {}
+            LoadPushMenus {}
 
             Image {
                 id: imageItem
@@ -151,10 +149,13 @@ Page {
         //showBusy = true
         searchModel.clear()        
 
-        Spotify.getAlbumTracks(album.id, {}, function(data) {
+        Spotify.getAlbumTracks(album.id,
+                               {offset: offset, limit: limit},
+                               function(data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
+                    offset = data.offset
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].name,

@@ -167,7 +167,7 @@ ApplicationWindow {
             iconSize = 128
         else
             iconSize = 256
-        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/shoutcast-sailfish.png"
+        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/playspot.png"
     }
 
     ConfigurationValue {

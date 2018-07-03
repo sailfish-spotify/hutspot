@@ -19,6 +19,8 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
     property var currentArtist
+    property int offset: 0
+    property int limit: app.searchLimit.value
 
     allowedOrientations: Orientation.All
 
@@ -32,12 +34,8 @@ Page {
         anchors.fill: parent
         anchors.topMargin: 0
 
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Reload")
-                onClicked: refresh()
-            }
-        }
+        LoadPullMenus {}
+        LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -201,10 +199,13 @@ Page {
         relatedArtists = undefined
         pendingRequests = 2
 
-        Spotify.getArtistAlbums(currentArtist.id, {}, function(data) {
+        Spotify.getArtistAlbums(currentArtist.id,
+                                {offset: offset, limit: limit},
+                                function(data) {
             if(data) {
                 console.log("number of ArtistAlbums: " + data.items.length)
                 artistAlbums = data
+                offset = data.offset
             } else {
                 console.log("No Data for getArtistAlbums")
             }
@@ -212,7 +213,9 @@ Page {
                 loadData()
         })
 
-        Spotify.getArtistRelatedArtists(currentArtist.id, {}, function(data) {
+        Spotify.getArtistRelatedArtists(currentArtist.id,
+                                        {offset: offset, limit: limit},
+                                        function(data) {
             if(data) {
                 console.log("number of ArtistRelatedArtists: " + data.artists.length)
                 relatedArtists = data
