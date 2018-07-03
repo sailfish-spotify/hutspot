@@ -173,44 +173,54 @@ Page {
 
     onCurrentArtistChanged: refresh()
 
+    property var artistAlbums
+    property var relatedArtists
+    property int pendingRequests
+
+    function loadData() {
+        var i;
+        if(artistAlbums)
+            for(i=0;i<artistAlbums.items.length;i++) {
+                searchModel.append({type: 0,
+                                    name: artistAlbums.items[i].name,
+                                    album: artistAlbums.items[i]})
+            }
+        if(relatedArtists)
+            for(i=0;i<relatedArtists.artists.length;i++) {
+                searchModel.append({type: 1,
+                                    name: relatedArtists.artists[i].name,
+                                    artist: relatedArtists.artists[i]})
+            }
+    }
+
     function refresh() {
         var i;
         //showBusy = true
         searchModel.clear()        
+        artistAlbums = undefined
+        relatedArtists = undefined
+        pendingRequests = 2
 
         Spotify.getArtistAlbums(currentArtist.id, {}, function(data) {
             if(data) {
-                try {
-                    console.log("number of ArtistAlbums: " + data.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 0,
-                                            name: data.items[i].name,
-                                            album: data.items[i]})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
+                console.log("number of ArtistAlbums: " + data.items.length)
+                artistAlbums = data
             } else {
                 console.log("No Data for getArtistAlbums")
             }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         Spotify.getArtistRelatedArtists(currentArtist.id, {}, function(data) {
             if(data) {
-                try {
-                    var i;
-                    console.log("number of ArtistRelatedArtists: " + data.artists.length)
-                    for(i=0;i<data.artists.length;i++) {
-                        searchModel.append({type: 1,
-                                            name: data.artists[i].name,
-                                            artist: data.artists[i]})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
+                console.log("number of ArtistRelatedArtists: " + data.artists.length)
+                relatedArtists = data
             } else {
                 console.log("No Data for getArtistRelatedArtists")
             }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
     }
 }

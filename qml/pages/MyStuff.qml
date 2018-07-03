@@ -74,7 +74,7 @@ Page {
                     text: {
                         switch(section) {
                         case "0": return qsTr("Saved Albums")
-                        case "1": return qsTr("Floowed Artists")
+                        case "1": return qsTr("Followed Artists")
                         case "2": return qsTr("Playlists")
                         case "3": return qsTr("Recently Played Tracks")
                         case "4": return qsTr("Saved Tracks")
@@ -153,98 +153,111 @@ Page {
 
     }
 
+    property var savedAlbums
+    property var userPlaylists
+    property var recentlyPlayedTracks
+    property var savedTracks
+    property var followedArtists
+    property int pendingRequests
+
+    function loadData() {
+        var i
+        if(savedAlbums)
+            for(i=0;i<savedAlbums.items.length;i++)
+                searchModel.append({type: 0,
+                                    stype: 0,
+                                    name: savedAlbums.items[i].album.name,
+                                    album: savedAlbums.items[i].album})
+        if(userPlaylists)
+            for(i=0;i<userPlaylists.items.length;i++) {
+                searchModel.append({type: 2,
+                                    stype: 2,
+                                    name: userPlaylists.items[i].name,
+                                    playlist: userPlaylists.items[i]})
+            }
+        if(recentlyPlayedTracks)
+            for(i=0;i<recentlyPlayedTracks.items.length;i++) {
+                searchModel.append({type: 3,
+                                    stype: 3,
+                                    name: recentlyPlayedTracks.items[i].track.name,
+                                    track: recentlyPlayedTracks.items[i].track})
+            }
+        if(savedTracks)
+            for(i=0;i<savedTracks.items.length;i++) {
+                searchModel.append({type: 3,
+                                    stype: 4,
+                                    name: savedTracks.items[i].track.name,
+                                    track: savedTracks.items[i].track})
+            }
+        if(followedArtists)
+            for(i=0;i<followedArtists.artists.items.length;i++) {
+                searchModel.append({type: 1,
+                                    stype: 1,
+                                    name: followedArtists.artists.items[i].name,
+                                    artist: followedArtists.artists.items[i]})
+            }
+
+    }
+
     function refresh() {
         var i;
         //showBusy = true
         searchModel.clear()
+        savedAlbums = undefined
+        userPlaylists = undefined
+        savedTracks = undefined
+        recentlyPlayedTracks = undefined
+        followedArtists = undefined
+        pendingRequests = 5
 
         Spotify.getMySavedAlbums({}, function(data) {
             if(data) {
-                try {
-                    console.log("number of SavedAlbums: " + data.items.length)
-                    for(i=0;i<data.items.length;i++)
-                        searchModel.append({type: 0,
-                                            stype: 0,
-                                            name: data.items[i].album.name,
-                                            album: data.items[i].album})
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
+                console.log("number of SavedAlbums: " + data.items.length)
+                savedAlbums = data
+            } else
                 console.log("No Data for getMySavedAlbums")
-            }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         Spotify.getUserPlaylists({},function(data) {
             if(data) {
-                try {
-                    console.log("number of playlists: " + data.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 2,
-                                            stype: 2,
-                                            name: data.items[i].name,
-                                            playlist: data.items[i]})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
+                console.log("number of playlists: " + data.items.length)
+                userPlaylists = data
+            } else
                 console.log("No Data for getUserPlaylists")
-            }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         Spotify.getMyRecentlyPlayedTracks({}, function(data) {
             if(data) {
-                try {
-                    console.log("number of RecentlyPlayedTracks: " + data.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            stype: 3,
-                                            name: data.items[i].track.name,
-                                            track: data.items[i].track})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
+                console.log("number of RecentlyPlayedTracks: " + data.items.length)
+                recentlyPlayedTracks = data
+            } else
                 console.log("No Data for getMyRecentlyPlayedTracks")
-            }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         Spotify.getMySavedTracks({}, function(data) {
             if(data) {
-                try {
-                    console.log("number of SavedTracks: " + data.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            stype: 4,
-                                            name: data.items[i].track.name,
-                                            track: data.items[i].track})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
+                console.log("number of SavedTracks: " + data.items.length)
+                savedTracks = data
+            } else
                 console.log("No Data for getMySavedTracks")
-            }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         Spotify.getFollowedArtists({}, function(data) {
             if(data) {
-                try {
-                    console.log("number of FollowedArtists: " + data.artists.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 1,
-                                            stype: 1,
-                                            name: data.artists.items[i].name,
-                                            track: data.artists.items[i]})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
+                console.log("number of FollowedArtists: " + data.artists.items.length)
+                followedArtists = data
+            } else
                 console.log("No Data for getFollowedArtists")
-            }
+            if(--pendingRequests == 0) // load when all requests are done
+                loadData()
         })
 
         /*Spotify.getMyTopArtists({}, function(data) {

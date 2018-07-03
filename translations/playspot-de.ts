@@ -203,15 +203,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Floowed Artists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Recently Played Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Saved Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Followed Artists</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
