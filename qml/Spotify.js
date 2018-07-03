@@ -18,7 +18,10 @@ var scopes_array = [
   "user-read-email",
   "user-modify-playback-state",
   "user-read-playback-state",
-  "user-read-recently-played"
+  "user-read-currently-playing",
+  "user-library-read",
+  "user-follow-read",
+  "user-top-read",
 ];
 var _scope = scopes_array.join(" ");
 

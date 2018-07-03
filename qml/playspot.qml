@@ -154,6 +154,22 @@ ApplicationWindow {
         }
     }
 
+    function getAppIconSource() {
+        return getAppIconSource2(Theme.iconSizeExtraLarge)
+    }
+
+    function getAppIconSource2(iconSize) {
+        if (iconSize < 108)
+            iconSize = 86
+        else if (iconSize < 128)
+            iconSize = 108
+        else if (iconSize < 256)
+            iconSize = 128
+        else
+            iconSize = 256
+        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/shoutcast-sailfish.png"
+    }
+
     ConfigurationValue {
             id: deviceId
             key: "/playspot/device_id"

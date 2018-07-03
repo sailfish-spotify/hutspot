@@ -42,6 +42,7 @@ void Spotify::doO2Auth(const QString &scope) {
         connect(o2Spotify, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
         connect(o2Spotify, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
         connect(o2Spotify, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+        connect(o2Spotify, SIGNAL(refreshFinished()), this, SLOT(onRefreshFinished()));
 
         //o2Spotify->unlink();  // for expired token
     }
@@ -76,6 +77,11 @@ void Spotify::onOpenBrowser(const QUrl &url) {
 void Spotify::onCloseBrowser() {
     // don't know how to close the broser tab/window and switch to ourselves
     qDebug() << "Spotify::onCloseBrowser()";
+}
+
+void Spotify::onRefreshFinished(QNetworkReply::NetworkError error) {
+    QNetworkReply *tokenReply = qobject_cast<QNetworkReply *>(sender());
+    qDebug() << "Spotify::onRefreshFinished(): " << error << ", " << tokenReply->errorString();
 }
 
 void Spotify::onLinkedChanged() {

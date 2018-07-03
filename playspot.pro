@@ -38,9 +38,10 @@ DISTFILES += qml/playspot.qml \
     qml/pages/MyStuff.qml \
     qml/pages/Album.qml \
     qml/pages/Playlist.qml \
-    qml/pages/Artist.qml
+    qml/pages/Artist.qml \
+    icons/256x256/playspot.png
 
-SAILFISHAPP_ICONS = 86x86 108x108 128x128
+SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
 # to disable building translations every time, comment out the
 # following CONFIG line

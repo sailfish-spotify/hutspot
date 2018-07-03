@@ -28,6 +28,7 @@ private slots:
     void onLinkingFailed();
     void onOpenBrowser(const QUrl &url);
     void onCloseBrowser();
+    void onRefreshFinished(QNetworkReply::NetworkError error);
 
 private:
     O2Spotify * o2Spotify;

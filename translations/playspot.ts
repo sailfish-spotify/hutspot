@@ -9,6 +9,30 @@
     </message>
 </context>
 <context>
+    <name>About</name>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spotify controller for Sailfish OS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2018 Willem-Jan de Hoog</source>
+        <extracomment>I doubt this needs to be translated</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License: MIT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thanks to</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Album</name>
     <message>
         <source>Reload</source>
@@ -143,6 +167,10 @@
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MyStuff</name>
@@ -155,19 +183,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -180,6 +196,22 @@
     </message>
     <message>
         <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Floowed Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recently Played Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved Tracks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

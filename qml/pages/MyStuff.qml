@@ -61,7 +61,7 @@ Page {
 
         }
 
-        section.property: "type"
+        section.property: "stype"
         section.delegate : Component {
             id: sectionHeading
             Item {
@@ -73,10 +73,11 @@ Page {
                     width: parent.width
                     text: {
                         switch(section) {
-                        case "0": return qsTr("Albums")
-                        case "1": return qsTr("Artists")
+                        case "0": return qsTr("Saved Albums")
+                        case "1": return qsTr("Floowed Artists")
                         case "2": return qsTr("Playlists")
-                        case "3": return qsTr("Tracks")
+                        case "3": return qsTr("Recently Played Tracks")
+                        case "4": return qsTr("Saved Tracks")
                         }
                     }
                     font.bold: true
@@ -163,8 +164,9 @@ Page {
                     console.log("number of SavedAlbums: " + data.items.length)
                     for(i=0;i<data.items.length;i++)
                         searchModel.append({type: 0,
-                                            name: data.items[i].name,
-                                            album: data.items[i]})
+                                            stype: 0,
+                                            name: data.items[i].album.name,
+                                            album: data.items[i].album})
                 } catch (err) {
                     console.log(err)
                 }
@@ -179,6 +181,7 @@ Page {
                     console.log("number of playlists: " + data.items.length)
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 2,
+                                            stype: 2,
                                             name: data.items[i].name,
                                             playlist: data.items[i]})
                     }
@@ -196,6 +199,7 @@ Page {
                     console.log("number of RecentlyPlayedTracks: " + data.items.length)
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
+                                            stype: 3,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
                     }
@@ -213,6 +217,7 @@ Page {
                     console.log("number of SavedTracks: " + data.items.length)
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
+                                            stype: 4,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
                     }
@@ -221,6 +226,24 @@ Page {
                 }
             } else {
                 console.log("No Data for getMySavedTracks")
+            }
+        })
+
+        Spotify.getFollowedArtists({}, function(data) {
+            if(data) {
+                try {
+                    console.log("number of FollowedArtists: " + data.artists.items.length)
+                    for(i=0;i<data.items.length;i++) {
+                        searchModel.append({type: 1,
+                                            stype: 1,
+                                            name: data.artists.items[i].name,
+                                            track: data.artists.items[i]})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getFollowedArtists")
             }
         })
 
