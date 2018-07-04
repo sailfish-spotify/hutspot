@@ -143,11 +143,12 @@ ApplicationWindow {
         target: serviceBrowser
 
         onServiceEntryAdded: {
-            console.log("onServiceEntryAdded" + service)
+            console.log("onServiceEntryAdded: " + service)
+            console.log(serviceBrowser.getJSON(service))
         }
 
         onServiceEntryRemoved: {
-            console.log("onServiceEntryRemoved" + service)
+            console.log("onServiceEntryRemoved: " + service)
         }
     }
 

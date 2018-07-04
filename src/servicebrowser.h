@@ -12,11 +12,12 @@ public:
     explicit ServiceBrowser(QObject *parent = 0);
 
 signals:
-    void serviceEntryAdded(QString);
-    void serviceEntryRemoved(QString);
+    void serviceEntryAdded(QString service);
+    void serviceEntryRemoved(QString service);
 
 public slots:
     Q_INVOKABLE void browse(const QString &scope);
+    Q_INVOKABLE QString getJSON(const QString &scope);
 
 private slots:
     void onServiceEntryAdded(QString service);

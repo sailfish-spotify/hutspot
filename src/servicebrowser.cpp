@@ -1,5 +1,9 @@
 #include "servicebrowser.h"
 
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+
 ServiceBrowser::ServiceBrowser(QObject *parent) {
     zcsBrowser = new ZConfServiceBrowser(parent);
 
@@ -11,6 +15,23 @@ ServiceBrowser::ServiceBrowser(QObject *parent) {
 void ServiceBrowser::browse(const QString &scope) {
     if(zcsBrowser)
         zcsBrowser->browse(scope);
+}
+
+QString ServiceBrowser::getJSON(const QString &scope) {
+    if(!zcsBrowser)
+        return QString("");
+
+    ZConfServiceEntry entry = zcsBrowser->serviceEntry(scope);
+
+    QJsonObject properties;
+    properties["ip"] = entry.ip;
+    properties["domain"] = entry.domain;
+    properties["host"] = entry.host;
+    properties["port"] = entry.port;
+    properties["protocol"] = entry.protocolName();
+
+    QJsonDocument doc(properties);
+    return doc.toJson(QJsonDocument::Compact);
 }
 
 void ServiceBrowser::onServiceEntryAdded(QString service) {
