@@ -55,8 +55,8 @@ public:
     ZConfServiceEntry serviceEntry(QString name);
 
 signals:
-    void serviceEntryAdded(QString);
-    void serviceEntryRemoved(QString);
+    void serviceEntryAdded(QString service);
+    void serviceEntryRemoved(QString service);
 
 protected slots:
     void createServiceBrowser();

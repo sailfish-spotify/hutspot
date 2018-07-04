@@ -19,8 +19,8 @@ public slots:
     Q_INVOKABLE void browse(const QString &scope);
 
 private slots:
-    void onServiceEntryAdded(QString);
-    void onServiceEntryRemoved(QString);
+    void onServiceEntryAdded(QString service);
+    void onServiceEntryRemoved(QString service);
 
 private:
     ZConfServiceBrowser * zcsBrowser;

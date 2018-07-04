@@ -108,6 +108,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         spotify.doO2Auth(Spotify._scope)
+        serviceBrowser.browse("_spotify-connect._tcp")
     }
 
     Connections {
@@ -137,6 +138,19 @@ ApplicationWindow {
         }
 
     }
+
+    Connections {
+        target: serviceBrowser
+
+        onServiceEntryAdded: {
+            console.log("onServiceEntryAdded" + service)
+        }
+
+        onServiceEntryRemoved: {
+            console.log("onServiceEntryRemoved" + service)
+        }
+    }
+
 
     property string display_name: ""
     property string product: ""
