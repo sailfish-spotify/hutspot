@@ -11,6 +11,7 @@
 #include <sailfishapp.h>
 
 #include "spotify.h"
+#include "servicebrowser.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,9 @@ int main(int argc, char *argv[])
 
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
+
+    ServiceBrowser serviceBrowser;
+    view->rootContext()->setContextProperty("serviceBrowser", &serviceBrowser);
 
     view->setSource(SailfishApp::pathTo("qml/playspot.qml"));
     view->show();

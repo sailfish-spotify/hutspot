@@ -55,45 +55,8 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            PullDownMenu {
-                MenuItem {
-                    text: qsTr("Load Next Set")
-                    enabled: searchString.length >= 1
-                    onClicked: {
-                        offset += limit
-                        refresh()
-                    }
-                }
-               MenuItem {
-                    text: qsTr("Load Previous Set")
-                    enabled: searchString.length >= 1
-                             && offset >= limit
-                    onClicked: {
-                        offset -= limit
-                        refresh()
-                    }
-                }
-            }
-
-            PushUpMenu {
-                MenuItem {
-                    text: qsTr("Load Next Set")
-                    enabled: searchString.length >= 1
-                    onClicked: {
-                        offset += limit
-                        refresh()
-                    }
-                }
-                MenuItem {
-                     text: qsTr("Load Previous Set")
-                     enabled: searchString.length >= 1
-                              && offset >= limit
-                     onClicked: {
-                         offset -= limit
-                         refresh()
-                     }
-                 }
-            }
+            LoadPullMenus {}
+            LoadPushMenus {}
 
             SearchField {
                 id: searchField

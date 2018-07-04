@@ -50,6 +50,7 @@ void Spotify::doO2Auth(const QString &scope) {
     qDebug() << "Starting OAuth...";
     //o2Spotify->unlink();  // ??
     o2Spotify->link();
+    //o2Spotify->refresh();
 }
 
 QString Spotify::getUserName() {
@@ -67,6 +68,11 @@ QString Spotify::getToken() {
 void Spotify::refreshToken() {
     if(o2Spotify)
         o2Spotify->refresh();
+}
+
+int Spotify::getExpires() {
+    if(o2Spotify)
+        o2Spotify->expires();
 }
 
 void Spotify::onOpenBrowser(const QUrl &url) {

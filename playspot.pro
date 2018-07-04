@@ -22,7 +22,11 @@ SOURCES += src/playspot.cpp \
     src/o2/o2replyserver.cpp \
     src/o2/o2spotify.cpp \
     src/o2/o2simplecrypt.cpp \
-    src/spotify.cpp
+    src/spotify.cpp \
+    src/qtzeroconf/zconfservicebrowser.cpp \
+    src/qtzeroconf/zconfserviceclient.cpp \
+    src/qtzeroconf/qt-watch.cpp \
+    src/servicebrowser.cpp
 
 DISTFILES += qml/playspot.qml \
     qml/cover/CoverPage.qml \
@@ -65,4 +69,11 @@ HEADERS += \
     src/o2/o2reply.h \
     src/o2/o2replyserver.h \
     src/o2/o2spotify.h \
-    src/spotify.h
+    src/spotify.h \
+    src/qtzeroconf/zconfservicebrowser.h \
+    src/qtzeroconf/zconfserviceclient.h \
+    src/qtzeroconf/qt-watch.h \
+    src/qtzeroconf/qt-watch_p.h \
+    src/servicebrowser.h
+
+QMAKE_LFLAGS += -lavahi-client -lavahi-common

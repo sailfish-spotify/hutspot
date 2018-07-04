@@ -110,6 +110,54 @@ ApplicationWindow {
         spotify.doO2Auth(Spotify._scope)
     }
 
+    Connections {
+        target: spotify
+
+        onExtraTokensReady: { // (const QVariantMap &extraTokens);
+            // extraTokens
+            //   scope: ""
+            //   token_type: "Bearer"
+        }
+
+        onLinkingFailed: {
+            console.log("Connections.onLinkingFailed")
+            app.connectionText = qsTr("Disconnected")
+        }
+
+        onLinkingSucceeded: {
+            console.log("Connections.onLinkingSucceeded")
+            //console.log("username: " + spotify.getUserName())
+            //console.log("token   : " + spotify.getToken())
+            Spotify._accessToken = spotify.getToken()
+            Spotify._username = spotify.getUserName()
+            console.log("expires: " + spotify.getExpires())
+            app.connectionText = qsTr("Connected")
+            spotify.refreshToken()
+            loadUser()
+        }
+
+    }
+
+    property string display_name: ""
+    property string product: ""
+    property string followers: ""
+
+    function loadUser() {
+        Spotify.getMe({}, function(data) {
+            if(data) {
+                try {
+                    display_name = data.display_name
+                    product = data.product
+                    followers = data.followers.total
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMe")
+            }
+        })
+    }
+
     property string mprisServiceName: "playspot"
 
     MprisPlayer {

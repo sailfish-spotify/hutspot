@@ -39,7 +39,7 @@ Page {
             }
             MenuItem {
                 text: qsTr("Devices")
-                onClicked: reload()
+                onClicked: reloadDevices()
             }
             MenuItem {
                 text: qsTr("Search")
@@ -91,6 +91,9 @@ Page {
                         textFormat: Text.StyledText
                         truncationMode: TruncationMode.Fade
                         text: app.connectionText
+                              + ": " + app.display_name
+                              + ", " + app.product
+                        //      + ", " + followers + qsTr("followers")
                     }
                 }
             }
@@ -172,34 +175,9 @@ Page {
         VerticalScrollDecorator {}
     }
 
-    Connections {
-        target: spotify
-
-        onExtraTokensReady: { // (const QVariantMap &extraTokens);
-            // extraTokens
-            //   scope: ""
-            //   token_type: "Bearer"
-        }
-
-        onLinkingFailed: {
-            console.log("Connections.onLinkingFailed")
-            app.connectionText = qsTr("Disconnected")
-        }
-
-        onLinkingSucceeded: {
-            console.log("Connections.onLinkingSucceeded")
-            //console.log("username: " + spotify.getUserName())
-            //console.log("token   : " + spotify.getToken())
-            Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
-            app.connectionText = qsTr("Connected")
-        }
-
-    }
-
     property var myDevices: []
 
-    function reload() {
+    function reloadDevices() {
         var i
         itemsModel.clear()
 

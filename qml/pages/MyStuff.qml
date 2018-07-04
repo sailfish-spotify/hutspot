@@ -18,6 +18,9 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
     property string searchString: ""
+    property int offset: 0
+
+    property int limit: app.searchLimit.value
 
     allowedOrientations: Orientation.All
 
@@ -31,12 +34,8 @@ Page {
         anchors.fill: parent
         anchors.topMargin: 0
 
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Reload")
-                onClicked: refresh()
-            }
-        }
+        LoadPullMenus {}
+        LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -210,7 +209,7 @@ Page {
         followedArtists = undefined
         pendingRequests = 5
 
-        Spotify.getMySavedAlbums({}, function(data) {
+        Spotify.getMySavedAlbums({offset: offset, limit: limit}, function(data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
                 savedAlbums = data
@@ -220,7 +219,7 @@ Page {
                 loadData()
         })
 
-        Spotify.getUserPlaylists({},function(data) {
+        Spotify.getUserPlaylists({offset: offset, limit: limit},function(data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 userPlaylists = data
@@ -230,19 +229,21 @@ Page {
                 loadData()
         })
 
-        Spotify.getMyRecentlyPlayedTracks({}, function(data) {
+        Spotify.getMyRecentlyPlayedTracks({offset: offset, limit: limit}, function(data) {
             if(data) {
                 console.log("number of RecentlyPlayedTracks: " + data.items.length)
                 recentlyPlayedTracks = data
+                // todo offset per request type
             } else
                 console.log("No Data for getMyRecentlyPlayedTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMySavedTracks({}, function(data) {
+        Spotify.getMySavedTracks({offset: offset, limit: limit}, function(data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
+                offset = data.offset
                 savedTracks = data
             } else
                 console.log("No Data for getMySavedTracks")

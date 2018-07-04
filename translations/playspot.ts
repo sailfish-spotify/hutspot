@@ -148,14 +148,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Disconnected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Connected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -188,10 +180,6 @@
 </context>
 <context>
     <name>MyStuff</name>
-    <message>
-        <source>Reload</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
@@ -231,10 +219,6 @@
 </context>
 <context>
     <name>Playlist</name>
-    <message>
-        <source>Reload</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Playlist</source>
         <translation type="unfinished"></translation>
@@ -290,14 +274,6 @@
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load Next Set</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>SearchResultListItem</name>
@@ -345,6 +321,14 @@
     </message>
     <message>
         <source>no artist known</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disconnected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
