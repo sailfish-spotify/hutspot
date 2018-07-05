@@ -35,3 +35,27 @@ function createItemsString(items, noneString) {
     }
     return str
 }
+
+function deviceInfoRequest(address, callback) {
+  var req = new XMLHttpRequest();
+    req.open('GET', "http://" + address + "/?action=getInfo");
+
+    req.onreadystatechange = function() {
+      if (req.readyState === 4) {
+        var data = null;
+        try {
+          data = req.responseText ? JSON.parse(req.responseText) : '';
+        } catch (e) {
+          console.error(e);
+        }
+
+        if (req.status >= 200 && req.status < 300) {
+          callback(data);
+        } else {
+          callback();
+        }
+      }
+    }
+
+    req.send(null);
+}

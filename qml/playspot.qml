@@ -144,7 +144,19 @@ ApplicationWindow {
 
         onServiceEntryAdded: {
             console.log("onServiceEntryAdded: " + service)
-            console.log(serviceBrowser.getJSON(service))
+            var serviceJSON = serviceBrowser.getJSON(service)
+            console.log(serviceJSON)
+            try {
+              var data = JSON.parse(serviceJSON)
+              if(data.protocol === "IPv4")
+                  Util.deviceInfoRequest(data.ip+":"+data.port, function(data) {
+                      if(data) {
+                          console.log(JSON.stringify(data,null,2))
+                      }
+                  })
+            } catch (e) {
+              console.error(e)
+            }
         }
 
         onServiceEntryRemoved: {
