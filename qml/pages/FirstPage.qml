@@ -10,7 +10,7 @@ import Sailfish.Silica 1.0
 import "../Spotify.js" as Spotify
 
 Page {
-    id: page
+    id: firstPage
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
@@ -37,10 +37,10 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
-            MenuItem {
-                text: qsTr("Devices")
-                onClicked: reloadDevices()
-            }
+//            MenuItem {
+//                text: qsTr("Devices")
+//                onClicked: reloadDevices()
+//            }
             MenuItem {
                 text: qsTr("Search")
                 onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
@@ -72,7 +72,7 @@ Page {
 
             PageHeader {
                 id: pHeader
-                title: qsTr("Items")
+                //title: qsTr("Items")
                 anchors.horizontalCenter: parent.horizontalCenter
                 Row {
                     parent: pHeader.extraContent
@@ -175,8 +175,19 @@ Page {
         VerticalScrollDecorator {}
     }
 
+    signal foundDevicesChanged()
+    onFoundDevicesChanged: {
+        var i
+        itemsModel.clear()
+        myDevices = app.foundDevices
+        console.log("number of devices: " + myDevices.length)
+        for(i=0;i<myDevices.length;i++)
+            itemsModel.append({type: 2, name: myDevices[i].remoteName, index: i})
+    }
+
     property var myDevices: []
 
+    // using spotify webapi
     function reloadDevices() {
         var i
         itemsModel.clear()

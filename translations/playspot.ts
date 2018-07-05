@@ -96,10 +96,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>

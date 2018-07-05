@@ -20,18 +20,29 @@ ApplicationWindow {
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
 
-    initialPage: Component { FirstPage { } }
+    initialPage: firstPage
     allowedOrientations: defaultAllowedOrientations
 
     cover: CoverPage {
         id: cover
     }
 
+    FirstPage {
+        id: firstPage
+    }
+
     property var device;
     function setDevice(newDevice) {
         device = newDevice
-        deviceId.value = device.id
-        deviceName.value = device.name
+
+        // spotify web api
+        //deviceId.value = device.id
+        //deviceName.value = device.name
+
+        // the avahi way
+        deviceId.value = device.deviceID
+        deviceName.value = device.remoteName
+
         Spotify.transferMyPlayback([deviceId.value],{}, function(data) {
 
         })
@@ -139,6 +150,12 @@ ApplicationWindow {
 
     }
 
+    property var foundDevices: []
+    signal devicesChanged()
+    onDevicesChanged: {
+        firstPage.foundDevicesChanged()
+    }
+
     Connections {
         target: serviceBrowser
 
@@ -151,7 +168,9 @@ ApplicationWindow {
               if(data.protocol === "IPv4")
                   Util.deviceInfoRequest(data.ip+":"+data.port, function(data) {
                       if(data) {
-                          console.log(JSON.stringify(data,null,2))
+                          //console.log(JSON.stringify(data,null,2))
+                          foundDevices.push(data)
+                          devicesChanged()
                       }
                   })
             } catch (e) {
@@ -161,6 +180,7 @@ ApplicationWindow {
 
         onServiceEntryRemoved: {
             console.log("onServiceEntryRemoved: " + service)
+            // todo remove from foundDevices
         }
     }
 
