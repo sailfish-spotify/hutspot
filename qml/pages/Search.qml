@@ -22,6 +22,10 @@ Page {
     property int offset: 0
     property int limit: app.searchLimit.value
 
+    property var searchTargets: [qsTr("Albums"), qsTr("Artists"), qsTr("Playlists"), qsTr("Tracks")]
+    property int selectedSearchTargetsMask: app.selected_search_targets.value
+    property var scMap: []
+
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -69,6 +73,63 @@ Page {
                 }
                 EnterKey.onClicked: refresh()
                 Component.onCompleted: searchField.forceActiveFocus()
+            }
+
+            /* What to search for */
+            ValueButton {
+                property var indexes: []
+                width: parent.width
+
+                label: qsTr("Search For")
+
+                ListModel {
+                    id: items
+                }
+
+                Component.onCompleted: {
+                    var c = 0;
+                    value = qsTr("None")
+                    indexes = []
+
+                    // load capabilities
+                    for (var u=0;u<searchTargets.length;u++) {
+                        items.append( {id: c, name: searchTargets[u]});
+                        scMap[c] = u;
+                        c++;
+                    }
+
+                    // the selected
+                    value = "";
+                    for(var i=0;i<scMap.length;i++) {
+                        if(selectedSearchTargetsMask & (0x01 << scMap[i])) {
+                            var first = value.length == 0;
+                            value = value + (first ? "" : ", ") + items.get(i).name;
+                            indexes.push(i);
+                        }
+                    }
+                }
+
+                onClicked: {
+                    var ms = pageStack.push(Qt.resolvedUrl("../components/MultiItemPicker.qml"), { items: items, label: label, indexes: indexes } );
+                    ms.accepted.connect(function() {
+                        indexes = ms.indexes.sort(function (a, b) { return a - b });
+                        selectedSearchTargetsMask = 0;
+                        if (indexes.length == 0) {
+                            value = qsTr("None");
+                        } else {
+                            value = "";
+                            var tmp = [];
+                            selectedSearchTargetsMask = 0;
+                            for(var i=0;i<indexes.length;i++) {
+                                value = value + ((i>0) ? ", " : "") + items.get(indexes[i]).name;
+                                selectedSearchTargetsMask |= (0x01 << scMap[indexes[i]]);
+                            }
+                        }
+                        app.selected_search_targets.value = selectedSearchTargetsMask;
+                        app.selected_search_targets.sync();
+                    })
+                }
+
             }
 
         }
@@ -174,8 +235,16 @@ Page {
             return
         showBusy = true
         searchModel.clear()
-        Spotify.search(searchString, ['album', 'artist', 'playlist', 'track'],
-                       {offset: offset, limit: limit}, function(data, error) {
+        var types = []
+        if(selectedSearchTargetsMask & 0x01)
+            types.push('album')
+        if(selectedSearchTargetsMask & 0x02)
+            types.push('artist')
+        if(selectedSearchTargetsMask & 0x04)
+            types.push('playlist')
+        if(selectedSearchTargetsMask & 0x08)
+            types.push('track')
+        Spotify.search(searchString, types, {offset: offset, limit: limit}, function(data, error) {
             if(data) {
                 // for now assume offset is the same for all 4 catagories
                 offset = data.albums.offset

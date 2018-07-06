@@ -19,6 +19,7 @@ ApplicationWindow {
 
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
+    property alias selected_search_targets: selected_search_targets
 
     initialPage: firstPage
     allowedOrientations: defaultAllowedOrientations
@@ -146,6 +147,7 @@ ApplicationWindow {
             app.connectionText = qsTr("Connected")
             spotify.refreshToken()
             loadUser()
+            firstPage.loginChanged()
         }
 
     }
@@ -298,6 +300,11 @@ ApplicationWindow {
         defaultValue: 20
     }
 
+    ConfigurationValue {
+            id: selected_search_targets
+            key: "/playspot/selected_search_targets"
+            defaultValue: 0xFFF
+    }
 
 }
 

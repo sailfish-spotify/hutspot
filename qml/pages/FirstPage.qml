@@ -190,9 +190,7 @@ Page {
     }
 
     signal foundDevicesChanged()
-    onFoundDevicesChanged: {
-        refreshDevices()
-    }
+    onFoundDevicesChanged: refreshDevices()
 
     function refreshDevices() {
         var i
@@ -228,6 +226,9 @@ Page {
     }
 
     property var myDevices: []
+
+    signal loginChanged()
+    onLoginChanged: reloadDevices()
 
     // using spotify webapi
     function reloadDevices() {
