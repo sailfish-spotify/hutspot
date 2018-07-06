@@ -50,9 +50,9 @@ function deviceInfoRequest(address, callback) {
         }
 
         if (req.status >= 200 && req.status < 300) {
-          callback(data);
+          callback(null, data);
         } else {
-          callback();
+          callback(data);
         }
       }
     }

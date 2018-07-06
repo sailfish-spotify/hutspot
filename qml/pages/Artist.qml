@@ -201,7 +201,7 @@ Page {
 
         Spotify.getArtistAlbums(currentArtist.id,
                                 {offset: offset, limit: limit},
-                                function(data) {
+                                function(error, data) {
             if(data) {
                 console.log("number of ArtistAlbums: " + data.items.length)
                 artistAlbums = data
@@ -215,7 +215,7 @@ Page {
 
         Spotify.getArtistRelatedArtists(currentArtist.id,
                                         {offset: offset, limit: limit},
-                                        function(data) {
+                                        function(error, data) {
             if(data) {
                 console.log("number of ArtistRelatedArtists: " + data.artists.length)
                 relatedArtists = data

@@ -169,7 +169,7 @@ Page {
                         text: qsTr("Set as Current")
                         onClicked: {
                             if(spotify)
-                              app.setDevice(myDevices[index])
+                                app.setDevice(deviceId, name)
                         }
                     }
                 }
@@ -200,6 +200,7 @@ Page {
 
         for(i=0;i<myDevices.length;i++)
             itemsModel.append({type: 2,
+                               deviceId: myDevices[i].id,
                                name: myDevices[i].name,
                                index: i,
                                sp: 1,
@@ -216,6 +217,7 @@ Page {
             }
             if(!found) {
                 itemsModel.append({type: 2,
+                                   deviceId: myDevices[i].deviceID,
                                    name: app.foundDevices[i].remoteName,
                                    index: i,
                                    sp: 0,
@@ -236,7 +238,7 @@ Page {
         //itemsModel.clear()
 
         myDevices = []
-        Spotify.getMyDevices(function(data) {
+        Spotify.getMyDevices(function(error, data) {
             if(data) {
                 try {
                     console.log("number of devices: " + myDevices.length)

@@ -130,7 +130,7 @@ Page {
         searchModel.clear()        
 
         Spotify.getPlaylistTracks(playlist.owner.id, playlist.id,
-                                  {offset: offset, limit: limit}, function(data) {
+                                  {offset: offset, limit: limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)

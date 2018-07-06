@@ -209,7 +209,7 @@ Page {
         followedArtists = undefined
         pendingRequests = 5
 
-        Spotify.getMySavedAlbums({offset: offset, limit: limit}, function(data) {
+        Spotify.getMySavedAlbums({offset: offset, limit: limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
                 savedAlbums = data
@@ -219,7 +219,7 @@ Page {
                 loadData()
         })
 
-        Spotify.getUserPlaylists({offset: offset, limit: limit},function(data) {
+        Spotify.getUserPlaylists({offset: offset, limit: limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 userPlaylists = data
@@ -229,7 +229,7 @@ Page {
                 loadData()
         })
 
-        Spotify.getMyRecentlyPlayedTracks({offset: offset, limit: limit}, function(data) {
+        Spotify.getMyRecentlyPlayedTracks({offset: offset, limit: limit}, function(error, data) {
             if(data) {
                 console.log("number of RecentlyPlayedTracks: " + data.items.length)
                 recentlyPlayedTracks = data
@@ -240,7 +240,7 @@ Page {
                 loadData()
         })
 
-        Spotify.getMySavedTracks({offset: offset, limit: limit}, function(data) {
+        Spotify.getMySavedTracks({offset: offset, limit: limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
                 offset = data.offset
@@ -251,7 +251,7 @@ Page {
                 loadData()
         })
 
-        Spotify.getFollowedArtists({}, function(data) {
+        Spotify.getFollowedArtists({}, function(error, data) {
             if(data) {
                 console.log("number of FollowedArtists: " + data.artists.items.length)
                 followedArtists = data
@@ -261,7 +261,7 @@ Page {
                 loadData()
         })
 
-        /*Spotify.getMyTopArtists({}, function(data) {
+        /*Spotify.getMyTopArtists({}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of TopArtists: " + data.items.length)

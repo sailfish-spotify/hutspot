@@ -331,5 +331,13 @@
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Play Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transfer Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

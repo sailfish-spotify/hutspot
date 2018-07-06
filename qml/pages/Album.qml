@@ -151,7 +151,7 @@ Page {
 
         Spotify.getAlbumTracks(album.id,
                                {offset: offset, limit: limit},
-                               function(data) {
+                               function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)

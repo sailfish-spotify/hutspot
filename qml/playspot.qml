@@ -13,6 +13,7 @@ import "Spotify.js" as Spotify
 import "Util.js" as Util
 import "cover"
 import "pages"
+import "components"
 
 ApplicationWindow {
     id: app
@@ -32,34 +33,48 @@ ApplicationWindow {
         id: firstPage
     }
 
-    property var device;
-    function setDevice(newDevice) {
-        device = newDevice
+    Messagebox {
+        id: msgBox
+    }
+
+    function showErrorMessage(error, text) {
+        var msg = text + ":" + error.status + ":" + error.message
+        msgBox.showMessage(errorMessage(error, msg), 3000)
+    }
+
+    function setDevice(id, name) {
 
         // spotify web api
         //deviceId.value = device.id
         //deviceName.value = device.name
 
         // the avahi way
-        deviceId.value = device.deviceID
-        deviceName.value = device.remoteName
+        deviceId.value = id
+        deviceName.value = name
 
-        Spotify.transferMyPlayback([deviceId.value],{}, function(data) {
-
+        Spotify.transferMyPlayback([id],{}, function(error, data) {
+            if(error)
+                showErrorMessage(error, qsTr("Transfer Failed"))
         })
     }
 
     function playTrack(track) {
-        Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(data) {
-            playing = true
-            refreshPlayingInfo()
+        Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(error, data) {
+            if(data) {
+                playing = true
+                refreshPlayingInfo()
+            } else
+                showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 
     function playContext(context) {
-        Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(data) {
-            playing = true
-            refreshPlayingInfo()
+        Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(error, data) {
+            if(data) {
+              playing = true
+              refreshPlayingInfo()
+            } else
+                showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 
@@ -67,25 +82,25 @@ ApplicationWindow {
     function pause() {
         if(playing) {
             // pause
-            Spotify.pause({}, function(data) {
+            Spotify.pause({}, function(error, data) {
                 playing = false
             })
         } else {
             // resume
-            Spotify.play({}, function(data) {
+            Spotify.play({}, function(error, data) {
                 playing = true
             })
         }
     }
 
     function next() {
-        Spotify.skipToNext({}, function(data) {
+        Spotify.skipToNext({}, function(error, data) {
             refreshPlayingInfo()
         })
     }
 
     function previous() {
-        Spotify.skipToPrevious({}, function(data) {
+        Spotify.skipToPrevious({}, function(error, data) {
             refreshPlayingInfo()
         })
     }
@@ -101,7 +116,7 @@ ApplicationWindow {
     }
 
     function refreshPlayingInfo() {
-        Spotify.getMyCurrentPlayingTrack({}, function(data) {
+        Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
             if(data) {
                 //item.track_number item.duration_ms
                 var uri = data.item.album.images[0].url
@@ -167,7 +182,7 @@ ApplicationWindow {
             try {
               var data = JSON.parse(serviceJSON)
               if(data.protocol === "IPv4")
-                  Util.deviceInfoRequest(data.ip+":"+data.port, function(data) {
+                  Util.deviceInfoRequest(data.ip+":"+data.port, function(error, data) {
                       if(data) {
                           //console.log(JSON.stringify(data,null,2))
                           // replace or add
@@ -207,7 +222,7 @@ ApplicationWindow {
     property string followers: ""
 
     function loadUser() {
-        Spotify.getMe({}, function(data) {
+        Spotify.getMe({}, function(error, data) {
             if(data) {
                 try {
                     display_name = data.display_name

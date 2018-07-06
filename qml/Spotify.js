@@ -83,9 +83,10 @@ function _performRequest(requestData, callback) {
         }
 
         if (req.status >= 200 && req.status < 300) {
-          callback(data);
+          callback(null, data);
         } else {
-          callback();
+          callback(data.error);
+          console.error(data.error.status + ": " + data.error.message);
         }
       }
     }
