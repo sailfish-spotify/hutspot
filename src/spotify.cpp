@@ -3,15 +3,6 @@
 #include <QDesktopServices>
 #include <QDebug>
 
-#ifdef QT_QML_DEBUG
-#include <QtQuick>
-#else
-#include <QQuickView>
-#include <QQmlContext>
-#include <QGuiApplication>
-#include <QTranslator>
-#endif
-
 #include "spotify.h"
 
 #include "o2/o0globals.h"

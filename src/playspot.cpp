@@ -6,6 +6,12 @@
 
 #ifdef QT_QML_DEBUG
 #include <QtQuick>
+#else
+#include <QQuickView>
+#include <QQmlContext>
+#include <QGuiApplication>
+#include <QTranslator>
+#include <QDebug>
 #endif
 
 #include <sailfishapp.h>
