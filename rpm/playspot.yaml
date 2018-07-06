@@ -33,6 +33,8 @@ PkgBR:
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9 
+  - avahi
+  - libavahi-client3
 
 # All installed files
 Files:

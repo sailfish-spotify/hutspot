@@ -3,6 +3,15 @@
 #include <QDesktopServices>
 #include <QDebug>
 
+#ifdef QT_QML_DEBUG
+#include <QtQuick>
+#else
+#include <QQuickView>
+#include <QQmlContext>
+#include <QGuiApplication>
+#include <QTranslator>
+#endif
+
 #include "spotify.h"
 
 #include "o2/o0globals.h"
@@ -73,6 +82,7 @@ void Spotify::refreshToken() {
 int Spotify::getExpires() {
     if(o2Spotify)
         o2Spotify->expires();
+    return -1;
 }
 
 void Spotify::onOpenBrowser(const QUrl &url) {
