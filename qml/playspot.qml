@@ -160,16 +160,24 @@ ApplicationWindow {
         target: serviceBrowser
 
         onServiceEntryAdded: {
-            console.log("onServiceEntryAdded: " + service)
             var serviceJSON = serviceBrowser.getJSON(service)
-            console.log(serviceJSON)
+            console.log("onServiceEntryAdded: " + serviceJSON)
             try {
               var data = JSON.parse(serviceJSON)
               if(data.protocol === "IPv4")
                   Util.deviceInfoRequest(data.ip+":"+data.port, function(data) {
                       if(data) {
                           //console.log(JSON.stringify(data,null,2))
-                          foundDevices.push(data)
+                          // replace or add
+                          var replaced = 0
+                          for(var i=0;i<foundDevices.length;i++) {
+                            if(foundDevices[i].remoteName === data.remoteName) {
+                              foundDevices[i] = data
+                                replaced = 1
+                            }
+                          }
+                          if(!replaced)
+                              foundDevices.push(data)
                           devicesChanged()
                       }
                   })
@@ -181,6 +189,13 @@ ApplicationWindow {
         onServiceEntryRemoved: {
             console.log("onServiceEntryRemoved: " + service)
             // todo remove from foundDevices
+            for(var i=0;i<foundDevices.length;i++) {
+              if(foundDevices[i].remoteName === data.remoteName) {
+                  foundDevices.splice(i, 1)
+                  devicesChanged()
+                  break
+              }
+            }
         }
     }
 

@@ -37,10 +37,10 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
-//            MenuItem {
-//                text: qsTr("Devices")
-//                onClicked: reloadDevices()
-//            }
+            MenuItem {
+                text: qsTr("Devices")
+                onClicked: reloadDevices()
+            }
             MenuItem {
                 text: qsTr("Search")
                 onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
@@ -108,6 +108,7 @@ Page {
                 height: childrenRect.height
 
                 Text {
+                    width: parent.width
                     text: {
                         switch(section) {
                         case "0": return qsTr("Playlists")
@@ -120,6 +121,7 @@ Page {
                     font.bold: true
                     font.pixelSize: Theme.fontSizeMedium
                     color: Theme.highlightColor
+                    horizontalAlignment: Text.AlignRight
                 }
             }
         }
@@ -138,7 +140,16 @@ Page {
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
                     //width: parent.width - countLabel.width
-                    text: name ? name : qsTr("No Name")
+                    text: {
+                        var str = name ? name : qsTr("No Name")
+                        if(sp && avahi)
+                            str += " [Spotify, Avahi]"
+                        else if(avahi)
+                            str += " [Avahi]"
+                        else
+                            str += " [Spotify]"
+                        return str
+                    }
                 }
 
             }
@@ -148,15 +159,18 @@ Page {
                 id: contextMenu
                 ContextMenu {
                     //enabled: (listView.model.get(index).type === "Item")
-                    MenuItem {
-                        enabled: type === 1 || type === 3
-                        text: qsTr("Play")
-                        onClicked: play(index)
-                    }
+//                    MenuItem {
+//                        enabled: type === 1 || type === 3
+//                        text: qsTr("Play")
+//                        onClicked: play(index)
+//                    }
                     MenuItem {
                         enabled: type === 2
                         text: qsTr("Set as Current")
-                        onClicked: setDevice(index)
+                        onClicked: {
+                            if(spotify)
+                              app.setDevice(myDevices[index])
+                        }
                     }
                 }
             }
@@ -177,12 +191,40 @@ Page {
 
     signal foundDevicesChanged()
     onFoundDevicesChanged: {
+        refreshDevices()
+    }
+
+    function refreshDevices() {
         var i
+        var j
+
         itemsModel.clear()
-        myDevices = app.foundDevices
-        console.log("number of devices: " + myDevices.length)
+
         for(i=0;i<myDevices.length;i++)
-            itemsModel.append({type: 2, name: myDevices[i].remoteName, index: i})
+            itemsModel.append({type: 2,
+                               name: myDevices[i].name,
+                               index: i,
+                               sp: 1,
+                               avahi: 0})
+
+        for(i=0;i<app.foundDevices.length;i++) {
+            var found = 0
+            for(j=0;j<itemsModel.count;j++) {
+                if(itemsModel.get(j).name === app.foundDevices[i].remoteName) {
+                    itemsModel.get(j).avahi = 1
+                    found = 1
+                    break
+                }
+            }
+            if(!found) {
+                itemsModel.append({type: 2,
+                                   name: app.foundDevices[i].remoteName,
+                                   index: i,
+                                   sp: 0,
+                                   avahi: 1})
+            }
+        }
+
     }
 
     property var myDevices: []
@@ -190,16 +232,15 @@ Page {
     // using spotify webapi
     function reloadDevices() {
         var i
-        itemsModel.clear()
+        //itemsModel.clear()
 
         myDevices = []
         Spotify.getMyDevices(function(data) {
             if(data) {
                 try {
-                    myDevices = data.devices
                     console.log("number of devices: " + myDevices.length)
-                    for(i=0;i<myDevices.length;i++)
-                        itemsModel.append({type: 2, name: myDevices[i].name, index: i})
+                    myDevices = data.devices
+                    refreshDevices()
                 } catch (err) {
                     console.log(err)
                 }
@@ -210,13 +251,6 @@ Page {
 
     }
 
-    function setDevice(index) {
-        app.setDevice(myDevices[index])
-    }
-
-    function play(index) {
-        app.playTrack(myRecentlyPlayedTracks[index])
-    }
 
 }
 

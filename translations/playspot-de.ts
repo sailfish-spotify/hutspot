@@ -116,10 +116,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Play</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Set as Current</source>
         <translation type="unfinished"></translation>
     </message>
