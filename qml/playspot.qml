@@ -21,6 +21,8 @@ ApplicationWindow {
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
     property alias selected_search_targets: selected_search_targets
+    property string playbackStateDeviceId: ""
+    property string playbackStateDeviceName: ""
 
     initialPage: firstPage
     allowedOrientations: defaultAllowedOrientations
@@ -38,22 +40,26 @@ ApplicationWindow {
     }
 
     function showErrorMessage(error, text) {
-        var msg = text + ":" + error.status + ":" + error.message
-        msgBox.showMessage(errorMessage(error, msg), 3000)
+        var msg
+        if(error) {
+            if(error.status && error.message)
+                msg = text + ":" + error.status + ":" + error.message
+            else
+                msg = error + ":" + text
+        } else
+            msg = text
+        msgBox.showMessage(msg, 3000)
     }
 
     function setDevice(id, name) {
 
-        // spotify web api
-        //deviceId.value = device.id
-        //deviceName.value = device.name
-
-        // the avahi way
         deviceId.value = id
         deviceName.value = name
 
         Spotify.transferMyPlayback([id],{}, function(error, data) {
-            if(error)
+            if(data) {
+                firstPage.pl
+            } else
                 showErrorMessage(error, qsTr("Transfer Failed"))
         })
     }
@@ -233,6 +239,21 @@ ApplicationWindow {
                 }
             } else {
                 console.log("No Data for getMe")
+            }
+        })
+        Spotify.getMyCurrentPlaybackState({}, function(error, data) {
+            if(data) {
+                try {
+                    if(data.device) {
+                        playbackStateDeviceId = data.device.id
+                        playbackStateDeviceName = data.device.name
+                        console.log("Current device: " + data.device.name)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMyCurrentPlaybackState")
             }
         })
     }

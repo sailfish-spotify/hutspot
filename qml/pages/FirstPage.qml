@@ -136,7 +136,7 @@ Page {
 
                 Label {
                     id: nameLabel
-                    color: Theme.primaryColor
+                    color: deviceId === playbackStateDeviceId ? Theme.highlightColor : Theme.primaryColor
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
                     //width: parent.width - countLabel.width
@@ -217,7 +217,7 @@ Page {
             }
             if(!found) {
                 itemsModel.append({type: 2,
-                                   deviceId: myDevices[i].deviceID,
+                                   deviceId: app.foundDevices[i].deviceID,
                                    name: app.foundDevices[i].remoteName,
                                    index: i,
                                    sp: 0,
