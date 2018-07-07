@@ -288,9 +288,18 @@ ApplicationWindow {
         })
     }
 
-    function unfollowPlaylist(playlist, callback) {
-        Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+    function followPlaylist(playlist, callback) {
+        Spotify.followPlaylist(id, playlist.id, function(error, data) {
             callback(error, data)
+        })
+    }
+
+    function unfollowPlaylist(playlist, callback) {
+        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + playlist.name + "</b>"),
+                              function() {
+            Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+                callback(error, data)
+            })
         })
     }
 
@@ -319,7 +328,7 @@ ApplicationWindow {
 
         property var metaData
 
-        identity: qsTrId("Simple Spotify Controller")
+        identity: qsTr("Simple Spotify Controller")
 
         canControl: true
 
@@ -369,6 +378,18 @@ ApplicationWindow {
         else
             iconSize = 256
         return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/hutspot.png"
+    }
+
+    /**
+     * can have a 4th param: rejectCallback
+     */
+    function showConfirmDialog(text, acceptCallback) {
+        var dialog = pageStack.push (Qt.resolvedUrl("components/ConfirmDialog.qml"),
+                                                   {confirmMessageText: text})
+        if(acceptCallback !== null)
+            dialog.accepted.connect(acceptCallback)
+        if(arguments.length >= 4 && arguments[3] !== null)
+            dialog.rejected.connect(arguments[3])
     }
 
     ConfigurationValue {

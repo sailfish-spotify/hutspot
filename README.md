@@ -40,6 +40,7 @@ The package is also built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:
  * The two icons on the bottom side give access to your albums/artists/playlists/tracks or to the Search page
  * Various actions can triggered  using the context menu (long press)
  * For some lists the nex/previous set (paging) can be retrieved using the Push/Pull menus
+ * Pause/Next/Previous is to be done on the Cover page or the controls on the Lock Screen.
 
 ## Thanks
  * Spotify for web api

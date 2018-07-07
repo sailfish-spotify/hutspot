@@ -180,6 +180,7 @@ Page {
                 ContextMenu {
                     MenuItem {
                         text: qsTr("Play")
+                        visible: enabled
                         onClicked: {
                             switch(type) {
                             case 0:
@@ -200,6 +201,7 @@ Page {
                     MenuItem {
                         text: qsTr("View")
                         enabled: type === 0 || type === 1 || type === 2
+                        visible: enabled
                         onClicked: {
                             switch(type) {
                             case 0:
@@ -216,14 +218,13 @@ Page {
                     }
                     MenuItem {
                         enabled: type === 2
-                        text: qsTr("Delete Playlist")
-                        onClicked: app.deletePlaylist(playlist, function(error,data) {
-                            if(data)
-                                refresh()
-                        })
+                        visible: enabled
+                        text: qsTr("Follow Playlist")
+                        onClicked: app.followPlaylist(playlist, function(error,data) {})
                     }
                     MenuItem {
                         enabled: type === 3
+                        visible: enabled
                         text: qsTr("Add to Playlist")
                         onClicked: app.addToPlaylist(track)
                     }
@@ -260,7 +261,7 @@ Page {
             types.push('playlist')
         if(selectedSearchTargetsMask & 0x08)
             types.push('track')
-        Spotify.search(searchString, types, {offset: offset, limit: limit}, function(data, error) {
+        Spotify.search(searchString, types, {offset: offset, limit: limit}, function(error, data) {
             if(data) {
                 // for now assume offset is the same for all 4 catagories
                 offset = data.albums.offset

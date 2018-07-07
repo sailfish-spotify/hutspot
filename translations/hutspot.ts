@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name></name>
-    <message id="Simple Spotify Controller">
-        <location filename="../qml/hutspot.qml" line="322"/>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>About</name>
     <message>
         <location filename="../qml/pages/About.qml" line="20"/>
@@ -102,6 +94,19 @@
     <message>
         <location filename="../qml/pages/Artist.qml" line="170"/>
         <source>No albums found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConfirmDialog</name>
+    <message>
+        <location filename="../qml/components/ConfirmDialog.qml" line="20"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ConfirmDialog.qml" line="21"/>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -425,22 +430,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Search.qml" line="201"/>
+        <location filename="../qml/pages/Search.qml" line="202"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Search.qml" line="219"/>
-        <source>Delete Playlist</source>
+        <location filename="../qml/pages/Search.qml" line="222"/>
+        <source>Follow Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Search.qml" line="227"/>
+        <location filename="../qml/pages/Search.qml" line="231"/>
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Search.qml" line="242"/>
+        <location filename="../qml/pages/Search.qml" line="246"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -528,6 +533,11 @@
     <message>
         <location filename="../qml/hutspot.qml" line="269"/>
         <source>Select a Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/hutspot.qml" line="331"/>
+        <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
