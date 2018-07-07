@@ -1,6 +1,9 @@
-Name: playspot
-Summary: Spotify Player for SailfishOS
+Name: hutspot
+Summary: Spotify controller for SailfishOS
 Version: 0.1
+Group: Applications/Multimedia
+URL: https://github.com/wdehoog/playspot
+License: MIT
 Release: 1
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS

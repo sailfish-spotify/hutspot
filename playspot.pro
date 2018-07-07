@@ -10,7 +10,7 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = playspot
+TARGET = hutspot
 
 CONFIG += sailfishapp
 
@@ -31,19 +31,19 @@ SOURCES += src/playspot.cpp \
 DISTFILES += qml/playspot.qml \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
-    rpm/playspot.changes.in \
-    rpm/playspot.changes.run.in \
-    rpm/playspot.spec \
-    rpm/playspot.yaml \
     translations/*.ts \
-    playspot.desktop \
     qml/pages/Search.qml \
     qml/components/SearchResultListItem.qml \
     qml/pages/MyStuff.qml \
     qml/pages/Album.qml \
     qml/pages/Playlist.qml \
     qml/pages/Artist.qml \
-    icons/256x256/playspot.png
+    icons/256x256/playspot.png \
+    rpm/hutspot.yaml \
+    rpm/hutspot.spec \
+    rpm/hutspot.changes.in \
+    rpm/hutspot.changes.run.in \
+    hutspot.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -55,7 +55,7 @@ CONFIG += sailfishapp_i18n
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-TRANSLATIONS += translations/playspot-de.ts
+#TRANSLATIONS += translations/hutspot-de.ts
 
 HEADERS += \
     src/o2/o0abstractstore.h \
