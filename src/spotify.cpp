@@ -34,7 +34,7 @@ void Spotify::doO2Auth(const QString &scope) {
         store->setGroupKey("spotify");
         o2Spotify->setStore(store);
 
-        o2Spotify->setReplyContent("<html><body><h1>spotify-for-sailfish: auth redirected</h1><h1>You can close this window. Return to the App.</h1></body></html>");
+        o2Spotify->setReplyContent("<html><body><h1>Playspot: authorization redirected</h1><br><h1>You can close this window and return to the App.</h1></body></html>");
 
         // Connect signals
         connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));

@@ -50,6 +50,10 @@
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Artist</name>
@@ -86,6 +90,37 @@
     <name>CoverPage</name>
     <message>
         <source>PlaySpot</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CreatePlaylist</name>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description (optional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collaborative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name for the new playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -215,6 +250,10 @@
         <source>Followed Artists</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -234,6 +273,14 @@
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to another Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unfollow Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaylistPicker</name>
@@ -243,6 +290,18 @@
     </message>
     <message>
         <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load Previous Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load Next Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create Playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -292,6 +351,14 @@
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SearchResultListItem</name>
@@ -338,6 +405,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Transfer Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
@@ -347,14 +422,6 @@
     </message>
     <message>
         <source>Connected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Play Failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

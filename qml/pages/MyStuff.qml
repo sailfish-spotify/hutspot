@@ -22,6 +22,7 @@ Page {
     property int limit: app.searchLimit.value
     property bool canLoadNext: true
     property bool canLoadPrevious: offset >= limit
+    property int currentIndex: -1
 
     allowedOrientations: Orientation.All
 
@@ -136,6 +137,21 @@ Page {
                                 pageStack.push(Qt.resolvedUrl("Playlist.qml"), {playlist: playlist})
                                 break;
                             }
+                        }
+                    }
+                    MenuItem {
+                        enabled: type === 3
+                        text: qsTr("Add to Playlist")
+                        onClicked: app.addToPlaylist(track)
+                    }
+                    MenuItem {
+                        enabled: type === 2
+                        text: qsTr("Unfollow Playlist")
+                        onClicked: {
+                            app.unfollowPlaylist(playlist, function(error,data) {
+                               if(data)
+                                   refresh()
+                            })
                         }
                     }
                 }

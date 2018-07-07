@@ -21,10 +21,9 @@ Page {
 
     property bool canLoadNext: searchString.length >= 1
     property bool canLoadPrevious: searchString.length >= 1 && offset >= limit
-
-    //property alias searchField: listView.header.searchField
     property int offset: 0
     property int limit: app.searchLimit.value
+    property int currentIndex: -1
 
     property var searchTargets: [qsTr("Albums"), qsTr("Artists"), qsTr("Playlists"), qsTr("Tracks")]
     property int selectedSearchTargetsMask: app.selected_search_targets.value
@@ -214,6 +213,19 @@ Page {
                                 break;
                             }
                         }
+                    }
+                    MenuItem {
+                        enabled: type === 2
+                        text: qsTr("Delete Playlist")
+                        onClicked: app.deletePlaylist(playlist, function(error,data) {
+                            if(data)
+                                refresh()
+                        })
+                    }
+                    MenuItem {
+                        enabled: type === 3
+                        text: qsTr("Add to Playlist")
+                        onClicked: app.addToPlaylist(track)
                     }
                 }
             }

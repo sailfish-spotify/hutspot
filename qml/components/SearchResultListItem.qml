@@ -32,7 +32,7 @@ Row {
 
         Label {
             id: nameLabel
-            color: Theme.primaryColor
+            color: currentIndex === index ? Theme.highlightColor : Theme.primaryColor
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             width: parent.width
@@ -42,7 +42,7 @@ Row {
         Label {
             id: meta1Label
             width: parent.width
-            color: Theme.primaryColor
+            color: currentIndex === index ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             truncationMode: TruncationMode.Fade
             text: getMeta1String()
@@ -53,7 +53,7 @@ Row {
         Label {
             id: meta2Label
             width: parent.width
-            color: Theme.secondaryColor
+            color: currentIndex === index ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade

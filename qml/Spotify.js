@@ -13,6 +13,8 @@ var scopes_array = [
   "streaming",
   "playlist-read-collaborative",
   "playlist-read-private",
+  "playlist-modify-private",
+  "playlist-modify-public",
   "user-read-recently-played",
   "user-read-private",
   "user-read-email",

@@ -223,7 +223,8 @@ ApplicationWindow {
         }
     }
 
-
+    property string id: ""
+    property string uri: ""
     property string display_name: ""
     property string product: ""
     property string followers: ""
@@ -232,6 +233,8 @@ ApplicationWindow {
         Spotify.getMe({}, function(error, data) {
             if(data) {
                 try {
+                    id = data.id
+                    uri = data.uri
                     display_name = data.display_name
                     product = data.product
                     followers = data.followers.total
@@ -255,6 +258,54 @@ ApplicationWindow {
                 }
             } else {
                 console.log("No Data for getMyCurrentPlaybackState")
+            }
+        })
+    }
+
+    function addToPlaylist(track) {
+
+        var ms = pageStack.push(Qt.resolvedUrl("components/PlaylistPicker.qml"),
+                                { label: qsTr("Select a Playlist") } );
+        ms.accepted.connect(function() {
+            if(ms.selectedItem && ms.selectedItem.playlist) {
+                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.owner.id,
+                                            ms.selectedItem.playlist.id,
+                                            [track.uri], {}, function(error, data) {
+                    if(data)
+                        console.log("addToPlaylist: added \"")
+                    else
+                        console.log("addToPlaylist: failed to add \"")
+                    console.log(track.name + "\" to \"" + ms.selectedItem.playlist.name + "\"")
+                })
+            }
+        })
+    }
+
+    function removeFromPlaylist(playlist, track, callback) {
+        Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], {}, function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function unfollowPlaylist(playlist, callback) {
+        Spotify.unfollowPlaylist(id, playlist.id, {}, function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function createPlaylist(callback) {
+        var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
+                                {} );
+        ms.accepted.connect(function() {
+            if(ms.name && ms.name.length > 0) {
+                var options = {name: ms.name,
+                               'public': ms.publicPL,
+                               collaborative: ms.collaborativePL}
+                if(ms.description && ms.description.length > 0)
+                    options.descriptions = ms.description
+                Spotify.createPlaylist(id, options, function(error, data) {
+                    callback(error, data)
+                })
             }
         })
     }

@@ -24,6 +24,7 @@ Page {
     property int limit: app.searchLimit.value
     property bool canLoadNext: true
     property bool canLoadPrevious: offset >= limit
+    property int currentIndex: -1
 
     allowedOrientations: Orientation.All
 

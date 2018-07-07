@@ -23,6 +23,7 @@ Page {
     property int limit: app.searchLimit.value
     property bool canLoadNext: true
     property bool canLoadPrevious: offset >= limit
+    property int currentIndex: -1
 
     allowedOrientations: Orientation.All
 
@@ -107,10 +108,10 @@ Page {
                         text: qsTr("Play")
                         onClicked: app.playTrack(track)
                     }                    
-                    /*MenuItem {
-                        text: qsTr("Add to Playlist")
+                    MenuItem {
+                        text: qsTr("Add to another Playlist")
                         onClicked: app.addToPlaylist(track)
-                    }*/
+                    }
                 }
             }
             onClicked: app.playTrack(track)
