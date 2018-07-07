@@ -171,7 +171,6 @@ public:
 {
         Q_UNUSED(interface);
         Q_UNUSED(type);
-        Q_UNUSED(txt);
 
         ZConfServiceBrowser *serviceBrowser = static_cast<ZConfServiceBrowser *>(userdata);
         if (serviceBrowser) {
@@ -189,7 +188,8 @@ public:
                     entry.host      = host_name;
                     entry.port      = port;
                     entry.protocol  = protocol;
-                    entry.flags     = flags;
+                    entry.flags     = flags;                    
+                    entry.text      = QString(avahi_string_list_to_string(txt));
                     serviceBrowser->d_ptr->entries.insert(name, entry);
                     emit serviceBrowser->serviceEntryAdded(name);
                 }

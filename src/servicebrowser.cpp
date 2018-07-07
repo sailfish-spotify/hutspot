@@ -29,7 +29,7 @@ QString ServiceBrowser::getJSON(const QString &scope) {
     properties["host"] = entry.host;
     properties["port"] = entry.port;
     properties["protocol"] = entry.protocolName();
-
+    properties["text"] = entry.text;
     QJsonDocument doc(properties);
     return doc.toJson(QJsonDocument::Compact);
 }

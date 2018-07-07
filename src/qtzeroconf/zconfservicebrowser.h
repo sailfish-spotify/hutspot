@@ -32,6 +32,7 @@ struct ZConfServiceEntry
     uint16_t               port;
     AvahiProtocol          protocol;
     AvahiLookupResultFlags flags;
+    QString                text;
 
     QString protocolName() const;
     inline bool isValid() const { return !(ip.isEmpty() && host.isEmpty()); }
