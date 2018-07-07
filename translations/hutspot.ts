@@ -109,7 +109,7 @@
     <name>CoverPage</name>
     <message>
         <location filename="../qml/cover/CoverPage.qml" line="49"/>
-        <source>PlaySpot</source>
+        <source>Hutspot</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

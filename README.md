@@ -1,11 +1,11 @@
-# hutspot
+# Hutspot
 
 The app hopes to become a Spotify 'controller'. You can browse/search albums, artists, playlists and tracks. Playing is done on an 'connect' device.
 
 Right now for authentication is done using [O2](https://github.com/pipacs/o2)
 and for the API code from [spotify-web-api-js](https://github.com/JMPerez/spotify-web-api-js) is used.
 
-O2 and spotify-web-api-js have their own license. For hutspot it is MIT.
+O2 and spotify-web-api-js have their own license. For Hutspot it is MIT.
 
 Currently you also need avahi. I have build it on [OBS](http://repo.merproject.org/obs/home:/wdehoog:/hutspot/sailfish_latest_armv7hl/).
 
