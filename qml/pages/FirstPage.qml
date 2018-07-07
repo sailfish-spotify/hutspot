@@ -30,6 +30,10 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Reload Devices")
+                onClicked: reloadDevices()
+            }
+            MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
             }
@@ -37,18 +41,14 @@ Page {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
-            MenuItem {
-                text: qsTr("Devices")
-                onClicked: reloadDevices()
-            }
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Search")
                 onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
             }
             MenuItem {
                 text: qsTr("My Stuff")
                 onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
-            }
+            }*/
         }
 
         PushUpMenu {
@@ -76,6 +76,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 Row {
                     parent: pHeader.extraContent
+                    width: parent.width
                     BusyIndicator {
                         id: busyThingy
                         //anchors.left: parent.left
@@ -87,7 +88,7 @@ Page {
                         width: parent.width - busyThingy.width - 2 * Theme.paddingMedium
                         //x: busyThingy.x + busyThingy.width + Theme.paddingMedium
                         color: Theme.secondaryColor
-                        font.pixelSize: Theme.fontSizeExtraSmall
+                        font.pixelSize: Theme.fontSizeMedium
                         textFormat: Text.StyledText
                         truncationMode: TruncationMode.Fade
                         text: app.connectionText
@@ -187,6 +188,28 @@ Page {
         }
 
         VerticalScrollDecorator {}
+    }
+
+    DockedPanel {
+        id: panel
+
+        width: parent.width
+        height: Theme.itemSizeLarge
+        dock: Dock.Bottom
+        open: true
+
+        Row {
+            anchors.centerIn: parent
+            spacing: Theme.paddingLarge
+            IconButton {
+                icon.source: "image://theme/icon-m-events"
+                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
+            }
+            IconButton {
+                icon.source: "image://theme/icon-m-search"
+                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
+            }
+        }
     }
 
     signal foundDevicesChanged()

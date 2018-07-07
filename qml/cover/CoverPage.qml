@@ -77,7 +77,9 @@ CoverBackground {
             }
 
             CoverAction {
-                iconSource: "image://theme/icon-cover-pause"
+                iconSource: app.playing
+                            ? "image://theme/icon-cover-pause"
+                            : "image://theme/icon-cover-play"
                 onTriggered: app.pause()
             }
 

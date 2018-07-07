@@ -124,10 +124,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -136,15 +132,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>My Stuff</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reload Devices</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

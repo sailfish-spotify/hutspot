@@ -58,7 +58,8 @@ ApplicationWindow {
 
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(data) {
-                firstPage.pl
+                playbackStateDeviceId = id
+                playbackStateDeviceName = name
             } else
                 showErrorMessage(error, qsTr("Transfer Failed"))
         })
