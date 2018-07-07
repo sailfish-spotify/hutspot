@@ -188,8 +188,8 @@ ApplicationWindow {
             console.log("onServiceEntryAdded: " + serviceJSON)
             try {
               var data = JSON.parse(serviceJSON)
-              if(data.protocol === "IPv4")
-                  Util.deviceInfoRequest(data.ip+":"+data.port, function(error, data) {
+              if(data.protocol === "IPv4") {
+                  Util.deviceInfoRequest(data, function(error, data) {
                       if(data) {
                           //console.log(JSON.stringify(data,null,2))
                           // replace or add
@@ -205,6 +205,7 @@ ApplicationWindow {
                           devicesChanged()
                       }
                   })
+              }
             } catch (e) {
               console.error(e)
             }

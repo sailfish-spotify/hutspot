@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message id="Simple Spotify Controller">
-        <location filename="../qml/hutspot.qml" line="321"/>
+        <location filename="../qml/hutspot.qml" line="322"/>
         <source></source>
         <translation type="unfinished"></translation>
     </message>
@@ -526,7 +526,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="268"/>
+        <location filename="../qml/hutspot.qml" line="269"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>

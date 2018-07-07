@@ -36,9 +36,22 @@ function createItemsString(items, noneString) {
     return str
 }
 
-function deviceInfoRequest(address, callback) {
+function deviceInfoRequest(avahi, callback) {
   var req = new XMLHttpRequest();
-    req.open('GET', "http://" + address + "/?action=getInfo");
+    var tmp;
+
+    // address
+    var url = "http://" + avahi.ip + ":" + avahi.port;
+
+    // path ( text also contains \s"VERSION=([^"]*)")
+    if(tmp = avahi.text.match(/"CPath=([^"]*)"/))
+        url += tmp[1]
+    else
+        url += "/"
+    // request
+    url += "?action=getInfo"
+
+    req.open('GET', url);
 
     req.onreadystatechange = function() {
       if (req.readyState === 4) {
