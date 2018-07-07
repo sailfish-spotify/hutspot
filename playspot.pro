@@ -39,7 +39,7 @@ DISTFILES += \
     qml/pages/Album.qml \
     qml/pages/Playlist.qml \
     qml/pages/Artist.qml \
-    icons/256x256/playspot.png \
+    icons/256x256/hutspot.png \
     rpm/hutspot.yaml \
     rpm/hutspot.spec \
     rpm/hutspot.changes.in \
