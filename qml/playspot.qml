@@ -282,13 +282,13 @@ ApplicationWindow {
     }
 
     function removeFromPlaylist(playlist, track, callback) {
-        Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], {}, function(error, data) {
+        Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
             callback(error, data)
         })
     }
 
     function unfollowPlaylist(playlist, callback) {
-        Spotify.unfollowPlaylist(id, playlist.id, {}, function(error, data) {
+        Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
             callback(error, data)
         })
     }

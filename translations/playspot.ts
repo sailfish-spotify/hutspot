@@ -254,6 +254,10 @@
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Unfollow Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -275,10 +279,6 @@
     </message>
     <message>
         <source>Add to another Playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unfollow Playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

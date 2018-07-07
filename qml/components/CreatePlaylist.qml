@@ -1,10 +1,7 @@
-/*
- * Copyright (C) 2015-2017 kimmoli <kimmo.lindholm@eke.fi>
- * All rights reserved.
+/**
+ * Copyright (C) 2018 Willem-Jan de Hoog
  *
- * This file is part of Maira
- *
- * You may use this file under the terms of BSD license
+ * License: MIT
  */
 
 import QtQuick 2.0

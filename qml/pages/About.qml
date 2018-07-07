@@ -92,9 +92,12 @@ Page {
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
                 text:
-"Spotify
-O2Auth
-Librespot"
+"Spotify: web api
+JMPerez: spotify-web-api-js
+pipacs: O2
+fooxl &DrYak: avahi, nss-mdns, libdaemon on sailfish
+laserpants: qtzeroconf
+librespot-org: librespot"
             }
         }
 
