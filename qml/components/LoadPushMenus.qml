@@ -4,7 +4,7 @@ import Sailfish.Silica 1.0
 PushUpMenu {
     MenuItem {
         text: qsTr("Load Next Set")
-        enabled: searchString.length >= 1
+        enabled: canLoadNext
         onClicked: {
             offset += limit
             refresh()
@@ -12,8 +12,7 @@ PushUpMenu {
     }
     MenuItem {
          text: qsTr("Load Previous Set")
-         enabled: searchString.length >= 1
-                  && offset >= limit
+         enabled: canLoadPrevious
          onClicked: {
              offset -= limit
              refresh()

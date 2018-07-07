@@ -31,8 +31,8 @@ Dialog
 
         header: DialogHeader
         {
-            acceptText: "OK"
-            cancelText: "Cancel"
+            acceptText: qsTr("OK")
+            cancelText: qsTr("Cancel")
         }
 
         delegate: BackgroundItem

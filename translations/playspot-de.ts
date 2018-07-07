@@ -167,6 +167,17 @@
     </message>
 </context>
 <context>
+    <name>MultiItemPicker</name>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MyStuff</name>
     <message>
         <source>My Stuff</source>
@@ -221,6 +232,17 @@
     </message>
     <message>
         <source>No Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlaylistPicker</name>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -333,6 +355,10 @@
     </message>
     <message>
         <source>Transfer Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

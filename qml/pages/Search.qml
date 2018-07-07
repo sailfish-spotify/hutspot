@@ -18,6 +18,10 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
     property string searchString: ""
+
+    property bool canLoadNext: searchString.length >= 1
+    property bool canLoadPrevious: searchString.length >= 1 && offset >= limit
+
     //property alias searchField: listView.header.searchField
     property int offset: 0
     property int limit: app.searchLimit.value

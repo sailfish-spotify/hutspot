@@ -19,8 +19,11 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
     property var currentArtist
+
     property int offset: 0
     property int limit: app.searchLimit.value
+    property bool canLoadNext: true
+    property bool canLoadPrevious: offset >= limit
 
     allowedOrientations: Orientation.All
 

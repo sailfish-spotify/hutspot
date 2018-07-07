@@ -18,8 +18,11 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
     property var playlist
+
     property int offset: 0
     property int limit: app.searchLimit.value
+    property bool canLoadNext: true
+    property bool canLoadPrevious: offset >= limit
 
     allowedOrientations: Orientation.All
 
@@ -103,7 +106,11 @@ Page {
                     MenuItem {
                         text: qsTr("Play")
                         onClicked: app.playTrack(track)
-                    }
+                    }                    
+                    /*MenuItem {
+                        text: qsTr("Add to Playlist")
+                        onClicked: app.addToPlaylist(track)
+                    }*/
                 }
             }
             onClicked: app.playTrack(track)
@@ -134,7 +141,7 @@ Page {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    offset = data.albums.offset
+                    offset = data.offset
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
