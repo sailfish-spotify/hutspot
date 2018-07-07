@@ -310,7 +310,7 @@ ApplicationWindow {
         })
     }
 
-    property string mprisServiceName: "playspot"
+    property string mprisServiceName: "hutspot"
 
     MprisPlayer {
         id: mprisPlayer
@@ -367,30 +367,30 @@ ApplicationWindow {
             iconSize = 128
         else
             iconSize = 256
-        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/playspot.png"
+        return "/usr/share/icons/hicolor/" + iconSize + "x" + iconSize + "/apps/hutspot.png"
     }
 
     ConfigurationValue {
             id: deviceId
-            key: "/playspot/device_id"
+            key: "/hutspot/device_id"
             defaultValue: ""
     }
 
     ConfigurationValue {
             id: deviceName
-            key: "/playspot/device_name"
+            key: "/hutspot/device_name"
             defaultValue: ""
     }
 
     ConfigurationValue {
         id: searchLimit
-        key: "/playspot/search_limit"
+        key: "/hutspot/search_limit"
         defaultValue: 20
     }
 
     ConfigurationValue {
             id: selected_search_targets
-            key: "/playspot/selected_search_targets"
+            key: "/hutspot/selected_search_targets"
             defaultValue: 0xFFF
     }
 

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setOrganizationName("wdehoog");
     QCoreApplication::setOrganizationDomain("wdehoog");
-    QCoreApplication::setApplicationName("playspot");
+    QCoreApplication::setApplicationName("hutspot");
 
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     ServiceBrowser serviceBrowser;
     view->rootContext()->setContextProperty("serviceBrowser", &serviceBrowser);
 
-    view->setSource(SailfishApp::pathTo("qml/playspot.qml"));
+    view->setSource(SailfishApp::pathTo("qml/hutspot.qml"));
     view->show();
 
     return app->exec();

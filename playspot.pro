@@ -14,7 +14,7 @@ TARGET = hutspot
 
 CONFIG += sailfishapp
 
-SOURCES += src/playspot.cpp \
+SOURCES += \
     src/o2/o0baseauth.cpp \
     src/o2/o0settingsstore.cpp \
     src/o2/o2.cpp \
@@ -26,9 +26,10 @@ SOURCES += src/playspot.cpp \
     src/qtzeroconf/zconfservicebrowser.cpp \
     src/qtzeroconf/zconfserviceclient.cpp \
     src/qtzeroconf/qt-watch.cpp \
-    src/servicebrowser.cpp
+    src/servicebrowser.cpp \
+    src/hutspot.cpp
 
-DISTFILES += qml/playspot.qml \
+DISTFILES += \
     qml/cover/CoverPage.qml \
     qml/pages/FirstPage.qml \
     translations/*.ts \
@@ -43,7 +44,8 @@ DISTFILES += qml/playspot.qml \
     rpm/hutspot.spec \
     rpm/hutspot.changes.in \
     rpm/hutspot.changes.run.in \
-    hutspot.desktop
+    hutspot.desktop \
+    qml/hutspot.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

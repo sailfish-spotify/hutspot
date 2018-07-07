@@ -46,7 +46,7 @@ CoverBackground {
             id: label
             anchors.left: parent.left
             anchors.right: parent.right
-            text: labelText.length > 0 ? labelText : qsTr("PlaySpot")
+            text: labelText.length > 0 ? labelText : qsTr("Hutspot")
             horizontalAlignment: Text.AlignHCenter
             //visible: imageSource === defaultImageSource
             font.pixelSize: Theme.fontSizeSmall
