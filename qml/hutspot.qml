@@ -283,8 +283,11 @@ ApplicationWindow {
     }
 
     function removeFromPlaylist(playlist, track, callback) {
-        Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
-            callback(error, data)
+        app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
+                              function() {
+            Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
+                callback(error, data)
+            })
         })
     }
 

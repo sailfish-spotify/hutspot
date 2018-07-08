@@ -139,6 +139,17 @@ Page {
                         onClicked: app.playTrack(track)
                     }                    
                     MenuItem {
+                        text: qsTr("Remove from Playlist")
+                        onClicked: {
+                            var idx = index
+                            var model = searchModel
+                            app.removeFromPlaylist(playlist, track, function(error, data) {
+                                if(!error)
+                                    model.remove(idx, 1)
+                            })
+                        }
+                    }
+                    MenuItem {
                         text: qsTr("Add to another Playlist")
                         onClicked: app.addToPlaylist(track)
                     }

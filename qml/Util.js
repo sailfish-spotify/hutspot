@@ -36,6 +36,11 @@ function createItemsString(items, noneString) {
     return str
 }
 
+function getIdFromURI(uri) {
+    var parts = uri.split(':');
+    return parts[parts.length-1];
+}
+
 function deviceInfoRequest(avahi, callback) {
   var req = new XMLHttpRequest();
     var tmp;

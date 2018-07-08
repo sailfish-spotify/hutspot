@@ -203,6 +203,10 @@ Page {
             spacing: Theme.paddingLarge
             //width: parent.width
             IconButton {
+                icon.source: "image://theme/icon-m-music"
+                onClicked: pageStack.push(Qt.resolvedUrl("Playing.qml"))
+            }
+            IconButton {
                 icon.source: "image://theme/icon-m-health"
                 onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
             }
@@ -217,7 +221,7 @@ Page {
             /*Button {
                 text: "new"
                 preferredWidth: Theme.buttonWidthSmall / 3
-                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
             }
             Button {
                 text: "mine"
