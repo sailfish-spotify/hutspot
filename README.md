@@ -37,13 +37,15 @@ The package is also built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:
 ## Operating
  * At startup authorization is done using a browser window. The tokens are saved so a next startup might not need a login. Still the browser window will apear. When authorization is successful you can switch to the app.
  * A list is shown of known play devices. The current one is highlighted. Using the context menu (long press) you select another device.
- * The three icons on the bottom side give access to 
-   * new releases
+ * The four icons on the bottom side give access to 
+   * a page that shows what is currently playing and contains some media controls
+   * a list of new releases
    * your albums/artists/playlists/tracks
    * the Search page
  * Various actions can triggered  using the context menu (long press)
  * For some lists the nex/previous set (paging) can be retrieved using the Push/Pull menus
- * Pause/Next/Previous is to be done on the Cover page or the controls on the Lock Screen.
+ *
+ * Pause/Next/Previous can be done on the Cover page or the controls on the Lock Screen.
 
 ## Thanks
  * Spotify for web api

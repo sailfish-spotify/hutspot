@@ -134,7 +134,7 @@ Row {
         var s = "";
         switch(type) {
         case 0:
-            return album.release_date
+            return Util.getYearFromReleaseDate(album.release_date)
         case 1:
             if(typeof(following) !== 'undefined') {
                if(following)

@@ -74,9 +74,10 @@ Page {
 
             Image {
                 id: imageItem
+                anchors.horizontalCenter: parent.horizontalCenter
                 source:  (playingObject && playingObject.item)
                          ? playingObject.item.album.images[0].url : defaultImageSource
-                width: parent.width
+                width: parent.width / 2
                 height: width
                 fillMode: Image.PreserveAspectFit
             }
@@ -103,53 +104,87 @@ Page {
                     if(playbackState && playbackState.item) {
                         var track = playbackState.item
                         s += Util.createItemsString(track.artists, qsTr("no artist known"))
-                        s += ", " + track.album.release_date
+                        s += " (" + Util.getYearFromReleaseDate(track.album.release_date) + ")"
                     }
                     return s
                 }
             }
 
 
-            Row {
-                Label {
-                    text:  {
-                        var s = ""
-                        if(playbackState) {
-                            s += playbackState.context.type
-                            if(contextObject)
-                                s += ": " + contextObject.name
-                        }
-                        return s
+            Label {
+                width: parent.width
+                text:  {
+                    var s = ""
+                    if(playbackState) {
+                        s += playbackState.context.type
+                        if(contextObject)
+                            s += ": " + contextObject.name
                     }
-                    wrapMode: Text.Wrap
+                    return s
                 }
-                Switch {
-                    checked: playbackState ? playbackState.repeat_state : false
-                    icon.source: "image://theme/icon-m-repeat"
-                    //text: qsTr("Repeat")
-                }
-                Switch {
-                    checked: playbackState ? playbackState.shuffle_state : false
-                    icon.source: "image://theme/icon-m-shuffle"
-                    //text: qsTr("Shuffle")
-                }
+                wrapMode: Text.Wrap
             }
 
             Label {
                 truncationMode: TruncationMode.Fade
                 width: parent.width
+                font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.Wrap
                 text:  (playbackState && playbackState.device)
-                        ? playbackState.device.name + " (" + playbackState.device.type + ")"
-                        : qsTr("unknown")
+                        ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
+                        : qsTr("none")
             }
 
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                IconButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    enabled: app.mprisPlayer.canGoPrevious
+                    icon.source: "image://theme/icon-m-previous"
+                    onClicked: app.previous(function(error,data) {
+                        if(!error)
+                            refresh()
+                    })
+                }
+                IconButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: app.playing
+                                 ? "image://theme/icon-cover-pause"
+                                 : "image://theme/icon-cover-play"
+                    onClicked: app.pause()
+                }
+                IconButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    enabled: app.mprisPlayer.canGoNext
+                    icon.source: "image://theme/icon-m-next"
+                    onClicked: app.next(function(error,data) {
+                        if(!error)
+                            refresh()
+                    })
+                }
+                Switch {
+                    checked: playbackState ? playbackState.repeat_state : false
+                    icon.source: "image://theme/icon-m-repeat"
+                    onClicked: app.setRepeat(checked, function(error,data) {
+                        if(!error)
+                            refresh()
+                    })
+                }
+                Switch {
+                    checked: playbackState ? playbackState.shuffle_state : false
+                    icon.source: "image://theme/icon-m-shuffle"
+                    onClicked: app.setShuffle(checked, function(error,data) {
+                        if(!error)
+                            refresh()
+                    })
+                }
+            }
 
-            Rectangle {
+            /*Rectangle {
                 width: parent.width
                 height:Theme.paddingLarge
                 opacity: 0
-            }
+            }*/
 
             /*Label {
                 truncationMode: TruncationMode.Fade
@@ -160,7 +195,7 @@ Page {
                 horizontalAlignment: Text.AlignRight
                 text: qsTr("Tracks")
             }*/
-
+            Separator{}
         }
 
         delegate: ListItem {
@@ -219,6 +254,12 @@ Page {
                 if(playbackState.context)
                     var cid = Util.getIdFromURI(playbackState.context.uri)
                     switch(playbackState.context.type) {
+                    case 'album':
+                        Spotify.getAlbum(cid, {}, function(error, data) {
+                            contextObject = data
+                        })
+                        loadAlbumTracks(cid)
+                        break
                     case 'artist':
                         Spotify.getArtist(cid, {}, function(error, data) {
                             contextObject = data
@@ -228,6 +269,7 @@ Page {
                         Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
                             contextObject = data
                         })
+                        loadPlaylistTracks(app.id, cid)
                         break
                     }
 
@@ -241,4 +283,47 @@ Page {
 
     }
 
+    function loadPlaylistTracks(id, pid) {
+        searchModel.clear()
+        Spotify.getPlaylistTracks(id, pid, {offset: offset, limit: limit}, function(error, data) {
+            if(data) {
+                try {
+                    console.log("number of PlaylistTracks: " + data.items.length)
+                    offset = data.offset
+                    for(var i=0;i<data.items.length;i++) {
+                        searchModel.append({type: 3,
+                                            name: data.items[i].track.name,
+                                            track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getPlaylistTracks")
+            }
+        })
+    }
+
+    function loadAlbumTracks(id) {
+        searchModel.clear()
+        Spotify.getAlbumTracks(id,
+                               {offset: offset, limit: limit},
+                               function(error, data) {
+            if(data) {
+                try {
+                    console.log("number of AlbumTracks: " + data.items.length)
+                    offset = data.offset
+                    for(var i=0;i<data.items.length;i++) {
+                        searchModel.append({type: 3,
+                                            name: data.items[i].name,
+                                            track: data.items[i]})
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getAlbumTracks")
+            }
+        })
+    }
 }

@@ -94,7 +94,7 @@ Page {
                 text: {
                     var s = Util.createItemsString(album.artists, qsTr("no artist known"))
                     if(album.release_date && album.release_date.length > 0)
-                        s += ", " + album.release_date
+                        s += " (" + Util.getYearFromReleaseDate(album.release_date) + ")"
                 }
             }
 

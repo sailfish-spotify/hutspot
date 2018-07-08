@@ -23,6 +23,7 @@ ApplicationWindow {
     property alias selected_search_targets: selected_search_targets
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
+    property alias mprisPlayer: mprisPlayer
 
     initialPage: firstPage
     allowedOrientations: defaultAllowedOrientations
@@ -100,15 +101,31 @@ ApplicationWindow {
         }
     }
 
-    function next() {
+    function next(callback) {
         Spotify.skipToNext({}, function(error, data) {
+            if(callback)
+                callback(error, data)
             refreshPlayingInfo()
         })
     }
 
-    function previous() {
+    function previous(callback) {
         Spotify.skipToPrevious({}, function(error, data) {
+            if(callback)
+                callback(error, data)
             refreshPlayingInfo()
+        })
+    }
+
+    function setRepeat(state, callback) {
+        Spotify.setRepeat(state, {}, function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function setShuffle(state, callback) {
+        Spotify.setShuffle(state, {}, function(error, data) {
+            callback(error, data)
         })
     }
 

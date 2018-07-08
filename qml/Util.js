@@ -41,6 +41,11 @@ function getIdFromURI(uri) {
     return parts[parts.length-1];
 }
 
+function getYearFromReleaseDate(releaseDate) {
+    var parts = releaseDate.split("-")
+    return parts[0]
+}
+
 function deviceInfoRequest(avahi, callback) {
   var req = new XMLHttpRequest();
     var tmp;
