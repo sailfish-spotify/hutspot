@@ -201,6 +201,11 @@ Page {
         Row {
             anchors.centerIn: parent
             spacing: Theme.paddingLarge
+            //width: parent.width
+            IconButton {
+                icon.source: "image://theme/icon-m-health"
+                onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
+            }
             IconButton {
                 icon.source: "image://theme/icon-m-events"
                 onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
@@ -209,6 +214,22 @@ Page {
                 icon.source: "image://theme/icon-m-search"
                 onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
             }
+            /*Button {
+                text: "new"
+                preferredWidth: Theme.buttonWidthSmall / 3
+                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
+            }
+            Button {
+                text: "mine"
+                preferredWidth: Theme.buttonWidthSmall / 3
+                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
+            }
+            Button {
+                text: "search"
+                preferredWidth: Theme.buttonWidthSmall / 3
+                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
+            }*/
+
         }
     }
 

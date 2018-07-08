@@ -322,6 +322,29 @@
     </message>
 </context>
 <context>
+    <name>NewRelease</name>
+    <message>
+        <location filename="../qml/pages/NewRelease.qml" line="50"/>
+        <source>New Releases</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NewRelease.qml" line="81"/>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NewRelease.qml" line="85"/>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NewRelease.qml" line="100"/>
+        <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Playlist</name>
     <message>
         <location filename="../qml/pages/Playlist.qml" line="54"/>
