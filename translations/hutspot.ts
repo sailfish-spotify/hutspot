@@ -38,23 +38,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="84"/>
-        <location filename="../qml/pages/Album.qml" line="108"/>
-        <source>No Name</source>
+        <location filename="../qml/pages/Album.qml" line="95"/>
+        <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="128"/>
-        <source>Play</source>
+        <location filename="../qml/pages/Album.qml" line="114"/>
+        <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/Album.qml" line="132"/>
+        <source>No Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Album.qml" line="151"/>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Album.qml" line="155"/>
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="147"/>
+        <location filename="../qml/pages/Album.qml" line="170"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>

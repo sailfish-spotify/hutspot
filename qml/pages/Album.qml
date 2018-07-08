@@ -77,11 +77,25 @@ Page {
 
             Label {
                 id: nameLabel
-                color: Theme.primaryColor
-                textFormat: Text.StyledText
+                color: Theme.highlightColor
+                font.bold: true
                 truncationMode: TruncationMode.Fade
                 width: parent.width
-                text: album ? album.name : qsTr("No Name")
+                wrapMode: Text.Wrap
+                text: album.name
+            }
+
+            Label {
+                id: artistLabel
+                color: Theme.primaryColor
+                truncationMode: TruncationMode.Fade
+                width: parent.width
+                wrapMode: Text.Wrap
+                text: {
+                    var s = Util.createItemsString(album.artists, qsTr("no artist known"))
+                    if(album.release_date && album.release_date.length > 0)
+                        s += ", " + album.release_date
+                }
             }
 
             Rectangle {
@@ -89,6 +103,17 @@ Page {
                 height:Theme.paddingLarge
                 opacity: 0
             }
+
+            Label {
+                truncationMode: TruncationMode.Fade
+                width: parent.width
+                font.bold: true
+                font.pixelSize: Theme.fontSizeMedium
+                color: Theme.highlightColor
+                horizontalAlignment: Text.AlignRight
+                text: qsTr("Tracks")
+            }
+
         }
 
         delegate: ListItem {
@@ -100,7 +125,6 @@ Page {
             Column {
                 width: parent.width
                 Label {
-                    id: nameLabel
                     color: Theme.primaryColor
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
@@ -109,7 +133,6 @@ Page {
                 }
 
                 Label {
-                    id: meta1Label
                     width: parent.width
                     color: Theme.primaryColor
                     font.pixelSize: Theme.fontSizeExtraSmall
