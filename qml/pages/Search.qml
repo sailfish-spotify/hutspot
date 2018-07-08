@@ -75,7 +75,9 @@ Page {
                     property: "searchString"
                     value: searchField.text.toLowerCase().trim()
                 }
+                EnterKey.enabled: text.length > 0
                 EnterKey.onClicked: refresh()
+                EnterKey.iconSource: "image://theme/icon-m-search"
                 Component.onCompleted: searchField.forceActiveFocus()
             }
 

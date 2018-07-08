@@ -288,21 +288,6 @@ ApplicationWindow {
         })
     }
 
-    function followPlaylist(playlist, callback) {
-        Spotify.followPlaylist(id, playlist.id, function(error, data) {
-            callback(error, data)
-        })
-    }
-
-    function unfollowPlaylist(playlist, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + playlist.name + "</b>"),
-                              function() {
-            Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
-                callback(error, data)
-            })
-        })
-    }
-
     function createPlaylist(callback) {
         var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
                                 {} );
@@ -317,6 +302,27 @@ ApplicationWindow {
                     callback(error, data)
                 })
             }
+        })
+    }
+
+    function isFollowingPlaylist(playlist, callback) {
+        Spotify.areFollowingPlaylist(id, playlist.id, [id], function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function followPlaylist(playlist, callback) {
+        Spotify.followPlaylist(id, playlist.id, function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function unfollowPlaylist(playlist, callback) {
+        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + playlist.name + "</b>"),
+                              function() {
+            Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+                callback(error, data)
+            })
         })
     }
 

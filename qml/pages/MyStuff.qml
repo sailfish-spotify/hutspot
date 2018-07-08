@@ -150,15 +150,17 @@ Page {
                         visible: enabled
                         text: qsTr("Unfollow")
                         onClicked: {
+                            var idx = index
+                            var model = searchModel
                             if(type === 1)
                                 app.unfollowArtist(artist, function(error,data) {
-                                   if(data)
-                                       searchModel.remove(index, 1)
+                                   if(!error)
+                                       model.remove(idx, 1)
                                 })
                             else
                                 app.unfollowPlaylist(playlist, function(error,data) {
-                                   if(data)
-                                       searchModel.remove(index, 1)
+                                   if(!error)
+                                       model.remove(idx, 1)
                                 })
                         }
                     }

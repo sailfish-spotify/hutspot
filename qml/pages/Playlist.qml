@@ -17,7 +17,9 @@ Page {
 
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
+
     property var playlist
+    property bool isFollowed: false
 
     property int offset: 0
     property int limit: app.searchLimit.value
@@ -46,7 +48,7 @@ Page {
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
             anchors.bottomMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
+            spacing: Theme.paddingMedium
 
             PageHeader {
                 id: pHeader
@@ -72,6 +74,7 @@ Page {
                        anchors.fill: parent
                        onClicked: app.playContext(playlist)
                 }
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
             Label {
@@ -80,14 +83,41 @@ Page {
                 textFormat: Text.StyledText
                 truncationMode: TruncationMode.Fade
                 width: parent.width
-                text: playlist ? playlist.name : qsTr("No Name")
+                text: playlist.name
             }
 
-            Rectangle {
+            TextSwitch {
+                checked: isFollowed
+                text: qsTr("Following")
+                 onClicked: {
+                     if(isFollowed)
+                          app.unfollowPlaylist(playlist, function(error,data) {
+                              if(data)
+                                  isFollowed = false
+                          })
+                      else
+                          app.followPlaylist(playlist, function(error,data) {
+                              if(data)
+                                  isFollowed = true
+                          })
+                 }
+            }
+
+            Label {
+                truncationMode: TruncationMode.Fade
+                width: parent.width
+                font.bold: true
+                font.pixelSize: Theme.fontSizeMedium
+                color: Theme.highlightColor
+                horizontalAlignment: Text.AlignRight
+                text: qsTr("Tracks")
+            }
+
+            /*Rectangle {
                 width: parent.width
                 height:Theme.paddingLarge
                 opacity: 0
-            }
+            }*/
         }
 
         delegate: ListItem {
@@ -156,6 +186,10 @@ Page {
             }
         })
 
+        app.isFollowingPlaylist(playlist, function(error, data) {
+            if(data)
+                isFollowed = data[0]
+        })
     }
 
 }
