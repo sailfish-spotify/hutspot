@@ -131,13 +131,24 @@ Row {
     }
 
     function getMeta2String() {
+        var s = "";
         switch(type) {
         case 0:
             return album.release_date
         case 1:
-            return artist.followers.total + " " + qsTr("followers")
+            if(typeof(following) !== 'undefined') {
+               if(following)
+                   s = qsTr("[following], ")
+            }
+            s += artist.followers.total + " " + qsTr("followers")
+            return s
         case 2:
-            return playlist.tracks.total + " " + qsTr("tracks")
+            /*if(typeof(following) !== 'undefined') {
+               if(following)
+                   s = qsTr("[following], ")
+            }*/
+            s += playlist.tracks.total + " " + qsTr("tracks")
+            return s
         case 3:
             if(track.album)
                 return track.album.name

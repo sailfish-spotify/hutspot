@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: searchPage
@@ -263,6 +264,7 @@ Page {
             types.push('track')
         Spotify.search(searchString, types, {offset: offset, limit: limit}, function(error, data) {
             if(data) {
+                var artistIds = []
                 // for now assume offset is the same for all 4 catagories
                 offset = data.albums.offset
                 try {
@@ -277,7 +279,9 @@ Page {
                     for(i=0;i<data.artists.items.length;i++) {
                         searchModel.append({type: 1,
                                             name: data.artists.items[i].name,
+                                            following: false,
                                             artist: data.artists.items[i]})
+                        artistIds.push(data.artists.items[i].id)
                     }
 
                     // playlists
@@ -293,6 +297,13 @@ Page {
                                             name: data.tracks.items[i].name,
                                             track: data.tracks.items[i]})
                     }
+
+                    // request additional Info
+                    Spotify.isFollowingArtists(artistIds, function(error, data) {
+                        if(data) {
+                            Util.setFollowedInfo(1, artistIds, data, searchModel)
+                        }
+                    })
 
                 } catch (err) {
                     console.log(err)

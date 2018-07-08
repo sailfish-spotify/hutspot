@@ -187,12 +187,22 @@ Page {
                                     name: artistAlbums.items[i].name,
                                     album: artistAlbums.items[i]})
             }
-        if(relatedArtists)
+        if(relatedArtists) {
+            var artistIds = []
             for(i=0;i<relatedArtists.artists.length;i++) {
                 searchModel.append({type: 1,
                                     name: relatedArtists.artists[i].name,
+                                    following: false,
                                     artist: relatedArtists.artists[i]})
+                artistIds.push(relatedArtists.artists[i].id)
             }
+            // request additional Info
+            Spotify.isFollowingArtists(artistIds, function(error, data) {
+                if(data) {
+                    Util.setFollowedInfo(1, artistIds, data, searchModel)
+                }
+            })
+        }
     }
 
     function refresh() {

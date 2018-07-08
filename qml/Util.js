@@ -72,3 +72,34 @@ function deviceInfoRequest(avahi, callback) {
 
     req.send(null);
 }
+
+/**
+ * @type type of item
+ * @ids array of ids sent to server
+ * @data array of booleans returned by server
+ * @model listmodel containing the items to update
+ */
+function setFollowedInfo(type, ids, data, model) {
+    var i,j,k;
+
+    for(i=0;i<data.length;i++) {
+        if(data[i]) {                        // if followed
+            for(j=0;j<model.count;j++) {     // lookup in current list
+                var v = model.get(j)
+                if(v.type === type) {
+                    var id
+                    switch(type) {
+                    case 1:
+                        id = v.artist.id
+                        break;
+                    case 2:
+                        id = v.playlist.id
+                        break
+                    }
+                    if(ids[i] === id)        // found it
+                        v.following = true
+                }
+            }
+        }
+    }
+}

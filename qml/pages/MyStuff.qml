@@ -213,6 +213,7 @@ Page {
                 searchModel.append({type: 1,
                                     stype: 1,
                                     name: followedArtists.artists.items[i].name,
+                                    following: true,
                                     artist: followedArtists.artists.items[i]})
             }
 
