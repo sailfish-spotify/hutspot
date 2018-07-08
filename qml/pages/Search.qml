@@ -218,12 +218,6 @@ Page {
                         }
                     }
                     MenuItem {
-                        enabled: type === 2
-                        visible: enabled
-                        text: qsTr("Follow Playlist")
-                        onClicked: app.followPlaylist(playlist, function(error,data) {})
-                    }
-                    MenuItem {
                         enabled: type === 3
                         visible: enabled
                         text: qsTr("Add to Playlist")

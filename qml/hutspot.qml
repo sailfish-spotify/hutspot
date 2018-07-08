@@ -320,6 +320,21 @@ ApplicationWindow {
         })
     }
 
+    function followArtist(artist, callback) {
+        Spotify.followArtists([artist.id], function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function unfollowArtist(artist, callback) {
+        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + artist.name + "</b>"),
+                              function() {
+            Spotify.unfollowArtists([artist.id], function(error, data) {
+                callback(error, data)
+            })
+        })
+    }
+
     property string mprisServiceName: "hutspot"
 
     MprisPlayer {

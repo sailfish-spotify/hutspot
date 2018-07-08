@@ -141,17 +141,25 @@ Page {
                     }
                     MenuItem {
                         enabled: type === 3
+                        visible: enabled
                         text: qsTr("Add to Playlist")
                         onClicked: app.addToPlaylist(track)
                     }
                     MenuItem {
-                        enabled: type === 2
-                        text: qsTr("Unfollow Playlist")
+                        enabled: type === 1 || type === 2
+                        visible: enabled
+                        text: qsTr("Unfollow")
                         onClicked: {
-                            app.unfollowPlaylist(playlist, function(error,data) {
-                               if(data)
-                                   refresh()
-                            })
+                            if(type === 1)
+                                app.unfollowArtist(artist, function(error,data) {
+                                   if(data)
+                                       searchModel.remove(index, 1)
+                                })
+                            else
+                                app.unfollowPlaylist(playlist, function(error,data) {
+                                   if(data)
+                                       searchModel.remove(index, 1)
+                                })
                         }
                     }
                 }

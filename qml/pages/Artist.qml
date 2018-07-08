@@ -18,7 +18,9 @@ Page {
 
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
+
     property var currentArtist
+    property bool isFollowed: false
 
     property int offset: 0
     property int limit: app.searchLimit.value
@@ -47,7 +49,7 @@ Page {
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
             anchors.bottomMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
+            spacing: Theme.paddingMedium
 
             PageHeader {
                 id: pHeader
@@ -73,6 +75,7 @@ Page {
                        anchors.fill: parent
                        onClicked: app.playContext(album)
                 }
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
             Label {
@@ -84,11 +87,28 @@ Page {
                 text:  currentArtist ? currentArtist.name : qsTr("No Name")
             }
 
-            Rectangle {
+            TextSwitch {
+                checked: isFollowed
+                text: qsTr("Following")
+                 onClicked: {
+                     if(isFollowed)
+                          app.unfollowArtist(currentArtist, function(error,data) {
+                              if(data)
+                                  isFollowed = false
+                          })
+                      else
+                          app.followArtist(currentArtist, function(error,data) {
+                              if(data)
+                                  isFollowed = true
+                          })
+                 }
+            }
+
+            /*Rectangle {
                 width: parent.width
                 height:Theme.paddingLarge
                 opacity: 0
-            }
+            }*/
         }
 
         section.property: "type"
@@ -188,7 +208,7 @@ Page {
                                     album: artistAlbums.items[i]})
             }
         if(relatedArtists) {
-            var artistIds = []
+            var artistIds = [currentArtist.id]
             for(i=0;i<relatedArtists.artists.length;i++) {
                 searchModel.append({type: 1,
                                     name: relatedArtists.artists[i].name,
@@ -199,6 +219,9 @@ Page {
             // request additional Info
             Spotify.isFollowingArtists(artistIds, function(error, data) {
                 if(data) {
+                    // first one is the currentArtist
+                    isFollowed = data[0]
+                    data.shift()
                     Util.setFollowedInfo(1, artistIds, data, searchModel)
                 }
             })
