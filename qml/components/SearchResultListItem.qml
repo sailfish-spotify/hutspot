@@ -140,7 +140,7 @@ Row {
                if(following)
                    s = qsTr("[following], ")
             }
-            s += artist.followers.total + " " + qsTr("followers")
+            s += Util.abbreviateNumber(artist.followers.total) + " " + qsTr("followers")
             return s
         case 2:
             /*if(typeof(following) !== 'undefined') {
