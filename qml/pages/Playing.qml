@@ -22,12 +22,14 @@ Page {
     property var playingObject
     property var playbackState
     property var contextObject
+    property string currentId: ""
 
     property int offset: 0
     property int limit: app.searchLimit.value
     property bool canLoadNext: true
     property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
+    property int playbackProgress: 0
 
     allowedOrientations: Orientation.All
 
@@ -143,9 +145,7 @@ Page {
                 Label {
                     id: progressLabel
                     anchors.verticalCenter: parent.verticalCenter
-                    text: (playbackState && playbackState.item)
-                          ? Util.getDurationString(playbackState.progress_ms)
-                          : ""
+                    text: Util.getDurationString(playbackProgress)
                 }
                 Slider {
                     height: progressLabel.height * 1.5
@@ -156,9 +156,7 @@ Page {
                                   ? playbackState.item.duration_ms
                                   : 0
                     handleVisible: false
-                    value: (playbackState)
-                           ? playbackState.progress_ms
-                           : 0
+                    value: playbackProgress
                     onReleased: {
                         Spotify.seek(Math.round(value), function(error, data) {
                             if(!error)
@@ -313,6 +311,24 @@ Page {
 
     Component.onCompleted: refresh()
 
+    property int failedAttempts: 0
+    property int refreshCount: 0
+    Timer {
+        id: handleRendererInfo
+        interval: 1000;
+        running: app.playing
+        repeat: true
+        onTriggered: {
+            if(++refreshCount>=5) {
+                refresh()
+                refreshCount = 0
+            }
+            // pretend progress (ms), refresh() will set the actual value
+            if( playbackState.item && playbackProgress < playbackState.item.duration_ms)
+                playbackProgress += 1000
+        }
+    }
+
     function refresh() {
         var i;
         //showBusy = true
@@ -323,31 +339,45 @@ Page {
                 playbackState = data
                 if(playbackState.context) {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
-                    switch(playbackState.context.type) {
-                    case 'album':
-                        Spotify.getAlbum(cid, {}, function(error, data) {
-                            contextObject = data
-                        })
-                        loadAlbumTracks(cid)
-                        break
-                    case 'artist':
-                        Spotify.getArtist(cid, {}, function(error, data) {
-                            contextObject = data
-                        })
-                        break
-                    case 'playlist':
-                        Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
-                            contextObject = data
-                        })
-                        loadPlaylistTracks(app.id, cid)
-                        break
+                    if(currentId !== cid) {
+                        currentId = cid
+                        switch(playbackState.context.type) {
+                        case 'album':
+                            Spotify.getAlbum(cid, {}, function(error, data) {
+                                contextObject = data
+                            })
+                            loadAlbumTracks(cid)
+                            break
+                        case 'artist':
+                            Spotify.getArtist(cid, {}, function(error, data) {
+                                contextObject = data
+                            })
+                            break
+                        case 'playlist':
+                            Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
+                                contextObject = data
+                            })
+                            loadPlaylistTracks(app.id, cid)
+                            break
+                        }
                     }
                 }
 
-                app.playing = playbackstate.is_playing
+                playbackProgress = playbackState.progress_ms
+                app.playing = playbackState.is_playing
 
+                // we have a connection
+                failedAttempts = 0
+            } else {
+                // lost connection
+                if(++failedAttempts >= 5) {
+                    showErrorMessage(null, qsTr("Connection lost with Spotify servers"))
+                    app.playing = false
+                }
             }
+
         })
+
         Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
             if(data) {
                 playingObject = data

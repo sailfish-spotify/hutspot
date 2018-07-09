@@ -361,18 +361,23 @@
 <context>
     <name>Playing</name>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="107"/>
+        <location filename="../qml/pages/Playing.qml" line="109"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="284"/>
+        <location filename="../qml/pages/Playing.qml" line="282"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="308"/>
+        <location filename="../qml/pages/Playing.qml" line="306"/>
         <source>No tracks found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Playing.qml" line="374"/>
+        <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

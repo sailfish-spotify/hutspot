@@ -13,9 +13,9 @@ function getDurationString(d) {
             return a[1]+":"+secondsString(Math.round(parseInt(a[2])));
     } else {
       // assume ms
-      d /= 1000;
-      var minutes = Math.floor(d / 60);
-      var seconds = "0" + (d - minutes * 60);
+      var s = Math.floor(d / 1000);
+      var minutes = Math.floor(s / 60);
+      var seconds = "0" + (s - minutes * 60);
       return minutes + ":" + seconds.substr(-2);
     }
 }
