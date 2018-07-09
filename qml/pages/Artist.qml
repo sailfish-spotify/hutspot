@@ -68,14 +68,15 @@ Page {
                 id: imageItem
                 source: (currentArtist && currentArtist.images)
                         ? currentArtist.images[0].url : defaultImageSource
-                width: parent.width
+                width: parent.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                        anchors.fill: parent
                        onClicked: app.playContext(album)
                 }
-                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
             Label {
@@ -85,6 +86,21 @@ Page {
                 truncationMode: TruncationMode.Fade
                 width: parent.width
                 text:  currentArtist ? currentArtist.name : qsTr("No Name")
+            }
+
+            Label {
+                color: Theme.primaryColor
+                truncationMode: TruncationMode.Fade
+                font.pixelSize: Theme.fontSizeSmall
+                width: parent.width
+                wrapMode: Text.Wrap
+                visible: text.length > 0
+                text: {
+                    var s = ""
+                    if(currentArtist.genres && currentArtist.genres.length > 0)
+                        s += Util.createItemsString(currentArtist.genres, "")
+                    return s
+                }
             }
 
             TextSwitch {

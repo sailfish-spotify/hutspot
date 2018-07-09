@@ -46,10 +46,11 @@ Page {
 
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
+            anchors.topMargin: Theme.paddingMedium
             anchors.bottomMargin: Theme.paddingLarge
             spacing: Theme.paddingLarge
 
-            PageHeader {
+            /*PageHeader {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Playing")
@@ -60,7 +61,7 @@ Page {
                     running: showBusy;
                 }
                 anchors.horizontalCenter: parent.horizontalCenter
-            }
+            }*/
 
             //LoadPullMenus {}
             //LoadPushMenus {}
@@ -77,9 +78,10 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 source:  (playingObject && playingObject.item)
                          ? playingObject.item.album.images[0].url : defaultImageSource
-                width: parent.width / 2
+                width: parent.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
             Label {
@@ -89,8 +91,7 @@ Page {
                 truncationMode: TruncationMode.Fade
                 width: parent.width
                 wrapMode: Text.Wrap
-                text: (playbackState && playbackState.item)
-                      ? playbackState.item.name : "none"
+                text: (playbackState && playbackState.item) ? playbackState.item.name : ""
             }
 
             Label {
@@ -104,7 +105,7 @@ Page {
                     if(playbackState && playbackState.item) {
                         var track = playbackState.item
                         s += Util.createItemsString(track.artists, qsTr("no artist known"))
-                        s += " (" + Util.getYearFromReleaseDate(track.album.release_date) + ")"
+
                     }
                     return s
                 }
@@ -119,13 +120,15 @@ Page {
                         s += playbackState.context.type
                         if(contextObject)
                             s += ": " + contextObject.name
+                        if(playbackState.item)
+                            s += " (" + Util.getYearFromReleaseDate(playbackState.item.album.release_date) + ")"
                     }
                     return s
                 }
                 wrapMode: Text.Wrap
             }
 
-            Label {
+            /*Label {
                 truncationMode: TruncationMode.Fade
                 width: parent.width
                 font.pixelSize: Theme.fontSizeSmall
@@ -133,6 +136,70 @@ Page {
                 text:  (playbackState && playbackState.device)
                         ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
                         : qsTr("none")
+            }*/
+
+            Row {
+                width: parent.width
+                Label {
+                    id: progressLabel
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: (playbackState && playbackState.item)
+                          ? Util.getDurationString(playbackState.progress_ms)
+                          : ""
+                }
+                Slider {
+                    height: progressLabel.height * 1.5
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - durationLabel.width - progressLabel.width
+                    minimumValue: 0
+                    maximumValue: (playbackState && playbackState.item)
+                                  ? playbackState.item.duration_ms
+                                  : 0
+                    handleVisible: false
+                    value: (playbackState)
+                           ? playbackState.progress_ms
+                           : 0
+                    onReleased: {
+                        Spotify.seek(Math.round(value), function(error, data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                }
+                Label {
+                    id: durationLabel
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: (playbackState && playbackState.item)
+                          ? Util.getDurationString(playbackState.item.duration_ms)
+                          : ""
+                }
+            }
+
+            Row {
+                width: parent.width
+                Slider {
+                    id: volumeSlider
+                    width: parent.width
+                    height: progressLabel.height
+                    anchors.verticalCenter: parent.verticalCenter
+                    minimumValue: 0
+                    maximumValue: 100
+                    handleVisible: false
+                    value: (playbackState && playbackState.device)
+                           ? playbackState.device.volume_percent : 0
+                    onReleased: {
+                        Spotify.setVolume(Math.round(value), function(error, data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                }
+                /*Label {
+                    id: volumeLabel
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: ((playbackState && playbackState.device)
+                          ? playbackState.device.volume_percent : "") + "%"
+                }*/
             }
 
             Row {
@@ -151,7 +218,10 @@ Page {
                     icon.source: app.playing
                                  ? "image://theme/icon-cover-pause"
                                  : "image://theme/icon-cover-play"
-                    onClicked: app.pause()
+                    onClicked: app.pause(function(error,data) {
+                        if(!error)
+                            refresh()
+                    })
                 }
                 IconButton {
                     anchors.verticalCenter: parent.verticalCenter
@@ -251,7 +321,7 @@ Page {
         Spotify.getMyCurrentPlaybackState({}, function(error, data) {
             if(data) {
                 playbackState = data
-                if(playbackState.context)
+                if(playbackState.context) {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
                     switch(playbackState.context.type) {
                     case 'album':
@@ -272,6 +342,9 @@ Page {
                         loadPlaylistTracks(app.id, cid)
                         break
                     }
+                }
+
+                app.playing = playbackstate.is_playing
 
             }
         })

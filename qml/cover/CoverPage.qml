@@ -73,19 +73,19 @@ CoverBackground {
 
             CoverAction {
                 iconSource: "image://theme/icon-cover-previous"
-                onTriggered: app.previous()
+                onTriggered: app.previous(function(error, data){})
             }
 
             CoverAction {
                 iconSource: app.playing
                             ? "image://theme/icon-cover-pause"
                             : "image://theme/icon-cover-play"
-                onTriggered: app.pause()
+                onTriggered: app.pause(function(error, data){})
             }
 
             CoverAction {
                 iconSource: "image://theme/icon-cover-next"
-                onTriggered: app.next()
+                onTriggered: app.next(function(error, data){})
             }
 
         }

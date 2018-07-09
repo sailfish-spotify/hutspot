@@ -66,9 +66,11 @@ Page {
                 id: imageItem
                 source:  (album && album.images)
                          ? album.images[0].url : defaultImageSource
-                width: parent.width
+                width: parent.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                        anchors.fill: parent
                        onClicked: app.playContext(album)
@@ -91,10 +93,22 @@ Page {
                 truncationMode: TruncationMode.Fade
                 width: parent.width
                 wrapMode: Text.Wrap
+                text: Util.createItemsString(album.artists, qsTr("no artist known"))
+            }
+
+            Label {
+                color: Theme.primaryColor
+                truncationMode: TruncationMode.Fade
+                font.pixelSize: Theme.fontSizeSmall
+                width: parent.width
+                wrapMode: Text.Wrap
                 text: {
-                    var s = Util.createItemsString(album.artists, qsTr("no artist known"))
+                    var s = ""
                     if(album.release_date && album.release_date.length > 0)
-                        s += " (" + Util.getYearFromReleaseDate(album.release_date) + ")"
+                        s += Util.getYearFromReleaseDate(album.release_date)
+                    if(album.genres && album.genres.length > 0)
+                        s += ", " + Util.createItemsString(album.genres, "")
+                    return s
                 }
             }
 

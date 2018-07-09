@@ -38,32 +38,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="95"/>
+        <location filename="../qml/pages/Album.qml" line="96"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="114"/>
+        <location filename="../qml/pages/Album.qml" line="128"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="132"/>
+        <location filename="../qml/pages/Album.qml" line="146"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="151"/>
+        <location filename="../qml/pages/Album.qml" line="165"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="155"/>
+        <location filename="../qml/pages/Album.qml" line="169"/>
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="170"/>
+        <location filename="../qml/pages/Album.qml" line="184"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -76,37 +76,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="87"/>
+        <location filename="../qml/pages/Artist.qml" line="88"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="92"/>
+        <location filename="../qml/pages/Artist.qml" line="108"/>
         <source>Following</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="126"/>
+        <location filename="../qml/pages/Artist.qml" line="142"/>
         <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="127"/>
+        <location filename="../qml/pages/Artist.qml" line="143"/>
         <source>Related Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="153"/>
+        <location filename="../qml/pages/Artist.qml" line="169"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="166"/>
+        <location filename="../qml/pages/Artist.qml" line="182"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="190"/>
+        <location filename="../qml/pages/Artist.qml" line="206"/>
         <source>No albums found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -361,32 +361,17 @@
 <context>
     <name>Playing</name>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="55"/>
-        <source>Playing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="106"/>
+        <location filename="../qml/pages/Playing.qml" line="107"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="134"/>
-        <source>on: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="135"/>
-        <source>none</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="214"/>
+        <location filename="../qml/pages/Playing.qml" line="284"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="238"/>
+        <location filename="../qml/pages/Playing.qml" line="308"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -399,32 +384,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="91"/>
+        <location filename="../qml/pages/Playlist.qml" line="92"/>
         <source>Following</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="113"/>
+        <location filename="../qml/pages/Playlist.qml" line="114"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="138"/>
+        <location filename="../qml/pages/Playlist.qml" line="139"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="142"/>
+        <location filename="../qml/pages/Playlist.qml" line="143"/>
         <source>Remove from Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="153"/>
+        <location filename="../qml/pages/Playlist.qml" line="154"/>
         <source>Add to another Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="168"/>
+        <location filename="../qml/pages/Playlist.qml" line="169"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -596,27 +581,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="152"/>
+        <location filename="../qml/hutspot.qml" line="156"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="176"/>
+        <location filename="../qml/hutspot.qml" line="180"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="186"/>
+        <location filename="../qml/hutspot.qml" line="190"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="286"/>
+        <location filename="../qml/hutspot.qml" line="290"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="372"/>
+        <location filename="../qml/hutspot.qml" line="376"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

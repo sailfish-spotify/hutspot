@@ -67,14 +67,15 @@ Page {
                 id: imageItem
                 source: (playlist && playlist.images)
                         ? playlist.images[0].url : defaultImageSource
-                width: parent.width
+                width: parent.width * 0.5
                 height: width
                 fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenter: parent.horizontalCenter
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                        anchors.fill: parent
                        onClicked: app.playContext(playlist)
                 }
-                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
             Label {

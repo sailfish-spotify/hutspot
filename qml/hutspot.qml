@@ -58,7 +58,7 @@ ApplicationWindow {
         deviceName.value = name
 
         Spotify.transferMyPlayback([id],{}, function(error, data) {
-            if(data) {
+            if(!error) {
                 playbackStateDeviceId = id
                 playbackStateDeviceName = name
             } else
@@ -68,7 +68,7 @@ ApplicationWindow {
 
     function playTrack(track) {
         Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(error, data) {
-            if(data) {
+            if(!error) {
                 playing = true
                 refreshPlayingInfo()
             } else
@@ -78,7 +78,7 @@ ApplicationWindow {
 
     function playContext(context) {
         Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(error, data) {
-            if(data) {
+            if(!error) {
               playing = true
               refreshPlayingInfo()
             } else
@@ -87,16 +87,20 @@ ApplicationWindow {
     }
 
     property bool playing
-    function pause() {
+    function pause(callback) {
         if(playing) {
             // pause
             Spotify.pause({}, function(error, data) {
-                playing = false
+                if(!error)
+                    playing = false
+                callback(error, data)
             })
         } else {
             // resume
             Spotify.play({}, function(error, data) {
-                playing = true
+                if(!error)
+                    playing = true
+                callback(error, data)
             })
         }
     }
@@ -383,15 +387,15 @@ ApplicationWindow {
 
         playbackStatus: Mpris.Stopped
 
-        onPauseRequested: app.pause()
+        onPauseRequested: app.pause(function(error, data){})
 
-        onPlayRequested: app.pause()
+        onPlayRequested: app.pause(function(error, data){})
 
-        onPlayPauseRequested: app.pause()
+        onPlayPauseRequested: app.pause(function(error, data){})
 
-        onNextRequested: app.next()
+        onNextRequested: app.next(function(error, data){})
 
-        onPreviousRequested: app.previous()
+        onPreviousRequested: app.previous(function(error, data){})
 
         onMetaDataChanged: {
             var metadata = {}
