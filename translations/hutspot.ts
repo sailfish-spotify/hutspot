@@ -591,22 +591,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="180"/>
+        <location filename="../qml/hutspot.qml" line="185"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="190"/>
+        <location filename="../qml/hutspot.qml" line="195"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="290"/>
+        <location filename="../qml/hutspot.qml" line="295"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="376"/>
+        <location filename="../qml/hutspot.qml" line="381"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

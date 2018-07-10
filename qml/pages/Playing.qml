@@ -370,9 +370,10 @@ Page {
                 failedAttempts = 0
             } else {
                 // lost connection
-                if(++failedAttempts >= 5) {
+                if(++failedAttempts >= 3) {
                     showErrorMessage(null, qsTr("Connection lost with Spotify servers"))
                     app.playing = false
+                    searchModel.clear()
                 }
             }
 
@@ -381,6 +382,7 @@ Page {
         Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
             if(data) {
                 playingObject = data
+                app.newPlayingTrackInfo(data.item)
             }
         })
 

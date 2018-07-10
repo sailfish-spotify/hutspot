@@ -143,21 +143,26 @@ ApplicationWindow {
         mprisPlayer.playbackStatus = status
     }
 
+    function newPlayingTrackInfo(track) {
+        //item.track_number item.duration_ms
+        var uri = track.album.images[0].url
+        cover.updateDisplayData(uri, track.name)
+
+        var metaData = {}
+        metaData['title'] = track.name
+        metaData['album'] = track.album.name
+        metaData['artUrl'] = uri
+        if(track.artists)
+            metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
+        else
+            metaData['artist'] = ''
+        mprisPlayer.metaData = metaData
+    }
+
     function refreshPlayingInfo() {
         Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
-            if(data) {
-                //item.track_number item.duration_ms
-                var uri = data.item.album.images[0].url
-                cover.updateDisplayData(uri, data.item.name)
-
-                var metaData = {}
-                metaData['title'] = data.item.name
-                if(data.item.artists)
-                    metaData['artist'] = Util.createItemsString(data.item.artists, qsTr("no artist known"))
-                else
-                    metaData['artist'] = ''
-                mprisPlayer.metaData = metaData
-            }
+            if(data)
+                newPlayingTrackInfo(data.item)
         })
     }
 
