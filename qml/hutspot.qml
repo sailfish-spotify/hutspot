@@ -198,6 +198,14 @@ ApplicationWindow {
             firstPage.loginChanged()
         }
 
+        onOpenBrowser: {
+            pageStack.push(Qt.resolvedUrl("components/WebAuth.qml"),
+                           {url: url, scale: Screen.widthRatio})
+        }
+
+        onCloseBrowser: {
+            pageStack.pop()
+        }
     }
 
     property var foundDevices: []

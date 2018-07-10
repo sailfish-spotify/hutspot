@@ -15,6 +15,8 @@ signals:
     void extraTokensReady(const QVariantMap &extraTokens);
     void linkingFailed();
     void linkingSucceeded();
+    void openBrowser(const QUrl &url);
+    void closeBrowser();
 
 public slots:
     Q_INVOKABLE void doO2Auth(const QString &scope);

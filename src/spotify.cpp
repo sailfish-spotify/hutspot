@@ -14,6 +14,21 @@ const char O2_CONSUMER_KEY[] = "388f2d2f105b45ef95e159ac87ef5733";
 const char O2_CONSUMER_SECRET[] = "c926747234ef4fc8aefb2759f2c3d571";
 const int localPort = 8888;
 
+const char O2_REPLY_CONTENT[] =
+"<html>"
+"<head>"
+"<style>"
+"  h1 {text-align: 'center';}"
+"</head>"
+"<body>"
+"<h1>Hutspot</h1>"
+"<br>"
+"<h1>Spotify authorization redirected</h1>"
+"<br>"
+"<h1>You can close this page and return to the App.</h1>"
+"</body>"
+"</html>";
+
 Spotify::Spotify(QObject *parent) : QObject(parent)
 {
     o2Spotify = NULL;
@@ -34,7 +49,7 @@ void Spotify::doO2Auth(const QString &scope) {
         store->setGroupKey("spotify");
         o2Spotify->setStore(store);
 
-        o2Spotify->setReplyContent("<html><body><h1>Hutspot: authorization redirected</h1><br><h1>You can close this window and return to the App.</h1></body></html>");
+        o2Spotify->setReplyContent(O2_REPLY_CONTENT);
 
         // Connect signals
         connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
@@ -78,12 +93,14 @@ int Spotify::getExpires() {
 
 void Spotify::onOpenBrowser(const QUrl &url) {
     qDebug() << "Opening browser with URL" << url.toString();
-    QDesktopServices::openUrl(url);
+    //QDesktopServices::openUrl(url);
+    emit openBrowser(url);
 }
 
 void Spotify::onCloseBrowser() {
     // don't know how to close the broser tab/window and switch to ourselves
     qDebug() << "Spotify::onCloseBrowser()";
+    emit closeBrowser();
 }
 
 void Spotify::onRefreshFinished(QNetworkReply::NetworkError error) {

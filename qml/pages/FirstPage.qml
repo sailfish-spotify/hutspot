@@ -12,7 +12,6 @@ import "../Spotify.js" as Spotify
 Page {
     id: firstPage
 
-    // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
     ListModel {

@@ -173,67 +173,67 @@
 <context>
     <name>FirstPage</name>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="33"/>
+        <location filename="../qml/pages/FirstPage.qml" line="32"/>
         <source>Reload Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="37"/>
+        <location filename="../qml/pages/FirstPage.qml" line="36"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="41"/>
+        <location filename="../qml/pages/FirstPage.qml" line="40"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="56"/>
+        <location filename="../qml/pages/FirstPage.qml" line="55"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="60"/>
+        <location filename="../qml/pages/FirstPage.qml" line="59"/>
         <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="115"/>
+        <location filename="../qml/pages/FirstPage.qml" line="114"/>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="116"/>
+        <location filename="../qml/pages/FirstPage.qml" line="115"/>
         <source>Recently Played Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="117"/>
+        <location filename="../qml/pages/FirstPage.qml" line="116"/>
         <source>Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="118"/>
+        <location filename="../qml/pages/FirstPage.qml" line="117"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="119"/>
+        <location filename="../qml/pages/FirstPage.qml" line="118"/>
         <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="145"/>
+        <location filename="../qml/pages/FirstPage.qml" line="144"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="170"/>
+        <location filename="../qml/pages/FirstPage.qml" line="169"/>
         <source>Set as Current</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="186"/>
+        <location filename="../qml/pages/FirstPage.qml" line="185"/>
         <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>
@@ -601,12 +601,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="295"/>
+        <location filename="../qml/hutspot.qml" line="303"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="381"/>
+        <location filename="../qml/hutspot.qml" line="389"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
