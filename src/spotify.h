@@ -15,6 +15,8 @@ signals:
     void extraTokensReady(const QVariantMap &extraTokens);
     void linkingFailed();
     void linkingSucceeded();
+    void linkedChanged();
+    void refreshFinished();
     void openBrowser(const QUrl &url);
     void closeBrowser();
 

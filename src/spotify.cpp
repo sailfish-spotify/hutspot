@@ -89,7 +89,7 @@ void Spotify::refreshToken() {
 
 int Spotify::getExpires() {
     if(o2Spotify)
-        o2Spotify->expires();
+        return o2Spotify->expires();
     return -1;
 }
 
@@ -109,10 +109,12 @@ void Spotify::onRefreshFinished(QNetworkReply::NetworkError error) {
     //QNetworkReply *tokenReply = qobject_cast<QNetworkReply *>(sender());
     //qDebug() << "Spotify::onRefreshFinished(): " << error << ", " << tokenReply->errorString();
     qDebug() << "Spotify::onRefreshFinished(): " << error;
+    emit refreshFinished();
 }
 
 void Spotify::onLinkedChanged() {
     qDebug() << "Linked changed!";
+    emit linkedChanged();
 }
 
 void Spotify::onLinkingSucceeded() {
