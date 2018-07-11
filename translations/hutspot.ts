@@ -578,6 +578,14 @@
     </message>
 </context>
 <context>
+    <name>WebAuth</name>
+    <message>
+        <location filename="../qml/components/WebAuth.qml" line="16"/>
+        <source>Authorization</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>hutspot</name>
     <message>
         <location filename="../qml/hutspot.qml" line="21"/>
@@ -601,22 +609,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="187"/>
+        <location filename="../qml/hutspot.qml" line="197"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="197"/>
+        <location filename="../qml/hutspot.qml" line="208"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="308"/>
+        <location filename="../qml/hutspot.qml" line="329"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="394"/>
+        <location filename="../qml/hutspot.qml" line="415"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

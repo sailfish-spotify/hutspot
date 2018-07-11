@@ -173,6 +173,16 @@ ApplicationWindow {
         serviceBrowser.browse("_spotify-connect._tcp")
     }
 
+    property int tokenExpireTime: 0 // in seconds
+    Timer  {
+        // refresh token on half time
+        id: refreshTokenTimer
+        interval: tokenExpireTime*1000/2
+        running: tokenExpireTime > 0
+        repeat: true
+        onTriggered: spotify.refreshToken()
+    }
+
     Connections {
         target: spotify
 
@@ -193,11 +203,22 @@ ApplicationWindow {
             //console.log("token   : " + spotify.getToken())
             Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
-            console.log("expires: " + spotify.getExpires())
+            tokenExpireTime = spotify.getExpires()
+            console.log("expires: " + tokenExpireTime)
             app.connectionText = qsTr("Connected")
             spotify.refreshToken()
             loadUser()
             firstPage.loginChanged()
+        }
+
+        onLinkedChanged: {
+            console.log("Connections.onLinkingChanged")
+        }
+
+        onRefreshFinished: {
+            console.log("expires: " + tokenExpireTime)
+            console.log("Connections.onRefreshFinished")
+            console.log("expires: " + tokenExpireTime)
         }
 
         onOpenBrowser: {

@@ -6,13 +6,24 @@ Page {
     id: webAuth
 
     property alias url: webView.url
+    property alias pHeader: pHeader
     property real scale: 1.0
     allowedOrientations: Orientation.All
 
+    PageHeader {
+        id: pHeader
+        width: parent.width
+        title: qsTr("Authorization")
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
     SilicaWebView {
         id: webView
-        anchors.fill: parent
 
+        y: pHeader.height + Theme.paddingLarge
+        width: parent.width - 2*Theme.paddingLarge
+        x: parent.x+Theme.paddingLarge
+        height: parent.height - pHeader.height - 2*Theme.paddingLarge
         //experimental.preferences.developerExtrasEnabled: true
         //experimental.preferences.navigatorQtObjectEnabled: true
 

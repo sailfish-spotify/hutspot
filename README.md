@@ -14,13 +14,13 @@ Due to the issues below this app is not for the faint of heart. Don't use it unl
 ## Issues
 
 ### Authorization
-  * Logging on is problematic. It is done using a browser window. Refreshing the tokens does not work as it should.
+  * Logging on is problematic. It is done using a browser window. Refreshing the tokens does not seem to work as it should.
   * No idea how to close the browser tab when O2 emits ```onCloseBrowser```
   * I honestly have no clue how this O2 is supposed to work. When to refresh what?
 
 ### Playing tracks
   * Device discovery is problematic. Spotify does not know all your devices. The official app and application discover them using Zeroconf. Using avahi hutspot tries the same. They are discovered but the Spotify server needs to be told they exist and I have no de how to do that.
-  * I managed to [build Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) and it even sometimes occurs on the list of devices so it can be used to play tracks. When logging in (passing credentials to librespot at startup) the Spotify server knows about it for a short time.
+  * I managed to [build Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) and it even sometimes occurs on the list of devices so it can be used to play tracks. When logging in (passing credentials to librespot at startup) the Spotify server knows about it's existence for a short time.
 
 ## Building
 I am developing it on Sailfish SDK. 
