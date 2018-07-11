@@ -20,7 +20,9 @@ ApplicationWindow {
 
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
+
     property alias selected_search_targets: selected_search_targets
+    property alias auth_using_browser: auth_using_browser
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
@@ -167,7 +169,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        spotify.doO2Auth(Spotify._scope)
+        spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         serviceBrowser.browse("_spotify-connect._tcp")
     }
 
@@ -199,8 +201,11 @@ ApplicationWindow {
         }
 
         onOpenBrowser: {
-            pageStack.push(Qt.resolvedUrl("components/WebAuth.qml"),
-                           {url: url, scale: Screen.widthRatio})
+            if(auth_using_browser.value)
+                Qt.openUrlExternally(url)
+            else
+                pageStack.push(Qt.resolvedUrl("components/WebAuth.qml"),
+                               {url: url, scale: Screen.widthRatio})
         }
 
         onCloseBrowser: {
@@ -474,5 +479,10 @@ ApplicationWindow {
             defaultValue: 0xFFF
     }
 
+    ConfigurationValue {
+            id: auth_using_browser
+            key: "/hutspot/auth_using_browser"
+            defaultValue: false
+    }
 }
 

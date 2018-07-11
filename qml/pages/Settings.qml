@@ -17,6 +17,7 @@ Page {
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
+            auth_using_browser.checked = app.auth_using_browser.value
         }
     }
 
@@ -38,6 +39,16 @@ Page {
                 inputMethodHints: Qt.ImhDigitsOnly
                 width: parent.width
                 onTextChanged: app.searchLimit.value = text
+            }
+            TextSwitch {
+                id: auth_using_browser
+                text: qsTr("Authorize using Browser")
+                description: qsTr("Use external Browser to login at Spotify")
+                checked: app.auth_using_browser.value
+                onCheckedChanged: {
+                    app.auth_using_browser.value = checked;
+                    app.auth_using_browser.sync();
+                }
             }
 
         }

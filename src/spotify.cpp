@@ -15,10 +15,12 @@ const char O2_CONSUMER_SECRET[] = "c926747234ef4fc8aefb2759f2c3d571";
 const int localPort = 8888;
 
 const char O2_REPLY_CONTENT[] =
+"<!DOCTYPE html>"
 "<html>"
 "<head>"
-"<style>"
-"  h1 {text-align: 'center';}"
+"<style type=\"text/css\">"
+"  h1 {text-align: center;}"
+"</style>"
 "</head>"
 "<body>"
 "<h1>Hutspot</h1>"

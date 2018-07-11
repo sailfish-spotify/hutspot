@@ -557,13 +557,23 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="33"/>
+        <location filename="../qml/pages/Settings.qml" line="34"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="37"/>
+        <location filename="../qml/pages/Settings.qml" line="38"/>
         <source>Number of results per request (limit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="45"/>
+        <source>Authorize using Browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="46"/>
+        <source>Use external Browser to login at Spotify</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -575,38 +585,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="65"/>
+        <location filename="../qml/hutspot.qml" line="67"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="75"/>
-        <location filename="../qml/hutspot.qml" line="85"/>
+        <location filename="../qml/hutspot.qml" line="77"/>
+        <location filename="../qml/hutspot.qml" line="87"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="156"/>
+        <location filename="../qml/hutspot.qml" line="158"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="185"/>
+        <location filename="../qml/hutspot.qml" line="187"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="195"/>
+        <location filename="../qml/hutspot.qml" line="197"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="303"/>
+        <location filename="../qml/hutspot.qml" line="308"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="389"/>
+        <location filename="../qml/hutspot.qml" line="394"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
