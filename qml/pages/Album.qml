@@ -19,6 +19,7 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
     property var album
+    property var albumArtists
 
     property int offset: 0
     property int limit: app.searchLimit.value
@@ -94,6 +95,10 @@ Page {
                 width: parent.width
                 wrapMode: Text.Wrap
                 text: Util.createItemsString(album.artists, qsTr("no artist known"))
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: loadArtist(album.artists)
+                }
             }
 
             Label {
@@ -190,7 +195,6 @@ Page {
     onAlbumChanged: refresh()
 
     function refresh() {
-        var i;
         //showBusy = true
         searchModel.clear()        
 
@@ -201,7 +205,7 @@ Page {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
                     offset = data.offset
-                    for(i=0;i<data.items.length;i++) {
+                    for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].name,
                                             track: data.items[i]})
@@ -214,6 +218,27 @@ Page {
             }
         })
 
+        var artists = []
+        for(var i=0;i<album.artists.length;i++)
+            artists.push(album.artists[i].id)
+        Spotify.getArtists(artists, {}, function(error, data) {
+            if(data)
+                albumArtists = data.artists
+        })
     }
 
+    function loadArtist(artists) {
+        if(albumArtists.length > 1) {
+            // choose
+            var ms = pageStack.push(Qt.resolvedUrl("../components/ArtistPicker.qml"),
+                                    { label: qsTr("View an Artist"), artists: albumArtists } );
+            ms.accepted.connect(function() {
+                if(ms.selectedItem) {
+                    pageStack.replace(Qt.resolvedUrl("Artist.qml"), {currentArtist: ms.selectedItem.artist})
+                }
+            })
+        } else if(albumArtists.length === 1) {
+            pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist:albumArtists[0]})
+        }
+    }
 }

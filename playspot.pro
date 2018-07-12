@@ -45,7 +45,8 @@ DISTFILES += \
     rpm/hutspot.changes.in \
     rpm/hutspot.changes.run.in \
     hutspot.desktop \
-    qml/hutspot.qml
+    qml/hutspot.qml \
+    qml/components/ArtistPicker.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

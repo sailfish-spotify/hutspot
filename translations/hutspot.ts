@@ -33,38 +33,43 @@
 <context>
     <name>Album</name>
     <message>
-        <location filename="../qml/pages/Album.qml" line="52"/>
+        <location filename="../qml/pages/Album.qml" line="53"/>
         <source>Album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="96"/>
+        <location filename="../qml/pages/Album.qml" line="97"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="128"/>
+        <location filename="../qml/pages/Album.qml" line="133"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="146"/>
+        <location filename="../qml/pages/Album.qml" line="151"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="165"/>
+        <location filename="../qml/pages/Album.qml" line="170"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="169"/>
+        <location filename="../qml/pages/Album.qml" line="174"/>
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="184"/>
+        <location filename="../qml/pages/Album.qml" line="189"/>
         <source>No tracks found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Album.qml" line="234"/>
+        <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -108,6 +113,19 @@
     <message>
         <location filename="../qml/pages/Artist.qml" line="206"/>
         <source>No albums found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ArtistPicker</name>
+    <message>
+        <location filename="../qml/components/ArtistPicker.qml" line="32"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/ArtistPicker.qml" line="33"/>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
