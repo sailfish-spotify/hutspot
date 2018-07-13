@@ -141,13 +141,13 @@ Page {
                     truncationMode: TruncationMode.Fade
                     //width: parent.width - countLabel.width
                     text: {
-                        var str = name ? name : qsTr("No Name")
-                        if(sp && avahi)
+                        var str = name ? name : qsTr("Unknown Name")
+                        /*if(sp && avahi)
                             str += " [Spotify, Avahi]"
                         else if(avahi)
                             str += " [Avahi]"
                         else
-                            str += " [Spotify]"
+                            str += " [Spotify]"*/
                         return str
                     }
                 }

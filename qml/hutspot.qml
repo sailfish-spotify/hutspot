@@ -170,7 +170,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
-        serviceBrowser.browse("_spotify-connect._tcp")
+        //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
     property int tokenExpireTime: 0 // in seconds
@@ -240,6 +240,8 @@ ApplicationWindow {
         firstPage.foundDevicesChanged()
     }
 
+    /* Service Browser has been disabled since it is unknown how to
+       register the discovered device at spotify.
     Connections {
         target: serviceBrowser
 
@@ -282,7 +284,7 @@ ApplicationWindow {
               }
             }
         }
-    }
+    }*/
 
     property string id: ""
     property string uri: ""

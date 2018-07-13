@@ -19,7 +19,7 @@ Due to the issues below this app is not for the faint of heart. Don't use it unl
   * I honestly have no clue how this O2 is supposed to work. When to refresh what?
 
 ### Playing tracks
-  * Device discovery is problematic. Spotify does not know all your devices. The official app and application discover them using Zeroconf. Using avahi hutspot tries the same. They are discovered but the Spotify server needs to be told they exist and I have no de how to do that.
+  * Device discovery is problematic. Spotify does not know all your devices. The official app and application discover them using Zeroconf. Using avahi Hutspot tried the same. They are discovered but the Spotify server needs to be told they exist and I have no de how to do that. Since it is unknown how to create the needed authentication blob for a device, only the official apps seem to be able to do it, I have removed the avahi device discovery.
   * I managed to [build Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) and it even sometimes occurs on the list of devices so it can be used to play tracks. When logging in (passing credentials to librespot at startup) the Spotify server knows about it's existence for a short time.
 
 ## Building

@@ -242,7 +242,7 @@
     </message>
     <message>
         <location filename="../qml/pages/FirstPage.qml" line="144"/>
-        <source>No Name</source>
+        <source>Unknown Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -637,12 +637,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="329"/>
+        <location filename="../qml/hutspot.qml" line="331"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="415"/>
+        <location filename="../qml/hutspot.qml" line="417"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

@@ -30,14 +30,14 @@ PkgConfigBR:
   - Qt5Quick
 
 # Build dependencies without a pkgconfig setup can be listed here
-PkgBR:
-  - libavahi-devel
+#PkgBR:
+#  - libavahi-devel
 
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9 
-  - avahi
-  - libavahi-client3
+#  - avahi
+#  - libavahi-client3
 
 # All installed files
 Files:
