@@ -70,4 +70,4 @@ HEADERS += \
     src/o2/o2spotify.h \
     src/spotify.h
 
-QMAKE_LFLAGS += -lavahi-client -lavahi-common
+#QMAKE_LFLAGS += -lavahi-client -lavahi-common
