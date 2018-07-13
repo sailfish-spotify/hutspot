@@ -191,67 +191,67 @@
 <context>
     <name>FirstPage</name>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="32"/>
+        <location filename="../qml/pages/FirstPage.qml" line="31"/>
         <source>Reload Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="36"/>
+        <location filename="../qml/pages/FirstPage.qml" line="35"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="40"/>
+        <location filename="../qml/pages/FirstPage.qml" line="39"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="55"/>
+        <location filename="../qml/pages/FirstPage.qml" line="54"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="59"/>
+        <location filename="../qml/pages/FirstPage.qml" line="58"/>
         <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="114"/>
+        <location filename="../qml/pages/FirstPage.qml" line="119"/>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="115"/>
+        <location filename="../qml/pages/FirstPage.qml" line="120"/>
         <source>Recently Played Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="116"/>
+        <location filename="../qml/pages/FirstPage.qml" line="121"/>
         <source>Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="117"/>
+        <location filename="../qml/pages/FirstPage.qml" line="122"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="118"/>
+        <location filename="../qml/pages/FirstPage.qml" line="123"/>
         <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="144"/>
+        <location filename="../qml/pages/FirstPage.qml" line="149"/>
         <source>Unknown Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="169"/>
+        <location filename="../qml/pages/FirstPage.qml" line="174"/>
         <source>Set as Current</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/FirstPage.qml" line="185"/>
+        <location filename="../qml/pages/FirstPage.qml" line="190"/>
         <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>
@@ -611,38 +611,38 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="67"/>
+        <location filename="../qml/hutspot.qml" line="89"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="77"/>
-        <location filename="../qml/hutspot.qml" line="87"/>
+        <location filename="../qml/hutspot.qml" line="99"/>
+        <location filename="../qml/hutspot.qml" line="109"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="158"/>
+        <location filename="../qml/hutspot.qml" line="180"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="197"/>
+        <location filename="../qml/hutspot.qml" line="219"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="208"/>
+        <location filename="../qml/hutspot.qml" line="230"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="331"/>
+        <location filename="../qml/hutspot.qml" line="353"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="417"/>
+        <location filename="../qml/hutspot.qml" line="439"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

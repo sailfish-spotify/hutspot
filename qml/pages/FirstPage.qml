@@ -7,12 +7,15 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+import "../components"
 import "../Spotify.js" as Spotify
 
 Page {
     id: firstPage
 
     allowedOrientations: Orientation.All
+    anchors.bottom: navPanel.top
+    clip: navPanel.expanded
 
     ListModel {
         id: itemsModel
@@ -22,10 +25,6 @@ Page {
         id: listView
         model: itemsModel
         anchors.fill: parent
-        anchors {
-            topMargin: 0
-            bottomMargin: 0
-        }
 
         PullDownMenu {
             MenuItem {
@@ -61,43 +60,49 @@ Page {
             }
        }
 
-        header: Column {
-            id: lvColumn
-
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
-            anchors.bottomMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
-
-            PageHeader {
-                id: pHeader
-                //title: qsTr("Items")
-                anchors.horizontalCenter: parent.horizontalCenter
-                Row {
-                    parent: pHeader.extraContent
-                    width: parent.width
-                    BusyIndicator {
-                        id: busyThingy
-                        //anchors.left: parent.left
-                        //running: showBusy
+        header: PageHeader {
+            id: pHeader
+            width: parent.width
+            Row {
+                parent: pHeader.extraContent
+                width: parent.width
+                /*BusyIndicator {
+                    id: busyThingy
+                    //anchors.left: parent.left
+                    //running: showBusy
+                }*/
+                IconButton {
+                    id: menuIcon
+                    width: icon.width
+                    height: icon.height
+                    icon.source: "image://theme/icon-m-menu" /*navPanel.expanded
+                                 ? "image://theme/icon-m-down"
+                                 : "image://theme/icon-m-up"*/
+                    onClicked: {
+                        if(!navPanel.modal) {
+                            navPanel.open = true
+                            navPanel.modal = true
+                        }
                     }
+                }
 
-                    Label {
-                        id: connected
-                        width: parent.width - busyThingy.width - 2 * Theme.paddingMedium
-                        //x: busyThingy.x + busyThingy.width + Theme.paddingMedium
-                        color: Theme.secondaryColor
-                        font.pixelSize: Theme.fontSizeMedium
-                        textFormat: Text.StyledText
-                        truncationMode: TruncationMode.Fade
-                        text: app.connectionText
-                              + ": " + app.display_name
-                              + ", " + app.product
-                        //      + ", " + followers + qsTr("followers")
-                    }
+                Label {
+                    id: connected
+                    width: parent.width - menuIcon.width - 2 * Theme.paddingMedium
+                    //width: parent.width - busyThingy.width - 2 * Theme.paddingMedium
+                    //x: busyThingy.x + busyThingy.width + Theme.paddingMedium
+                    color: Theme.secondaryColor
+                    font.pixelSize: Theme.fontSizeMedium
+                    textFormat: Text.StyledText
+                    truncationMode: TruncationMode.Fade
+                    text: app.connectionText
+                          + ": " + app.display_name
+                          + ", " + app.product
+                    //      + ", " + followers + qsTr("followers")
                 }
             }
         }
+
 
         section.property: "type"
         section.delegate : Component {
@@ -189,51 +194,8 @@ Page {
         VerticalScrollDecorator {}
     }
 
-    DockedPanel {
-        id: panel
-
-        width: parent.width
-        height: Theme.itemSizeLarge
-        dock: Dock.Bottom
-        open: true
-
-        Row {
-            anchors.centerIn: parent
-            spacing: Theme.paddingLarge
-            //width: parent.width
-            IconButton {
-                icon.source: "image://theme/icon-m-music"
-                onClicked: pageStack.push(Qt.resolvedUrl("Playing.qml"))
-            }
-            IconButton {
-                icon.source: "image://theme/icon-m-health"
-                onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
-            }
-            IconButton {
-                icon.source: "image://theme/icon-m-events"
-                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
-            }
-            IconButton {
-                icon.source: "image://theme/icon-m-search"
-                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
-            }
-            /*Button {
-                text: "new"
-                preferredWidth: Theme.buttonWidthSmall / 3
-                onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
-            }
-            Button {
-                text: "mine"
-                preferredWidth: Theme.buttonWidthSmall / 3
-                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
-            }
-            Button {
-                text: "search"
-                preferredWidth: Theme.buttonWidthSmall / 3
-                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
-            }*/
-
-        }
+    NavigationPanel {
+        id: navPanel
     }
 
     signal foundDevicesChanged()

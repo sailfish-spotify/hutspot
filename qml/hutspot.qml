@@ -29,6 +29,7 @@ ApplicationWindow {
 
     initialPage: firstPage
     allowedOrientations: defaultAllowedOrientations
+    //anchors.bottomMargin: navPanel.visibleSize
 
     cover: CoverPage {
         id: cover
@@ -40,6 +41,27 @@ ApplicationWindow {
 
     Messagebox {
         id: msgBox
+    }
+
+    /*NavigationPanel {
+        id: navPanel
+    }*/
+
+    function showPage(page) {
+        switch(page) {
+        case 'playing':
+            pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
+            break;
+        case 'new':
+            pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
+            break;
+        case 'mine':
+            pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
+            break;
+        case 'search':
+            pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
+            break;
+        }
     }
 
     function showErrorMessage(error, text) {
