@@ -40,8 +40,11 @@ Page {
     SilicaListView {
         id: listView
         model: searchModel
-        anchors.fill: parent
-        anchors.topMargin: 0
+
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
         header: Column {
             id: lvColumn
@@ -52,18 +55,13 @@ Page {
             anchors.bottomMargin: Theme.paddingLarge
             spacing: Theme.paddingLarge
 
-            /*PageHeader {
+            PageHeader {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Playing")
-                BusyIndicator {
-                    id: busyThingy
-                    parent: pHeader.extraContent
-                    anchors.left: parent.left
-                    running: showBusy;
-                }
                 anchors.horizontalCenter: parent.horizontalCenter
-            }*/
+                MenuButton {}
+            }
 
             //LoadPullMenus {}
             //LoadPushMenus {}
@@ -310,6 +308,10 @@ Page {
     }
 
     Component.onCompleted: refresh()
+
+    NavigationPanel {
+        id: navPanel
+    }
 
     property int failedAttempts: 0
     property int refreshCount: 0

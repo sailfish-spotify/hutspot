@@ -39,28 +39,24 @@ Page {
     SilicaListView {
         id: listView
         model: searchModel
-        anchors.fill: parent
-        anchors.topMargin: 0
+
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
         header: Column {
             id: lvColumn
 
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
-            anchors.bottomMargin: Theme.paddingLarge
             spacing: Theme.paddingLarge
 
             PageHeader {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Search")
-                BusyIndicator {
-                    id: busyThingy
-                    parent: pHeader.extraContent
-                    anchors.left: parent.left
-                    running: showBusy;
-                }
-                anchors.horizontalCenter: parent.horizontalCenter
+                MenuButton {}
             }
 
             LoadPullMenus {}
@@ -241,6 +237,10 @@ Page {
             color: Theme.secondaryColor
         }
 
+    }
+
+    NavigationPanel {
+        id: navPanel
     }
 
     function refresh() {

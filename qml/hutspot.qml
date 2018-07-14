@@ -27,39 +27,61 @@ ApplicationWindow {
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
 
-    initialPage: firstPage
-    allowedOrientations: defaultAllowedOrientations
+    //initialPage: loadFirstPage()
     //anchors.bottomMargin: navPanel.visibleSize
+
+    allowedOrientations: defaultAllowedOrientations
 
     cover: CoverPage {
         id: cover
     }
 
-    FirstPage {
+    /*FirstPage {
         id: firstPage
-    }
+    }*/
 
     Messagebox {
         id: msgBox
     }
 
-    /*NavigationPanel {
-        id: navPanel
-    }*/
-
     function showPage(page) {
         switch(page) {
-        case 'playing':
-            pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
+        case 'PlayingPage':
+            if(pageStack.currentPage.objectName !== "PlayingPage")
+                pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
             break;
-        case 'new':
+        case 'NewReleasePage':
+            pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
+            firstPage.value = 'NewReleasePage'
             break;
-        case 'mine':
+        case 'MyStuffPage':
+            pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
+            firstPage.value = 'MyStuffPage'
             break;
-        case 'search':
+        case 'SearchPage':
+            pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
+            firstPage.value = 'SearchPage'
+            break;
+        }
+    }
+
+    function loadFirstPage() {
+        switch(firstPage.value) {
+        default:
+        case "PlayingPage":
+            pageStack.replace(Qt.resolvedUrl("pages/Playing.qml"))
+            break;
+        case "NewReleasePage":
+            pageStack.replace(Qt.resolvedUrl("pages/NewRelease.qml"))
+            break;
+        case "MyStuffPage":
+            pageStack.replace(Qt.resolvedUrl("pages/MyStuff.qml"))
+            break;
+        case "SearchPage":
+            pageStack.replace(Qt.resolvedUrl("pages/Search.qml"))
             break;
         }
     }
@@ -190,6 +212,33 @@ ApplicationWindow {
         })
     }
 
+    property var myDevices: []
+
+    property bool loggedIn: false
+    onLoggedInChanged: reloadDevices()
+
+    // using spotify webapi
+    function reloadDevices() {
+        var i
+        //itemsModel.clear()
+
+        myDevices = []
+        Spotify.getMyDevices(function(error, data) {
+            if(data) {
+                try {
+                    console.log("number of devices: " + myDevices.length)
+                    myDevices = data.devices
+                    //refreshDevices()
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getMyDevices")
+            }
+        })
+
+    }
+
     Component.onCompleted: {
         spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         //serviceBrowser.browse("_spotify-connect._tcp")
@@ -230,7 +279,7 @@ ApplicationWindow {
             app.connectionText = qsTr("Connected")
             spotify.refreshToken()
             loadUser()
-            firstPage.loginChanged()
+            loggedIn = true
         }
 
         onLinkedChanged: {
@@ -252,7 +301,8 @@ ApplicationWindow {
         }
 
         onCloseBrowser: {
-            pageStack.pop()
+            //pageStack.pop()
+            loadFirstPage()
         }
     }
 
@@ -529,5 +579,12 @@ ApplicationWindow {
             key: "/hutspot/auth_using_browser"
             defaultValue: false
     }
+
+    ConfigurationValue {
+            id: firstPage
+            key: "/hutspot/first_page"
+            defaultValue: ""
+    }
+
 }
 

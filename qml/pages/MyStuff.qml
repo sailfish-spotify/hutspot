@@ -33,8 +33,11 @@ Page {
     SilicaListView {
         id: listView
         model: searchModel
-        anchors.fill: parent
-        anchors.topMargin: 0
+
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -51,13 +54,7 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("My Stuff")
-                BusyIndicator {
-                    id: busyThingy
-                    parent: pHeader.extraContent
-                    anchors.left: parent.left
-                    running: showBusy;
-                }
-                anchors.horizontalCenter: parent.horizontalCenter
+                MenuButton {}
             }
 
         }
@@ -180,6 +177,10 @@ Page {
             color: Theme.secondaryColor
         }
 
+    }
+
+    NavigationPanel {
+        id: navPanel
     }
 
     property var savedAlbums
@@ -311,5 +312,17 @@ Page {
 
     }
 
-    Component.onCompleted: refresh()
+    Connections {
+        target: app
+        onLoggedInChanged: {
+            if(app.loggedIn)
+                refresh()
+        }
+    }
+
+    Component.onCompleted: {
+        if(app.loggedIn)
+            refresh()
+    }
+
 }
