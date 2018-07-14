@@ -16,6 +16,7 @@
 
 #include <sailfishapp.h>
 
+#include "IconProvider.h"
 #include "spotify.h"
 //#include "servicebrowser.h"
 
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
 
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
+
+    // custom icon loader
+    QQmlEngine *engine = view->engine();
+    engine->addImageProvider(QLatin1String("hutspot-icons"), new IconProvider);
 
 //    ServiceBrowser serviceBrowser;
 //    view->rootContext()->setContextProperty("serviceBrowser", &serviceBrowser);

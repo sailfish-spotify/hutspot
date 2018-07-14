@@ -68,6 +68,7 @@ HEADERS += \
     src/o2/o2reply.h \
     src/o2/o2replyserver.h \
     src/o2/o2spotify.h \
-    src/spotify.h
+    src/spotify.h \
+    src/IconProvider.h
 
 #QMAKE_LFLAGS += -lavahi-client -lavahi-common

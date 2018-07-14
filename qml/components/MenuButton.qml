@@ -7,10 +7,12 @@ IconButton {
     height: icon.height
 
     x: Theme.paddingMedium
-    y: Theme.paddingMedium
-    icon.height: Theme.iconSizeMedium
+    y: Theme.paddingLarge*1.5
+    icon.height: Theme.iconSizeSmall
     icon.fillMode: Image.PreserveAspectFit
-    icon.source: "image://theme/icon-m-menu" /*navPanel.expanded
+    icon.source: "image://hutspot-icons/icon-m-toolbar"
+
+               /*"image://theme/icon-m-menu" navPanel.expanded
                  ? "image://theme/icon-m-down"
                  : "image://theme/icon-m-up"*/
     onClicked: {

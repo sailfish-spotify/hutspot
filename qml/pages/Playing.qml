@@ -78,6 +78,17 @@ Page {
                 }
             }
 
+            PushUpMenu {
+                MenuItem {
+                    text: qsTr("Login")
+                    onClicked: spotify.doO2Auth(Spotify._scope, app.auth_using_browser.value)
+                }
+                MenuItem {
+                    text: qsTr("Refresh Token")
+                    onClicked: spotify.refreshToken()
+                }
+            }
+
             /* playbackState
                   .context type uri
                   .is_playing
