@@ -27,7 +27,6 @@ SOURCES += \
 
 DISTFILES += \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
     translations/*.ts \
     qml/pages/Search.qml \
     qml/components/SearchResultListItem.qml \
@@ -42,7 +41,8 @@ DISTFILES += \
     rpm/hutspot.changes.run.in \
     hutspot.desktop \
     qml/hutspot.qml \
-    qml/components/ArtistPicker.qml
+    qml/components/ArtistPicker.qml \
+    qml/pages/DevicesPage.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

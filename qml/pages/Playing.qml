@@ -63,8 +63,20 @@ Page {
                 MenuButton {}
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
+            PullDownMenu {
+                MenuItem {
+                    text: qsTr("About")
+                    onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
+                }
+                MenuItem {
+                    text: qsTr("Settings")
+                    onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
+                }
+                MenuItem {
+                    text: qsTr("Devices")
+                    onClicked: pageStack.push(Qt.resolvedUrl("DevicesPage.qml"))
+                }
+            }
 
             /* playbackState
                   .context type uri

@@ -11,11 +11,11 @@ import "../components"
 import "../Spotify.js" as Spotify
 
 Page {
-    id: firstPage
+    id: devicesPage
 
     allowedOrientations: Orientation.All
-    anchors.bottom: navPanel.top
-    clip: navPanel.expanded
+    //anchors.bottom: navPanel.top
+    //clip: navPanel.expanded
 
     ListModel {
         id: itemsModel
@@ -31,104 +31,12 @@ Page {
                 text: qsTr("Reload Devices")
                 onClicked: reloadDevices()
             }
-            MenuItem {
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-            }
-            MenuItem {
-                text: qsTr("Settings")
-                onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
-            }
-            /*MenuItem {
-                text: qsTr("Search")
-                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
-            }
-            MenuItem {
-                text: qsTr("My Stuff")
-                onClicked: pageStack.push(Qt.resolvedUrl("MyStuff.qml"))
-            }*/
         }
-
-        PushUpMenu {
-            MenuItem {
-                text: qsTr("Login")
-                onClicked: spotify.doO2Auth(Spotify._scope, app.auth_using_browser.value)
-            }
-            MenuItem {
-                text: qsTr("Refresh Token")
-                onClicked: spotify.refreshToken()
-            }
-       }
 
         header: PageHeader {
             id: pHeader
             width: parent.width
-            Row {
-                parent: pHeader.extraContent
-                width: parent.width
-                /*BusyIndicator {
-                    id: busyThingy
-                    //anchors.left: parent.left
-                    //running: showBusy
-                }*/
-                IconButton {
-                    id: menuIcon
-                    width: icon.width
-                    height: icon.height
-                    icon.source: "image://theme/icon-m-menu" /*navPanel.expanded
-                                 ? "image://theme/icon-m-down"
-                                 : "image://theme/icon-m-up"*/
-                    onClicked: {
-                        if(!navPanel.modal) {
-                            navPanel.open = true
-                            navPanel.modal = true
-                        }
-                    }
-                }
-
-                Label {
-                    id: connected
-                    width: parent.width - menuIcon.width - 2 * Theme.paddingMedium
-                    //width: parent.width - busyThingy.width - 2 * Theme.paddingMedium
-                    //x: busyThingy.x + busyThingy.width + Theme.paddingMedium
-                    color: Theme.secondaryColor
-                    font.pixelSize: Theme.fontSizeMedium
-                    textFormat: Text.StyledText
-                    truncationMode: TruncationMode.Fade
-                    text: app.connectionText
-                          + ": " + app.display_name
-                          + ", " + app.product
-                    //      + ", " + followers + qsTr("followers")
-                }
-            }
-        }
-
-
-        section.property: "type"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                height: childrenRect.height
-
-                Text {
-                    width: parent.width
-                    text: {
-                        switch(section) {
-                        case "0": return qsTr("Playlists")
-                        case "1": return qsTr("Recently Played Tracks")
-                        case "2": return qsTr("Devices")
-                        case "3": return qsTr("Tracks")
-                        case "4": return qsTr("Albums")
-                        }
-                    }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
-                }
-            }
+            title: qsTr("Devices")
         }
 
         delegate: ListItem {
@@ -163,12 +71,6 @@ Page {
             Component {
                 id: contextMenu
                 ContextMenu {
-                    //enabled: (listView.model.get(index).type === "Item")
-//                    MenuItem {
-//                        enabled: type === 1 || type === 3
-//                        text: qsTr("Play")
-//                        onClicked: play(index)
-//                    }
                     MenuItem {
                         enabled: type === 2
                         text: qsTr("Set as Current")
@@ -236,10 +138,21 @@ Page {
 
     }
 
-    property var myDevices: []
 
-    signal loginChanged()
-    onLoginChanged: reloadDevices()
+    Connections {
+        target: app
+        onLoggedInChanged: {
+            if(app.loggedIn)
+                reloadDevices()
+        }
+    }
+
+    Component.onCompleted: {
+        if(app.loggedIn)
+            reloadDevices()
+    }
+
+    property var myDevices: []
 
     // using spotify webapi
     function reloadDevices() {
