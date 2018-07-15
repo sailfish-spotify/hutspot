@@ -36,8 +36,11 @@ Page {
     SilicaListView {
         id: listView
         model: searchModel
-        anchors.fill: parent
-        anchors.topMargin: 0
+
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -54,13 +57,7 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Playlist")
-                BusyIndicator {
-                    id: busyThingy
-                    parent: pHeader.extraContent
-                    anchors.left: parent.left
-                    running: showBusy;
-                }
-                anchors.horizontalCenter: parent.horizontalCenter
+                MenuButton {}
             }
 
             Image {
@@ -170,6 +167,10 @@ Page {
             color: Theme.secondaryColor
         }
 
+    }
+
+    NavigationPanel {
+        id: navPanel
     }
 
     onPlaylistChanged: refresh()
