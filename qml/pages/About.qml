@@ -97,7 +97,6 @@ JMPerez: spotify-web-api-js
 pipacs: O2
 fooxl & DrYak: avahi, nss-mdns, libdaemon on sailfish
 laserpants: qtzeroconf
-librespot-org: librespot
 kimmoli: IconProvider & MultiItemPicker"
             }
         }
