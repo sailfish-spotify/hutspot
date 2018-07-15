@@ -38,7 +38,8 @@ Page {
                 label: qsTr("Number of results per request (limit)")
                 inputMethodHints: Qt.ImhDigitsOnly
                 width: parent.width
-                onTextChanged: app.searchLimit.value = text
+                onTextChanged: app.searchLimit.value = Math.floor(text)
+                validator: IntValidator {bottom: 1; top: 50;}
             }
             TextSwitch {
                 id: auth_using_browser

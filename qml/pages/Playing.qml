@@ -63,21 +63,6 @@ Page {
                 MenuButton {}
             }
 
-            PullDownMenu {
-                MenuItem {
-                    text: qsTr("About")
-                    onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-                }
-                MenuItem {
-                    text: qsTr("Settings")
-                    onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
-                }
-                MenuItem {
-                    text: qsTr("Devices")
-                    onClicked: pageStack.push(Qt.resolvedUrl("DevicesPage.qml"))
-                }
-            }
-
             PushUpMenu {
                 MenuItem {
                     text: qsTr("Login")
@@ -319,14 +304,14 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Label {
+        /*Label {
             anchors.fill: parent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignBottom
             visible: parent.count == 0
             text: qsTr("No tracks found")
             color: Theme.secondaryColor
-        }
+        }*/
 
     }
 

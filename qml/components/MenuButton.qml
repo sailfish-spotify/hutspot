@@ -11,7 +11,7 @@ IconButton {
     icon.source: "image://hutspot-icons/icon-m-toolbar"
 
     onClicked: {
-        if(!navPanel.modal) {
+        if(!navPanel.modal && !navPanel.moving) {
             navPanel.open = true
             navPanel.modal = true
         }

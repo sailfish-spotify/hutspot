@@ -72,7 +72,7 @@ Page {
                     text: {
                         switch(section) {
                         case "1": return qsTr("Top Artists")
-                        case "4": return qsTr("Top Tracks")
+                        case "3": return qsTr("Top Tracks")
                         }
                     }
                     font.bold: true

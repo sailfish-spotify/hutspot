@@ -189,49 +189,49 @@
     </message>
 </context>
 <context>
-    <name>DevicesPage</name>
+    <name>Devices</name>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="31"/>
+        <location filename="../qml/pages/Devices.qml" line="31"/>
         <source>Reload Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="39"/>
+        <location filename="../qml/pages/Devices.qml" line="39"/>
         <source>Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="57"/>
+        <location filename="../qml/pages/Devices.qml" line="57"/>
         <source>Unknown Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="79"/>
+        <location filename="../qml/pages/Devices.qml" line="79"/>
         <source>active</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="79"/>
+        <location filename="../qml/pages/Devices.qml" line="79"/>
         <source>inactive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="82"/>
+        <location filename="../qml/pages/Devices.qml" line="82"/>
         <source>restricted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="82"/>
+        <location filename="../qml/pages/Devices.qml" line="82"/>
         <source>unrestricted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="95"/>
+        <location filename="../qml/pages/Devices.qml" line="95"/>
         <source>Set as Current</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="111"/>
+        <location filename="../qml/pages/Devices.qml" line="111"/>
         <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>
@@ -365,46 +365,26 @@
     </message>
     <message>
         <location filename="../qml/pages/Playing.qml" line="68"/>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="72"/>
-        <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="76"/>
-        <source>Devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="83"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="87"/>
+        <location filename="../qml/pages/Playing.qml" line="72"/>
         <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="130"/>
+        <location filename="../qml/pages/Playing.qml" line="115"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="303"/>
+        <location filename="../qml/pages/Playing.qml" line="288"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="327"/>
-        <source>No tracks found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="399"/>
+        <location filename="../qml/pages/Playing.qml" line="384"/>
         <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -595,12 +575,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="45"/>
+        <location filename="../qml/pages/Settings.qml" line="46"/>
         <source>Authorize using Browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="46"/>
+        <location filename="../qml/pages/Settings.qml" line="47"/>
         <source>Use external Browser to login at Spotify</source>
         <translation type="unfinished"></translation>
     </message>
