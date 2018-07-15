@@ -206,12 +206,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="76"/>
+        <location filename="../qml/pages/DevicesPage.qml" line="79"/>
+        <source>active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/DevicesPage.qml" line="79"/>
+        <source>inactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/DevicesPage.qml" line="82"/>
+        <source>restricted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/DevicesPage.qml" line="82"/>
+        <source>unrestricted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/DevicesPage.qml" line="95"/>
         <source>Set as Current</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/DevicesPage.qml" line="92"/>
+        <location filename="../qml/pages/DevicesPage.qml" line="111"/>
         <source>No Items</source>
         <translation type="unfinished"></translation>
     </message>

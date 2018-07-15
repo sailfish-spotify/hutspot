@@ -44,9 +44,9 @@ Page {
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
 
-            Item {
+            Column {
+                id: column
                 width: parent.width
-
                 Label {
                     id: nameLabel
                     color: deviceId === playbackStateDeviceId ? Theme.highlightColor : Theme.primaryColor
@@ -55,6 +55,8 @@ Page {
                     //width: parent.width - countLabel.width
                     text: {
                         var str = name ? name : qsTr("Unknown Name")
+                        if(myDevices[index].type)
+                            str += ", " + myDevices[index].type
                         /*if(sp && avahi)
                             str += " [Spotify, Avahi]"
                         else if(avahi)
@@ -64,8 +66,25 @@ Page {
                         return str
                     }
                 }
-
+                Label {
+                    id: meta1Label
+                    width: parent.width
+                    color: deviceId === playbackStateDeviceId ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    truncationMode: TruncationMode.Fade
+                    text: {
+                        var str = myDevices[index].volume_percent + "%"
+                        str += ", "
+                        str += myDevices[index].is_active
+                               ? qsTr("active") : qsTr("inactive")
+                        str += ", "
+                        str += myDevices[index].is_restricted
+                               ? qsTr("restricted") : qsTr("unrestricted")
+                        return str
+                    }
+                }
             }
+
             menu: contextMenu
 
             Component {
