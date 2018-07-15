@@ -232,7 +232,7 @@ Page {
 
     function refresh() {
         var i;
-        //showBusy = true
+
         searchModel.clear()
         savedAlbums = undefined
         userPlaylists = undefined
@@ -292,23 +292,6 @@ Page {
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
-
-        /*Spotify.getMyTopArtists({}, function(error, data) {
-            if(data) {
-                try {
-                    console.log("number of TopArtists: " + data.items.length)
-                    for(i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 1,
-                                            name: data.items[i].track.name,
-                                            track: data.items[i].track})
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyTopArtists")
-            }
-        })*/
 
     }
 

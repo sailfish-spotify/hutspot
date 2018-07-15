@@ -27,18 +27,11 @@ ApplicationWindow {
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
 
-    //initialPage: loadFirstPage()
-    //anchors.bottomMargin: navPanel.visibleSize
-
     allowedOrientations: defaultAllowedOrientations
 
     cover: CoverPage {
         id: cover
     }
-
-    /*FirstPage {
-        id: firstPage
-    }*/
 
     Messagebox {
         id: msgBox
@@ -53,19 +46,23 @@ ApplicationWindow {
         case 'NewReleasePage':
             pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
-            firstPage.value = 'NewReleasePage'
             break;
         case 'MyStuffPage':
             pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
-            firstPage.value = 'MyStuffPage'
+            break;
+        case 'TopStuffPage':
+            pageStack.clear()
+            pageStack.push(Qt.resolvedUrl("pages/TopStuff.qml"))
             break;
         case 'SearchPage':
             pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
-            firstPage.value = 'SearchPage'
             break;
+        default:
+            return
         }
+        firstPage.value = page
     }
 
     function loadFirstPage() {
@@ -79,6 +76,9 @@ ApplicationWindow {
             break;
         case "MyStuffPage":
             pageStack.replace(Qt.resolvedUrl("pages/MyStuff.qml"))
+            break;
+        case "TopStuffPage":
+            pageStack.replace(Qt.resolvedUrl("pages/TopStuff.qml"))
             break;
         case "SearchPage":
             pageStack.replace(Qt.resolvedUrl("pages/Search.qml"))

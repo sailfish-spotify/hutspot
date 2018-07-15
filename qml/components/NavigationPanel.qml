@@ -29,10 +29,17 @@ DockedPanel {
             }
         }
         IconButton {
-            icon.source: "image://theme/icon-m-events"
+            icon.source: "image://theme/icon-m-people" // -events
             onClicked: {
                 open = false
                 app.showPage('MyStuffPage')
+            }
+        }
+        IconButton {
+            icon.source: "image://theme/icon-m-like"
+            onClicked: {
+                open = false
+                app.showPage('TopStuffPage')
             }
         }
         IconButton {

@@ -93,14 +93,14 @@ Page {
                     value = qsTr("None")
                     indexes = []
 
-                    // load capabilities
-                    for (var u=0;u<searchTargets.length;u++) {
+                    // load possible choices
+                    for(var u=0;u<searchTargets.length;u++) {
                         items.append( {id: c, name: searchTargets[u]});
                         scMap[c] = u;
                         c++;
                     }
 
-                    // the selected
+                    // read the selected
                     value = "";
                     for(var i=0;i<scMap.length;i++) {
                         if(selectedSearchTargetsMask & (0x01 << scMap[i])) {
@@ -112,7 +112,8 @@ Page {
                 }
 
                 onClicked: {
-                    var ms = pageStack.push(Qt.resolvedUrl("../components/MultiItemPicker.qml"), { items: items, label: label, indexes: indexes } );
+                    var ms = pageStack.push(Qt.resolvedUrl("../components/MultiItemPicker.qml"),
+                                            { items: items, label: label, indexes: indexes } );
                     ms.accepted.connect(function() {
                         indexes = ms.indexes.sort(function (a, b) { return a - b });
                         selectedSearchTargetsMask = 0;
@@ -120,10 +121,8 @@ Page {
                             value = qsTr("None");
                         } else {
                             value = "";
-                            var tmp = [];
-                            selectedSearchTargetsMask = 0;
                             for(var i=0;i<indexes.length;i++) {
-                                value = value + ((i>0) ? ", " : "") + items.get(indexes[i]).name;
+                                value += ((i>0) ? ", " : "") + items.get(indexes[i]).name;
                                 selectedSearchTargetsMask |= (0x01 << scMap[indexes[i]]);
                             }
                         }
