@@ -23,6 +23,7 @@ Page {
     property var playbackState
     property var contextObject
     property string currentId: ""
+    property string currentTrackId: ""
 
     property int offset: 0
     property int limit: app.searchLimit.value
@@ -281,7 +282,7 @@ Page {
             Column {
                 width: parent.width
                 Label {
-                    color: Theme.primaryColor
+                    color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
                     width: parent.width
@@ -290,7 +291,7 @@ Page {
 
                 Label {
                     width: parent.width
-                    color: Theme.primaryColor
+                    color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
                     font.pixelSize: Theme.fontSizeExtraSmall
                     truncationMode: TruncationMode.Fade
                     text: track.track_number + ", " + Util.getDurationString(track.duration_ms)
@@ -314,8 +315,6 @@ Page {
         }*/
 
     }
-
-    Component.onCompleted: refresh()
 
     NavigationPanel {
         id: navPanel
@@ -371,6 +370,9 @@ Page {
                             break
                         }
                     }
+                } else {
+                    // no context (a single track?)
+                    currentId = playbackState.item.id
                 }
 
                 playbackProgress = playbackState.progress_ms
@@ -393,6 +395,7 @@ Page {
             if(data) {
                 playingObject = data
                 app.newPlayingTrackInfo(data.item)
+                currentTrackId = playingObject.item.id
             }
         })
 
@@ -441,4 +444,18 @@ Page {
             }
         })
     }
+
+    Connections {
+        target: app
+        onLoggedInChanged: {
+            if(app.loggedIn)
+                refresh()
+        }
+    }
+
+    Component.onCompleted: {
+        if(app.loggedIn)
+            refresh()
+    }
+
 }

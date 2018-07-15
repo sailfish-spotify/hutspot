@@ -56,7 +56,7 @@ DockedPanel {
                     app.showPage('SearchPage')
                 }
             }
-            IconButton {
+            /*IconButton {
                 id: ib
                 icon.source: "image://theme/icon-m-enter-close"
                 transform: Rotation {
@@ -67,13 +67,13 @@ DockedPanel {
                 onClicked: {
                     secondRow.enabled = !secondRow.enabled
                 }
-            }
+            }*/
         }
 
         Row {
             id: secondRow
-            visible: enabled
-            enabled: false
+            //visible: enabled
+            //enabled: false
             spacing: Theme.paddingMedium
 
             IconButton {
@@ -103,7 +103,7 @@ DockedPanel {
     onOpenChanged: {
         if(!open) {
             modal = false
-            secondRow.enabled = false
+            //secondRow.enabled = false
         }
     }
 

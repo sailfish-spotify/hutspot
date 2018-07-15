@@ -359,32 +359,32 @@
 <context>
     <name>Playing</name>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="61"/>
+        <location filename="../qml/pages/Playing.qml" line="62"/>
         <source>Playing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="68"/>
+        <location filename="../qml/pages/Playing.qml" line="69"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="72"/>
+        <location filename="../qml/pages/Playing.qml" line="73"/>
         <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="115"/>
+        <location filename="../qml/pages/Playing.qml" line="116"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="288"/>
+        <location filename="../qml/pages/Playing.qml" line="289"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="384"/>
+        <location filename="../qml/pages/Playing.qml" line="386"/>
         <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>

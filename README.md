@@ -1,6 +1,6 @@
 # Hutspot
 
-The app hopes to become a Spotify 'controller'. You can browse/search albums, artists, playlists and tracks. Playing is done on an 'connect' device.
+The app hopes to become a Spotify 'controller'. You can browse/search albums, artists, playlists and tracks. Playing is done on an 'connect' device. It requires a premium Spotify account.
 
 Right now for authentication is done using [O2](https://github.com/pipacs/o2)
 and for the API code from [spotify-web-api-js](https://github.com/JMPerez/spotify-web-api-js) is used.
