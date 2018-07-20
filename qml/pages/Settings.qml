@@ -8,6 +8,8 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+import org.nemomobile.dbus 2.0
+
 Page {
     id: settingsPage
 
@@ -52,8 +54,146 @@ Page {
                 }
             }
 
+            TextSwitch {
+                id: launchLibrespot
+                text: qsTr("Librespot")
+                description: {
+                    if(!librespotServiceEnabled)
+                        return qsTr("Unavailable")
+                    else
+                        return librespotServiceRunning
+                                ? qsTr("Running")
+                                : qsTr("Stopped")
+                }
+                enabled: librespotServiceEnabled
+                checked: librespotServiceRunning
+                onCheckedChanged: {
+                    if(checked) {
+                        if(!librespotServiceRunning)
+                            manager.startUnit("librespot.service")
+                    } else
+                        manager.stopUnit("librespot.service")
+                }
+            }
         }
     }
 
+    property bool librespotServiceEnabled: false
+    property bool librespotServiceRunning: false
+
+    onLibrespotServiceEnabled: {
+        console.log("onLibrespotServiceEnabled: " + librespotServiceEnabled)
+    }
+
+    onLibrespotServiceRunningChanged: {
+        console.log("onLibrespotServiceRunningChanged: " + librespotServiceRunning)
+    }
+
+    DBusInterface {
+        id: librespotService
+
+        bus: DBus.SessionBus
+        service: "org.freedesktop.systemd1"
+        iface: "org.freedesktop.systemd1.Unit"
+        signalsEnabled: true
+
+        function updateProperties() {
+            console.log("librespotService.updateProperties: path=" + path)
+            if (path !== "") {
+                var activeState = librespotService.getProperty("ActiveState")
+                if (activeState === "active" || activeState === "inactive") {
+                    //enableSwitch.busy = false
+                } else {
+                    //enableSwitch.busy = true
+                }
+                librespotServiceRunning = activeState === "active"
+            } else {
+                librespotServiceRunning = false
+            }
+        }
+
+        onPropertiesChanged: updateProperties()
+        onPathChanged: {
+            manager.subscribe()
+            if(path !== "")
+                updateProperties()
+        }
+    }
+
+    DBusInterface {
+        id: manager
+
+        bus: DBus.SessionBus
+        service: "org.freedesktop.systemd1"
+        path: "/org/freedesktop/systemd1"
+        iface: "org.freedesktop.systemd1.Manager"
+        signalsEnabled: true
+
+        Component.onCompleted: {
+            updatePath()
+            updateEnabled()
+        }
+
+        function startUnit(unit) {
+            typedCall("StartUnit",
+                      [{"type": "s", "value": unit},
+                       {"type": "s", "value": "replace"}],
+                function(state) {
+                    updatePath()
+                    console.log("manager.StartUnit: " + state)
+                },
+                function() {
+                    updatePath()
+                    console.log("manager.StartUnit failed ")
+                })
+        }
+
+        function stopUnit(unit) {
+            typedCall("StopUnit",
+                      [{"type": "s", "value": unit},
+                       {"type": "s", "value": "replace"}],
+                function(state) {
+                    updatePath()
+                    console.log("manager.StopUnit: " + state)
+                },
+                function() {
+                    updatePath()
+                    console.log("manager.StopUnit failed ")
+                })
+        }
+
+        function subscribe() {
+            call("Subscribe", undefined)
+        }
+
+        function updateEnabled() {
+            manager.typedCall("GetUnitFileState", [{"type": "s", "value": "librespot.service"}],
+                              function(state) {
+                                  // seems to be 'static'
+                                  if (state !== "disabled" && state !== "invalid") {
+                                      librespotServiceEnabled = true
+                                  } else {
+                                      librespotServiceEnabled = false
+                                  }
+                              },
+                              function() {
+                                  librespotServiceEnabled = false
+                              })
+        }
+
+        function updatePath() {
+            manager.typedCall("GetUnit", [{ "type": "s", "value": "librespot.service"}], function(unit) {
+                librespotService.path = unit
+            }, function() {
+                librespotService.path = ""
+            })
+        }
+    }
+
+    /*Timer {
+        id: runningUpdateTimer
+        interval: 100
+        onTriggered: librespotService.updateProperties()
+    }*/
 }
 

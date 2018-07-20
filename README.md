@@ -20,8 +20,12 @@ Due to the issues below this app is not for the faint of heart. Don't use it unl
   * I honestly have no clue how this O2 is supposed to work. When to refresh what? So logging in might not work as it should.
 
 ### Playing tracks
-  * Device discovery is problematic. Spotify does not know all your devices. The official app and application discover them using Zeroconf. Using avahi Hutspot tried the same. They are discovered but the Spotify server needs to be told they exist and I have no de how to do that. Since it is unknown how to create the needed authentication blob for a device, only the official apps seem to be able to do it, I have removed the avahi device discovery.
-  * I managed to [build Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) and it even sometimes occurs on the list of devices so it can be used to play tracks. When logging in (passing credentials to librespot at startup) the Spotify server knows about it's existence for a short time.
+Device discovery is problematic. Spotify does not know all your devices. The official app and application discover them using Zeroconf. Using avahi Hutspot tried the same. They are discovered but the Spotify server needs to be told they exist and I have no de how to do that. Since it is unknown how to create the needed authentication blob for a device, only the official apps seem to be able to do it, I have removed the avahi device discovery.
+
+## Librespot on Sailfish
+I managed to build and package [Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c), an open source Spotify client. A package can be downloaded from [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl). When logging in (passing credentials to librespot at startup) the Spotify server knows about it's existence for a short time so you can then select it in the device list.
+
+Hutspot has an option in it's Settings page to start/stop Librespot.
 
 ## Operating
  
@@ -49,8 +53,6 @@ Various:
  * The Playing page shows what is currently playing and contains various player controls.
  * Pause/Next/Previous can also be done on the Cover page or the controls on the Lock Screen.
 
-## Building
-I am developing it on Sailfish SDK. 
 
 ## Thanks
  * Spotify for web api
@@ -59,4 +61,7 @@ I am developing it on Sailfish SDK.
  * fooxl and DrYak for avahi, nss-mdns and libdaemon on sailfish
  * laserpants for [qtzeroconf](https://github.com/laserpants/qtzeroconf)
  * kimmoli: IconProvider & MultiItemPicker
+ * librespot-org for [Librespot](https://github.com/librespot-org/librespot)
+ * dtcooper for [raspotify](https://github.com/dtcooper/raspotify)
+ * sfietkonstantin for rust and cargo on OBS
 

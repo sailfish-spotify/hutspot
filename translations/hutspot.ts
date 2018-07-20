@@ -565,23 +565,43 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="34"/>
+        <location filename="../qml/pages/Settings.qml" line="36"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="38"/>
+        <location filename="../qml/pages/Settings.qml" line="40"/>
         <source>Number of results per request (limit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="46"/>
+        <location filename="../qml/pages/Settings.qml" line="48"/>
         <source>Authorize using Browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="47"/>
+        <location filename="../qml/pages/Settings.qml" line="49"/>
         <source>Use external Browser to login at Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="59"/>
+        <source>Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="62"/>
+        <source>Unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="65"/>
+        <source>Running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="66"/>
+        <source>Stopped</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
