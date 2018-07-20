@@ -24,6 +24,7 @@ Device discovery is problematic. Spotify does not know all your devices. The off
 
 ## Librespot on Sailfish
 I managed to build and package [Librespot](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c), an open source Spotify client. A package can be downloaded from [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl). When logging in (passing credentials to librespot at startup) the Spotify server knows about it's existence for a short time so you can then select it in the device list.
+See the [gist](https://gist.github.com/wdehoog/d83d75564ebc77a985384950af44ee7c) on how to store the credentials in the cache.
 
 Hutspot has an option in it's Settings page to start/stop Librespot.
 
