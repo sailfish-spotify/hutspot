@@ -136,7 +136,16 @@ Page {
                     }
                 }
             }
-            //onClicked: app.loadStation(model.id, Shoutcast.createInfo(model), tuneinBase)
+            onClicked: {
+                switch(type) {
+                case 1:
+                    pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
+                    break;
+                case 3:
+                    app.playTrack(track)
+                    break;
+                }
+            }
         }
 
         VerticalScrollDecorator {}

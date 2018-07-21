@@ -111,7 +111,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="203"/>
+        <location filename="../qml/pages/Artist.qml" line="212"/>
         <source>No albums found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -328,7 +328,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="176"/>
+        <location filename="../qml/pages/MyStuff.qml" line="191"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -518,7 +518,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Search.qml" line="235"/>
+        <location filename="../qml/pages/Search.qml" line="250"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -638,7 +638,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/TopStuff.qml" line="149"/>
+        <location filename="../qml/pages/TopStuff.qml" line="158"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>

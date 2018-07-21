@@ -84,7 +84,7 @@ Page {
                     }
                 }
             }
-            //onClicked: app.loadStation(model.id, Shoutcast.createInfo(model), tuneinBase)
+            onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
         }
 
         VerticalScrollDecorator {}
