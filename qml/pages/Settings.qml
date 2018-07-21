@@ -81,42 +81,42 @@ Page {
     property bool librespotServiceEnabled: false
     property bool librespotServiceRunning: false
 
-    onLibrespotServiceEnabled: {
+    property string systemdJob: ""
+
+    /*onLibrespotServiceEnabled: {
         console.log("onLibrespotServiceEnabled: " + librespotServiceEnabled)
     }
-
     onLibrespotServiceRunningChanged: {
         console.log("onLibrespotServiceRunningChanged: " + librespotServiceRunning)
-    }
+    }*/
 
     DBusInterface {
         id: librespotService
 
+        property string serviceName: "librespot.service"
         bus: DBus.SessionBus
         service: "org.freedesktop.systemd1"
         iface: "org.freedesktop.systemd1.Unit"
         signalsEnabled: true
 
-        function updateProperties() {
-            console.log("librespotService.updateProperties: path=" + path)
+        function updateState() {
+            console.log("librespotService.updateState: path=" + path)
             if (path !== "") {
                 var activeState = librespotService.getProperty("ActiveState")
-                if (activeState === "active" || activeState === "inactive") {
-                    //enableSwitch.busy = false
-                } else {
-                    //enableSwitch.busy = true
+                if (activeState === "active") {
+                    librespotServiceRunning = true
+                } else if(activeState === "inactive") {
+                    librespotServiceRunning = false
                 }
-                librespotServiceRunning = activeState === "active"
             } else {
                 librespotServiceRunning = false
             }
         }
 
-        onPropertiesChanged: updateProperties()
+        onPropertiesChanged: updateState()
         onPathChanged: {
-            manager.subscribe()
             if(path !== "")
-                updateProperties()
+                updateState()
         }
     }
 
@@ -130,6 +130,7 @@ Page {
         signalsEnabled: true
 
         Component.onCompleted: {
+            call("Subscribe", undefined)
             updatePath()
             updateEnabled()
         }
@@ -138,62 +139,79 @@ Page {
             typedCall("StartUnit",
                       [{"type": "s", "value": unit},
                        {"type": "s", "value": "replace"}],
-                function(state) {
-                    updatePath()
-                    console.log("manager.StartUnit: " + state)
-                },
-                function() {
-                    updatePath()
-                    console.log("manager.StartUnit failed ")
-                })
+                      function(job) {
+                          systemdJob = job
+                          updatePath()
+                          console.log("manager.StartUnit: " + job)
+                      },
+                      function() {
+                          updatePath()
+                          console.log("manager.StartUnit failed ")
+                      })
         }
 
         function stopUnit(unit) {
             typedCall("StopUnit",
                       [{"type": "s", "value": unit},
                        {"type": "s", "value": "replace"}],
-                function(state) {
-                    updatePath()
-                    console.log("manager.StopUnit: " + state)
-                },
-                function() {
-                    updatePath()
-                    console.log("manager.StopUnit failed ")
-                })
-        }
-
-        function subscribe() {
-            call("Subscribe", undefined)
+                      function(job) {
+                          systemdJob = job
+                          updatePath()
+                          console.log("manager.StopUnit: " + job)
+                      },
+                      function() {
+                          updatePath()
+                          console.log("manager.StopUnit failed ")
+                      })
         }
 
         function updateEnabled() {
-            manager.typedCall("GetUnitFileState", [{"type": "s", "value": "librespot.service"}],
-                              function(state) {
-                                  // seems to be 'static'
-                                  if (state !== "disabled" && state !== "invalid") {
-                                      librespotServiceEnabled = true
-                                  } else {
-                                      librespotServiceEnabled = false
-                                  }
-                              },
-                              function() {
-                                  librespotServiceEnabled = false
-                              })
+            typedCall("GetUnitFileState", [{"type": "s", "value": librespotService.serviceName}],
+                      function(state) {
+                          // seems to be 'static'
+                          if (state !== "disabled" && state !== "invalid") {
+                              librespotServiceEnabled = true
+                          } else {
+                              librespotServiceEnabled = false
+                          }
+                      },
+                      function() {
+                          librespotServiceEnabled = false
+                      })
         }
 
         function updatePath() {
-            manager.typedCall("GetUnit", [{ "type": "s", "value": "librespot.service"}], function(unit) {
-                librespotService.path = unit
-            }, function() {
-                librespotService.path = ""
-            })
+            typedCall("GetUnit", [{ "type": "s", "value": librespotService.serviceName}],
+                      function(unit) {
+                          librespotService.path = unit
+                      },
+                      function() {
+                          librespotService.path = ""
+                      })
+        }
+
+        /*signal unitNew(string unit, string path)
+        onUnitNew: {
+            console.log("onUnitNew unit:" + unit +", path:" + path)
+        }
+
+        signal unitRemoved(string unit, string path)
+        onUnitRemoved: {
+            console.log("onUnitRemoved unit:" + unit +", path:" + path)
+        }*/
+
+        signal jobNew(int id, string path, string unit)
+        onJobNew: {
+            console.log("onJobNew id:" + id  + ", path:" + path + ", unit:" + unit)
+        }
+
+        signal jobRemoved(int id, string path, string unit, string result)
+        onJobRemoved: {
+            if(systemdJob === path)
+                librespotService.updateState()
+            console.log("onJobRemoved id:" + id  + ", path:" + path + ", unit:" + unit + ", result:" + result)
         }
     }
 
-    /*Timer {
-        id: runningUpdateTimer
-        interval: 100
-        onTriggered: librespotService.updateProperties()
-    }*/
 }
 
