@@ -8,7 +8,7 @@ and for the API code from [spotify-web-api-js](https://github.com/JMPerez/spotif
 O2 and spotify-web-api-js have their own license. For Hutspot it is MIT.
 
 
-Hutspot is being built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:/hutspot/sailfish_latest_armv7hl/).
+Hutspot is being built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:/hutspot/sailfish_latest_armv7hl/). See [this wiki page](https://github.com/wdehoog/hutspot/wiki/Installation) on how to install it.
 
 Due to the issues with athentication and detecting Spotify capable players this app is not 'plug and play'. Don't use it unless you are willing to mess around.
 
