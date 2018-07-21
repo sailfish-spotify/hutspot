@@ -601,7 +601,7 @@
     </message>
     <message>
         <location filename="../qml/pages/Settings.qml" line="66"/>
-        <source>Stopped</source>
+        <source>Not Running</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

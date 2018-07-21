@@ -63,7 +63,7 @@ Page {
                     else
                         return librespotServiceRunning
                                 ? qsTr("Running")
-                                : qsTr("Stopped")
+                                : qsTr("Not Running")
                 }
                 enabled: librespotServiceEnabled
                 checked: librespotServiceRunning

@@ -125,7 +125,7 @@ Page {
                 width: parent.width
                 text:  {
                     var s = ""
-                    if(playbackState) {
+                    if(playbackState && playbackState.context) {
                         s += playbackState.context.type
                         if(contextObject)
                             s += ": " + contextObject.name
