@@ -39,5 +39,19 @@ Page {
         Component.onCompleted: {
             webAuth.scale = scale
         }
+
+        // copied from webcat to get scaling of Spotify authentication html
+        // usable on phone screen
+        property variant devicePixelRatio: {//1.5
+            if (Screen.width <= 540) return 1.5;
+            else if (Screen.width > 540 && Screen.width <= 768) return 2.0;
+            else if (Screen.width > 768) return 3.0;
+        }
+        experimental.customLayoutWidth: width / devicePixelRatio
+        experimental.deviceWidth: width / devicePixelRatio
+        experimental.overview: true
+        experimental.userScripts: [
+            Qt.resolvedUrl("DevicePixelRatioHack.js")
+        ]
     }
 }

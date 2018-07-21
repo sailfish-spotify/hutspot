@@ -97,7 +97,8 @@ JMPerez: spotify-web-api-js
 pipacs: O2
 fooxl & DrYak: avahi, nss-mdns, libdaemon on sailfish
 laserpants: qtzeroconf
-kimmoli: IconProvider & MultiItemPicker"
+kimmoli: IconProvider & MultiItemPicker
+leszek: DevicePixelRatioHack"
             }
         }
 

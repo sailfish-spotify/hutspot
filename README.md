@@ -41,6 +41,7 @@ See the wiki page on [Operating](https://github.com/wdehoog/hutspot/wiki/Operati
  * fooxl and DrYak for avahi, nss-mdns and libdaemon on sailfish
  * laserpants for [qtzeroconf](https://github.com/laserpants/qtzeroconf)
  * kimmoli: IconProvider & MultiItemPicker
+ * leszek: DevicePixelRatioHack
  * librespot-org for [Librespot](https://github.com/librespot-org/librespot)
  * dtcooper for [raspotify](https://github.com/dtcooper/raspotify)
  * sfietkonstantin for rust and cargo on OBS
