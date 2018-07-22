@@ -52,9 +52,9 @@ Page {
 
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
-            anchors.topMargin: Theme.paddingMedium
+            //anchors.topMargin: Theme.paddingMedium
             anchors.bottomMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
+            //spacing: Theme.paddingLarge
 
             PageHeader {
                 id: pHeader
@@ -93,64 +93,81 @@ Page {
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
             }
 
-            Label {
-                id: nameLabel
-                color: Theme.highlightColor
-                font.bold: true
-                truncationMode: TruncationMode.Fade
+            Column {
                 width: parent.width
-                wrapMode: Text.Wrap
-                text: (playbackState && playbackState.item) ? playbackState.item.name : ""
+                spacing: Theme.paddingSmall
+                Label {
+                    id: nameLabel
+                    color: Theme.highlightColor
+                    font.bold: true
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    text: (playbackState && playbackState.item) ? playbackState.item.name : ""
+                }
+
+                Label {
+                    id: artistLabel
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    text: {
+                        var s = ""
+                        if(playbackState && playbackState.item) {
+                            var track = playbackState.item
+                            s += Util.createItemsString(track.artists, qsTr("no artist known"))
+
+                        }
+                        return s
+                    }
+                }
+
+
+                Label {
+                    width: parent.width
+                    font.pixelSize: Theme.fontSizeSmall
+                    text:  {
+                        var s = ""
+                        if(playbackState && playbackState.context) {
+                            s += playbackState.context.type
+                            if(contextObject)
+                                s += ": " + contextObject.name
+                            if(playbackState.item)
+                                s += " (" + Util.getYearFromReleaseDate(playbackState.item.album.release_date) + ")"
+                        }
+                        return s
+                    }
+                    wrapMode: Text.Wrap
+                }
+                /*Label {
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.Wrap
+                    text:  (playbackState && playbackState.device)
+                            ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
+                            : qsTr("none")
+                }*/
             }
 
-            Label {
-                id: artistLabel
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
+
+            Separator {
+                width: parent.width
                 color: Theme.primaryColor
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                wrapMode: Text.Wrap
-                text: {
-                    var s = ""
-                    if(playbackState && playbackState.item) {
-                        var track = playbackState.item
-                        s += Util.createItemsString(track.artists, qsTr("no artist known"))
-
-                    }
-                    return s
-                }
             }
-
-
-            Label {
-                width: parent.width
-                text:  {
-                    var s = ""
-                    if(playbackState && playbackState.context) {
-                        s += playbackState.context.type
-                        if(contextObject)
-                            s += ": " + contextObject.name
-                        if(playbackState.item)
-                            s += " (" + Util.getYearFromReleaseDate(playbackState.item.album.release_date) + ")"
-                    }
-                    return s
-                }
-                wrapMode: Text.Wrap
-            }
-
-            /*Label {
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                font.pixelSize: Theme.fontSizeSmall
-                wrapMode: Text.Wrap
-                text:  (playbackState && playbackState.device)
-                        ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
-                        : qsTr("none")
-            }*/
 
             Row {
                 width: parent.width
                 Label {
                     id: progressLabel
+                    font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
                     text: Util.getDurationString(playbackProgress)
                 }
@@ -173,6 +190,7 @@ Page {
                 }
                 Label {
                     id: durationLabel
+                    font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
                     text: (playbackState && playbackState.item)
                           ? Util.getDurationString(playbackState.item.duration_ms)
@@ -180,37 +198,29 @@ Page {
                 }
             }
 
-            Row {
+            Slider {
+                id: volumeSlider
                 width: parent.width
-                Slider {
-                    id: volumeSlider
-                    width: parent.width
-                    height: progressLabel.height
-                    anchors.verticalCenter: parent.verticalCenter
-                    minimumValue: 0
-                    maximumValue: 100
-                    handleVisible: false
-                    value: (playbackState && playbackState.device)
-                           ? playbackState.device.volume_percent : 0
-                    onReleased: {
-                        Spotify.setVolume(Math.round(value), function(error, data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
+                minimumValue: 0
+                maximumValue: 100
+                handleVisible: false
+                value: (playbackState && playbackState.device)
+                       ? playbackState.device.volume_percent : 0
+                onReleased: {
+                    Spotify.setVolume(Math.round(value), function(error, data) {
+                        if(!error)
+                            refresh()
+                    })
                 }
-                /*Label {
-                    id: volumeLabel
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: ((playbackState && playbackState.device)
-                          ? playbackState.device.volume_percent : "") + "%"
-                }*/
             }
 
             Row {
-                anchors.horizontalCenter: parent.horizontalCenter
+                id: buttonRow
+                width: parent.width
+                property real itemWidth : width / 5
+
                 IconButton {
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: buttonRow.itemWidth
                     enabled: app.mprisPlayer.canGoPrevious
                     icon.source: "image://theme/icon-m-previous"
                     onClicked: app.previous(function(error,data) {
@@ -219,7 +229,7 @@ Page {
                     })
                 }
                 IconButton {
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: buttonRow.itemWidth
                     icon.source: app.playing
                                  ? "image://theme/icon-cover-pause"
                                  : "image://theme/icon-cover-play"
@@ -229,7 +239,7 @@ Page {
                     })
                 }
                 IconButton {
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: buttonRow.itemWidth
                     enabled: app.mprisPlayer.canGoNext
                     icon.source: "image://theme/icon-m-next"
                     onClicked: app.next(function(error,data) {
@@ -237,17 +247,21 @@ Page {
                             refresh()
                     })
                 }
-                Switch {
-                    checked: playbackState ? playbackState.repeat_state : false
-                    icon.source: "image://theme/icon-m-repeat"
+                IconButton {
+                    width: buttonRow.itemWidth
+                    icon.source: (playbackState && playbackState.repeat_state)
+                                 ? "image://theme/icon-m-repeat?" + Theme.highlightColor
+                                 : "image://theme/icon-m-repeat"
                     onClicked: app.setRepeat(checked, function(error,data) {
                         if(!error)
                             refresh()
                     })
                 }
-                Switch {
-                    checked: playbackState ? playbackState.shuffle_state : false
-                    icon.source: "image://theme/icon-m-shuffle"
+                IconButton {
+                    width: buttonRow.itemWidth
+                    icon.source: (playbackState && playbackState.shuffle_state)
+                                 ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
+                                 : "image://theme/icon-m-shuffle"
                     onClicked: app.setShuffle(checked, function(error,data) {
                         if(!error)
                             refresh()
@@ -270,7 +284,11 @@ Page {
                 horizontalAlignment: Text.AlignRight
                 text: qsTr("Tracks")
             }*/
-            Separator{}
+
+            Separator {
+                width: parent.width
+                color: Theme.primaryColor
+            }
         }
 
         delegate: ListItem {
