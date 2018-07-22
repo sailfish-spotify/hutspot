@@ -192,7 +192,6 @@ ApplicationWindow {
     function newPlayingTrackInfo(track) {
         //item.track_number item.duration_ms
         var uri = track.album.images[0].url
-        cover.updateDisplayData(uri, track.name)
 
         var metaData = {}
         metaData['title'] = track.name
@@ -202,6 +201,7 @@ ApplicationWindow {
             metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
         else
             metaData['artist'] = ''
+        cover.updateDisplayData(metaData)
         mprisPlayer.metaData = metaData
     }
 
@@ -215,7 +215,10 @@ ApplicationWindow {
     property var myDevices: []
 
     property bool loggedIn: false
-    onLoggedInChanged: reloadDevices()
+    onLoggedInChanged: {
+        refreshPlayingInfo()
+        reloadDevices()
+    }
 
     // using spotify webapi
     function reloadDevices() {

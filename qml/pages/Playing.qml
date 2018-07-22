@@ -75,13 +75,6 @@ Page {
                 }
             }
 
-            /* playbackState
-                  .context type uri
-                  .is_playing
-                  .progress_ms
-                  .item = track
-            */
-
             Image {
                 id: imageItem
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -118,7 +111,6 @@ Page {
                         if(playbackState && playbackState.item) {
                             var track = playbackState.item
                             s += Util.createItemsString(track.artists, qsTr("no artist known"))
-
                         }
                         return s
                     }
@@ -269,25 +261,15 @@ Page {
                 }
             }
 
-            /*Rectangle {
-                width: parent.width
-                height:Theme.paddingLarge
-                opacity: 0
-            }*/
-
-            /*Label {
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                font.bold: true
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.highlightColor
-                horizontalAlignment: Text.AlignRight
-                text: qsTr("Tracks")
-            }*/
-
             Separator {
                 width: parent.width
                 color: Theme.primaryColor
+            }
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
             }
         }
 
@@ -358,8 +340,6 @@ Page {
 
     function refresh() {
         var i;
-        //showBusy = true
-        //searchModel.clear()
 
         Spotify.getMyCurrentPlaybackState({}, function(error, data) {
             if(data) {

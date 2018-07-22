@@ -12,14 +12,13 @@ CoverBackground {
 
     property string defaultImageSource : "image://theme/icon-m-music"
     property string imageSource : defaultImageSource
-    property string labelText : ""
+    property string titleText : ""
+    property string albumText : ""
+    property string artistsText : ""
 
     Column {
         width: parent.width
 
-        //anchors.topMargin: Theme.paddingMedium
-        //anchors.top: parent.top + Theme.paddingMedium
-        // nothing works. try a filler...
         Rectangle {
             width: parent.width
             height: Theme.paddingMedium
@@ -43,31 +42,57 @@ CoverBackground {
         }
 
         Text {
-            id: label
-            anchors.left: parent.left
-            anchors.right: parent.right
-            text: labelText.length > 0 ? labelText : qsTr("Hutspot")
-            horizontalAlignment: Text.AlignHCenter
-            //visible: imageSource === defaultImageSource
+            id: titleLabel
+            x: titleLabel.width > cover.width
+               ? parent.width
+               : (parent.width-titleLabel.width) / 2
+            text: titleText.length > 0 ? titleText : qsTr("Hutspot")
+            horizontalAlignment: titleLabel.width > cover.width
+                                 ? Text.AlignLeft
+                                 : Text.AlignHCenter
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.primaryColor
 
             NumberAnimation on x {
-                running: true
-                from: parent.width
-                to: -1 * label.width
+                running: cover.status === Cover.Active
+                         && titleLabel.width > cover.width
+                from: cover.width
+                to: -1 * titleLabel.width //+ cover.width)
                 loops: Animation.Infinite
-                duration: 3000
+                duration: 5000
             }
         }
-        /*
-        NumberAnimation on x { from: 0; to: -text.width; duration: 6000; loops: Animation.Infinite }
-        NumberAnimation {
-            target: ball
-            properties: "x"
-            to: anim.xMove
-            duration: 20
-        }*/
+
+        Text {
+            id: otherLabel
+            x: otherLabel.width > cover.width
+               ? parent.width
+               : (parent.width-otherLabel.width) / 2
+            text: artistsText
+            /*{
+                var s = ""
+                if(albumText)
+                    s += albumText
+                if(artistsText && artistsText.length > 0)
+                    s += (s.length > 0 ? ", " : "") + artistsText
+                return s
+            }*/
+            horizontalAlignment: otherLabel.width > cover.width
+                                 ? Text.AlignLeft
+                                 : Text.AlignHCenter
+            font.pixelSize: Theme.fontSizeSmall
+            color: Theme.primaryColor
+
+            NumberAnimation on x {
+                running: cover.status === Cover.Active
+                         && otherLabel.width > cover.width
+                from: cover.width
+                to: -1 * otherLabel.width //+ cover.width)
+                loops: Animation.Infinite
+                duration: 5000
+            }
+        }
+
         CoverActionList {
             id: coverAction
 
@@ -91,9 +116,11 @@ CoverBackground {
         }
     }
 
-    function updateDisplayData(imageSource, text) {
-        cover.imageSource = imageSource ? imageSource : defaultImageSource
-        labelText = text
+    function updateDisplayData(metaData) {
+        titleText = metaData['title']
+        albumText = metaData['album']
+        artistsText = metaData['artist']
+        cover.imageSource = metaData['artUrl'] ? metaData['artUrl'] : defaultImageSource
     }
 }
 

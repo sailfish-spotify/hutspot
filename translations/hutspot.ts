@@ -374,17 +374,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="120"/>
+        <location filename="../qml/pages/Playing.qml" line="113"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="307"/>
+        <location filename="../qml/pages/Playing.qml" line="289"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="404"/>
+        <location filename="../qml/pages/Playing.qml" line="384"/>
         <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -675,27 +675,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="202"/>
+        <location filename="../qml/hutspot.qml" line="201"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="268"/>
+        <location filename="../qml/hutspot.qml" line="271"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="279"/>
+        <location filename="../qml/hutspot.qml" line="282"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="403"/>
+        <location filename="../qml/hutspot.qml" line="406"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="489"/>
+        <location filename="../qml/hutspot.qml" line="492"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
