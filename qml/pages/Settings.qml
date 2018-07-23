@@ -1,5 +1,5 @@
 /**
- * Donnie. Copyright (C) 2017 Willem-Jan de Hoog
+ * Hutspot. Copyright (C) 2018 Willem-Jan de Hoog
  *
  * License: MIT
  */
@@ -8,7 +8,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-import org.nemomobile.dbus 2.0
+import "../components"
 
 Page {
     id: settingsPage
@@ -20,6 +20,7 @@ Page {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
             auth_using_browser.checked = app.auth_using_browser.value
+            start_stop_librespot.checked = app.start_stop_librespot.value
         }
     }
 
@@ -54,164 +55,43 @@ Page {
                 }
             }
 
+            /*TextSwitch {
+                id: start_stop_librespot
+                text: qsTr("Start/Stop Librespot")
+                description: qsTr("Start Librespot when launched and stop it on exit")
+                checked: app.start_stop_librespot.value
+                onCheckedChanged: {
+                    app.start_stop_librespot.value = checked;
+                    app.start_stop_librespot.sync();
+                }
+            }*/
+
             TextSwitch {
                 id: launchLibrespot
                 text: qsTr("Librespot")
                 description: {
-                    if(!librespotServiceEnabled)
+                    if(!librespot.serviceEnabled)
                         return qsTr("Unavailable")
                     else
-                        return librespotServiceRunning
+                        return librespot.serviceRunning
                                 ? qsTr("Running")
                                 : qsTr("Not Running")
                 }
-                enabled: librespotServiceEnabled
-                checked: librespotServiceRunning
+                enabled: librespot.serviceEnabled
+                checked: librespot.serviceRunning
                 onCheckedChanged: {
                     if(checked) {
-                        if(!librespotServiceRunning)
-                            manager.startUnit("librespot.service")
+                        if(!librespot.serviceRunning)
+                            librespot.start()
                     } else
-                        manager.stopUnit("librespot.service")
+                        librespot.stop()
                 }
             }
         }
     }
 
-    property bool librespotServiceEnabled: false
-    property bool librespotServiceRunning: false
-
-    property string systemdJob: ""
-
-    /*onLibrespotServiceEnabled: {
-        console.log("onLibrespotServiceEnabled: " + librespotServiceEnabled)
+    Librespot {
+        id: librespot
     }
-    onLibrespotServiceRunningChanged: {
-        console.log("onLibrespotServiceRunningChanged: " + librespotServiceRunning)
-    }*/
-
-    DBusInterface {
-        id: librespotService
-
-        property string serviceName: "librespot.service"
-        bus: DBus.SessionBus
-        service: "org.freedesktop.systemd1"
-        iface: "org.freedesktop.systemd1.Unit"
-        signalsEnabled: true
-
-        function updateState() {
-            console.log("librespotService.updateState: path=" + path)
-            if (path !== "") {
-                var activeState = librespotService.getProperty("ActiveState")
-                if (activeState === "active") {
-                    librespotServiceRunning = true
-                } else if(activeState === "inactive") {
-                    librespotServiceRunning = false
-                }
-            } else {
-                librespotServiceRunning = false
-            }
-        }
-
-        onPropertiesChanged: updateState()
-        onPathChanged: {
-            if(path !== "")
-                updateState()
-        }
-    }
-
-    DBusInterface {
-        id: manager
-
-        bus: DBus.SessionBus
-        service: "org.freedesktop.systemd1"
-        path: "/org/freedesktop/systemd1"
-        iface: "org.freedesktop.systemd1.Manager"
-        signalsEnabled: true
-
-        Component.onCompleted: {
-            call("Subscribe", undefined)
-            updatePath()
-            updateEnabled()
-        }
-
-        function startUnit(unit) {
-            typedCall("StartUnit",
-                      [{"type": "s", "value": unit},
-                       {"type": "s", "value": "replace"}],
-                      function(job) {
-                          systemdJob = job
-                          updatePath()
-                          console.log("manager.StartUnit: " + job)
-                      },
-                      function() {
-                          updatePath()
-                          console.log("manager.StartUnit failed ")
-                      })
-        }
-
-        function stopUnit(unit) {
-            typedCall("StopUnit",
-                      [{"type": "s", "value": unit},
-                       {"type": "s", "value": "replace"}],
-                      function(job) {
-                          systemdJob = job
-                          updatePath()
-                          console.log("manager.StopUnit: " + job)
-                      },
-                      function() {
-                          updatePath()
-                          console.log("manager.StopUnit failed ")
-                      })
-        }
-
-        function updateEnabled() {
-            typedCall("GetUnitFileState", [{"type": "s", "value": librespotService.serviceName}],
-                      function(state) {
-                          // seems to be 'static'
-                          if (state !== "disabled" && state !== "invalid") {
-                              librespotServiceEnabled = true
-                          } else {
-                              librespotServiceEnabled = false
-                          }
-                      },
-                      function() {
-                          librespotServiceEnabled = false
-                      })
-        }
-
-        function updatePath() {
-            typedCall("GetUnit", [{ "type": "s", "value": librespotService.serviceName}],
-                      function(unit) {
-                          librespotService.path = unit
-                      },
-                      function() {
-                          librespotService.path = ""
-                      })
-        }
-
-        /*signal unitNew(string unit, string path)
-        onUnitNew: {
-            console.log("onUnitNew unit:" + unit +", path:" + path)
-        }
-
-        signal unitRemoved(string unit, string path)
-        onUnitRemoved: {
-            console.log("onUnitRemoved unit:" + unit +", path:" + path)
-        }*/
-
-        signal jobNew(int id, string path, string unit)
-        onJobNew: {
-            console.log("onJobNew id:" + id  + ", path:" + path + ", unit:" + unit)
-        }
-
-        signal jobRemoved(int id, string path, string unit, string result)
-        onJobRemoved: {
-            if(systemdJob === path)
-                librespotService.updateState()
-            console.log("onJobRemoved id:" + id  + ", path:" + path + ", unit:" + unit + ", result:" + result)
-        }
-    }
-
 }
 

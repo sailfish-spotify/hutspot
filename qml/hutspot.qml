@@ -23,6 +23,8 @@ ApplicationWindow {
 
     property alias selected_search_targets: selected_search_targets
     property alias auth_using_browser: auth_using_browser
+    property alias start_stop_librespot: start_stop_librespot
+
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
@@ -587,6 +589,12 @@ ApplicationWindow {
             id: firstPage
             key: "/hutspot/first_page"
             defaultValue: ""
+    }
+
+    ConfigurationValue {
+            id: start_stop_librespot
+            key: "/hutspot/start_stop_librespot"
+            defaultValue: true
     }
 
 }
