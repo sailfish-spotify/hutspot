@@ -6,6 +6,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+
 import org.nemomobile.configuration 1.0
 import org.nemomobile.mpris 1.0
 
@@ -247,6 +248,26 @@ ApplicationWindow {
     Component.onCompleted: {
         spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         //serviceBrowser.browse("_spotify-connect._tcp")
+    }
+
+    Connections {
+        target: librespot
+        onServiceEnabledChanged: {
+            if(start_stop_librespot.value) {
+                if(librespot.serviceEnabled)
+                    librespot.start()
+            }
+        }
+    }
+
+    // thanks to harbour-storeman.qml
+    Connections {
+        target: __quickWindow
+        onClosing: {
+            if(start_stop_librespot.value) {
+                librespot.stop()
+            }
+        }
     }
 
     property int tokenExpireTime: 0 // in seconds
@@ -525,6 +546,10 @@ ApplicationWindow {
 
             mprisPlayer.metadata = metadata
         }
+    }
+
+    Librespot {
+        id: librespot
     }
 
     function getAppIconSource() {

@@ -669,43 +669,43 @@
 <context>
     <name>hutspot</name>
     <message>
-        <location filename="../qml/hutspot.qml" line="21"/>
+        <location filename="../qml/hutspot.qml" line="22"/>
         <source>connecting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="113"/>
+        <location filename="../qml/hutspot.qml" line="114"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="123"/>
-        <location filename="../qml/hutspot.qml" line="133"/>
+        <location filename="../qml/hutspot.qml" line="124"/>
+        <location filename="../qml/hutspot.qml" line="134"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="203"/>
+        <location filename="../qml/hutspot.qml" line="204"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="273"/>
+        <location filename="../qml/hutspot.qml" line="294"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="284"/>
+        <location filename="../qml/hutspot.qml" line="305"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="408"/>
+        <location filename="../qml/hutspot.qml" line="429"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="494"/>
+        <location filename="../qml/hutspot.qml" line="515"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

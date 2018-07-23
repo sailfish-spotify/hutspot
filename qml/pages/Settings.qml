@@ -55,7 +55,7 @@ Page {
                 }
             }
 
-            /*TextSwitch {
+            TextSwitch {
                 id: start_stop_librespot
                 text: qsTr("Start/Stop Librespot")
                 description: qsTr("Start Librespot when launched and stop it on exit")
@@ -64,7 +64,7 @@ Page {
                     app.start_stop_librespot.value = checked;
                     app.start_stop_librespot.sync();
                 }
-            }*/
+            }
 
             TextSwitch {
                 id: launchLibrespot
