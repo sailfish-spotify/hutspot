@@ -154,24 +154,30 @@ Page {
                 id: listItem
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                //contentHeight: Theme.itemSizeLarge
+                contentHeight: Theme.itemSizeExtraSmall
 
-                Column {
+                Item {
                     width: parent.width
+                    height: label.height
+                    anchors.verticalCenter: parent.verticalCenter
+
                     Label {
+                        id: label
+                        anchors.left: parent.left
+                        anchors.right: duration.left
+                        anchors.rightMargin: Theme.paddingLarge
                         color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
                         textFormat: Text.StyledText
                         truncationMode: TruncationMode.Fade
-                        width: parent.width
                         text: name ? name : qsTr("No Name")
                     }
 
                     Label {
-                        width: parent.width
+                        id: duration
+                        anchors.right: parent.right
                         color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeExtraSmall
-                        truncationMode: TruncationMode.Fade
-                        text: track.track_number + ", " + Util.getDurationString(track.duration_ms)
+                        font.pixelSize: Theme.fontSizeSmall
+                        text: Util.getDurationString(track.duration_ms)
                         enabled: text.length > 0
                         visible: enabled
                     }
