@@ -9,6 +9,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import "../components"
+import "../Spotify.js" as Spotify
 
 Page {
     id: settingsPage
@@ -27,6 +28,17 @@ Page {
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Login")
+                onClicked: spotify.doO2Auth(Spotify._scope, app.auth_using_browser.value)
+            }
+            MenuItem {
+                text: qsTr("Refresh Token")
+                onClicked: spotify.refreshToken()
+            }
+        }
 
         ListModel { id: items }
 

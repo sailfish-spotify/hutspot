@@ -359,27 +359,17 @@
 <context>
     <name>Playing</name>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="62"/>
+        <location filename="../qml/pages/Playing.qml" line="67"/>
         <source>Playing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="69"/>
-        <source>Login</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="73"/>
-        <source>Refresh Token</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Playing.qml" line="113"/>
+        <location filename="../qml/pages/Playing.qml" line="107"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="289"/>
+        <location filename="../qml/pages/Playing.qml" line="166"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -565,52 +555,62 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="37"/>
-        <source>Settings</source>
+        <location filename="../qml/pages/Settings.qml" line="34"/>
+        <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="41"/>
-        <source>Number of results per request (limit)</source>
+        <location filename="../qml/pages/Settings.qml" line="38"/>
+        <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/Settings.qml" line="49"/>
-        <source>Authorize using Browser</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="50"/>
-        <source>Use external Browser to login at Spotify</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/pages/Settings.qml" line="60"/>
-        <source>Start/Stop Librespot</source>
+        <location filename="../qml/pages/Settings.qml" line="53"/>
+        <source>Number of results per request (limit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/pages/Settings.qml" line="61"/>
+        <source>Authorize using Browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="62"/>
+        <source>Use external Browser to login at Spotify</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="72"/>
+        <source>Start/Stop Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="73"/>
         <source>Start Librespot when launched and stop it on exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="71"/>
+        <location filename="../qml/pages/Settings.qml" line="83"/>
         <source>Librespot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="74"/>
+        <location filename="../qml/pages/Settings.qml" line="86"/>
         <source>Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="77"/>
+        <location filename="../qml/pages/Settings.qml" line="89"/>
         <source>Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="78"/>
+        <location filename="../qml/pages/Settings.qml" line="90"/>
         <source>Not Running</source>
         <translation type="unfinished"></translation>
     </message>
