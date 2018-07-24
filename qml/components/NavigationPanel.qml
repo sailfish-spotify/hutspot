@@ -13,15 +13,18 @@ DockedPanel {
     modal: false
 
     Column {
+        id: bar
         width: parent.width
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+        property real itemWidth : width / 5
 
         Row {
             id: firstRow
-            spacing: Theme.paddingMedium
+            width: parent.width
 
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-music"
                 onClicked: {
                     open = false
@@ -29,6 +32,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-health"
                 onClicked: {
                     open = false
@@ -36,6 +40,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-person" // -events
                 onClicked: {
                     open = false
@@ -43,6 +48,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-like"
                 onClicked: {
                     open = false
@@ -50,6 +56,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-search"
                 onClicked: {
                     open = false
@@ -72,11 +79,9 @@ DockedPanel {
 
         Row {
             id: secondRow
-            //visible: enabled
-            //enabled: false
-            spacing: Theme.paddingMedium
 
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-accessory-speaker"
                 onClicked: {
                     open = false
@@ -84,6 +89,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-developer-mode"
                 onClicked: {
                     open = false
@@ -91,6 +97,7 @@ DockedPanel {
                 }
             }
             IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-about"
                 onClicked: {
                     open = false
@@ -103,7 +110,6 @@ DockedPanel {
     onOpenChanged: {
         if(!open) {
             modal = false
-            //secondRow.enabled = false
         }
     }
 
