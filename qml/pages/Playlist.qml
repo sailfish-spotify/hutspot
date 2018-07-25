@@ -75,13 +75,19 @@ Page {
                 }
             }
 
-            Label {
-                id: nameLabel
-                color: Theme.primaryColor
-                textFormat: Text.StyledText
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                text: playlist.name
+            MetaLabels {
+                firstLabelText: playlist.name
+                secondLabelText: playlist.description
+                thirdLabelText: {
+                    var s = playlist.owner.display_name
+                    if(playlist.followers && playlist.followers.total > 0)
+                        s += ", " + Util.abbreviateNumber(playlist.followers.total) + " " + qsTr("followers")
+                    if(playlist["public"])
+                        s += ", " +  qsTr("public")
+                    if(playlist.collaborative)
+                        s += ", " +  qsTr("collaborative")
+                    return s
+                }
             }
 
             TextSwitch {

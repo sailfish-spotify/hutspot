@@ -76,28 +76,18 @@ Page {
                 }
             }
 
-            Label {
-                id: nameLabel
-                color: Theme.primaryColor
-                textFormat: Text.StyledText
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                text:  currentArtist ? currentArtist.name : qsTr("No Name")
-            }
-
-            Label {
-                color: Theme.primaryColor
-                truncationMode: TruncationMode.Fade
-                font.pixelSize: Theme.fontSizeSmall
-                width: parent.width
-                wrapMode: Text.Wrap
-                visible: text.length > 0
-                text: {
+            MetaLabels {
+                firstLabelText: currentArtist ? currentArtist.name : qsTr("No Name")
+                secondLabelText: {
                     var s = ""
                     if(currentArtist.genres && currentArtist.genres.length > 0)
                         s += Util.createItemsString(currentArtist.genres, "")
                     return s
                 }
+                thirdLabelText: currentArtist.followers.total > 0
+                                ? Util.abbreviateNumber(currentArtist.followers.total) + " " + qsTr("followers")
+                                : ""
+
             }
 
             TextSwitch {

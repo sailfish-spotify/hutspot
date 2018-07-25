@@ -80,34 +80,10 @@ Page {
                     onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 }
 
-                Column {
-                    width: parent.width
-                    spacing: Theme.paddingSmall
-
-                    Label {
-                        color: Theme.highlightColor
-                        font.bold: true
-                        truncationMode: TruncationMode.Fade
-                        width: parent.width
-                        wrapMode: Text.Wrap
-                        text: getFirstLabelText(playbackState, contextObject)
-                    }
-                    Label {
-                        color: Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        truncationMode: TruncationMode.Fade
-                        width: parent.width
-                        wrapMode: Text.Wrap
-                        visible: text.length > 0
-                        text:  getSecondLabelText(playbackState, contextObject)
-                    }
-                    Label {
-                        width: parent.width
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.Wrap
-                        visible: text.length > 0
-                        text: getThirdLabelText(playbackState, contextObject)
-                    }
+                MetaLabels {
+                    firstLabelText: getFirstLabelText(playbackState, contextObject)
+                    secondLabelText: getSecondLabelText(playbackState, contextObject)
+                    thirdLabelText: getThirdLabelText(playbackState, contextObject)
                 }
 
                 /*Label {
@@ -162,20 +138,6 @@ Page {
                       when: loader.status == Loader.Ready
                     }
                 }
-
-                /*// for playlist tracks
-                SearchResultListItem {
-                    id: searchResultListItem
-                    enabled: stype > 0
-                    visible: enabled
-                }
-
-                // for album tracks
-                AlbumTrackListItem {
-                    id: albumTrackListItem
-                    enabled: stype === 0
-                    visible: enabled
-                }*/
 
                 onClicked: app.playTrack(track)
             }
@@ -379,13 +341,13 @@ Page {
             break
         case 'artist':
             if(contextObject && contextObject.followers.total > 0)
-                s += contextObject.followers.total + " " + qsTr("followers")
+                s += Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
             break
         case 'playlist':
             if(contextObject) {
                 s += contextObject.owner.display_name
-                if(contextObject.followers.total > 0)
-                    s += ", " + contextObject.followers.total + " " + qsTr("followers")
+                if(contextObject.followers && contextObject.followers.total > 0)
+                    s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
                 if(contextObject["public"])
                     s += ", " +  qsTr("public")
                 if(contextObject.collaborative)

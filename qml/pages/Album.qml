@@ -77,36 +77,10 @@ Page {
                 }
             }
 
-            Label {
-                id: nameLabel
-                color: Theme.highlightColor
-                font.bold: true
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                wrapMode: Text.Wrap
-                text: album.name
-            }
-
-            Label {
-                id: artistLabel
-                color: Theme.primaryColor
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                wrapMode: Text.Wrap
-                text: Util.createItemsString(album.artists, qsTr("no artist known"))
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: loadArtist(album.artists)
-                }
-            }
-
-            Label {
-                color: Theme.primaryColor
-                truncationMode: TruncationMode.Fade
-                font.pixelSize: Theme.fontSizeSmall
-                width: parent.width
-                wrapMode: Text.Wrap
-                text: {
+            MetaLabels {
+                firstLabelText: album.name
+                secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
+                thirdLabelText: {
                     var s = ""
                     if(album.release_date && album.release_date.length > 0)
                         s += Util.getYearFromReleaseDate(album.release_date)
@@ -114,22 +88,15 @@ Page {
                         s += ", " + Util.createItemsString(album.genres, "")
                     return s
                 }
+                /*MouseArea {
+                    anchors.fill: parent
+                    onClicked: loadArtist(album.artists)
+                }*/
             }
 
-            Rectangle {
+            Separator {
                 width: parent.width
-                height:Theme.paddingLarge
-                opacity: 0
-            }
-
-            Label {
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                font.bold: true
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.highlightColor
-                horizontalAlignment: Text.AlignRight
-                text: qsTr("Tracks")
+                color: Theme.primaryColor
             }
 
         }
