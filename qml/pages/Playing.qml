@@ -18,10 +18,11 @@ Page {
 
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
+    property string pageHeaderText: qsTr("Playing")
 
     property var playingObject
     property var playbackState
-    property var contextObject
+    property var contextObject: null
     property string currentId: ""
     property string currentTrackId: ""
 
@@ -51,7 +52,6 @@ Page {
 
             width: parent.width
             anchors.fill: parent
-            //anchors.bottom: navPanel.top
             clip: true
 
             header: Column {
@@ -64,7 +64,7 @@ Page {
                 PageHeader {
                     id: pHeader
                     width: parent.width
-                    title: qsTr("Playing")
+                    title: pageHeaderText
                     anchors.horizontalCenter: parent.horizontalCenter
                     MenuButton {}
                 }
@@ -83,60 +83,42 @@ Page {
                 Column {
                     width: parent.width
                     spacing: Theme.paddingSmall
+
                     Label {
-                        id: nameLabel
                         color: Theme.highlightColor
                         font.bold: true
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                         wrapMode: Text.Wrap
-                        text: (playbackState && playbackState.item) ? playbackState.item.name : ""
+                        text: getFirstLabelText(playbackState, contextObject)
                     }
-
                     Label {
-                        id: artistLabel
                         color: Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                         wrapMode: Text.Wrap
-                        text: {
-                            var s = ""
-                            if(playbackState && playbackState.item) {
-                                var track = playbackState.item
-                                s += Util.createItemsString(track.artists, qsTr("no artist known"))
-                            }
-                            return s
-                        }
+                        visible: text.length > 0
+                        text:  getSecondLabelText(playbackState, contextObject)
                     }
-
                     Label {
                         width: parent.width
                         font.pixelSize: Theme.fontSizeSmall
-                        text:  {
-                            var s = ""
-                            if(playbackState && playbackState.context) {
-                                s += playbackState.context.type
-                                if(contextObject)
-                                    s += ": " + contextObject.name
-                                if(playbackState.item)
-                                    s += " (" + Util.getYearFromReleaseDate(playbackState.item.album.release_date) + ")"
-                            }
-                            return s
-                        }
                         wrapMode: Text.Wrap
+                        visible: text.length > 0
+                        text: getThirdLabelText(playbackState, contextObject)
                     }
-
-                    /*Label {
-                        truncationMode: TruncationMode.Fade
-                        width: parent.width
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode: Text.Wrap
-                        text:  (playbackState && playbackState.device)
-                                ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
-                                : qsTr("none")
-                    }*/
                 }
+
+                /*Label {
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.Wrap
+                    text:  (playbackState && playbackState.device)
+                            ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
+                            : qsTr("none")
+                }*/
 
                 Rectangle {
                     width: parent.width
@@ -357,6 +339,63 @@ Page {
         }
     }
 
+    function getFirstLabelText(playbackState) {
+        return (playbackState && playbackState.item) ? playbackState.item.name : ""
+    }
+
+    function getSecondLabelText(playbackState, contextObject) {
+        var s = ""
+        if(playbackState === undefined)
+             return s
+        if(!playbackState.context)
+            return s
+        switch(playbackState.context.type) {
+        case 'album':
+            if(contextObject)
+                s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
+            break
+        case 'artist':
+            if(contextObject)
+                s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
+            break
+        case 'playlist':
+            if(contextObject)
+                s+= contextObject.description
+            break
+        }
+        return s
+    }
+
+    function getThirdLabelText(playbackState, contextObject) {
+        var s = ""
+        if(playbackState === undefined)
+             return s
+        if(!playbackState.context)
+            return s
+        switch(playbackState.context.type) {
+        case 'album':
+            if(contextObject)
+                s += Util.getYearFromReleaseDate(contextObject.release_date)
+            break
+        case 'artist':
+            if(contextObject && contextObject.followers.total > 0)
+                s += contextObject.followers.total + " " + qsTr("followers")
+            break
+        case 'playlist':
+            if(contextObject) {
+                s += contextObject.owner.display_name
+                if(contextObject.followers.total > 0)
+                    s += ", " + contextObject.followers.total + " " + qsTr("followers")
+                if(contextObject["public"])
+                    s += ", " +  qsTr("public")
+                if(contextObject.collaborative)
+                    s += ", " +  qsTr("collaborative")
+            }
+            break
+        }
+        return s
+    }
+
     function refresh() {
         var i;
 
@@ -367,29 +406,38 @@ Page {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
                     if(currentId !== cid) {
                         currentId = cid
+                        contextObject = null
                         switch(playbackState.context.type) {
                         case 'album':
                             Spotify.getAlbum(cid, {}, function(error, data) {
                                 contextObject = data
+                                pageHeaderText = qsTr("Playing Album")
                             })
                             loadAlbumTracks(cid)
                             break
                         case 'artist':
                             Spotify.getArtist(cid, {}, function(error, data) {
                                 contextObject = data
+                                pageHeaderText = qsTr("Playing Artist")
                             })
                             break
                         case 'playlist':
                             Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
                                 contextObject = data
+                                pageHeaderText = qsTr("Playing Playlist")
                             })
                             loadPlaylistTracks(app.id, cid)
+                            break
+                        default:
+                            pageHeaderText = qsTr("Playing Album")
                             break
                         }
                     }
                 } else {
                     // no context (a single track?)
                     currentId = playbackState.item.id
+                    contextObject = null
+                    pageHeaderText = qsTr("Playing")
                 }
 
                 playbackProgress = playbackState.progress_ms
