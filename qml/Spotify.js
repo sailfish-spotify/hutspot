@@ -10,6 +10,7 @@ var _accessToken = null;
 var _username = null;
 
 var scopes_array = [
+  "user-library-modify",
   "streaming",
   "playlist-read-collaborative",
   "playlist-read-private",
@@ -279,7 +280,10 @@ function removeFromMySavedAlbums(albumIds, options, callback) {
   var requestData = {
     url: _baseUri + '/me/albums',
     type: 'DELETE',
-    postData: albumIds
+    //postData: albumIds gives: 400 missing payload
+    params: {
+         ids: albumIds.join(',')
+    }
   };
   return _checkParamsAndPerformRequest(requestData, options, callback);
 };
