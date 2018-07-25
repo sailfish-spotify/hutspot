@@ -142,6 +142,7 @@ Page {
 
             AlbumTrackListItem {
                 id: albumTrackListItem
+                dataModel: model
             }
 
             menu: contextMenu

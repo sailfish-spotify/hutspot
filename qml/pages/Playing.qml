@@ -164,7 +164,24 @@ Page {
                                ? Theme.itemSizeExtraSmall
                                : Theme.itemSizeLarge
 
-                // for playlist tracks
+                Loader {
+                    id: loader
+
+                    width: parent.width
+
+                    source: stype > 0
+                            ? "../components/SearchResultListItem.qml"
+                            : "../components/AlbumTrackListItem.qml"
+
+                    Binding {
+                      target: loader.item
+                      property: "dataModel"
+                      value: model
+                      when: loader.status == Loader.Ready
+                    }
+                }
+
+                /*// for playlist tracks
                 SearchResultListItem {
                     id: searchResultListItem
                     enabled: stype > 0
@@ -176,7 +193,7 @@ Page {
                     id: albumTrackListItem
                     enabled: stype === 0
                     visible: enabled
-                }
+                }*/
 
                 onClicked: app.playTrack(track)
             }

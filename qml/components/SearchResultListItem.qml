@@ -6,6 +6,8 @@ import "../Util.js" as Util
 Row {
     id: row
 
+    property var dataModel
+
     width: parent.width
     //height: column.height
     spacing: Theme.paddingMedium
@@ -19,7 +21,7 @@ Row {
         }
         asynchronous: true
         fillMode: Image.PreserveAspectFit
-        source: getImageURL(model)
+        source: getImageURL(dataModel)
     }
 
 
@@ -32,17 +34,17 @@ Row {
 
         Label {
             id: nameLabel
-            color: currentIndex === index ? Theme.highlightColor : Theme.primaryColor
+            color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             width: parent.width
-            text: name ? name : qsTr("No Name")
+            text: dataModel.name ? dataModel.name : qsTr("No Name")
         }
 
         Label {
             id: meta1Label
             width: parent.width
-            color: currentIndex === index ? Theme.highlightColor : Theme.primaryColor
+            color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             truncationMode: TruncationMode.Fade
             text: getMeta1String()
@@ -53,7 +55,7 @@ Row {
         Label {
             id: meta2Label
             width: parent.width
-            color: currentIndex === index ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            color: currentIndex === dataModel.index ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
@@ -63,26 +65,26 @@ Row {
         }
     }
 
-    function getImageURL(model) {
+    function getImageURL(dataModel) {
         var images
-        switch(type) {
+        switch(dataModel.type) {
         case 0:
-            if(album.images)
-                images = album.images
+            if(dataModel.album.images)
+                images = dataModel.album.images
             break;
         case 1:
-            if(artist.images)
-                images = artist.images
+            if(dataModel.artist.images)
+                images = dataModel.artist.images
             break;
         case 2:
-            if(playlist.images)
-                images = playlist.images
+            if(dataModel.playlist.images)
+                images = dataModel.playlist.images
             break;
         case 3:
-            if(track.images)
-                images = track.images
-            else if(track.album && track.album.images)
-                images = track.album.images
+            if(dataModel.track.images)
+                images = dataModel.track.images
+            else if(dataModel.track.album && dataModel.track.album.images)
+                images = dataModel.track.album.images
             break;
         default:
             return ""
@@ -103,27 +105,27 @@ Row {
     function getMeta1String() {
         var items = []
         var ts = ""
-        switch(type) {
+        switch(dataModel.type) {
         case 0:
-            if(album.artists)
-                items = album.artists
+            if(dataModel.album.artists)
+                items = dataModel.album.artists
             return Util.createItemsString(items, qsTr("no artist known"))
         case 1:
-            if(artist.genres)
-                items = artist.genres
+            if(dataModel.artist.genres)
+                items = dataModel.artist.genres
             return Util.createItemsString(items, qsTr("no genre known"))
         case 2:
-            if(playlist.owner.display_name)
-                return playlist.owner.display_name
+            if(dataModel.playlist.owner.display_name)
+                return dataModel.playlist.owner.display_name
             else
-                return qsTr("Id") + ": " + playlist.owner.id
+                return qsTr("Id") + ": " + dataModel.playlist.owner.id
         case 3:
-            if(track.duration_ms)
-                ts += Util.getDurationString(track.duration_ms) + ", "
-            if(track.artists)
-                items = track.artists
-            else if(track.album && track.album.artists)
-                items = track.album.artists
+            if(dataModel.track.duration_ms)
+                ts += Util.getDurationString(dataModel.track.duration_ms) + ", "
+            if(dataModel.track.artists)
+                items = dataModel.track.artists
+            else if(dataModel.track.album && dataModel.track.album.artists)
+                items = dataModel.track.album.artists
             return ts + Util.createItemsString(items, qsTr("no artist known"))
         default:
             return ""
@@ -132,26 +134,26 @@ Row {
 
     function getMeta2String() {
         var s = "";
-        switch(type) {
+        switch(dataModel.type) {
         case 0:
-            return Util.getYearFromReleaseDate(album.release_date)
+            return Util.getYearFromReleaseDate(dataModel.album.release_date)
         case 1:
-            if(typeof(following) !== 'undefined') {
-               if(following)
+            if(typeof(dataModel.following) !== 'undefined') {
+               if(dataModel.following)
                    s = qsTr("[following], ")
             }
-            s += Util.abbreviateNumber(artist.followers.total) + " " + qsTr("followers")
+            s += Util.abbreviateNumber(dataModel.artist.followers.total) + " " + qsTr("followers")
             return s
         case 2:
             /*if(typeof(following) !== 'undefined') {
                if(following)
                    s = qsTr("[following], ")
             }*/
-            s += playlist.tracks.total + " " + qsTr("tracks")
+            s += dataModel.playlist.tracks.total + " " + qsTr("tracks")
             return s
         case 3:
-            if(track.album)
-                return track.album.name
+            if(dataModel.track.album)
+                return dataModel.track.album.name
             break;
         }
         return ""
