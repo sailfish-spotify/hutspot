@@ -72,7 +72,7 @@ Page {
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                        anchors.fill: parent
-                       onClicked: app.playContext(album)
+                       onClicked: app.playContext(currentArtist)
                 }
             }
 

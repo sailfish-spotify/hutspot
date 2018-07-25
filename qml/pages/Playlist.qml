@@ -70,8 +70,8 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
-                       anchors.fill: parent
-                       onClicked: app.playContext(playlist)
+                     anchors.fill: parent
+                     onClicked: app.playContext(playlist)
                 }
             }
 
