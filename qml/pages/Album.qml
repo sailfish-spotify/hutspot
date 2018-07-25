@@ -72,8 +72,8 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
-                       anchors.fill: parent
-                       onClicked: app.playContext(album)
+                     anchors.fill: parent
+                     onClicked: app.playContext(album)
                 }
             }
 
@@ -88,10 +88,7 @@ Page {
                         s += ", " + Util.createItemsString(album.genres, "")
                     return s
                 }
-                /*MouseArea {
-                    anchors.fill: parent
-                    onClicked: loadArtist(album.artists)
-                }*/
+                onSecondLabelClicked: loadArtist(album.artists)
             }
 
             Separator {
