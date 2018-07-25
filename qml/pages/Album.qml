@@ -81,9 +81,9 @@ Page {
                 firstLabelText: album.name
                 secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
                 thirdLabelText: {
-                    var s = ""
+                    var s = album.tracks.total + " " + qsTr("tracks")
                     if(album.release_date && album.release_date.length > 0)
-                        s += Util.getYearFromReleaseDate(album.release_date)
+                        s += ", " + Util.getYearFromReleaseDate(album.release_date)
                     if(album.genres && album.genres.length > 0)
                         s += ", " + Util.createItemsString(album.genres, "")
                     return s

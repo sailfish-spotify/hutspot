@@ -336,8 +336,12 @@ Page {
             return s
         switch(playbackState.context.type) {
         case 'album':
-            if(contextObject)
-                s += Util.getYearFromReleaseDate(contextObject.release_date)
+            if(contextObject) {
+                s += contextObject.tracks.total + " " + qsTr("tracks")
+                s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
+                if(contextObject.genres)
+                    s += ", " + Util.createItemsString(contextObject.genres, "")
+            }
             break
         case 'artist':
             if(contextObject && contextObject.followers.total > 0)
@@ -345,7 +349,8 @@ Page {
             break
         case 'playlist':
             if(contextObject) {
-                s += contextObject.owner.display_name
+                s += contextObject.tracks.total + " " + qsTr("tracks")
+                s += ", " + qsTr("by") + " " + contextObject.owner.display_name
                 if(contextObject.followers && contextObject.followers.total > 0)
                     s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
                 if(contextObject["public"])

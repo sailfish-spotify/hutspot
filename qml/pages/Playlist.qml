@@ -64,7 +64,7 @@ Page {
                 id: imageItem
                 source: (playlist && playlist.images)
                         ? playlist.images[0].url : defaultImageSource
-                width: parent.width * 0.5
+                width: parent.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -79,7 +79,8 @@ Page {
                 firstLabelText: playlist.name
                 secondLabelText: playlist.description
                 thirdLabelText: {
-                    var s = playlist.owner.display_name
+                    var s = playlist.tracks.total + " " + qsTr("tracks")
+                    s += ", " + qsTr("by") + " " + playlist.owner.display_name
                     if(playlist.followers && playlist.followers.total > 0)
                         s += ", " + Util.abbreviateNumber(playlist.followers.total) + " " + qsTr("followers")
                     if(playlist["public"])
