@@ -504,6 +504,21 @@ ApplicationWindow {
         })
     }
 
+    function saveAlbum(album, callback) {
+        Spotify.addToMySavedAlbums([album.id], function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function unSaveAlbum(album, callback) {
+        app.showConfirmDialog(qsTr("Please confirm to un-save:<br><br><b>" + album.name + "</b>"),
+                              function() {
+            Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+                callback(error, data)
+            })
+        })
+    }
+
     property string mprisServiceName: "hutspot"
 
     MprisPlayer {

@@ -20,6 +20,7 @@ Page {
     property bool showBusy: false
     property var album
     property var albumArtists
+    property bool isAlbumSaved: false
 
     property int offset: 0
     property int limit: app.searchLimit.value
@@ -77,18 +78,45 @@ Page {
                 }
             }
 
-            MetaLabels {
-                firstLabelText: album.name
-                secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
-                thirdLabelText: {
-                    var s = album.tracks.total + " " + qsTr("tracks")
-                    if(album.release_date && album.release_date.length > 0)
-                        s += ", " + Util.getYearFromReleaseDate(album.release_date)
-                    if(album.genres && album.genres.length > 0)
-                        s += ", " + Util.createItemsString(album.genres, "")
-                    return s
+            Item {
+                width: parent.width
+                height: metaLabels.height
+
+                MetaLabels {
+                    id: metaLabels
+                    anchors.left: parent.left
+                    anchors.right: savedImage.left
+                    //anchors.rightMargin: Theme.paddingMedium
+
+                    firstLabelText: album.name
+                    secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
+                    thirdLabelText: {
+                        var s = ""
+                        if(album.tracks)
+                            s += album.tracks.total + " " + qsTr("tracks")
+                        else if(album.album_type === "single")
+                            s += "1 " + qsTr("track")
+                        if(album.release_date && album.release_date.length > 0)
+                            s += ", " + Util.getYearFromReleaseDate(album.release_date)
+                        if(album.genres && album.genres.length > 0)
+                            s += ", " + Util.createItemsString(album.genres, "")
+                        return s
+                    }
+                    onSecondLabelClicked: loadArtist(album.artists)
                 }
-                onSecondLabelClicked: loadArtist(album.artists)
+
+                Image {
+                    id: savedImage
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    asynchronous: true
+                    fillMode: Image.PreserveAspectFit
+                    source: isAlbumSaved ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
+                    MouseArea {
+                         anchors.fill: parent
+                         onClicked: toggleSaved(album)
+                    }
+                }
             }
 
             Separator {
@@ -176,6 +204,11 @@ Page {
             if(data)
                 albumArtists = data.artists
         })
+
+        Spotify.containsMySavedAlbums([album.id], {}, function(error, data) {
+            if(data)
+                isAlbumSaved = data[0]
+        })
     }
 
     function loadArtist(artists) {
@@ -191,5 +224,18 @@ Page {
         } else if(albumArtists.length === 1) {
             pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist:albumArtists[0]})
         }
+    }
+
+    function toggleSaved(album) {
+        if(isAlbumSaved)
+            app.unSaveAlbum(album, function(error,data) {
+                if(!error)
+                    isAlbumSaved = false
+            })
+        else
+            app.saveAlbum(album, function(error,data) {
+                if(!error)
+                    isAlbumSaved = true
+            })
     }
 }

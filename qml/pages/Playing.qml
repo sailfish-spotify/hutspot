@@ -337,7 +337,10 @@ Page {
         switch(playbackState.context.type) {
         case 'album':
             if(contextObject) {
-                s += contextObject.tracks.total + " " + qsTr("tracks")
+                if(contextObject.tracks)
+                    s += contextObject.tracks.total + " " + qsTr("tracks")
+                else if(contextObject.album_type === "single")
+                    s += "1 " + qsTr("track")
                 s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
                 if(contextObject.genres)
                     s += ", " + Util.createItemsString(contextObject.genres, "")

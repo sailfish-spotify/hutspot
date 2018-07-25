@@ -94,28 +94,12 @@ Page {
             TextSwitch {
                 checked: isFollowed
                 text: qsTr("Following")
-                 onClicked: {
-                     if(isFollowed)
-                          app.unfollowPlaylist(playlist, function(error,data) {
-                              if(data)
-                                  isFollowed = false
-                          })
-                      else
-                          app.followPlaylist(playlist, function(error,data) {
-                              if(data)
-                                  isFollowed = true
-                          })
-                 }
+                onClicked: toggleFollow(playlist)
             }
 
-            Label {
-                truncationMode: TruncationMode.Fade
+            Separator {
                 width: parent.width
-                font.bold: true
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.highlightColor
-                horizontalAlignment: Text.AlignRight
-                text: qsTr("Tracks")
+                color: Theme.primaryColor
             }
 
             /*Rectangle {
@@ -213,4 +197,16 @@ Page {
         })
     }
 
+    function toggleFollow(playlist) {
+        if(isFollowed)
+             app.unfollowPlaylist(playlist, function(error, data) {
+                 if(data)
+                     isFollowed = false
+             })
+         else
+             app.followPlaylist(playlist, function(error, data) {
+                 if(data)
+                     isFollowed = true
+             })
+    }
 }

@@ -93,18 +93,7 @@ Page {
             TextSwitch {
                 checked: isFollowed
                 text: qsTr("Following")
-                 onClicked: {
-                     if(isFollowed)
-                          app.unfollowArtist(currentArtist, function(error,data) {
-                              if(data)
-                                  isFollowed = false
-                          })
-                      else
-                          app.followArtist(currentArtist, function(error,data) {
-                              if(data)
-                                  isFollowed = true
-                          })
-                 }
+                onClicked: toggleFollow(currentArtist)
             }
 
             /*Rectangle {
@@ -280,4 +269,18 @@ Page {
                 loadData()
         })
     }
+
+    function toggleFollow(artist) {
+        if(isFollowed)
+            app.unfollowArtist(artist, function(error,data) {
+                if(data)
+                    isFollowed = false
+            })
+        else
+            app.followArtist(artist, function(error,data) {
+                if(data)
+                    isFollowed = true
+            })
+     }
+
 }
