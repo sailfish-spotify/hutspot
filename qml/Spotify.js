@@ -11,6 +11,7 @@ var _username = null;
 
 var scopes_array = [
   "user-library-modify",
+  "user-follow-modify",
   "streaming",
   "playlist-read-collaborative",
   "playlist-read-private",

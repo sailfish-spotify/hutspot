@@ -88,12 +88,8 @@ Page {
                                 ? Util.abbreviateNumber(currentArtist.followers.total) + " " + qsTr("followers")
                                 : ""
 
-            }
-
-            TextSwitch {
-                checked: isFollowed
-                text: qsTr("Following")
-                onClicked: toggleFollow(currentArtist)
+                isFavorite: isFollowed
+                onToggleFavorite: toggleFollow(currentArtist)
             }
 
             /*Rectangle {

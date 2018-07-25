@@ -89,12 +89,8 @@ Page {
                         s += ", " +  qsTr("collaborative")
                     return s
                 }
-            }
-
-            TextSwitch {
-                checked: isFollowed
-                text: qsTr("Following")
-                onClicked: toggleFollow(playlist)
+                isFavorite: isFollowed
+                onToggleFavorite: toggleFollow(playlist)
             }
 
             Separator {

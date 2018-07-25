@@ -78,45 +78,26 @@ Page {
                 }
             }
 
-            Item {
+            MetaLabels {
+                id: metaLabels
                 width: parent.width
-                height: metaLabels.height
-
-                MetaLabels {
-                    id: metaLabels
-                    anchors.left: parent.left
-                    anchors.right: savedImage.left
-                    //anchors.rightMargin: Theme.paddingMedium
-
-                    firstLabelText: album.name
-                    secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
-                    thirdLabelText: {
-                        var s = ""
-                        if(album.tracks)
-                            s += album.tracks.total + " " + qsTr("tracks")
-                        else if(album.album_type === "single")
-                            s += "1 " + qsTr("track")
-                        if(album.release_date && album.release_date.length > 0)
-                            s += ", " + Util.getYearFromReleaseDate(album.release_date)
-                        if(album.genres && album.genres.length > 0)
-                            s += ", " + Util.createItemsString(album.genres, "")
-                        return s
-                    }
-                    onSecondLabelClicked: loadArtist(album.artists)
+                firstLabelText: album.name
+                secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
+                thirdLabelText: {
+                    var s = ""
+                    if(album.tracks)
+                        s += album.tracks.total + " " + qsTr("tracks")
+                    else if(album.album_type === "single")
+                        s += "1 " + qsTr("track")
+                    if(album.release_date && album.release_date.length > 0)
+                        s += ", " + Util.getYearFromReleaseDate(album.release_date)
+                    if(album.genres && album.genres.length > 0)
+                        s += ", " + Util.createItemsString(album.genres, "")
+                    return s
                 }
-
-                Image {
-                    id: savedImage
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    asynchronous: true
-                    fillMode: Image.PreserveAspectFit
-                    source: isAlbumSaved ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
-                    MouseArea {
-                         anchors.fill: parent
-                         onClicked: toggleSaved(album)
-                    }
-                }
+                onSecondLabelClicked: loadArtist(album.artists)
+                isFavorite: isAlbumSaved
+                onToggleFavorite: toggleSaved(album)
             }
 
             Separator {
