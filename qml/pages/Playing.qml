@@ -110,7 +110,6 @@ Page {
                         }
                     }
 
-
                     Label {
                         width: parent.width
                         font.pixelSize: Theme.fontSizeSmall
@@ -127,6 +126,7 @@ Page {
                         }
                         wrapMode: Text.Wrap
                     }
+
                     /*Label {
                         truncationMode: TruncationMode.Fade
                         width: parent.width
@@ -136,6 +136,12 @@ Page {
                                 ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
                                 : qsTr("none")
                     }*/
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: Theme.paddingMedium
+                    opacity: 0
                 }
 
                 Separator {
@@ -154,33 +160,22 @@ Page {
                 id: listItem
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                contentHeight: Theme.itemSizeExtraSmall
+                contentHeight: stype == 0
+                               ? Theme.itemSizeExtraSmall
+                               : Theme.itemSizeLarge
 
-                Item {
-                    width: parent.width
-                    height: label.height
-                    anchors.verticalCenter: parent.verticalCenter
+                // for playlist tracks
+                SearchResultListItem {
+                    id: searchResultListItem
+                    enabled: stype > 0
+                    visible: enabled
+                }
 
-                    Label {
-                        id: label
-                        anchors.left: parent.left
-                        anchors.right: duration.left
-                        anchors.rightMargin: Theme.paddingLarge
-                        color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
-                        textFormat: Text.StyledText
-                        truncationMode: TruncationMode.Fade
-                        text: name ? name : qsTr("No Name")
-                    }
-
-                    Label {
-                        id: duration
-                        anchors.right: parent.right
-                        color: currentTrackId === track.id ? Theme.highlightColor : Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        text: Util.getDurationString(track.duration_ms)
-                        enabled: text.length > 0
-                        visible: enabled
-                    }
+                // for album tracks
+                AlbumTrackListItem {
+                    id: albumTrackListItem
+                    enabled: stype === 0
+                    visible: enabled
                 }
 
                 onClicked: app.playTrack(track)
@@ -200,7 +195,8 @@ Page {
         }
     } // Item
 
-    PanelBackground {
+    PanelBackground { //
+    // Item { for transparant controlpanel
         id: controlPanel
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -414,6 +410,7 @@ Page {
                     offset = data.offset
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
+                                            stype: 2,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
                     }
@@ -437,6 +434,7 @@ Page {
                     offset = data.offset
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
+                                            stype: 0,
                                             name: data.items[i].name,
                                             track: data.items[i]})
                     }

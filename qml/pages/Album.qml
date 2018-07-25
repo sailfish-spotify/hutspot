@@ -27,6 +27,8 @@ Page {
     property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
+    property string currentTrackId: ""
+
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -136,27 +138,10 @@ Page {
             id: listItem
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
-            //contentHeight: Theme.itemSizeLarge
+            contentHeight: Theme.itemSizeExtraSmall
 
-            Column {
-                width: parent.width
-                Label {
-                    color: Theme.primaryColor
-                    textFormat: Text.StyledText
-                    truncationMode: TruncationMode.Fade
-                    width: parent.width
-                    text: name ? name : qsTr("No Name")
-                }
-
-                Label {
-                    width: parent.width
-                    color: Theme.primaryColor
-                    font.pixelSize: Theme.fontSizeExtraSmall
-                    truncationMode: TruncationMode.Fade
-                    text: track.track_number + ", " + Util.getDurationString(track.duration_ms)
-                    enabled: text.length > 0
-                    visible: enabled
-                }
+            AlbumTrackListItem {
+                id: albumTrackListItem
             }
 
             menu: contextMenu

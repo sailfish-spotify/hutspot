@@ -153,9 +153,8 @@ Row {
             if(track.album)
                 return track.album.name
             break;
-        default:
-            return ""
         }
+        return ""
     }
 
 }
