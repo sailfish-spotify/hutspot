@@ -75,7 +75,7 @@ Page {
                 }
             }
 
-            MetaLabels {
+            MetaInfoPanel {
                 firstLabelText: playlist.name
                 secondLabelText: playlist.description
                 thirdLabelText: {

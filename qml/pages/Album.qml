@@ -78,7 +78,7 @@ Page {
                 }
             }
 
-            MetaLabels {
+            MetaInfoPanel {
                 id: metaLabels
                 width: parent.width
                 firstLabelText: album.name

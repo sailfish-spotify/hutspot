@@ -23,6 +23,7 @@ Page {
     property var playingObject
     property var playbackState
     property var contextObject: null
+    property bool isContextFavorite: false
     property string currentId: ""
     property string currentTrackId: ""
 
@@ -80,10 +81,13 @@ Page {
                     onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 }
 
-                MetaLabels {
+                MetaInfoPanel {
                     firstLabelText: getFirstLabelText(playbackState, contextObject)
                     secondLabelText: getSecondLabelText(playbackState, contextObject)
                     thirdLabelText: getThirdLabelText(playbackState, contextObject)
+
+                    isFavorite: isContextFavorite
+                    onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
                 }
 
                 /*Label {
@@ -480,6 +484,63 @@ Page {
                 console.log("No Data for getAlbumTracks")
             }
         })
+    }
+
+    function toggleSavedFollowed(playbackState, contextObject) {
+        if(!playbackState || !playbackState.context || !contextObject)
+            return
+        switch(playbackState.context.type) {
+        case 'album':
+            if(isContextFavorite)
+                app.unSaveAlbum(contextObject, function(error,data) {
+                    if(!error)
+                        isContextFavorite = false
+                })
+            else
+                app.saveAlbum(contextObject, function(error,data) {
+                    if(!error)
+                        isContextFavorite = true
+                })
+            break
+        case 'artist':
+            if(isContextFavorite)
+                app.unfollowArtist(contextObject, function(error,data) {
+                    if(data)
+                        isContextFavorite = false
+                })
+            else
+                app.followArtist(contextObject, function(error,data) {
+                    if(data)
+                        isContextFavorite = true
+                })
+            break
+        case 'playlist':
+            if(isContextFavorite)
+                 app.unfollowPlaylist(contextObject, function(error, data) {
+                     if(data)
+                         isContextFavorite = false
+                 })
+             else
+                 app.followPlaylist(contextObject, function(error, data) {
+                     if(data)
+                         isContextFavorite = true
+                 })
+            break
+        default: // track?
+            if(playingObject && playingObject.item) { // Note uses globals
+                if(isContextFavorite)
+                    app.unSaveTrack(playingObject.item, function(error,data) {
+                        if(!error)
+                            isContextFavorite = false
+                    })
+                else
+                    app.saveTrack(playingObject.item, function(error,data) {
+                        if(!error)
+                            isContextFavorite = true
+                    })
+            }
+            break
+        }
     }
 
     Connections {

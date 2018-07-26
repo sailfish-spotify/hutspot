@@ -45,7 +45,7 @@ DISTFILES += \
     qml/pages/TopStuff.qml \
     qml/pages/Devices.qml \
     qml/components/Librespot.qml \
-    qml/components/MetaLabels.qml
+    qml/components/MetaInfoPanel.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

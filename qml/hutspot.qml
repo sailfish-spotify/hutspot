@@ -481,7 +481,7 @@ ApplicationWindow {
     }
 
     function unfollowPlaylist(playlist, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + playlist.name + "</b>"),
+        app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
                               function() {
             Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
                 callback(error, data)
@@ -496,7 +496,7 @@ ApplicationWindow {
     }
 
     function unfollowArtist(artist, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to unfollow:<br><br><b>" + artist.name + "</b>"),
+        app.showConfirmDialog(qsTr("Please confirm to unfollow artist:<br><br><b>" + artist.name + "</b>"),
                               function() {
             Spotify.unfollowArtists([artist.id], function(error, data) {
                 callback(error, data)
@@ -511,9 +511,24 @@ ApplicationWindow {
     }
 
     function unSaveAlbum(album, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to un-save:<br><br><b>" + album.name + "</b>"),
+        app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
                               function() {
             Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+                callback(error, data)
+            })
+        })
+    }
+
+    function saveTrack(track, callback) {
+        Spotify.addToMySavedTracks([track.id], function(error, data) {
+            callback(error, data)
+        })
+    }
+
+    function unSaveTrack(track, callback) {
+        app.showConfirmDialog(qsTr("Please confirm to un-save track:<br><br><b>" + track.name + "</b>"),
+                              function() {
+            Spotify.removeFromMySavedTracks([track.id], function(error, data) {
                 callback(error, data)
             })
         })

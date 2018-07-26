@@ -76,7 +76,7 @@ Page {
                 }
             }
 
-            MetaLabels {
+            MetaInfoPanel {
                 firstLabelText: currentArtist ? currentArtist.name : qsTr("No Name")
                 secondLabelText: {
                     var s = ""
