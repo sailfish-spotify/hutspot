@@ -90,7 +90,9 @@ Page {
                     return s
                 }
                 isFavorite: isFollowed
-                onToggleFavorite: toggleFollow(playlist)
+                onToggleFavorite: app.toggleFollowPlaylist(playlist, isFollowed, function(followed) {
+                    isFollowed = followed
+                })
             }
 
             Separator {
@@ -193,16 +195,4 @@ Page {
         })
     }
 
-    function toggleFollow(playlist) {
-        if(isFollowed)
-             app.unfollowPlaylist(playlist, function(error, data) {
-                 if(data)
-                     isFollowed = false
-             })
-         else
-             app.followPlaylist(playlist, function(error, data) {
-                 if(data)
-                     isFollowed = true
-             })
-    }
 }

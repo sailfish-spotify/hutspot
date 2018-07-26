@@ -89,7 +89,9 @@ Page {
                                 : ""
 
                 isFavorite: isFollowed
-                onToggleFavorite: toggleFollow(currentArtist)
+                onToggleFavorite: app.toggleFollowArtist(currentArtist, isFollowed, function(followed) {
+                    isFollowed = followed
+                })
             }
 
             /*Rectangle {
@@ -265,18 +267,5 @@ Page {
                 loadData()
         })
     }
-
-    function toggleFollow(artist) {
-        if(isFollowed)
-            app.unfollowArtist(artist, function(error,data) {
-                if(data)
-                    isFollowed = false
-            })
-        else
-            app.followArtist(artist, function(error,data) {
-                if(data)
-                    isFollowed = true
-            })
-     }
 
 }

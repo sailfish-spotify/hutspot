@@ -534,6 +534,58 @@ ApplicationWindow {
         })
     }
 
+    function toggleSavedTrack(model) {
+        if(model.saved)
+            unSaveTrack(model.track, function(error,data) {
+                if(!error)
+                    model.saved = false
+            })
+        else
+            saveTrack(model.track, function(error,data) {
+                if(!error)
+                    model.saved = true
+            })
+    }
+
+    function toggleSavedAlbum(album, isAlbumSaved, callback) {
+        if(isAlbumSaved)
+            app.unSaveAlbum(album, function(error,data) {
+                if(!error)
+                    callback(false)
+            })
+        else
+            app.saveAlbum(album, function(error,data) {
+                if(!error)
+                    callback(true)
+            })
+    }
+
+    function toggleFollowArtist(artist, isFollowed, callback) {
+        if(isFollowed)
+            unfollowArtist(artist, function(error,data) {
+                if(data)
+                    callback(false)
+            })
+        else
+            followArtist(artist, function(error,data) {
+                if(data)
+                    callback(true)
+            })
+    }
+
+    function toggleFollowPlaylist(playlist, isFollowed, callback) {
+        if(isFollowed)
+             unfollowPlaylist(playlist, function(error, data) {
+                 if(data)
+                     callback(false)
+             })
+         else
+             followPlaylist(playlist, function(error, data) {
+                 if(data)
+                     callback(true)
+             })
+    }
+
     property string mprisServiceName: "hutspot"
 
     MprisPlayer {

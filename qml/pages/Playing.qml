@@ -141,6 +141,16 @@ Page {
                       value: model
                       when: loader.status == Loader.Ready
                     }
+                    Binding {
+                        target: loader.item
+                        property: "isFavorite"
+                        value: saved
+                        when: stype === 0
+                    }
+                }
+                Connections {
+                    target: loader.item
+                    onToggleFavorite: app.toggleSavedTrack(model)
                 }
 
                 onClicked: app.playTrack(track)
@@ -448,8 +458,8 @@ Page {
                     console.log("number of PlaylistTracks: " + data.items.length)
                     offset = data.offset
                     for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            stype: 2,
+                        searchModel.append({type: Spotify.ItemType.Track,
+                                            stype: Spotify.ItemType.Playlist,
                                             name: data.items[i].track.name,
                                             track: data.items[i].track})
                     }
@@ -471,11 +481,20 @@ Page {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
                     offset = data.offset
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            stype: 0,
+                        searchModel.append({type: Spotify.ItemType.Track,
+                                            stype: Spotify.ItemType.Album,
                                             name: data.items[i].name,
+                                            saved: false,
                                             track: data.items[i]})
+                        trackIds.push(data.items[i].id)
+                        // get info about saved tracks
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data) {
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                            }
+                        })
                     }
                 } catch (err) {
                     console.log(err)
@@ -491,40 +510,19 @@ Page {
             return
         switch(playbackState.context.type) {
         case 'album':
-            if(isContextFavorite)
-                app.unSaveAlbum(contextObject, function(error,data) {
-                    if(!error)
-                        isContextFavorite = false
-                })
-            else
-                app.saveAlbum(contextObject, function(error,data) {
-                    if(!error)
-                        isContextFavorite = true
-                })
+            app.toggleSavedAlbum(contextObject, isContextFavorite, function(saved) {
+                isContextFavorite = saved
+            })
             break
         case 'artist':
-            if(isContextFavorite)
-                app.unfollowArtist(contextObject, function(error,data) {
-                    if(data)
-                        isContextFavorite = false
-                })
-            else
-                app.followArtist(contextObject, function(error,data) {
-                    if(data)
-                        isContextFavorite = true
-                })
+            app.toggleFollowArtist(contextObject, isContextFavorite, function(followed) {
+                isContextFavorite = followed
+            })
             break
         case 'playlist':
-            if(isContextFavorite)
-                 app.unfollowPlaylist(contextObject, function(error, data) {
-                     if(data)
-                         isContextFavorite = false
-                 })
-             else
-                 app.followPlaylist(contextObject, function(error, data) {
-                     if(data)
-                         isContextFavorite = true
-                 })
+            app.toggleFollowPlaylist(contextObject, isContextFavorite, function(followed) {
+                isContextFavorite = followed
+            })
             break
         default: // track?
             if(playingObject && playingObject.item) { // Note uses globals

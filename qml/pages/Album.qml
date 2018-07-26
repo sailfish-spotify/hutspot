@@ -97,7 +97,9 @@ Page {
                 }
                 onSecondLabelClicked: loadArtist(album.artists)
                 isFavorite: isAlbumSaved
-                onToggleFavorite: toggleSaved(album)
+                onToggleFavorite: app.toggleSavedAlbum(album, isAlbumSaved, function(saved) {
+                    isAlbumSaved = saved
+                })
             }
 
             Separator {
@@ -117,7 +119,7 @@ Page {
                 id: albumTrackListItem
                 dataModel: model
                 isFavorite: saved
-                onToggleFavorite: toggleSavedTrack(model)
+                onToggleFavorite: app.toggleSavedTrack(model)
             }
 
             menu: contextMenu
@@ -219,29 +221,4 @@ Page {
         }
     }
 
-    function toggleSaved(album) {
-        if(isAlbumSaved)
-            app.unSaveAlbum(album, function(error,data) {
-                if(!error)
-                    isAlbumSaved = false
-            })
-        else
-            app.saveAlbum(album, function(error,data) {
-                if(!error)
-                    isAlbumSaved = true
-            })
-    }
-
-    function toggleSavedTrack(model) {
-        if(model.saved)
-            app.unSaveTrack(model.track, function(error,data) {
-                if(!error)
-                    model.saved = false
-            })
-        else
-            app.saveTrack(model.track, function(error,data) {
-                if(!error)
-                    model.saved = true
-            })
-    }
 }
