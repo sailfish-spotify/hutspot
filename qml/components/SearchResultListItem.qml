@@ -8,6 +8,10 @@ Row {
 
     property var dataModel
 
+    // not used, same as in AlbumTrackListItem so Loader can be used
+    property var isFavorite
+    property bool saved
+
     width: parent.width
     //height: column.height
     spacing: Theme.paddingMedium
