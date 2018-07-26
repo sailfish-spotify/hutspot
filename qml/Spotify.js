@@ -90,7 +90,8 @@ function _performRequest(requestData, callback) {
           callback(null, data);
         } else {
           callback(data.error);
-          console.error(data.error.status + ": " + data.error.message);
+          if(data.error)
+              console.error(data.error.status + ": " + data.error.message);
         }
       }
     }
@@ -202,7 +203,10 @@ function removeFromMySavedTracks(trackIds, options, callback) {
   var requestData = {
     url: _baseUri + '/me/tracks',
     type: 'DELETE',
-    postData: trackIds
+    //postData: trackIds gives: 400 missing payload
+    params: {
+         ids: trackIds.join(',')
+    }
   };
   return _checkParamsAndPerformRequest(requestData, options, callback);
 };
@@ -1678,3 +1682,9 @@ function setAccessToken(accessToken) {
   _accessToken = accessToken;
 };
 
+var ItemType = {
+    Album: 0,
+    Artist: 1,
+    Playlist: 2,
+    Track: 3
+}
