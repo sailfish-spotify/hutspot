@@ -25,7 +25,18 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         asynchronous: true
         fillMode: Image.PreserveAspectFit
-        source: isFavorite ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
+        source: {
+            if(isFavorite)
+                return currentTrackId === dataModel.track.id
+                        ? "image://theme/icon-m-favorite-selected?" + Theme.highlightColor
+                        : "image://theme/icon-m-favorite-selected"
+            else
+                return currentTrackId === dataModel.track.id
+                          ? "image://theme/icon-m-favorite?" + Theme.highlightColor
+                          : "image://theme/icon-m-favorite"
+        }
+        // these are used in the Spotify application
+        //source: isFavorite ? "image://theme/icon-m-certificates" : "image://theme/icon-m-add"
         MouseArea {
              anchors.fill: parent
              onClicked: toggleFavorite()
