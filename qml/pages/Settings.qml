@@ -22,6 +22,7 @@ Page {
             searchLimit.text = app.searchLimit.value
             auth_using_browser.checked = app.auth_using_browser.value
             start_stop_librespot.checked = app.start_stop_librespot.value
+            confirm_un_follow_save.checked = app.confirm_un_follow_save.value
         }
     }
 
@@ -100,6 +101,17 @@ Page {
                 }
             }
         }
+        TextSwitch {
+            id: confirm_un_follow_save
+            text: qsTr("Confirm Un-Save/Follow")
+            description: qsTr("Ask for confirmation for un-save and un-follow")
+            checked: app.confirm_un_follow_save.value
+            onCheckedChanged: {
+                app.confirm_un_follow_save.value = checked;
+                app.confirm_un_follow_save.sync();
+            }
+        }
+
     }
 
     Librespot {

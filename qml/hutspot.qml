@@ -192,7 +192,9 @@ ApplicationWindow {
         mprisPlayer.playbackStatus = status
     }
 
-    function newPlayingTrackInfo(track) {
+    signal newPlayingTrackInfo(var track)
+
+    onNewPlayingTrackInfo: {
         //item.track_number item.duration_ms
         var uri = track.album.images[0].url
 
@@ -481,12 +483,17 @@ ApplicationWindow {
     }
 
     function unfollowPlaylist(playlist, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
-                              function() {
+        if(confirm_un_follow_save.value)
+            app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
+                                  function() {
+                Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+                    callback(error, data)
+                })
+            })
+        else
             Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
                 callback(error, data)
             })
-        })
     }
 
     function followArtist(artist, callback) {
@@ -496,12 +503,17 @@ ApplicationWindow {
     }
 
     function unfollowArtist(artist, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to unfollow artist:<br><br><b>" + artist.name + "</b>"),
-                              function() {
+        if(confirm_un_follow_save.value)
+            app.showConfirmDialog(qsTr("Please confirm to unfollow artist:<br><br><b>" + artist.name + "</b>"),
+                                  function() {
+                Spotify.unfollowArtists([artist.id], function(error, data) {
+                    callback(error, data)
+                })
+            })
+        else
             Spotify.unfollowArtists([artist.id], function(error, data) {
                 callback(error, data)
             })
-        })
     }
 
     function saveAlbum(album, callback) {
@@ -511,12 +523,17 @@ ApplicationWindow {
     }
 
     function unSaveAlbum(album, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
-                              function() {
+        if(confirm_un_follow_save.value)
+            app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
+                                  function() {
+                Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+                    callback(error, data)
+                })
+            })
+        else
             Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
                 callback(error, data)
             })
-        })
     }
 
     function saveTrack(track, callback) {
@@ -526,12 +543,17 @@ ApplicationWindow {
     }
 
     function unSaveTrack(track, callback) {
-        app.showConfirmDialog(qsTr("Please confirm to un-save track:<br><br><b>" + track.name + "</b>"),
-                              function() {
+        if(confirm_un_follow_save.value)
+            app.showConfirmDialog(qsTr("Please confirm to un-save track:<br><br><b>" + track.name + "</b>"),
+                                  function() {
+                Spotify.removeFromMySavedTracks([track.id], function(error, data) {
+                    callback(error, data)
+                })
+            })
+        else
             Spotify.removeFromMySavedTracks([track.id], function(error, data) {
                 callback(error, data)
             })
-        })
     }
 
     function toggleSavedTrack(model) {
@@ -704,5 +726,10 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue {
+            id: confirm_un_follow_save
+            key: "/hutspot/confirm_un_follow_save"
+            defaultValue: true
+    }
 }
 
