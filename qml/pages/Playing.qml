@@ -547,6 +547,11 @@ Page {
             if(app.loggedIn)
                 refresh()
         }
+        onNewPlayingTrackInfo: {
+            // track change?
+            if(currentTrackId !== track.id)
+                refresh()
+        }
     }
 
     Component.onCompleted: {
