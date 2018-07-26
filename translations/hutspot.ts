@@ -53,22 +53,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="126"/>
+        <location filename="../qml/pages/Album.qml" line="128"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="130"/>
+        <location filename="../qml/pages/Album.qml" line="132"/>
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="145"/>
+        <location filename="../qml/pages/Album.qml" line="147"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="199"/>
+        <location filename="../qml/pages/Album.qml" line="211"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -76,7 +76,7 @@
 <context>
     <name>AlbumTrackListItem</name>
     <message>
-        <location filename="../qml/components/AlbumTrackListItem.qml" line="27"/>
+        <location filename="../qml/components/AlbumTrackListItem.qml" line="50"/>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>

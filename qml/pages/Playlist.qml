@@ -77,7 +77,7 @@ Page {
 
             MetaInfoPanel {
                 firstLabelText: playlist.name
-                secondLabelText: playlist.description
+                secondLabelText: playlist.description ? playlist.description : ""
                 thirdLabelText: {
                     var s = playlist.tracks.total + " " + qsTr("tracks")
                     s += ", " + qsTr("by") + " " + playlist.owner.display_name

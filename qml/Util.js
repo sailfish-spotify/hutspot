@@ -89,6 +89,34 @@ function deviceInfoRequest(avahi, callback) {
  * @data array of booleans returned by server
  * @model listmodel containing the items to update
  */
+function setSavedInfo(type, ids, data, model) {
+    var i,j,k;
+
+    for(i=0;i<data.length;i++) {
+        if(data[i]) {                        // if saved
+            for(j=0;j<model.count;j++) {     // lookup in current list
+                var v = model.get(j)
+                if(v.type === type) {
+                    var id
+                    switch(type) {
+                    case SpotifyItemType.Track:
+                        id = v.track.id
+                        break;
+                    }
+                    if(ids[i] === id)        // found it
+                        v.saved = true
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @type type of item
+ * @ids array of ids sent to server
+ * @data array of booleans returned by server
+ * @model listmodel containing the items to update
+ */
 function setFollowedInfo(type, ids, data, model) {
     var i,j,k;
 
@@ -99,10 +127,10 @@ function setFollowedInfo(type, ids, data, model) {
                 if(v.type === type) {
                     var id
                     switch(type) {
-                    case 1:
+                    case SpotifyItemType.Artist:
                         id = v.artist.id
                         break;
-                    case 2:
+                    case SpotifyItemType.Playlist:
                         id = v.playlist.id
                         break
                     }
@@ -127,4 +155,12 @@ function abbreviateNumber(number) {
     if (/\.0$/.test(formatted))
       formatted = formatted.substr(0, formatted.length - 2);
     return formatted + postfix;
+}
+
+// keep in sync with Spotify.js ItemType
+var SpotifyItemType = {
+    Album: 0,
+    Artist: 1,
+    Playlist: 2,
+    Track: 3
 }

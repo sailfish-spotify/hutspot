@@ -116,6 +116,8 @@ Page {
             AlbumTrackListItem {
                 id: albumTrackListItem
                 dataModel: model
+                isFavorite: saved
+                onToggleFavorite: toggleSavedTrack(model)
             }
 
             menu: contextMenu
@@ -165,11 +167,21 @@ Page {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
                     offset = data.offset
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: 3,
+                        searchModel.append({type: Spotify.ItemType.Track,
                                             name: data.items[i].name,
+                                            saved: false,
                                             track: data.items[i]})
+                        trackIds.push(data.items[i].id)
                     }
+                    // get info about saved tracks
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data) {
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                        }
+                    })
+
                 } catch (err) {
                     console.log(err)
                 }
@@ -217,6 +229,19 @@ Page {
             app.saveAlbum(album, function(error,data) {
                 if(!error)
                     isAlbumSaved = true
+            })
+    }
+
+    function toggleSavedTrack(model) {
+        if(model.saved)
+            app.unSaveTrack(model.track, function(error,data) {
+                if(!error)
+                    model.saved = false
+            })
+        else
+            app.saveTrack(model.track, function(error,data) {
+                if(!error)
+                    model.saved = true
             })
     }
 }
