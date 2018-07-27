@@ -94,56 +94,15 @@ Page {
                 dataModel: model
             }
 
-            menu: contextMenu
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Play")
-                        onClicked: {
-                            switch(type) {
-                            case 1:
-                                app.playContext(artist)
-                                break;
-                            case 3:
-                                app.playTrack(track)
-                                break;
-                            }
-                        }
-                    }
-                    MenuItem {
-                        text: qsTr("View")
-                        enabled: type === 1
-                        onClicked: pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
-                    }
-                    /*MenuItem {
-                        enabled: type === 1
-                        visible: enabled
-                        text: qsTr("Unfollow")
-                        onClicked: {
-                            var idx = index
-                            var model = searchModel
-                            app.unfollowArtist(artist, function(error,data) {
-                               if(!error)
-                                   model.remove(idx, 1)
-                            })
-                        }
-                    }*/
-                    MenuItem {
-                        enabled: type === 3
-                        visible: enabled
-                        text: qsTr("Add to Playlist")
-                        onClicked: app.addToPlaylist(track)
-                    }
-                }
-            }
+            menu: SearchResultContextMenu {}
+
             onClicked: {
                 switch(type) {
                 case 1:
                     pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
                     break;
                 case 3:
-                    app.playTrack(track)
+                    pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
                     break;
                 }
             }

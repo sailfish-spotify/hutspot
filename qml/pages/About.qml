@@ -1,5 +1,5 @@
 /**
- * Donnie. Copyright (C) 2017 Willem-Jan de Hoog
+ * Hutspot. Copyright (C) 2018 Willem-Jan de Hoog
  *
  * License: MIT
  */

@@ -118,32 +118,28 @@ Page {
                 dataModel: model
             }
 
-            menu: contextMenu
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Play")
-                        onClicked: app.playTrack(track)
-                    }                    
-                    MenuItem {
-                        text: qsTr("Remove from Playlist")
-                        onClicked: {
-                            var idx = index
-                            var model = searchModel
-                            app.removeFromPlaylist(playlist, track, function(error, data) {
-                                if(!error)
-                                    model.remove(idx, 1)
-                            })
-                        }
-                    }
-                    MenuItem {
-                        text: qsTr("Add to another Playlist")
-                        onClicked: app.addToPlaylist(track)
+            menu: SearchResultContextMenu {
+                contextType: Spotify.ItemType.Playlist
+
+                MenuItem {
+                    text: qsTr("Remove from Playlist")
+                    onClicked: {
+                        var idx = index
+                        var model = searchModel
+                        app.removeFromPlaylist(playlist, track, function(error, data) {
+                            if(!error)
+                                model.remove(idx, 1)
+                        })
                     }
                 }
+
+                MenuItem {
+                    text: qsTr("Add to another Playlist")
+                    onClicked: app.addToPlaylist(track)
+                }
             }
-            onClicked: app.playTrack(track)
+
+            onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
         }
 
         VerticalScrollDecorator {}

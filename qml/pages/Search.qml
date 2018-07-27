@@ -173,56 +173,8 @@ Page {
                 dataModel: model
             }
 
-            menu: contextMenu
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Play")
-                        visible: enabled
-                        onClicked: {
-                            switch(type) {
-                            case 0:
-                                app.playContext(album)
-                                break;
-                            case 1:
-                                app.playContext(artist)
-                                break;
-                            case 2:
-                                app.playContext(playlist)
-                                break;
-                            case 3:
-                                app.playTrack(track)
-                                break;
-                            }
-                        }
-                    }
-                    MenuItem {
-                        text: qsTr("View")
-                        enabled: type === 0 || type === 1 || type === 2
-                        visible: enabled
-                        onClicked: {
-                            switch(type) {
-                            case 0:
-                                pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
-                                break;
-                            case 1:
-                                pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
-                                break;
-                            case 2:
-                                pageStack.push(Qt.resolvedUrl("Playlist.qml"), {playlist: playlist})
-                                break;
-                            }
-                        }
-                    }
-                    MenuItem {
-                        enabled: type === 3
-                        visible: enabled
-                        text: qsTr("Add to Playlist")
-                        onClicked: app.addToPlaylist(track)
-                    }
-                }
-            }
+            menu: SearchResultContextMenu {}
+
             onClicked: {
                 switch(type) {
                 case 0:
@@ -235,7 +187,7 @@ Page {
                     pageStack.push(Qt.resolvedUrl("Playlist.qml"), {playlist: playlist})
                     break;
                 case 3:
-                    app.playTrack(track)
+                    pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
                     break;
                 }
             }

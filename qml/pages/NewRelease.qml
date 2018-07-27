@@ -71,20 +71,8 @@ Page {
                 dataModel: model
             }
 
-            menu: contextMenu
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Play")
-                        onClicked: app.playContext(album)
-                    }
-                    MenuItem {
-                        text: qsTr("View")
-                        onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
-                    }
-                }
-            }
+            menu: SearchResultContextMenu {}
+
             onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
         }
 
