@@ -47,6 +47,7 @@ Dialog {
 
             SearchResultListItem {
                 id: searchResultListItem
+                dataModel: model
             }
         }
 
