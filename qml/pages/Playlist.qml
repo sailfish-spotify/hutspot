@@ -100,11 +100,11 @@ Page {
                 color: Theme.primaryColor
             }
 
-            /*Rectangle {
+            Rectangle {
                 width: parent.width
-                height:Theme.paddingLarge
+                height:Theme.paddingMedium
                 opacity: 0
-            }*/
+            }
         }
 
         delegate: ListItem {

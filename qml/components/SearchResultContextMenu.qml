@@ -38,13 +38,13 @@ ContextMenu {
             switch(type) {
             case 0:
                 pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: album})
-                break;
+                break
             case 1:
                 pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: artist})
-                break;
+                break
             case 2:
                 pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: playlist})
-                break;
+                break
             }
         }
     }

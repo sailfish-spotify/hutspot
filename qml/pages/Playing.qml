@@ -27,6 +27,8 @@ Page {
     property string currentId: ""
     property string currentTrackId: ""
 
+    property string viewMenuText: ""
+
     property int offset: 0
     property int limit: app.searchLimit.value
     property bool canLoadNext: true
@@ -81,13 +83,97 @@ Page {
                     onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 }
 
-                MetaInfoPanel {
-                    firstLabelText: getFirstLabelText(playbackState, contextObject)
-                    secondLabelText: getSecondLabelText(playbackState, contextObject)
-                    thirdLabelText: getThirdLabelText(playbackState, contextObject)
+                Item {
+                    id: infoContainer
 
-                    isFavorite: isContextFavorite
-                    onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
+                    // put MetaInfoPanel in Item to be able to make room for context menu
+                    width: parent.width
+                    height: info.height + (cmenu ? cmenu.height : 0)
+
+                    MetaInfoPanel {
+                        id: info
+                        anchors.top: parent.top
+                        firstLabelText: getFirstLabelText(playbackState, contextObject)
+                        secondLabelText: getSecondLabelText(playbackState, contextObject)
+                        thirdLabelText: getThirdLabelText(playbackState, contextObject)
+
+                        isFavorite: isContextFavorite
+                        onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
+                        onFirstLabelClicked: openMenu()
+                        onSecondLabelClicked: openMenu()
+                        onThirdLabelClicked: openMenu()
+
+                        function openMenu() {
+                            cmenu.update()
+                            cmenu.open(infoContainer)
+                        }
+                    }
+                }
+
+                ContextMenu {
+                    id: cmenu
+
+                    function update() {
+                        viewAlbum.enabled = false
+                        viewArtist.enabled = false
+                        viewPlaylist.enabled = false
+                        switch(getContextType()) {
+                        case Spotify.ItemType.Album:
+                            viewAlbum.enabled = true
+                            viewArtist.enabled = true
+                            break
+                        case Spotify.ItemType.Artist:
+                            viewArtist.enabled = true
+                            break
+                        case Spotify.ItemType.Playlist:
+                            viewPlaylist.enabled = true
+                            break
+                        case Spotify.ItemType.Track:
+                            viewAlbum.enabled = true
+                            viewArtist.enabled = false
+                            break
+                        }
+                    }
+
+                    MenuItem {
+                        id: viewAlbum
+                        text: qsTr("View Album")
+                        visible: enabled
+                        onClicked: {
+                            switch(getContextType()) {
+                            case Spotify.ItemType.Album:
+                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: contextObject})
+                                break
+                            case Spotify.ItemType.Track:
+                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: playingObject.item.album})
+                                break
+                            }
+                        }
+                    }
+                    MenuItem {
+                        id: viewArtist
+                        visible: enabled
+                        text: qsTr("View Artist")
+                        onClicked: {
+                            switch(getContextType()) {
+                            case Spotify.ItemType.Album:
+                                app.loadArtist(contextObject.artists)
+                                break
+                            case Spotify.ItemType.Artist:
+                                pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: contextObject})
+                                break
+                            case Spotify.ItemType.Track:
+                                app.loadArtist(playingObject.item.artists)
+                                break
+                            }
+                        }
+                    }
+                    MenuItem {
+                        id: viewPlaylist
+                        visible: enabled
+                        text: qsTr("View Playlist")
+                        onClicked: pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: contextObject})
+                    }
                 }
 
                 /*Label {
@@ -391,6 +477,22 @@ Page {
             break
         }
         return s
+    }
+
+    function getContextType() {
+        if(!playbackState || !playbackState.context || !contextObject)
+            return -1
+        switch(playbackState.context.type) {
+        case 'album':
+            return Spotify.ItemType.Album
+        case 'artist':
+            return Spotify.ItemType.Artist
+        case 'playlist':
+            return Spotify.ItemType.Playlist
+        }
+        if(playingObject && playingObject.item)
+            return Spotify.ItemType.Track
+        return -1
     }
 
     function refresh() {

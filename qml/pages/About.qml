@@ -93,6 +93,7 @@ Page {
                 wrapMode: Text.WordWrap
                 text:
 "Spotify: web api
+librespot-org: Librespot
 JMPerez: spotify-web-api-js
 pipacs: O2
 fooxl & DrYak: avahi, nss-mdns, libdaemon on sailfish

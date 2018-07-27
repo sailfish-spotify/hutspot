@@ -82,7 +82,11 @@ Page {
                 id: metaLabels
                 width: parent.width
                 firstLabelText: album.name
-                secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
+                // arrows: \u27A5 \u21A6 \u21A5
+                // pointing finger: \u261B
+                // triangles: \u25BA \u25B7 \u27A4
+                // bars: \u2759 \u275A
+                secondLabelText: "\u21A5 " + Util.createItemsString(album.artists, qsTr("no artist known"))
                 thirdLabelText: {
                     var s = ""
                     if(album.tracks)
@@ -95,7 +99,8 @@ Page {
                         s += ", " + Util.createItemsString(album.genres, "")
                     return s
                 }
-                onSecondLabelClicked: loadArtist(album.artists)
+                onSecondLabelClicked: app.loadArtist(album.artists)
+                //secondLabel.font.underline: true to indicate you can click on it
                 isFavorite: isAlbumSaved
                 onToggleFavorite: app.toggleSavedAlbum(album, isAlbumSaved, function(saved) {
                     isAlbumSaved = saved
@@ -192,21 +197,6 @@ Page {
             if(data)
                 isAlbumSaved = data[0]
         })
-    }
-
-    function loadArtist(artists) {
-        if(albumArtists.length > 1) {
-            // choose
-            var ms = pageStack.push(Qt.resolvedUrl("../components/ArtistPicker.qml"),
-                                    { label: qsTr("View an Artist"), artists: albumArtists } );
-            ms.accepted.connect(function() {
-                if(ms.selectedItem) {
-                    pageStack.replace(Qt.resolvedUrl("Artist.qml"), {currentArtist: ms.selectedItem.artist})
-                }
-            })
-        } else if(albumArtists.length === 1) {
-            pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist:albumArtists[0]})
-        }
     }
 
 }

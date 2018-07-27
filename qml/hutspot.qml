@@ -611,6 +611,21 @@ ApplicationWindow {
              })
     }
 
+    function loadArtist(artists) {
+        if(artists.length > 1) {
+            // choose
+            var ms = pageStack.push(Qt.resolvedUrl("components/ArtistPicker.qml"),
+                                    { label: qsTr("View an Artist"), artists: artists } );
+            ms.accepted.connect(function() {
+                if(ms.selectedItem) {
+                    pageStack.replace(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist: ms.selectedItem.artist})
+                }
+            })
+        } else if(artists.length === 1) {
+            pageStack.push(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist:artists[0]})
+        }
+    }
+
     property string mprisServiceName: "hutspot"
 
     MprisPlayer {
