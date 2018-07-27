@@ -20,9 +20,10 @@ Item {
     property alias secondLabel: secondLabel
     property alias thirdLabel: thirdLabel
 
-    //signal firstLabelClicked()
+    signal firstLabelClicked()
     signal secondLabelClicked()
-    //signal thirdLabelClicked()
+    signal thirdLabelClicked()
+
     signal toggleFavorite()
 
     Column {
@@ -39,10 +40,10 @@ Item {
             width: parent.width
             wrapMode: Text.Wrap
             text: firstLabelText
-            /*MouseArea {
+            MouseArea {
                 anchors.fill: parent
                 onClicked: firstLabelClicked()
-            }*/
+            }
         }
         Label {
             id: secondLabel
@@ -65,10 +66,10 @@ Item {
             wrapMode: Text.Wrap
             visible: text.length > 0
             text: thirdLabelText
-            /*MouseArea {
+            MouseArea {
                 anchors.fill: parent
                 onClicked: thirdLabelClicked()
-            }*/
+            }
         }
     }
 
