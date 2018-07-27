@@ -69,24 +69,27 @@ ApplicationWindow {
     }
 
     function loadFirstPage() {
+        var pageUrl = undefined
         switch(firstPage.value) {
         default:
         case "PlayingPage":
-            pageStack.replace(Qt.resolvedUrl("pages/Playing.qml"))
+            pageUrl = Qt.resolvedUrl("pages/Playing.qml")
             break;
         case "NewReleasePage":
-            pageStack.replace(Qt.resolvedUrl("pages/NewRelease.qml"))
+            pageUrl = Qt.resolvedUrl("pages/NewRelease.qml")
             break;
         case "MyStuffPage":
-            pageStack.replace(Qt.resolvedUrl("pages/MyStuff.qml"))
+            pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
             break;
         case "TopStuffPage":
-            pageStack.replace(Qt.resolvedUrl("pages/TopStuff.qml"))
+            pageUrl = Qt.resolvedUrl("pages/TopStuff.qml")
             break;
         case "SearchPage":
-            pageStack.replace(Qt.resolvedUrl("pages/Search.qml"))
+            pageUrl = Qt.resolvedUrl("pages/Search.qml")
             break;
         }
+        if(pageUrl !== undefined )
+            pageStack.replace(pageUrl, {}, PageStackAction.Immediate)
     }
 
     function showErrorMessage(error, text) {
@@ -571,12 +574,12 @@ ApplicationWindow {
 
     function toggleSavedAlbum(album, isAlbumSaved, callback) {
         if(isAlbumSaved)
-            app.unSaveAlbum(album, function(error,data) {
+            unSaveAlbum(album, function(error,data) {
                 if(!error)
                     callback(false)
             })
         else
-            app.saveAlbum(album, function(error,data) {
+            saveAlbum(album, function(error,data) {
                 if(!error)
                     callback(true)
             })
