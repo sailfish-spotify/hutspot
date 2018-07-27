@@ -667,6 +667,12 @@ Page {
             if(currentTrackId !== track.id)
                 refresh()
         }
+        onRemovedFromPlaylist: {
+            if(getContextType() === Spotify.ItemType.Playlist
+               && contextObject.id === playlistId) {
+                Util.removeFromListModel(searchModel, trackId)
+            }
+        }
     }
 
     Component.onCompleted: {

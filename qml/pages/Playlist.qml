@@ -90,6 +90,9 @@ Page {
                     return s
                 }
                 isFavorite: isFollowed
+                //onFirstLabelClicked: secondLabelClicked()
+                //onSecondLabelClicked: edit playlist details
+                //onThirdLabelClicked: secondLabelClicked()
                 onToggleFavorite: app.toggleFollowPlaylist(playlist, isFollowed, function(followed) {
                     isFollowed = followed
                 })

@@ -43,7 +43,13 @@ ApplicationWindow {
     function showPage(page) {
         switch(page) {
         case 'PlayingPage':
-            if(pageStack.currentPage.objectName !== "PlayingPage")
+            // pop all pages above playing page or add it
+            var playingPage = pageStack.find(function(page) {
+                return page.objectName === "PlayingPage"
+            })
+            if(playingPage !== undefined)
+                pageStack.pop(playingPage)
+            else
                 pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
             break;
         case 'NewReleasePage':
@@ -447,11 +453,14 @@ ApplicationWindow {
         })
     }
 
+    signal removedFromPlaylist(string playlistId, string trackId)
+
     function removeFromPlaylist(playlist, track, callback) {
         app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
                               function() {
             Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
                 callback(error, data)
+                removedFromPlaylist(playlist.id, track.id)
             })
         })
     }

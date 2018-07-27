@@ -157,6 +157,37 @@ function abbreviateNumber(number) {
     return formatted + postfix;
 }
 
+function removeFromListModel(model, id) {
+    var i;
+    for(i=0;i<model.count;i++) {
+        var obj = model.get(i);
+        var found = false
+        switch(obj.type) {
+        case SpotifyItemType.Album:
+            if(obj.album.id === id)
+                found = true
+            break;
+        case SpotifyItemType.Artist:
+            if(obj.artist.id === id)
+                found = true
+            break;
+        case SpotifyItemType.Playlist:
+            if(obj.playlist.id === id)
+                found = true
+            break;
+        case SpotifyItemType.Track:
+            if(obj.track.id === id)
+                found = true
+            break;
+        }
+        if(found) {
+            model.remove(i);
+            return true
+        }
+    }
+    return false
+}
+
 // keep in sync with Spotify.js ItemType
 var SpotifyItemType = {
     Album: 0,
