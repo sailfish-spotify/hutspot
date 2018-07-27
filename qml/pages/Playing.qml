@@ -148,6 +148,9 @@ Page {
                         when: stype === 0
                     }
                 }
+
+                menu: AlbumTrackContextMenu {}
+
                 Connections {
                     target: loader.item
                     onToggleFavorite: app.toggleSavedTrack(model)

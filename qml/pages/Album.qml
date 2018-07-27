@@ -122,20 +122,8 @@ Page {
                 onToggleFavorite: app.toggleSavedTrack(model)
             }
 
-            menu: contextMenu
-            Component {
-                id: contextMenu
-                ContextMenu {
-                    MenuItem {
-                        text: qsTr("Play")
-                        onClicked: app.playTrack(track)
-                    }
-                    MenuItem {
-                        text: qsTr("Add to Playlist")
-                        onClicked: app.addToPlaylist(track)
-                    }
-                }
-            }
+            menu: AlbumTrackContextMenu {}
+
             onClicked: app.playTrack(track)
         }
 

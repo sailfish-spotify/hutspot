@@ -46,7 +46,8 @@ DISTFILES += \
     qml/pages/Devices.qml \
     qml/components/Librespot.qml \
     qml/components/MetaInfoPanel.qml \
-    qml/components/SearchResultContextMenu.qml
+    qml/components/SearchResultContextMenu.qml \
+    qml/components/AlbumTrackContextMenu.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
