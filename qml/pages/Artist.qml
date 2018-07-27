@@ -84,7 +84,7 @@ Page {
                         s += Util.createItemsString(currentArtist.genres, "")
                     return s
                 }
-                thirdLabelText: currentArtist.followers.total > 0
+                thirdLabelText: currentArtist.followers && currentArtist.followers.total > 0
                                 ? Util.abbreviateNumber(currentArtist.followers.total) + " " + qsTr("followers")
                                 : ""
 
