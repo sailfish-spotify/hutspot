@@ -323,8 +323,14 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context)
+        if(!playbackState.context) {
+            // no context (a single track?)
+            if(playbackState.item && playbackState.item.album) {
+                s += playbackState.item.album.name
+                s += ", " + Util.getYearFromReleaseDate(playbackState.item.album.release_date)
+            }
             return s
+        }
         switch(playbackState.context.type) {
         case 'album':
             if(contextObject)
@@ -346,8 +352,12 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context)
+        if(!playbackState.context) {
+            // no context (a single track?)
+            if(playbackState.item && playbackState.item.artists)
+                s += Util.createItemsString(playbackState.item.artists, qsTr("no artist known"))
             return s
+        }
         switch(playbackState.context.type) {
         case 'album':
             if(contextObject) {
