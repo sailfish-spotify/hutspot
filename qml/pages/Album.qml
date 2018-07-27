@@ -82,11 +82,7 @@ Page {
                 id: metaLabels
                 width: parent.width
                 firstLabelText: album.name
-                // arrows: \u27A5 \u21A6 \u21A5
-                // pointing finger: \u261B
-                // triangles: \u25BA \u25B7 \u27A4
-                // bars: \u2759 \u275A
-                secondLabelText: "\u21A5 " + Util.createItemsString(album.artists, qsTr("no artist known"))
+                secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
                 thirdLabelText: {
                     var s = ""
                     if(album.tracks)
@@ -99,8 +95,9 @@ Page {
                         s += ", " + Util.createItemsString(album.genres, "")
                     return s
                 }
+                onFirstLabelClicked: secondLabelClicked()
                 onSecondLabelClicked: app.loadArtist(album.artists)
-                //secondLabel.font.underline: true to indicate you can click on it
+                onThirdLabelClicked: secondLabelClicked()
                 isFavorite: isAlbumSaved
                 onToggleFavorite: app.toggleSavedAlbum(album, isAlbumSaved, function(saved) {
                     isAlbumSaved = saved
