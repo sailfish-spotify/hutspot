@@ -33,41 +33,35 @@ const char O2_REPLY_CONTENT[] =
 
 Spotify::Spotify(QObject *parent) : QObject(parent)
 {
-    o2Spotify = NULL;
+    o2Spotify = new O2Spotify(this);
+    o2Spotify->setClientId(O2_CONSUMER_KEY);
+    o2Spotify->setClientSecret(O2_CONSUMER_SECRET);
+    o2Spotify->setLocalPort(localPort);
+
+    // Create a store object for writing the received tokens
+    O0SettingsStore *store = new O0SettingsStore(O2_ENCRYPTION_KEY);
+    store->setGroupKey("spotify");
+    o2Spotify->setGrantFlow(O2::GrantFlowAuthorizationCode);
+    o2Spotify->setStore(store);
+    o2Spotify->setReplyContent(O2_REPLY_CONTENT);
+
+    // Connect signals
+    connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
+    connect(o2Spotify, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
+    connect(o2Spotify, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
+    connect(o2Spotify, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
+    connect(o2Spotify, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
+    connect(o2Spotify, SIGNAL(refreshFinished(QNetworkReply::NetworkError)), this, SLOT(onRefreshFinished(QNetworkReply::NetworkError)));
+
 }
 
 void Spotify::doO2Auth(const QString &scope) {
-    if(o2Spotify == NULL) {
-        // redirect URL will be http://127.0.0.1:8888/
-        o2Spotify = new O2Spotify(this);
-        o2Spotify->setClientId(O2_CONSUMER_KEY);
-        o2Spotify->setClientSecret(O2_CONSUMER_SECRET);
-        o2Spotify->setLocalPort(localPort);
-        if(scope.length() > 0)
-            o2Spotify->setScope(scope);
-
-        // Create a store object for writing the received tokens
-        O0SettingsStore *store = new O0SettingsStore(O2_ENCRYPTION_KEY);
-        store->setGroupKey("spotify");
-        o2Spotify->setStore(store);
-
-        o2Spotify->setReplyContent(O2_REPLY_CONTENT);
-
-        // Connect signals
-        connect(o2Spotify, SIGNAL(linkedChanged()), this, SLOT(onLinkedChanged()));
-        connect(o2Spotify, SIGNAL(linkingFailed()), this, SLOT(onLinkingFailed()));
-        connect(o2Spotify, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
-        connect(o2Spotify, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
-        connect(o2Spotify, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
-        connect(o2Spotify, SIGNAL(refreshFinished(QNetworkReply::NetworkError)), this, SLOT(onRefreshFinished(QNetworkReply::NetworkError)));
-
-        //o2Spotify->unlink();  // for expired token
-    }
+    if (scope.length() > 0)
+        o2Spotify->setScope(scope);
 
     qDebug() << "Starting OAuth...";
-    //o2Spotify->unlink();  // ??
+    o2Spotify->unlink();
     o2Spotify->link();
-    //o2Spotify->refresh();
 }
 
 QString Spotify::getUserName() {
@@ -136,4 +130,8 @@ void Spotify::onLinkingSucceeded() {
 void Spotify::onLinkingFailed() {
     qDebug() << "Linking failed!";
     emit linkingFailed();
+}
+
+bool Spotify::isLinked() {
+    return o2Spotify->linked();
 }
