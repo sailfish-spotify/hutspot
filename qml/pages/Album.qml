@@ -40,10 +40,7 @@ Page {
         id: listView
         model: searchModel
 
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        anchors.fill: parent
 
         header: Column {
             id: lvColumn
@@ -57,7 +54,6 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Album")
-                MenuButton {}
             }
 
             LoadPullMenus {}
@@ -140,10 +136,6 @@ Page {
             color: Theme.secondaryColor
         }
 
-    }
-
-    NavigationPanel {
-        id: navPanel
     }
 
     onAlbumChanged: refresh()

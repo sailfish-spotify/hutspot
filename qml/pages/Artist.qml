@@ -39,9 +39,7 @@ Page {
         model: searchModel
 
         width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        anchors.fill: parent
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -58,7 +56,6 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Artist")
-                MenuButton {}
             }
 
             Image {
@@ -161,10 +158,6 @@ Page {
             color: Theme.secondaryColor
         }
 
-    }
-
-    NavigationPanel {
-        id: navPanel
     }
 
     onCurrentArtistChanged: refresh()

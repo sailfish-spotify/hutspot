@@ -43,10 +43,7 @@ Page {
         id: listView
         model: searchModel
 
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        anchors.fill: parent
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -63,7 +60,6 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("Playlist")
-                MenuButton {}
             }
 
             Image {
@@ -159,10 +155,6 @@ Page {
             color: Theme.secondaryColor
         }
 
-    }
-
-    NavigationPanel {
-        id: navPanel
     }
 
     // when the page is on the stack but not on top a refresh can wait

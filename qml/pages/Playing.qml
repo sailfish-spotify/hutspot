@@ -6,6 +6,7 @@
 
 
 import QtQuick 2.2
+import QtGraphicalEffects 1.0
 import Sailfish.Silica 1.0
 
 import "../components"
@@ -38,314 +39,104 @@ Page {
 
     allowedOrientations: Orientation.All
 
+    GlassyBackground {
+        anchors.fill: parent
+        sourceSize.height: parent.height
+        source: (playingObject && playingObject.item)
+                ? playingObject.item.album.images[0].url : defaultImageSource
+        visible: (playingObject && playingObject.item) ? true : false
+    }
+
     ListModel {
         id: searchModel
     }
 
-    Item {
-        id: upper
-        anchors.left: parent.left
-        anchors.top: parent.top
-        height: parent.height - controlPanel.height
+
+
+    SilicaListView {
+        id: listView
+        model: searchModel
+
         width: parent.width
+        anchors.fill: parent
+        clip: true
 
-        SilicaListView {
-            id: listView
-            model: searchModel
+        header: Column {
+            id: lvColumn
 
-            width: parent.width
-            anchors.fill: parent
-            clip: true
+            width: playingPage.width
+            anchors.bottomMargin: Theme.paddingLarge
+            spacing: Theme.paddingLarge
 
-            header: Column {
-                id: lvColumn
+            PageHeader {
+                id: pHeader
+                width: parent.width
+                title: pageHeaderText
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
 
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                anchors.bottomMargin: Theme.paddingLarge
-
-                PageHeader {
-                    id: pHeader
-                    width: parent.width
-                    title: pageHeaderText
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    MenuButton {}
-                }
-
+            Item {
+                width: parent.width
+                height: albumArt.height
                 Image {
-                    id: imageItem
+                    id: albumArt
                     anchors.horizontalCenter: parent.horizontalCenter
-                    source:  (playingObject && playingObject.item)
+                    source: (playingObject && playingObject.item)
                              ? playingObject.item.album.images[0].url : defaultImageSource
-                    width: parent.width * 0.75
-                    height: width
+                    width: parent.width - 4*Theme.horizontalPageMargin
+                    height: sourceSize.height*(width/sourceSize.width)
                     fillMode: Image.PreserveAspectFit
-                    onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 }
-
-                Item {
-                    id: infoContainer
-
-                    // put MetaInfoPanel in Item to be able to make room for context menu
-                    width: parent.width
-                    height: info.height + (cmenu ? cmenu.height : 0)
-
-                    MetaInfoPanel {
-                        id: info
-                        anchors.top: parent.top
-                        firstLabelText: getFirstLabelText(playbackState, contextObject)
-                        secondLabelText: getSecondLabelText(playbackState, contextObject)
-                        thirdLabelText: getThirdLabelText(playbackState, contextObject)
-
-                        isFavorite: isContextFavorite
-                        onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
-                        onFirstLabelClicked: openMenu()
-                        onSecondLabelClicked: openMenu()
-                        onThirdLabelClicked: openMenu()
-
-                        function openMenu() {
-                            cmenu.update()
-                            cmenu.open(infoContainer)
-                        }
-                    }
-                }
-
-                ContextMenu {
-                    id: cmenu
-
-                    function update() {
-                        viewAlbum.enabled = false
-                        viewArtist.enabled = false
-                        viewPlaylist.enabled = false
-                        switch(getContextType()) {
-                        case Spotify.ItemType.Album:
-                            viewAlbum.enabled = true
-                            viewArtist.enabled = true
-                            break
-                        case Spotify.ItemType.Artist:
-                            viewArtist.enabled = true
-                            break
-                        case Spotify.ItemType.Playlist:
-                            viewPlaylist.enabled = true
-                            break
-                        case Spotify.ItemType.Track:
-                            viewAlbum.enabled = true
-                            viewArtist.enabled = false
-                            break
-                        }
-                    }
-
-                    MenuItem {
-                        id: viewAlbum
-                        text: qsTr("View Album")
-                        visible: enabled
-                        onClicked: {
-                            switch(getContextType()) {
-                            case Spotify.ItemType.Album:
-                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: contextObject})
-                                break
-                            case Spotify.ItemType.Track:
-                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: playingObject.item.album})
-                                break
-                            }
-                        }
-                    }
-                    MenuItem {
-                        id: viewArtist
-                        visible: enabled
-                        text: qsTr("View Artist")
-                        onClicked: {
-                            switch(getContextType()) {
-                            case Spotify.ItemType.Album:
-                                app.loadArtist(contextObject.artists)
-                                break
-                            case Spotify.ItemType.Artist:
-                                pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: contextObject})
-                                break
-                            case Spotify.ItemType.Track:
-                                app.loadArtist(playingObject.item.artists)
-                                break
-                            }
-                        }
-                    }
-                    MenuItem {
-                        id: viewPlaylist
-                        visible: enabled
-                        text: qsTr("View Playlist")
-                        onClicked: pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: contextObject})
-                    }
-                }
-
-                /*Label {
-                    truncationMode: TruncationMode.Fade
-                    width: parent.width
-                    font.pixelSize: Theme.fontSizeSmall
-                    wrapMode: Text.Wrap
-                    text:  (playbackState && playbackState.device)
-                            ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
-                            : qsTr("none")
-                }*/
-
-                Rectangle {
-                    width: parent.width
-                    height: Theme.paddingMedium
-                    opacity: 0
-                }
-
-                Separator {
-                    width: parent.width
-                    color: Theme.primaryColor
-                }
-
-                Rectangle {
-                    width: parent.width
-                    height: Theme.paddingMedium
-                    opacity: 0
+                DropShadow {
+                    anchors.fill: albumArt
+                    radius: 50.0
+                    samples: 30
+                    color: "#000"
+                    source: albumArt
                 }
             }
 
-            delegate: ListItem {
-                id: listItem
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                contentHeight: stype == 0
-                               ? Theme.itemSizeExtraSmall
-                               : Theme.itemSizeLarge
-
-                Loader {
-                    id: loader
-
-                    width: parent.width
-
-                    source: stype > 0
-                            ? "../components/SearchResultListItem.qml"
-                            : "../components/AlbumTrackListItem.qml"
-
-                    Binding {
-                      target: loader.item
-                      property: "dataModel"
-                      value: model
-                      when: loader.status == Loader.Ready
-                    }
-                    Binding {
-                        target: loader.item
-                        property: "isFavorite"
-                        value: saved
-                        when: stype === 0
-                    }
-                }
-
-                menu: AlbumTrackContextMenu {}
-
-                Connections {
-                    target: loader.item
-                    onToggleFavorite: app.toggleSavedTrack(model)
-                }
-
-                onClicked: app.playTrack(track)
-            }
-
-            VerticalScrollDecorator {}
-
-            /*Label {
-                anchors.fill: parent
+            Label {
+                x: Theme.horizontalPageMargin
+                width: playingPage.width - Theme.horizontalPageMargin*2
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignBottom
-                visible: parent.count == 0
-                text: qsTr("No tracks found")
-                color: Theme.secondaryColor
-            }*/
-
-        }
-    } // Item
-
-    PanelBackground { //
-    // Item { for transparant controlpanel
-        id: controlPanel
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        width: parent.width
-        height: col.height
-        opacity: navPanel.open ? 0.0 : 1.0
-
-        Column {
-            id: col
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
-
-            Row {
-                width: parent.width
-                Label {
-                    id: progressLabel
-                    font.pixelSize: Theme.fontSizeSmall
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: Util.getDurationString(playbackProgress)
-                }
-                Slider {
-                    height: progressLabel.height * 1.5
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - durationLabel.width - progressLabel.width
-                    minimumValue: 0
-                    maximumValue: (playbackState && playbackState.item)
-                                  ? playbackState.item.duration_ms
-                                  : 0
-                    handleVisible: false
-                    value: playbackProgress
-                    onReleased: {
-                        Spotify.seek(Math.round(value), function(error, data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                }
-                Label {
-                    id: durationLabel
-                    font.pixelSize: Theme.fontSizeSmall
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: (playbackState && playbackState.item)
-                          ? Util.getDurationString(playbackState.item.duration_ms)
-                          : ""
-                }
+                text: getFirstLabelText(playbackState, contextObject)
+                font.pixelSize: Theme.fontSizeLarge
             }
 
-            Slider {
-                id: volumeSlider
+            Label {
+                x: Theme.horizontalPageMargin
+                width: playingPage.width - Theme.horizontalPageMargin*2
+                horizontalAlignment: Text.AlignHCenter
+                text: getThirdLabelText(playbackState, contextObject)
+            }
+
+            Rectangle {
                 width: parent.width
-                minimumValue: 0
-                maximumValue: 100
-                handleVisible: false
-                value: (playbackState && playbackState.device)
-                       ? playbackState.device.volume_percent : 0
-                onReleased: {
-                    Spotify.setVolume(Math.round(value), function(error, data) {
-                        if(!error)
-                            refresh()
-                    })
-                }
+                height: Theme.paddingLarge
+                color: "transparent"
             }
 
             Row {
                 id: buttonRow
                 width: parent.width
-                property real itemWidth : width / 5
+                property real itemWidth : width / 3
 
                 IconButton {
                     width: buttonRow.itemWidth
                     enabled: app.mprisPlayer.canGoPrevious
                     icon.source: "image://theme/icon-m-previous"
                     onClicked: app.previous(function(error,data) {
-                        if(!error)
-                            refresh()
+                        refresh()
                     })
                 }
                 IconButton {
                     width: buttonRow.itemWidth
                     icon.source: app.playing
-                                 ? "image://theme/icon-cover-pause"
-                                 : "image://theme/icon-cover-play"
+                                 ? "image://theme/icon-l-pause"
+                                 : "image://theme/icon-l-play"
                     onClicked: app.pause(function(error,data) {
-                        if(!error)
-                            refresh()
+                        refresh()
                     })
                 }
                 IconButton {
@@ -353,37 +144,342 @@ Page {
                     enabled: app.mprisPlayer.canGoNext
                     icon.source: "image://theme/icon-m-next"
                     onClicked: app.next(function(error,data) {
-                        if(!error)
-                            refresh()
-                    })
-                }
-                IconButton {
-                    width: buttonRow.itemWidth
-                    icon.source: (playbackState && playbackState.repeat_state)
-                                 ? "image://theme/icon-m-repeat?" + Theme.highlightColor
-                                 : "image://theme/icon-m-repeat"
-                    onClicked: app.setRepeat(checked, function(error,data) {
-                        if(!error)
-                            refresh()
-                    })
-                }
-                IconButton {
-                    width: buttonRow.itemWidth
-                    icon.source: (playbackState && playbackState.shuffle_state)
-                                 ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
-                                 : "image://theme/icon-m-shuffle"
-                    onClicked: app.setShuffle(checked, function(error,data) {
-                        if(!error)
-                            refresh()
+                        refresh()
                     })
                 }
             }
-        }
-    } // Control Panel
 
-    NavigationPanel {
-        id: navPanel
-        height: controlPanel.height
+            /*Rectangle {
+                width: parent.width
+                height: Theme.paddingLarge
+                color: "transparent"
+            }*/
+
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: spotifyConnectRow.childrenRect.height
+                MouseArea {
+                    anchors.fill: spotifyConnectRow
+                    onClicked: pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
+                }
+
+                Row {
+                    id: spotifyConnectRow
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: Theme.paddingMedium
+                    Image {
+                        anchors.verticalCenter: spotifyConnectLabel.verticalCenter
+                        source: "image://theme/icon-cover-play"
+                    }
+
+                    Label {
+                        id: spotifyConnectLabel
+                        text: "Listening on <b>" + app.playbackStateDeviceName + "</b>"
+                    }
+                    visible: app.playbackStateDeviceName != ""
+                }
+            }
+
+            /*Image {
+                id: imageItem
+                anchors.horizontalCenter: parent.horizontalCenter
+                source:  (playingObject && playingObject.item)
+                         ? playingObject.item.album.images[0].url : defaultImageSource
+                width: parent.width * 0.75
+                height: width
+                fillMode: Image.PreserveAspectFit
+                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
+            }*/
+
+            /*Item {
+                id: infoContainer
+
+                // put MetaInfoPanel in Item to be able to make room for context menu
+                width: parent.width
+                height: info.height + (cmenu ? cmenu.height : 0)
+
+                MetaInfoPanel {
+                    id: info
+                    anchors.top: parent.top
+                    firstLabelText: getFirstLabelText(playbackState, contextObject)
+                    secondLabelText: getSecondLabelText(playbackState, contextObject)
+                    thirdLabelText: getThirdLabelText(playbackState, contextObject)
+
+                    isFavorite: isContextFavorite
+                    onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
+                    onFirstLabelClicked: openMenu()
+                    onSecondLabelClicked: openMenu()
+                    onThirdLabelClicked: openMenu()
+
+                    function openMenu() {
+                        cmenu.update()
+                        cmenu.open(infoContainer)
+                    }
+                }
+            }*/
+
+            ContextMenu {
+                id: cmenu
+
+                function update() {
+                    viewAlbum.enabled = false
+                    viewArtist.enabled = false
+                    viewPlaylist.enabled = false
+                    switch(getContextType()) {
+                    case Spotify.ItemType.Album:
+                        viewAlbum.enabled = true
+                        viewArtist.enabled = true
+                        break
+                    case Spotify.ItemType.Artist:
+                        viewArtist.enabled = true
+                        break
+                    case Spotify.ItemType.Playlist:
+                        viewPlaylist.enabled = true
+                        break
+                    case Spotify.ItemType.Track:
+                        viewAlbum.enabled = true
+                        viewArtist.enabled = false
+                        break
+                    }
+                }
+
+                MenuItem {
+                    id: viewAlbum
+                    text: qsTr("View Album")
+                    visible: enabled
+                    onClicked: {
+                        switch(getContextType()) {
+                        case Spotify.ItemType.Album:
+                            pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: contextObject})
+                            break
+                        case Spotify.ItemType.Track:
+                            pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: playingObject.item.album})
+                            break
+                        }
+                    }
+                }
+                MenuItem {
+                    id: viewArtist
+                    visible: enabled
+                    text: qsTr("View Artist")
+                    onClicked: {
+                        switch(getContextType()) {
+                        case Spotify.ItemType.Album:
+                            app.loadArtist(contextObject.artists)
+                            break
+                        case Spotify.ItemType.Artist:
+                            pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: contextObject})
+                            break
+                        case Spotify.ItemType.Track:
+                            app.loadArtist(playingObject.item.artists)
+                            break
+                        }
+                    }
+                }
+                MenuItem {
+                    id: viewPlaylist
+                    visible: enabled
+                    text: qsTr("View Playlist")
+                    onClicked: pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: contextObject})
+                }
+            }
+
+            /*Label {
+                truncationMode: TruncationMode.Fade
+                width: parent.width
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.Wrap
+                text:  (playbackState && playbackState.device)
+                        ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
+                        : qsTr("none")
+            }*/
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
+        }
+
+        delegate: ListItem {
+            id: listItem
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            contentHeight: stype == 0
+                           ? Theme.itemSizeExtraSmall
+                           : Theme.itemSizeLarge
+
+            Loader {
+                id: loader
+
+                width: parent.width
+
+                source: stype > 0
+                        ? "../components/SearchResultListItem.qml"
+                        : "../components/AlbumTrackListItem.qml"
+
+                Binding {
+                  target: loader.item
+                  property: "dataModel"
+                  value: model
+                  when: loader.status == Loader.Ready
+                }
+                Binding {
+                    target: loader.item
+                    property: "isFavorite"
+                    value: saved
+                    when: stype === 0
+                }
+            }
+
+            menu: AlbumTrackContextMenu {}
+
+            Connections {
+                target: loader.item
+                onToggleFavorite: app.toggleSavedTrack(model)
+            }
+
+            onClicked: app.playTrack(track)
+        }
+
+        footer: PanelBackground { //
+            // Item { for transparant controlpanel
+            id: controlPanel
+            width: parent.width
+            height: col.height
+
+            Column {
+                id: col
+                width: parent.width - 2*Theme.paddingMedium
+                x: Theme.paddingMedium
+
+                Row {
+                    width: parent.width
+                    Label {
+                        id: progressLabel
+                        font.pixelSize: Theme.fontSizeSmall
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: Util.getDurationString(playbackProgress)
+                    }
+                    Slider {
+                        height: progressLabel.height * 1.5
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width - durationLabel.width - progressLabel.width
+                        minimumValue: 0
+                        maximumValue: (playbackState && playbackState.item)
+                                      ? playbackState.item.duration_ms
+                                      : 0
+                        handleVisible: false
+                        value: playbackProgress
+                        onReleased: {
+                            Spotify.seek(Math.round(value), function(error, data) {
+                                if(!error)
+                                    refresh()
+                            })
+                        }
+                    }
+                    Label {
+                        id: durationLabel
+                        font.pixelSize: Theme.fontSizeSmall
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: (playbackState && playbackState.item)
+                              ? Util.getDurationString(playbackState.item.duration_ms)
+                              : ""
+                    }
+                }
+
+                Slider {
+                    id: volumeSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 100
+                    handleVisible: false
+                    value: (playbackState && playbackState.device)
+                           ? playbackState.device.volume_percent : 0
+                    onReleased: {
+                        Spotify.setVolume(Math.round(value), function(error, data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                }
+
+                /*Row {
+                    id: buttonRow
+                    width: parent.width
+                    property real itemWidth : width / 5
+
+                    IconButton {
+                        width: buttonRow.itemWidth
+                        enabled: app.mprisPlayer.canGoPrevious
+                        icon.source: "image://theme/icon-m-previous"
+                        onClicked: app.previous(function(error,data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                    IconButton {
+                        width: buttonRow.itemWidth
+                        icon.source: app.playing
+                                     ? "image://theme/icon-cover-pause"
+                                     : "image://theme/icon-cover-play"
+                        onClicked: app.pause(function(error,data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                    IconButton {
+                        width: buttonRow.itemWidth
+                        enabled: app.mprisPlayer.canGoNext
+                        icon.source: "image://theme/icon-m-next"
+                        onClicked: app.next(function(error,data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                    IconButton {
+                        width: buttonRow.itemWidth
+                        icon.source: (playbackState && playbackState.repeat_state)
+                                     ? "image://theme/icon-m-repeat?" + Theme.highlightColor
+                                     : "image://theme/icon-m-repeat"
+                        onClicked: app.setRepeat(checked, function(error,data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                    IconButton {
+                        width: buttonRow.itemWidth
+                        icon.source: (playbackState && playbackState.shuffle_state)
+                                     ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
+                                     : "image://theme/icon-m-shuffle"
+                        onClicked: app.setShuffle(checked, function(error,data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
+                }*/
+            }
+        } // Control Panel
+
+
+        VerticalScrollDecorator {}
+
+        /*Label {
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignBottom
+            visible: parent.count == 0
+            text: qsTr("No tracks found")
+            color: Theme.secondaryColor
+        }*/
+
     }
 
     property int failedAttempts: 0
@@ -657,12 +753,12 @@ Page {
     }
 
     Connections {
-        target: app
+        target: spotify
+        onLinkingSucceeded: refresh()
+    }
 
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
+    Connections {
+        target: app
 
         onNewPlayingTrackInfo: {
             // track change?
@@ -687,9 +783,5 @@ Page {
         }
     }
 
-    Component.onCompleted: {
-        if(app.loggedIn)
-            refresh()
-    }
-
+    Component.onCompleted: refresh()
 }

@@ -111,7 +111,6 @@ Page {
                 app.confirm_un_follow_save.sync();
             }
         }
-
     }
 
     Librespot {

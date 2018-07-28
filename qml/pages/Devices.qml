@@ -14,8 +14,6 @@ Page {
     id: devicesPage
 
     allowedOrientations: Orientation.All
-    //anchors.bottom: navPanel.top
-    //clip: navPanel.expanded
 
     ListModel {
         id: itemsModel
@@ -115,10 +113,6 @@ Page {
         VerticalScrollDecorator {}
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     signal foundDevicesChanged()
     onFoundDevicesChanged: refreshDevices()
 
@@ -159,17 +153,11 @@ Page {
 
 
     Connections {
-        target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                reloadDevices()
-        }
+        target: spotify
+        onLinkingSucceeded: reloadDevices()
     }
 
-    Component.onCompleted: {
-        if(app.loggedIn)
-            reloadDevices()
-    }
+    Component.onCompleted: reloadDevices()
 
     property var myDevices: []
 

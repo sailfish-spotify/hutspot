@@ -34,11 +34,7 @@ Page {
         id: listView
         model: searchModel
 
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
-
+        anchors.fill: parent
         header: Column {
             id: lvColumn
 
@@ -51,7 +47,6 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: qsTr("New Releases")
-                MenuButton {}
             }
 
             LoadPullMenus {}
@@ -89,10 +84,6 @@ Page {
 
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     function refresh() {
         var i;
         showBusy = true
@@ -119,16 +110,7 @@ Page {
     }
 
     Connections {
-        target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
+        target: spotify
+        onLinkingSucceeded: refresh()
     }
-
-    Component.onCompleted: {
-        if(app.loggedIn)
-            refresh()
-    }
-
 }

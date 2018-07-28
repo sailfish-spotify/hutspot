@@ -16,7 +16,63 @@ CoverBackground {
     property string albumText : ""
     property string artistsText : ""
 
+    Image {
+        id: articleImage
+        anchors.fill: parent
+        source: imageSource
+        fillMode: Image.PreserveAspectCrop
+    }
+
+    OpacityRampEffect {
+        slope: 1.0
+        offset: 0.15
+        opacity: 0.5
+        sourceItem: articleImage
+        direction: OpacityRamp.TopToBottom
+    }
+
     Column {
+        spacing: Theme.paddingLarge
+        anchors.fill: parent
+        anchors.margins: Theme.paddingLarge;
+        Label {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: Theme.fontSizeExtraLarge
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            maximumLineCount: 6
+            elide: Text.ElideRight
+            text: titleText
+        }
+        Label {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: Theme.fontSizeLarge
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            maximumLineCount: 6
+            elide: Text.ElideRight
+            text: artistsText
+            color: Theme.secondaryColor
+        }
+        Row {
+            spacing: Theme.paddingMedium
+            Image {
+                height: Theme.iconSizeSmall
+                width: Theme.iconSizeSmall
+                sourceSize.width: Theme.iconSizeSmall
+                sourceSize.height: Theme.iconSizeSmall
+                smooth: true
+                anchors.verticalCenter: spotifyLabel.verticalCenter
+                source: Qt.resolvedUrl("../pages/spotify.svg")
+            }
+
+            Label {
+                id: spotifyLabel
+                text: "Spotify"
+            }
+        }
+
+    /*Column {
         width: parent.width
 
         Rectangle {
@@ -77,7 +133,7 @@ CoverBackground {
                     s += (s.length > 0 ? ", " : "") + artistsText
                 return s
             }*/
-            horizontalAlignment: otherLabel.width > cover.width
+            /*horizontalAlignment: otherLabel.width > cover.width
                                  ? Text.AlignLeft
                                  : Text.AlignHCenter
             font.pixelSize: Theme.fontSizeSmall
@@ -91,13 +147,12 @@ CoverBackground {
                 loops: Animation.Infinite
                 duration: 5000
             }
-        }
+        }*/
 
         CoverActionList {
             id: coverAction
-
             CoverAction {
-                iconSource: "image://theme/icon-cover-previous"
+                iconSource: "image://theme/icon-cover-previous-song"
                 onTriggered: app.previous(function(error, data){})
             }
 
@@ -109,7 +164,7 @@ CoverBackground {
             }
 
             CoverAction {
-                iconSource: "image://theme/icon-cover-next"
+                iconSource: "image://theme/icon-cover-next-song"
                 onTriggered: app.next(function(error, data){})
             }
 

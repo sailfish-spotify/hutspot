@@ -40,62 +40,9 @@ ApplicationWindow {
         id: msgBox
     }
 
-    function showPage(page) {
-        switch(page) {
-        case 'PlayingPage':
-            // pop all pages above playing page or add it
-            var playingPage = pageStack.find(function(page) {
-                return page.objectName === "PlayingPage"
-            })
-            if(playingPage !== undefined)
-                pageStack.pop(playingPage)
-            else
-                pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
-            break;
-        case 'NewReleasePage':
-            pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
-            break;
-        case 'MyStuffPage':
-            pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
-            break;
-        case 'TopStuffPage':
-            pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/TopStuff.qml"))
-            break;
-        case 'SearchPage':
-            pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
-            break;
-        default:
-            return
-        }
-        firstPage.value = page
-    }
-
     function loadFirstPage() {
-        var pageUrl = undefined
-        switch(firstPage.value) {
-        default:
-        case "PlayingPage":
-            pageUrl = Qt.resolvedUrl("pages/Playing.qml")
-            break;
-        case "NewReleasePage":
-            pageUrl = Qt.resolvedUrl("pages/NewRelease.qml")
-            break;
-        case "MyStuffPage":
-            pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
-            break;
-        case "TopStuffPage":
-            pageUrl = Qt.resolvedUrl("pages/TopStuff.qml")
-            break;
-        case "SearchPage":
-            pageUrl = Qt.resolvedUrl("pages/Search.qml")
-            break;
-        }
-        if(pageUrl !== undefined )
-            pageStack.replace(pageUrl, {}, PageStackAction.Immediate)
+        pageStack.replace(Qt.resolvedUrl("pages/MainPage.qml"), {}, PageStackAction.Immediate)
+        pageStack.pushAttached(Qt.resolvedUrl("pages/Playing.qml"))
     }
 
     function showErrorMessage(error, text) {
@@ -228,12 +175,6 @@ ApplicationWindow {
 
     property var myDevices: []
 
-    property bool loggedIn: spotify.isLinked()
-    onLoggedInChanged: {
-        refreshPlayingInfo()
-        reloadDevices()
-    }
-
     // using spotify webapi
     function reloadDevices() {
         var i
@@ -260,14 +201,6 @@ ApplicationWindow {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
-            Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
-            tokenExpireTime = spotify.getExpires()
-            console.log("expires: " + tokenExpireTime)
-            app.connectionText = qsTr("Connected")
-            loadUser()
-            loggedIn = true
-
             // with Spotify's stupid short living tokens, we can totally assume
             // it's already expired
             spotify.refreshToken();
@@ -332,7 +265,9 @@ ApplicationWindow {
             console.log("expires: " + tokenExpireTime)
             app.connectionText = qsTr("Connected")
             loadUser()
-            loggedIn = true
+
+            refreshPlayingInfo()
+            reloadDevices()
         }
 
         onLinkedChanged: {
