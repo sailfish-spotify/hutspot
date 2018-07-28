@@ -492,6 +492,8 @@ ApplicationWindow {
         })
     }
 
+    signal createdPlaylist(var playlist)
+
     function createPlaylist(callback) {
         var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
                                 {} );
@@ -504,6 +506,8 @@ ApplicationWindow {
                     options.description = ms.description
                 Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
+                    if(data)
+                        createdPlaylist(data)
                 })
             }
         })

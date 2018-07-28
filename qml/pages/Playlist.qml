@@ -185,7 +185,10 @@ Page {
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but
                 // we schedule a refresh
-                _needsRefresh = true
+                if(playlistPage.status === PageStatus.Active)
+                    refresh()
+                else
+                    _needsRefresh = true
             }
         }
 
@@ -204,7 +207,7 @@ Page {
 
         onRemovedFromPlaylist: {
             if(playlist.id === playlistId) {
-                Util.removeFromListModel(searchModel, trackId)
+                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, trackId)
             }
         }
     }

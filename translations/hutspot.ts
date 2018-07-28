@@ -279,42 +279,42 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="56"/>
+        <location filename="../qml/pages/MyStuff.qml" line="57"/>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="74"/>
+        <location filename="../qml/pages/MyStuff.qml" line="75"/>
         <source>Saved Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="75"/>
+        <location filename="../qml/pages/MyStuff.qml" line="76"/>
         <source>Followed Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="76"/>
+        <location filename="../qml/pages/MyStuff.qml" line="77"/>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="77"/>
+        <location filename="../qml/pages/MyStuff.qml" line="78"/>
         <source>Recently Played Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="78"/>
+        <location filename="../qml/pages/MyStuff.qml" line="79"/>
         <source>Saved Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="104"/>
+        <location filename="../qml/pages/MyStuff.qml" line="105"/>
         <source>Unfollow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="147"/>
+        <location filename="../qml/pages/MyStuff.qml" line="148"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -428,27 +428,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="219"/>
+        <location filename="../qml/pages/Playlist.qml" line="222"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="220"/>
+        <location filename="../qml/pages/Playlist.qml" line="223"/>
         <source>by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="222"/>
+        <location filename="../qml/pages/Playlist.qml" line="225"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="224"/>
+        <location filename="../qml/pages/Playlist.qml" line="227"/>
         <source>public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="226"/>
+        <location filename="../qml/pages/Playlist.qml" line="229"/>
         <source>collaborative</source>
         <translation type="unfinished"></translation>
     </message>
@@ -764,12 +764,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="654"/>
+        <location filename="../qml/hutspot.qml" line="658"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="673"/>
+        <location filename="../qml/hutspot.qml" line="677"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

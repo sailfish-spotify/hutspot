@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: myStuffPage
@@ -152,6 +153,39 @@ Page {
 
     NavigationPanel {
         id: navPanel
+    }
+
+    // when the page is on the stack but not on top a refresh can wait
+    property bool _needsRefresh: false
+
+    onStatusChanged: {
+        if (status === PageStatus.Activating) {
+            if(_needsRefresh) {
+                _needsRefresh = false
+                refresh()
+            }
+        }
+    }
+
+    Connections {
+        target: app
+
+        onDetailsChangedOfPlaylist: {
+            // check if the playist is in the current list if so trigger a refresh
+            var i = Util.doesListModelContain(searchModel, Spotify.ItemType.Playlist, playlistId)
+            if(i >= 0) {
+                if(myStuffPage.status === PageStatus.Active)
+                    refresh()
+                else
+                    _needsRefresh = true
+            }
+        }
+        onCreatedPlaylist: {
+            if(myStuffPage.status === PageStatus.Active)
+                refresh()
+            else
+                _needsRefresh = true
+        }
     }
 
     property var savedAlbums

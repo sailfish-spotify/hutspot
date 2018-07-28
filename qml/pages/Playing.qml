@@ -682,7 +682,7 @@ Page {
         onRemovedFromPlaylist: {
             if(getContextType() === Spotify.ItemType.Playlist
                && contextObject.id === playlistId) {
-                Util.removeFromListModel(searchModel, trackId)
+                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, trackId)
             }
         }
     }
