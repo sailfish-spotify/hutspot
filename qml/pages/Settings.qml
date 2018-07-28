@@ -100,15 +100,15 @@ Page {
                         librespot.stop()
                 }
             }
-        }
-        TextSwitch {
-            id: confirm_un_follow_save
-            text: qsTr("Confirm Un-Save/Follow")
-            description: qsTr("Ask for confirmation for un-save and un-follow")
-            checked: app.confirm_un_follow_save.value
-            onCheckedChanged: {
-                app.confirm_un_follow_save.value = checked;
-                app.confirm_un_follow_save.sync();
+            TextSwitch {
+                id: confirm_un_follow_save
+                text: qsTr("Confirm Un-Save/Follow")
+                description: qsTr("Ask for confirmation for un-save and un-follow")
+                checked: app.confirm_un_follow_save.value
+                onCheckedChanged: {
+                    app.confirm_un_follow_save.value = checked;
+                    app.confirm_un_follow_save.sync();
+                }
             }
         }
 
