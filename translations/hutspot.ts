@@ -428,27 +428,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="222"/>
+        <location filename="../qml/pages/Playlist.qml" line="215"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="223"/>
+        <location filename="../qml/pages/Playlist.qml" line="216"/>
         <source>by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="225"/>
+        <location filename="../qml/pages/Playlist.qml" line="218"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="227"/>
+        <location filename="../qml/pages/Playlist.qml" line="220"/>
         <source>public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="229"/>
+        <location filename="../qml/pages/Playlist.qml" line="222"/>
         <source>collaborative</source>
         <translation type="unfinished"></translation>
     </message>
