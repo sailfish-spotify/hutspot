@@ -25,6 +25,7 @@ ApplicationWindow {
     property alias selected_search_targets: selected_search_targets
     property alias auth_using_browser: auth_using_browser
     property alias start_stop_librespot: start_stop_librespot
+    property alias confirm_un_follow_save: confirm_un_follow_save
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
