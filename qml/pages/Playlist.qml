@@ -27,6 +27,12 @@ Page {
     property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
+    // binding to playlist properties does not seem to work
+    // (not updated when modified)
+    property string playListName: ""
+    property string playlistDescription: ""
+    property string playlistMetaText: ""
+
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -76,23 +82,20 @@ Page {
             }
 
             MetaInfoPanel {
-                firstLabelText: playlist.name
-                secondLabelText: playlist.description ? playlist.description : ""
-                thirdLabelText: {
-                    var s = playlist.tracks.total + " " + qsTr("tracks")
-                    s += ", " + qsTr("by") + " " + playlist.owner.display_name
-                    if(playlist.followers && playlist.followers.total > 0)
-                        s += ", " + Util.abbreviateNumber(playlist.followers.total) + " " + qsTr("followers")
-                    if(playlist["public"])
-                        s += ", " +  qsTr("public")
-                    if(playlist.collaborative)
-                        s += ", " +  qsTr("collaborative")
-                    return s
-                }
+                id: metaInfoPanel
+
                 isFavorite: isFollowed
-                //onFirstLabelClicked: secondLabelClicked()
-                //onSecondLabelClicked: edit playlist details
-                //onThirdLabelClicked: secondLabelClicked()
+
+                // unfortunately binding to playlist properties (playlist.name)
+                // does not work: the text is not updated when the property changes value
+                firstLabelText: playListName
+                secondLabelText: playlistDescription
+                thirdLabelText: playlistMetaText
+
+                onFirstLabelClicked: secondLabelClicked()
+                onSecondLabelClicked: app.editPlaylistDetails(playlist)
+                onThirdLabelClicked: secondLabelClicked()
+
                 onToggleFavorite: app.toggleFollowPlaylist(playlist, isFollowed, function(followed) {
                     isFollowed = followed
                 })
@@ -162,7 +165,67 @@ Page {
         id: navPanel
     }
 
+    // when the page is on the stack but not on top a refresh can wait
+    property bool _needsRefresh: false
+
+    onStatusChanged: {
+        if (status === PageStatus.Activating) {
+            if(_needsRefresh) {
+                _needsRefresh = false
+                refresh()
+            }
+        }
+    }
+
+    Connections {
+        target: app
+
+        onAddedToPlaylist: {
+            if(playlist.id === playlistId) {
+                // in theory it has been added at the end of the list
+                // so we could load the info and add it to the model but
+                // we schedule a refresh
+                _needsRefresh = true
+            }
+        }
+
+        onDetailsChangedOfPlaylist: {
+            if(playlist.id === playlistId) {
+                playlist.name = playlistDetails.name
+                if(playlistDetails.description)
+                    playlist.description = playlistDetails.description
+                else
+                    playlist.description = ""
+                playlist['public'] = playlistDetails['public']
+                playlist.collaborative = playlistDetails.collaborative
+                updatePlaylistTexts()
+            }
+        }
+
+        onRemovedFromPlaylist: {
+            if(playlist.id === playlistId) {
+                Util.removeFromListModel(searchModel, trackId)
+            }
+        }
+    }
+
     onPlaylistChanged: refresh()
+
+    // binding firstLabelText to playlist.name will not work since changing
+    // playlist.name value does not seem to trigger an update
+    function updatePlaylistTexts() {
+        playListName = playlist.name
+        playlistDescription = playlist.description ? playlist.description : ""
+        var s = playlist.tracks.total + " " + qsTr("tracks")
+        s += ", " + qsTr("by") + " " + playlist.owner.display_name
+        if(playlist.followers && playlist.followers.total > 0)
+            s += ", " + Util.abbreviateNumber(playlist.followers.total) + " " + qsTr("followers")
+        if(playlist["public"])
+            s += ", " +  qsTr("public")
+        if(playlist.collaborative)
+            s += ", " +  qsTr("collaborative")
+        playlistMetaText = s
+    }
 
     function refresh() {
         var i;
@@ -192,6 +255,9 @@ Page {
             if(data)
                 isFollowed = data[0]
         })
+
+
+        updatePlaylistTexts()
     }
 
 }

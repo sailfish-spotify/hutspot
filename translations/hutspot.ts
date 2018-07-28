@@ -149,37 +149,37 @@
 <context>
     <name>CreatePlaylist</name>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="28"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="37"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="29"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="38"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="34"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="13"/>
         <source>Create Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="43"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="53"/>
         <source>Name for the new playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="56"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="66"/>
         <source>Public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="67"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="77"/>
         <source>Collaborative</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/CreatePlaylist.qml" line="72"/>
+        <location filename="../qml/components/CreatePlaylist.qml" line="83"/>
         <source>Description (optional)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -236,11 +236,16 @@
     <name>LoadPullMenus</name>
     <message>
         <location filename="../qml/components/LoadPullMenus.qml" line="7"/>
+        <source>Reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/components/LoadPullMenus.qml" line="11"/>
         <source>Load Next Set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/LoadPullMenus.qml" line="15"/>
+        <location filename="../qml/components/LoadPullMenus.qml" line="19"/>
         <source>Load Previous Set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -418,47 +423,47 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="59"/>
+        <location filename="../qml/pages/Playlist.qml" line="65"/>
         <source>Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="82"/>
+        <location filename="../qml/pages/Playlist.qml" line="219"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="83"/>
+        <location filename="../qml/pages/Playlist.qml" line="220"/>
         <source>by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="85"/>
+        <location filename="../qml/pages/Playlist.qml" line="222"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="87"/>
+        <location filename="../qml/pages/Playlist.qml" line="224"/>
         <source>public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="89"/>
+        <location filename="../qml/pages/Playlist.qml" line="226"/>
         <source>collaborative</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="128"/>
+        <location filename="../qml/pages/Playlist.qml" line="131"/>
         <source>Remove from Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="140"/>
+        <location filename="../qml/pages/Playlist.qml" line="143"/>
         <source>Add to another Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="155"/>
+        <location filename="../qml/pages/Playlist.qml" line="158"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -749,17 +754,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="440"/>
+        <location filename="../qml/hutspot.qml" line="441"/>
+        <source>Edit Playlist Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/hutspot.qml" line="466"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="627"/>
+        <location filename="../qml/hutspot.qml" line="654"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="646"/>
+        <location filename="../qml/hutspot.qml" line="673"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

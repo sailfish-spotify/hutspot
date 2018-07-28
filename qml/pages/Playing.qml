@@ -658,15 +658,27 @@ Page {
 
     Connections {
         target: app
+
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
         }
+
         onNewPlayingTrackInfo: {
             // track change?
             if(currentTrackId !== track.id)
                 refresh()
         }
+
+        onAddedToPlaylist: {
+            if(getContextType() === Spotify.ItemType.Playlist
+               && contextObject.id === playlistId) {
+                // in theory it has been added at the end of the list
+                // so we could load the info and add it to the model but ...
+                refresh()
+            }
+        }
+
         onRemovedFromPlaylist: {
             if(getContextType() === Spotify.ItemType.Playlist
                && contextObject.id === playlistId) {

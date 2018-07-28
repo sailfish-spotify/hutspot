@@ -434,6 +434,32 @@ ApplicationWindow {
         })
     }
 
+    signal detailsChangedOfPlaylist(string playlistId, var playlistDetails)
+
+    function editPlaylistDetails(playlist, callback) {
+        var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
+                                {titleText: qsTr("Edit Playlist Details"),
+                                 name: playlist.name, description: playlist.description,
+                                 publicPL: playlist['public'], collaborative: playlist.collaborative} );
+        ms.accepted.connect(function() {
+            if(ms.name && ms.name.length > 0) {
+                var options = {name: ms.name,
+                               'public': ms.publicPL,
+                               collaborative: ms.collaborativePL}
+                if(ms.description && ms.description.length > 0)
+                    options.description = ms.description
+                Spotify.changePlaylistDetails(id, playlist.id, options, function(error, data) {
+                    if(callback)
+                        callback(error, data)
+                    if(!error)
+                        detailsChangedOfPlaylist(playlist.id, options)
+                })
+            }
+        })
+    }
+
+    signal addedToPlaylist(string playlistId, string trackId)
+
     function addToPlaylist(track) {
 
         var ms = pageStack.push(Qt.resolvedUrl("components/PlaylistPicker.qml"),
@@ -443,9 +469,10 @@ ApplicationWindow {
                 Spotify.addTracksToPlaylist(ms.selectedItem.playlist.owner.id,
                                             ms.selectedItem.playlist.id,
                                             [track.uri], {}, function(error, data) {
-                    if(data)
+                    if(data) {
+                        addedToPlaylist(ms.selectedItem.playlist.id, track.id)
                         console.log("addToPlaylist: added \"")
-                    else
+                    } else
                         console.log("addToPlaylist: failed to add \"")
                     console.log(track.name + "\" to \"" + ms.selectedItem.playlist.name + "\"")
                 })
@@ -474,7 +501,7 @@ ApplicationWindow {
                                'public': ms.publicPL,
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
-                    options.descriptions = ms.description
+                    options.description = ms.description
                 Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
                 })
