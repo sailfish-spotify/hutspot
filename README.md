@@ -8,7 +8,7 @@ and for the API code from [spotify-web-api-js](https://github.com/JMPerez/spotif
 O2 and spotify-web-api-js have their own license. For Hutspot it is MIT.
 
 
-Hutspot is being built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:/hutspot/sailfish_latest_armv7hl/). See [this wiki page](https://github.com/wdehoog/hutspot/wiki/Installation) on how to install it.
+Hutspot is being built on [OBS](http://repo.merproject.org/obs/home:/wdehoog:/hutspot/sailfish_latest_armv7hl/). See [this wiki page](https://github.com/sailfish-spotify/hutspot/wiki/Installation) on how to install it.
 
 Due to the issues with athentication and detecting Spotify capable players this app is not 'plug and play'. Don't use it unless you are willing to mess around.
 
@@ -24,13 +24,13 @@ Device discovery is problematic. Spotify does not know all your devices. The off
 ### Librespot on Sailfish
 I managed to build and package [Librespot](https://github.com/librespot-org/), an open source Spotify client. A package can be downloaded from [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl). 
 
-For more see the wiki page on [Librespot](https://github.com/wdehoog/hutspot/wiki/Librespot)
+For more see the wiki page on [Librespot](https://github.com/sailfish-spotify/hutspot/wiki/Librespot)
 
 Hutspot has an option in it's Settings page to start/stop the Librespot service.
 
 ### Operating
  
-See the wiki page on [Operating](https://github.com/wdehoog/hutspot/wiki/Operating)
+See the wiki page on [Operating](https://github.com/sailfish-spotify/hutspot/wiki/Operating)
 
 ### Donations
 Soddy but I do not accept any donations. I really appreciate the gesture but it is a hobby that I am able to do because others are investing their time as well.
