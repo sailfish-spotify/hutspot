@@ -259,6 +259,15 @@ Page {
                 isFollowed = data[0]
         })
 
+        // description is not send with getUserPlaylists
+        app.getPlaylist(playlist.id, function(error, data) {
+            if(data) {
+                if(data.description) {
+                    playlist.description = data.description
+                    updatePlaylistTexts()
+                }
+            }
+        })
 
         updatePlaylistTexts()
     }

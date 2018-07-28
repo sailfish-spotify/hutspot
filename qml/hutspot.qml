@@ -434,6 +434,13 @@ ApplicationWindow {
         })
     }
 
+    function getPlaylist(playlistId, callback) {
+        Spotify.getPlaylist(id, playlistId, {}, function(error, data) {
+            if(callback)
+                callback(error, data)
+        })
+    }
+
     signal detailsChangedOfPlaylist(string playlistId, var playlistDetails)
 
     function editPlaylistDetails(playlist, callback) {

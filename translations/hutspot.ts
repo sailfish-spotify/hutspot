@@ -754,22 +754,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="441"/>
+        <location filename="../qml/hutspot.qml" line="448"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="466"/>
+        <location filename="../qml/hutspot.qml" line="473"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="658"/>
+        <location filename="../qml/hutspot.qml" line="665"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="677"/>
+        <location filename="../qml/hutspot.qml" line="684"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
