@@ -228,7 +228,7 @@ ApplicationWindow {
 
     property var myDevices: []
 
-    property bool loggedIn: false
+    property bool loggedIn: spotify.isLinked()
     onLoggedInChanged: {
         refreshPlayingInfo()
         reloadDevices()
@@ -257,7 +257,24 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
+        if (!spotify.isLinked()) {
+            spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
+        } else {
+            Spotify._accessToken = spotify.getToken()
+            Spotify._username = spotify.getUserName()
+            tokenExpireTime = spotify.getExpires()
+            console.log("expires: " + tokenExpireTime)
+            app.connectionText = qsTr("Connected")
+            loadUser()
+            loggedIn = true
+
+            // with Spotify's stupid short living tokens, we can totally assume
+            // it's already expired
+            spotify.refreshToken();
+
+            loadFirstPage()
+        }
+
         //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
@@ -314,7 +331,6 @@ ApplicationWindow {
             tokenExpireTime = spotify.getExpires()
             console.log("expires: " + tokenExpireTime)
             app.connectionText = qsTr("Connected")
-            spotify.refreshToken()
             loadUser()
             loggedIn = true
         }

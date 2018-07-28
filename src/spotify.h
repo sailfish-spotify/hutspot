@@ -26,6 +26,7 @@ public slots:
     Q_INVOKABLE QString getToken();
     Q_INVOKABLE void refreshToken();
     Q_INVOKABLE int getExpires();
+    Q_INVOKABLE bool isLinked();
 
 private slots:
     void onLinkedChanged();
