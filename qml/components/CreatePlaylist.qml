@@ -10,10 +10,19 @@ import Sailfish.Silica 1.0
 Dialog {
     id: createPlaylist
 
+    property string titleText: qsTr("Create Playlist")
+
     property string name: ""
     property bool publicPL: true
     property bool collaborativePL: false
     property string description: ""
+
+    onStatusChanged: {
+        if (status === PageStatus.Activating) {
+            nameField.text = name
+            descriptionField.text = description
+        }
+    }
 
     SilicaListView  {
         id: view
@@ -31,7 +40,7 @@ Dialog {
 
             Text {
                 width: parent.width
-                text: qsTr("Create Playlist")
+                text: titleText
                 font.bold: true
                 font.pixelSize: Theme.fontSizeMedium
                 color: Theme.highlightColor
@@ -39,6 +48,7 @@ Dialog {
             }
 
             TextField {
+                id: nameField
                 width: parent.width
                 placeholderText: qsTr("Name for the new playlist")
                 onTextChanged: name = text
@@ -68,6 +78,7 @@ Dialog {
             }
 
             TextField {
+                id: descriptionField
                 width: parent.width
                 placeholderText: qsTr("Description (optional)")
                 onTextChanged: description = text
