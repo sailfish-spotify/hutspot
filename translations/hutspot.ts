@@ -15,7 +15,7 @@
     </message>
     <message>
         <location filename="../qml/pages/About.qml" line="65"/>
-        <source>Copyright (C) 2018 Willem-Jan de Hoog</source>
+        <source>Copyright (C) 2018</source>
         <extracomment>I doubt this needs to be translated</extracomment>
         <translation type="unfinished"></translation>
     </message>
@@ -26,6 +26,11 @@
     </message>
     <message>
         <location filename="../qml/pages/About.qml" line="82"/>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/About.qml" line="99"/>
         <source>Thanks to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -744,32 +749,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="305"/>
+        <location filename="../qml/hutspot.qml" line="322"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="316"/>
+        <location filename="../qml/hutspot.qml" line="267"/>
+        <location filename="../qml/hutspot.qml" line="333"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="448"/>
+        <location filename="../qml/hutspot.qml" line="464"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="473"/>
+        <location filename="../qml/hutspot.qml" line="489"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="665"/>
+        <location filename="../qml/hutspot.qml" line="681"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="684"/>
+        <location filename="../qml/hutspot.qml" line="700"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
