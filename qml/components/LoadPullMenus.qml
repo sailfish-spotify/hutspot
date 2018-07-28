@@ -4,6 +4,10 @@ import Sailfish.Silica 1.0
 
 PullDownMenu {
     MenuItem {
+        text: qsTr("Reload")
+        onClicked: refresh()
+    }
+    MenuItem {
         text: qsTr("Load Next Set")
         enabled: canLoadNext
         onClicked: {
