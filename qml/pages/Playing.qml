@@ -576,6 +576,7 @@ Page {
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
                                             name: data.items[i].track.name,
+                                            saved: false,
                                             track: data.items[i].track})
                     }
                 } catch (err) {
