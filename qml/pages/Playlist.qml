@@ -177,26 +177,22 @@ Page {
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but
                 // we schedule a refresh
-                _needsRefresh = true
+                if(playlistPage.status === PageStatus.Active)
+                    refresh()
+                else
+                    _needsRefresh = true
             }
         }
 
         onDetailsChangedOfPlaylist: {
             if(playlist.id === playlistId) {
-                playlist.name = playlistDetails.name
-                if(playlistDetails.description)
-                    playlist.description = playlistDetails.description
-                else
-                    playlist.description = ""
-                playlist['public'] = playlistDetails['public']
-                playlist.collaborative = playlistDetails.collaborative
-                updatePlaylistTexts()
+                refreshDetails()
             }
         }
 
         onRemovedFromPlaylist: {
             if(playlist.id === playlistId) {
-                Util.removeFromListModel(searchModel, trackId)
+                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, trackId)
             }
         }
     }
@@ -248,8 +244,22 @@ Page {
                 isFollowed = data[0]
         })
 
+        // description is not send with getUserPlaylists so get it using getPlaylist
+        refreshDetails()
 
         updatePlaylistTexts()
     }
 
+    function refreshDetails() {
+        app.getPlaylist(playlist.id, function(error, data) {
+            if(data) {
+                // update details
+                playlist.name = data.name
+                playlist.description = data.description
+                playlist['public'] = data['public']
+                playlist.collaborative = data.collaborative
+                updatePlaylistTexts()
+            }
+        })
+    }
 }

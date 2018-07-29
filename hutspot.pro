@@ -48,8 +48,8 @@ DISTFILES += \
     qml/components/MetaInfoPanel.qml \
     qml/components/SearchResultContextMenu.qml \
     qml/components/AlbumTrackContextMenu.qml \
-    qml/components/GlassyBackground.qml \
-    qml/pages/MainPage.qml
+    qml/pages/GenreMood.qml \
+    qml/pages/GenreMoodPlaylist.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

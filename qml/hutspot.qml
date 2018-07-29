@@ -386,6 +386,13 @@ ApplicationWindow {
         })
     }
 
+    function getPlaylist(playlistId, callback) {
+        Spotify.getPlaylist(id, playlistId, {}, function(error, data) {
+            if(callback)
+                callback(error, data)
+        })
+    }
+
     signal detailsChangedOfPlaylist(string playlistId, var playlistDetails)
 
     function editPlaylistDetails(playlist, callback) {
@@ -444,6 +451,8 @@ ApplicationWindow {
         })
     }
 
+    signal createdPlaylist(var playlist)
+
     function createPlaylist(callback) {
         var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
                                 {} );
@@ -456,6 +465,8 @@ ApplicationWindow {
                     options.description = ms.description
                 Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
+                    if(data)
+                        createdPlaylist(data)
                 })
             }
         })

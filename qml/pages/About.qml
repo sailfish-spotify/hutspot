@@ -62,7 +62,7 @@ Page {
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeExtraSmall
                         //: I doubt this needs to be translated
-                        text: qsTr("Copyright (C) 2018 Willem-Jan de Hoog")
+                        text: qsTr("Copyright (C) 2018")
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                     }
@@ -78,6 +78,23 @@ Page {
 
             }
 
+            SectionHeader {
+                text: qsTr("Contributors")
+            }
+
+            Label {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.horizontalPageMargin
+                    right: parent.right
+                    rightMargin: Theme.horizontalPageMargin
+                }
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+                text:
+"Willem-Jan de Hoog
+Maciej Janiszewski"
+            }
             SectionHeader {
                 text: qsTr("Thanks to")
             }
