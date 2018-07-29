@@ -25,14 +25,6 @@ DockedPanel {
 
             IconButton {
                 width: bar.itemWidth
-                icon.source: "image://theme/icon-m-music"
-                onClicked: {
-                    open = false
-                    app.showPage('PlayingPage')
-                }
-            }
-            IconButton {
-                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-health"
                 onClicked: {
                     open = false
@@ -63,6 +55,14 @@ DockedPanel {
                     app.showPage('SearchPage')
                 }
             }
+            IconButton {
+                width: bar.itemWidth
+                icon.source: "image://hutspot-icons/compass"
+                onClicked: {
+                    open = false
+                    app.showPage('GenreMoodPage')
+                }
+            }
             /*IconButton {
                 id: ib
                 icon.source: "image://theme/icon-m-enter-close"
@@ -80,6 +80,14 @@ DockedPanel {
         Row {
             id: secondRow
 
+            IconButton {
+                width: bar.itemWidth
+                icon.source: "image://theme/icon-m-music"
+                onClicked: {
+                    open = false
+                    app.showPage('PlayingPage')
+                }
+            }
             IconButton {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-accessory-speaker"

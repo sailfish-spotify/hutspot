@@ -48,7 +48,7 @@ ApplicationWindow {
             var playingPage = pageStack.find(function(page) {
                 return page.objectName === "PlayingPage"
             })
-            if(playingPage !== undefined)
+            if(playingPage !== null)
                 pageStack.pop(playingPage)
             else
                 pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
@@ -68,6 +68,10 @@ ApplicationWindow {
         case 'SearchPage':
             pageStack.clear()
             pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
+            break;
+        case 'GenreMoodPage':
+            pageStack.clear()
+            pageStack.push(Qt.resolvedUrl("pages/GenreMoodPage.qml"))
             break;
         default:
             return
@@ -93,6 +97,9 @@ ApplicationWindow {
             break;
         case "SearchPage":
             pageUrl = Qt.resolvedUrl("pages/Search.qml")
+            break;
+        case 'GenreMoodPage':
+            pageUrl = Qt.resolvedUrl("pages/GenreMood.qml")
             break;
         }
         if(pageUrl !== undefined )
