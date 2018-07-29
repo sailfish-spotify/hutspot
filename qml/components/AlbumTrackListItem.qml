@@ -13,11 +13,11 @@ Item {
 
     property var isFavorite
     property var dataModel
+    signal toggleFavorite()
 
     width: parent.width
     height: Math.max(labelss.height, savedImage.height)
 
-    signal toggleFavorite()
 
     Image {
         id: savedImage

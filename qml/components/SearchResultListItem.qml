@@ -11,6 +11,7 @@ Row {
     // not used, same as in AlbumTrackListItem so Loader can be used
     property var isFavorite
     property bool saved
+    signal toggleFavorite()
 
     width: parent.width
     //height: column.height
