@@ -253,11 +253,6 @@
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
-        <location filename="../qml/pages/GenreMoodPlaylist.qml" line="58"/>
-        <source>Playlists for </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../qml/pages/GenreMoodPlaylist.qml" line="94"/>
         <source>No Playlists found</source>
         <translation type="unfinished"></translation>

@@ -55,7 +55,7 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Playlists for ") + category.name
+                title: category.name
                 MenuButton {}
             }
         }
