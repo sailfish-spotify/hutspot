@@ -47,7 +47,7 @@ Page {
                 width: parent.width
                 Label {
                     id: nameLabel
-                    color: deviceId === playbackStateDeviceId ? Theme.highlightColor : Theme.primaryColor
+                    color: (app.controller.playbackState && deviceId === app.controller.playbackState.device.id) ? Theme.highlightColor : Theme.primaryColor
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
                     //width: parent.width - countLabel.width
@@ -67,7 +67,7 @@ Page {
                 Label {
                     id: meta1Label
                     width: parent.width
-                    color: deviceId === playbackStateDeviceId ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    color: (app.controller.playbackState && deviceId === app.controller.playbackState.device.id) ? Theme.secondaryHighlightColor : Theme.secondaryColor
                     font.pixelSize: Theme.fontSizeSmall
                     truncationMode: TruncationMode.Fade
                     text: {
@@ -111,6 +111,47 @@ Page {
         }
 
         VerticalScrollDecorator {}
+
+        footer: PanelBackground { //
+            // Item { for transparant controlpanel
+            id: controlPanel
+            width: parent.width
+            height: col.height
+
+            Column {
+                id: col
+                width: parent.width - 2*Theme.paddingMedium
+                x: Theme.paddingMedium
+
+                Row {
+                    Image {
+                        source: "image://theme/icon-m-speaker"
+                        anchors.verticalCenter: parent.verticalCenter
+                        sourceSize {
+                            width: Theme.iconSizeSmall
+                            height: Theme.iconSizeSmall
+                        }
+                        height: Theme.iconSizeSmall
+                    }
+
+                    Slider {
+                        id: volumeSlider
+                        width: parent.width
+                        minimumValue: 0
+                        maximumValue: 100
+                        handleVisible: false
+                        value: (app.controller.playbackState && app.controller.playbackState.device)
+                               ? app.controller.playbackState.device.volume_percent : 0
+                        onReleased: {
+                            Spotify.setVolume(Math.round(value), function(error, data) {
+                                if(!error)
+                                    refresh()
+                            })
+                        }
+                    }
+                }
+            }
+        } // Control Panel
     }
 
     signal foundDevicesChanged()
@@ -157,8 +198,7 @@ Page {
         onLinkingSucceeded: reloadDevices()
     }
 
-    Component.onCompleted: reloadDevices()
-
+    Component.onCompleted:  reloadDevices()
     property var myDevices: []
 
     // using spotify webapi

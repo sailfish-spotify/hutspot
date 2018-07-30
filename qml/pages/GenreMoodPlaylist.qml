@@ -36,10 +36,7 @@ Page {
         id: listView
         model: searchModel
 
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        anchors.fill: parent
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -56,7 +53,6 @@ Page {
                 id: pHeader
                 width: parent.width
                 title: category.name
-                MenuButton {}
             }
         }
 
@@ -97,10 +93,6 @@ Page {
 
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     function refresh() {
         var i;
         //showBusy = true
@@ -127,15 +119,9 @@ Page {
     }
 
     Connections {
-        target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
+        target: spotify
+        onLinkingSucceeded: refresh()
     }
 
-    Component.onCompleted: {
-        if(app.loggedIn)
-            refresh()
-    }
+    Component.onCompleted: refresh()
 }

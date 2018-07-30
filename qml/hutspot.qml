@@ -19,6 +19,11 @@ import "components"
 ApplicationWindow {
     id: app
 
+    property alias controller: spotifyController
+    SpotifyController {
+        id: spotifyController
+    }
+
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
 
@@ -26,9 +31,6 @@ ApplicationWindow {
     property alias auth_using_browser: auth_using_browser
     property alias start_stop_librespot: start_stop_librespot
     property alias confirm_un_follow_save: confirm_un_follow_save
-
-    property string playbackStateDeviceId: ""
-    property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
 
     allowedOrientations: defaultAllowedOrientations
@@ -65,8 +67,7 @@ ApplicationWindow {
 
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
-                playbackStateDeviceId = id
-                playbackStateDeviceName = name
+                app.controller.refreshPlaybackState()
             } else
                 showErrorMessage(error, qsTr("Transfer Failed"))
         })
@@ -75,8 +76,7 @@ ApplicationWindow {
     function playTrack(track) {
         Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(error, data) {
             if(!error) {
-                playing = true
-                refreshPlayingInfo()
+                spotifyController.refreshPlaybackState();
             } else
                 showErrorMessage(error, qsTr("Play Failed"))
         })
@@ -85,37 +85,17 @@ ApplicationWindow {
     function playContext(context) {
         Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(error, data) {
             if(!error) {
-              playing = true
-              refreshPlayingInfo()
+              spotifyController.refreshPlaybackState();
             } else
                 showErrorMessage(error, qsTr("Play Failed"))
         })
-    }
-
-    property bool playing
-    function pause(callback) {
-        if(playing) {
-            // pause
-            Spotify.pause({}, function(error, data) {
-                if(!error)
-                    playing = false
-                callback(error, data)
-            })
-        } else {
-            // resume
-            Spotify.play({}, function(error, data) {
-                if(!error)
-                    playing = true
-                callback(error, data)
-            })
-        }
     }
 
     function next(callback) {
         Spotify.skipToNext({}, function(error, data) {
             if(callback)
                 callback(error, data)
-            refreshPlayingInfo()
+            spotifyController.refreshPlaybackState();
         })
     }
 
@@ -123,55 +103,42 @@ ApplicationWindow {
         Spotify.skipToPrevious({}, function(error, data) {
             if(callback)
                 callback(error, data)
-            refreshPlayingInfo()
+            spotifyController.refreshPlaybackState();
         })
     }
 
     function setRepeat(state, callback) {
         Spotify.setRepeat(state, {}, function(error, data) {
-            callback(error, data)
+            if (callback) callback(error, data)
         })
     }
 
     function setShuffle(state, callback) {
         Spotify.setShuffle(state, {}, function(error, data) {
-            callback(error, data)
+            if (callback) callback(error, data)
         })
     }
 
-    onPlayingChanged: {
-        var status = playing ?  Mpris.Playing : Mpris.Paused
+    Connections {
+        target: spotifyController
+        onPlaybackStateChanged: {
+            var track = spotifyController.playbackState.item;
 
-        // it seems that in order to use the play button on the Lock screen
-        // when canPlay is true so should canPause be.
-        mprisPlayer.canPlay = status !== Mpris.Playing
-        mprisPlayer.canPause = status !== Mpris.Stopped
-        mprisPlayer.playbackStatus = status
-    }
+            //item.track_number item.duration_ms
+            var uri = track.album.images[0].url
 
-    signal newPlayingTrackInfo(var track)
+            var metaData = {}
+            metaData['title'] = track.name
+            metaData['album'] = track.album.name
+            metaData['artUrl'] = uri
+            if(track.artists)
+                metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
+            else
+                metaData['artist'] = ''
+            cover.updateDisplayData(metaData)
+            mprisPlayer.metaData = metaData
+        }
 
-    onNewPlayingTrackInfo: {
-        //item.track_number item.duration_ms
-        var uri = track.album.images[0].url
-
-        var metaData = {}
-        metaData['title'] = track.name
-        metaData['album'] = track.album.name
-        metaData['artUrl'] = uri
-        if(track.artists)
-            metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
-        else
-            metaData['artist'] = ''
-        cover.updateDisplayData(metaData)
-        mprisPlayer.metaData = metaData
-    }
-
-    function refreshPlayingInfo() {
-        Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
-            if(data)
-                newPlayingTrackInfo(data.item)
-        })
     }
 
     property var myDevices: []
@@ -260,14 +227,12 @@ ApplicationWindow {
             console.log("Connections.onLinkingSucceeded")
             //console.log("username: " + spotify.getUserName())
             //console.log("token   : " + spotify.getToken())
-            Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
+
             tokenExpireTime = spotify.getExpires()
             console.log("expires: " + tokenExpireTime)
             app.connectionText = qsTr("Connected")
             loadUser()
 
-            refreshPlayingInfo()
             reloadDevices()
         }
 
@@ -367,21 +332,6 @@ ApplicationWindow {
                 }
             } else {
                 console.log("No Data for getMe")
-            }
-        })
-        Spotify.getMyCurrentPlaybackState({}, function(error, data) {
-            if(data) {
-                try {
-                    if(data.device) {
-                        playbackStateDeviceId = data.device.id
-                        playbackStateDeviceName = data.device.name
-                        console.log("Current device: " + data.device.name)
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyCurrentPlaybackState")
             }
         })
     }
@@ -630,6 +580,7 @@ ApplicationWindow {
     MprisPlayer {
         id: mprisPlayer
         serviceName: mprisServiceName
+        playbackStatus: spotifyController.isPlaying ? Mpris.Playing : Mpris.Paused
 
         property var metaData
 
@@ -637,25 +588,19 @@ ApplicationWindow {
 
         canControl: true
 
-        canPause: playing
-        canPlay: !playing
+        canPause: spotifyController.isPlaying
+        canPlay: !spotifyController.isPlaying
 
         canGoNext: true
         canGoPrevious: true
 
         canSeek: false
 
-        playbackStatus: Mpris.Stopped
-
-        onPauseRequested: app.pause(function(error, data){})
-
-        onPlayRequested: app.pause(function(error, data){})
-
-        onPlayPauseRequested: app.pause(function(error, data){})
-
-        onNextRequested: app.next(function(error, data){})
-
-        onPreviousRequested: app.previous(function(error, data){})
+        onPauseRequested: spotifyController.pause()
+        onPlayRequested: spotifyController.play()
+        onPlayPauseRequested: spotifyController.playPause()
+        onNextRequested: app.next()
+        onPreviousRequested: app.previous()
 
         onMetaDataChanged: {
             var metadata = {}

@@ -13,7 +13,7 @@ import "../Spotify.js" as Spotify
 
 Page {
     id: myStuffPage
-    objectName: "MyStuffPage"
+    objectName: "MainStuffPage"
 
     property int searchInType: 0
     property bool showBusy: false
@@ -69,20 +69,35 @@ Page {
             }
 
             Row {
+                width: parent.width
+                property int rowWidth: (parent.width / 2) - (Theme.paddingMedium / 2)
+                spacing: Theme.paddingMedium
                 Button {
+                    width: parent.rowWidth
                     text: "New Releases"
                     onClicked: pageStack.push(Qt.resolvedUrl("NewRelease.qml"))
                 }
                 Button {
+                    width: parent.rowWidth
                     text: "Top stuff"
                     onClicked: pageStack.push(Qt.resolvedUrl("TopStuff.qml"))
                 }
             }
-            Button {
-                text: "Search"
-                onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
+            Row {
+                width: parent.width
+                property int rowWidth: (parent.width / 2) - (Theme.paddingMedium / 2)
+                spacing: Theme.paddingMedium
+                Button {
+                    width: parent.rowWidth
+                    text: "Genres & Mood"
+                    onClicked: pageStack.push(Qt.resolvedUrl("GenreMood.qml"))
+                }
+                Button {
+                    width: parent.rowWidth
+                    text: "Search"
+                    onClicked: pageStack.push(Qt.resolvedUrl("Search.qml"))
+                }
             }
-
         }
 
         section.property: "stype"

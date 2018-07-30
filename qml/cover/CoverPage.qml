@@ -153,19 +153,19 @@ CoverBackground {
             id: coverAction
             CoverAction {
                 iconSource: "image://theme/icon-cover-previous-song"
-                onTriggered: app.previous(function(error, data){})
+                onTriggered: app.previous()
             }
 
             CoverAction {
-                iconSource: app.playing
+                iconSource: app.controller.isPlaying
                             ? "image://theme/icon-cover-pause"
                             : "image://theme/icon-cover-play"
-                onTriggered: app.pause(function(error, data){})
+                onTriggered: app.controller.playPause()
             }
 
             CoverAction {
                 iconSource: "image://theme/icon-cover-next-song"
-                onTriggered: app.next(function(error, data){})
+                onTriggered: app.next()
             }
 
         }

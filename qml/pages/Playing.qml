@@ -19,14 +19,10 @@ Page {
 
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
-    property string pageHeaderText: qsTr("Playing")
 
-    property var playingObject
-    property var playbackState
     property var contextObject: null
     property bool isContextFavorite: false
     property string currentId: ""
-    property string currentTrackId: ""
 
     property string viewMenuText: ""
 
@@ -37,31 +33,28 @@ Page {
     property int currentIndex: -1
     property int playbackProgress: 0
 
+    property string pageHeaderTitle: qsTr("Playing")
+    property string pageHeaderDescription: ""
+
     allowedOrientations: Orientation.All
 
     GlassyBackground {
         anchors.fill: parent
         sourceSize.height: parent.height
-        source: (playingObject && playingObject.item)
-                ? playingObject.item.album.images[0].url : defaultImageSource
-        visible: (playingObject && playingObject.item) ? true : false
+        source: app.controller.playbackState ? app.controller.playbackState.item.album.images[0].url : ""
+        visible: (app.controller.playbackState !== undefined) && app.controller.playbackState.item
     }
 
     ListModel {
         id: searchModel
     }
 
-
-
-    SilicaListView {
+    SilicaFlickable {
         id: listView
-        model: searchModel
-
-        width: parent.width
+        //model: searchModel
         anchors.fill: parent
-        clip: true
 
-        header: Column {
+        Column {
             id: lvColumn
 
             width: playingPage.width
@@ -69,9 +62,10 @@ Page {
             spacing: Theme.paddingLarge
 
             PageHeader {
-                id: pHeader
                 width: parent.width
-                title: pageHeaderText
+                title: (app.controller.playbackState && app.controller.playbackState.context.type) ? qsTr("Playing " + app.controller.playbackState.context.type) : qsTr("Playing")
+
+                description: pageHeaderDescription
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -81,8 +75,8 @@ Page {
                 Image {
                     id: albumArt
                     anchors.horizontalCenter: parent.horizontalCenter
-                    source: (playingObject && playingObject.item)
-                             ? playingObject.item.album.images[0].url : defaultImageSource
+                    source: (app.controller.playbackState && app.controller.playbackState.item)
+                             ? app.controller.playbackState.item.album.images[0].url : defaultImageSource
                     width: parent.width - 4*Theme.horizontalPageMargin
                     height: sourceSize.height*(width/sourceSize.width)
                     fillMode: Image.PreserveAspectFit
@@ -100,7 +94,7 @@ Page {
                 x: Theme.horizontalPageMargin
                 width: playingPage.width - Theme.horizontalPageMargin*2
                 horizontalAlignment: Text.AlignHCenter
-                text: getFirstLabelText(playbackState, contextObject)
+                text: app.controller.playbackState ? app.controller.playbackState.item.name : ""
                 font.pixelSize: Theme.fontSizeLarge
             }
 
@@ -108,7 +102,96 @@ Page {
                 x: Theme.horizontalPageMargin
                 width: playingPage.width - Theme.horizontalPageMargin*2
                 horizontalAlignment: Text.AlignHCenter
-                text: getThirdLabelText(playbackState, contextObject)
+                text: Util.createItemsString(app.controller.playbackState ? app.controller.playbackState.item.artists : [], qsTr("no artist known"))
+            }
+
+            Row {
+                x: Theme.horizontalPageMargin
+                width: playingPage.width - Theme.horizontalPageMargin*2
+                Label {
+                    id: progressLabel
+                    font.pixelSize: Theme.fontSizeSmall
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: Util.getDurationString(playbackProgress)
+                }
+                Slider {
+                    //height: progressLabel.height * 1.5
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - durationLabel.width - progressLabel.width
+                    minimumValue: 0
+                    maximumValue: (app.controller.playbackState && app.controller.playbackState.item)
+                                  ? app.controller.playbackState.item.duration_ms
+                                  : 0
+                    handleVisible: false
+                    value: playbackProgress
+                    onReleased: {
+                        Spotify.seek(Math.round(value), function(error, data) {
+                            if(!error)
+                                app.controller.refreshPlaybackState()
+                        })
+                    }
+                }
+                Label {
+                    id: durationLabel
+                    font.pixelSize: Theme.fontSizeSmall
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: (app.controller.playbackState && app.controller.playbackState.item)
+                          ? Util.getDurationString(app.controller.playbackState.item.duration_ms)
+                          : ""
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                color: "transparent"
+            }
+
+            Row {
+                id: buttonRow
+                width: parent.width
+                property real itemWidth : width / 5
+
+                IconButton {
+                    width: buttonRow.itemWidth
+                    icon.source: (app.controller.playbackState && app.controller.playbackState.shuffle_state)
+                                 ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
+                                 : "image://theme/icon-m-shuffle"
+                    onClicked: app.setShuffle(checked, function(error,data) {
+                        if(!error)
+                            app.controller.refreshPlaybackState()
+                    })
+                }
+
+                IconButton {
+                    width: buttonRow.itemWidth
+                    enabled: app.mprisPlayer.canGoPrevious
+                    icon.source: "image://theme/icon-m-previous"
+                    onClicked: app.previous()
+                }
+                IconButton {
+                    width: buttonRow.itemWidth
+                    icon.source: app.controller.isPlaying
+                                 ? "image://theme/icon-l-pause"
+                                 : "image://theme/icon-l-play"
+                    onClicked: app.controller.playPause()
+                }
+                IconButton {
+                    width: buttonRow.itemWidth
+                    enabled: app.mprisPlayer.canGoNext
+                    icon.source: "image://theme/icon-m-next"
+                    onClicked: app.next()
+                }
+                IconButton {
+                    width: buttonRow.itemWidth
+                    icon.source: (app.controller.playbackState && app.controller.playbackState.repeat_state)
+                                 ? "image://theme/icon-m-repeat?" + Theme.highlightColor
+                                 : "image://theme/icon-m-repeat"
+                    onClicked: app.setRepeat(checked, function(error,data) {
+                        if(!error)
+                            app.controller.refreshPlaybackState()
+                    })
+                }
             }
 
             Rectangle {
@@ -116,44 +199,6 @@ Page {
                 height: Theme.paddingLarge
                 color: "transparent"
             }
-
-            Row {
-                id: buttonRow
-                width: parent.width
-                property real itemWidth : width / 3
-
-                IconButton {
-                    width: buttonRow.itemWidth
-                    enabled: app.mprisPlayer.canGoPrevious
-                    icon.source: "image://theme/icon-m-previous"
-                    onClicked: app.previous(function(error,data) {
-                        refresh()
-                    })
-                }
-                IconButton {
-                    width: buttonRow.itemWidth
-                    icon.source: app.playing
-                                 ? "image://theme/icon-l-pause"
-                                 : "image://theme/icon-l-play"
-                    onClicked: app.pause(function(error,data) {
-                        refresh()
-                    })
-                }
-                IconButton {
-                    width: buttonRow.itemWidth
-                    enabled: app.mprisPlayer.canGoNext
-                    icon.source: "image://theme/icon-m-next"
-                    onClicked: app.next(function(error,data) {
-                        refresh()
-                    })
-                }
-            }
-
-            /*Rectangle {
-                width: parent.width
-                height: Theme.paddingLarge
-                color: "transparent"
-            }*/
 
             Item {
                 anchors.left: parent.left
@@ -175,22 +220,11 @@ Page {
 
                     Label {
                         id: spotifyConnectLabel
-                        text: "Listening on <b>" + app.playbackStateDeviceName + "</b>"
+                        text: app.controller.playbackState ? "Listening on <b>" + app.controller.playbackState.device.name + "</b>" : ""
                     }
-                    visible: app.playbackStateDeviceName != ""
+                    visible: app.controller.playbackState !== undefined && app.controller.playbackState.device !== undefined
                 }
             }
-
-            /*Image {
-                id: imageItem
-                anchors.horizontalCenter: parent.horizontalCenter
-                source:  (playingObject && playingObject.item)
-                         ? playingObject.item.album.images[0].url : defaultImageSource
-                width: parent.width * 0.75
-                height: width
-                fillMode: Image.PreserveAspectFit
-                onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
-            }*/
 
             /*Item {
                 id: infoContainer
@@ -254,7 +288,7 @@ Page {
                             pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: contextObject})
                             break
                         case Spotify.ItemType.Track:
-                            pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: playingObject.item.album})
+                            pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: app.controller.playbackState.item.album})
                             break
                         }
                     }
@@ -272,7 +306,7 @@ Page {
                             pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: contextObject})
                             break
                         case Spotify.ItemType.Track:
-                            app.loadArtist(playingObject.item.artists)
+                            app.loadArtist(app.controller.playbackState.item.artists)
                             break
                         }
                     }
@@ -307,7 +341,7 @@ Page {
                 opacity: 0
             }
         }
-
+/*
         delegate: ListItem {
             id: listItem
             width: parent.width - 2*Theme.paddingMedium
@@ -347,139 +381,7 @@ Page {
             }
 
             onClicked: app.playTrack(track)
-        }
-
-        footer: PanelBackground { //
-            // Item { for transparant controlpanel
-            id: controlPanel
-            width: parent.width
-            height: col.height
-
-            Column {
-                id: col
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-
-                Row {
-                    width: parent.width
-                    Label {
-                        id: progressLabel
-                        font.pixelSize: Theme.fontSizeSmall
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: Util.getDurationString(playbackProgress)
-                    }
-                    Slider {
-                        height: progressLabel.height * 1.5
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width - durationLabel.width - progressLabel.width
-                        minimumValue: 0
-                        maximumValue: (playbackState && playbackState.item)
-                                      ? playbackState.item.duration_ms
-                                      : 0
-                        handleVisible: false
-                        value: playbackProgress
-                        onReleased: {
-                            Spotify.seek(Math.round(value), function(error, data) {
-                                if(!error)
-                                    refresh()
-                            })
-                        }
-                    }
-                    Label {
-                        id: durationLabel
-                        font.pixelSize: Theme.fontSizeSmall
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: (playbackState && playbackState.item)
-                              ? Util.getDurationString(playbackState.item.duration_ms)
-                              : ""
-                    }
-                }
-
-                Slider {
-                    id: volumeSlider
-                    width: parent.width
-                    minimumValue: 0
-                    maximumValue: 100
-                    handleVisible: false
-                    value: (playbackState && playbackState.device)
-                           ? playbackState.device.volume_percent : 0
-                    onReleased: {
-                        Spotify.setVolume(Math.round(value), function(error, data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                }
-
-                /*Row {
-                    id: buttonRow
-                    width: parent.width
-                    property real itemWidth : width / 5
-
-                    IconButton {
-                        width: buttonRow.itemWidth
-                        enabled: app.mprisPlayer.canGoPrevious
-                        icon.source: "image://theme/icon-m-previous"
-                        onClicked: app.previous(function(error,data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                    IconButton {
-                        width: buttonRow.itemWidth
-                        icon.source: app.playing
-                                     ? "image://theme/icon-cover-pause"
-                                     : "image://theme/icon-cover-play"
-                        onClicked: app.pause(function(error,data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                    IconButton {
-                        width: buttonRow.itemWidth
-                        enabled: app.mprisPlayer.canGoNext
-                        icon.source: "image://theme/icon-m-next"
-                        onClicked: app.next(function(error,data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                    IconButton {
-                        width: buttonRow.itemWidth
-                        icon.source: (playbackState && playbackState.repeat_state)
-                                     ? "image://theme/icon-m-repeat?" + Theme.highlightColor
-                                     : "image://theme/icon-m-repeat"
-                        onClicked: app.setRepeat(checked, function(error,data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                    IconButton {
-                        width: buttonRow.itemWidth
-                        icon.source: (playbackState && playbackState.shuffle_state)
-                                     ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
-                                     : "image://theme/icon-m-shuffle"
-                        onClicked: app.setShuffle(checked, function(error,data) {
-                            if(!error)
-                                refresh()
-                        })
-                    }
-                }*/
-            }
-        } // Control Panel
-
-
-        VerticalScrollDecorator {}
-
-        /*Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
-            text: qsTr("No tracks found")
-            color: Theme.secondaryColor
         }*/
-
     }
 
     property int failedAttempts: 0
@@ -487,15 +389,15 @@ Page {
     Timer {
         id: handleRendererInfo
         interval: 1000;
-        running: app.playing
+        running: app.controller.isPlaying
         repeat: true
         onTriggered: {
             if(++refreshCount>=5) {
-                refresh()
+                app.controller.refreshPlaybackState()
                 refreshCount = 0
             }
             // pretend progress (ms), refresh() will set the actual value
-            if( playbackState.item && playbackProgress < playbackState.item.duration_ms)
+            if( app.controller.playbackState.item && playbackProgress < app.controller.playbackState.item.duration_ms)
                 playbackProgress += 1000
         }
     }
@@ -576,9 +478,9 @@ Page {
     }
 
     function getContextType() {
-        if(!playbackState || !playbackState.context || !contextObject)
+        if(!app.controller.playbackState || !app.controller.playbackState.context || !contextObject)
             return -1
-        switch(playbackState.context.type) {
+        switch(app.controller.playbackState.context.type) {
         case 'album':
             return Spotify.ItemType.Album
         case 'artist':
@@ -586,79 +488,9 @@ Page {
         case 'playlist':
             return Spotify.ItemType.Playlist
         }
-        if(playingObject && playingObject.item)
+        if(app.controller.playbackState && app.controller.playbackState.item)
             return Spotify.ItemType.Track
         return -1
-    }
-
-    function refresh() {
-        var i;
-
-        Spotify.getMyCurrentPlaybackState({}, function(error, data) {
-            if(data) {
-                playbackState = data
-                if(playbackState.context) {
-                    var cid = Util.getIdFromURI(playbackState.context.uri)
-                    if(currentId !== cid) {
-                        currentId = cid
-                        contextObject = null
-                        switch(playbackState.context.type) {
-                        case 'album':
-                            Spotify.getAlbum(cid, {}, function(error, data) {
-                                contextObject = data
-                                pageHeaderText = qsTr("Playing Album")
-                            })
-                            loadAlbumTracks(cid)
-                            break
-                        case 'artist':
-                            Spotify.getArtist(cid, {}, function(error, data) {
-                                contextObject = data
-                                pageHeaderText = qsTr("Playing Artist")
-                            })
-                            break
-                        case 'playlist':
-                            Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
-                                contextObject = data
-                                pageHeaderText = qsTr("Playing Playlist")
-                            })
-                            loadPlaylistTracks(app.id, cid)
-                            break
-                        default:
-                            pageHeaderText = qsTr("Playing Album")
-                            break
-                        }
-                    }
-                } else {
-                    // no context (a single track?)
-                    currentId = playbackState.item.id
-                    contextObject = null
-                    pageHeaderText = qsTr("Playing")
-                }
-
-                playbackProgress = playbackState.progress_ms
-                app.playing = playbackState.is_playing
-
-                // we have a connection
-                failedAttempts = 0
-            } else {
-                // lost connection
-                if(++failedAttempts >= 3) {
-                    showErrorMessage(null, qsTr("Connection lost with Spotify servers"))
-                    app.playing = false
-                    searchModel.clear()
-                }
-            }
-
-        })
-
-        Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
-            if(data) {
-                playingObject = data
-                app.newPlayingTrackInfo(data.item)
-                currentTrackId = playingObject.item.id
-            }
-        })
-
     }
 
     function loadPlaylistTracks(id, pid) {
@@ -737,14 +569,14 @@ Page {
             })
             break
         default: // track?
-            if(playingObject && playingObject.item) { // Note uses globals
+            if(app.controller.playbackState && app.controller.playbackState.item) { // Note uses globals
                 if(isContextFavorite)
-                    app.unSaveTrack(playingObject.item, function(error,data) {
+                    app.unSaveTrack(app.controller.playbackState.item, function(error,data) {
                         if(!error)
                             isContextFavorite = false
                     })
                 else
-                    app.saveTrack(playingObject.item, function(error,data) {
+                    app.saveTrack(app.controller.playbackState.item, function(error,data) {
                         if(!error)
                             isContextFavorite = true
                     })
@@ -754,25 +586,52 @@ Page {
     }
 
     Connections {
-        target: spotify
-        onLinkingSucceeded: refresh()
+        target: app.controller
+        onPlaybackStateChanged: {
+            if(app.controller.playbackState.context) {
+                var cid = Util.getIdFromURI(app.controller.playbackState.context.uri)
+                if(currentId !== cid) {
+                    currentId = cid
+                    contextObject = null
+                    switch(app.controller.playbackState.context.type) {
+                    case 'album':
+                        pageHeaderDescription = app.controller.playbackState.item.album.name
+                        break
+                    case 'artist':
+                        pageHeaderDescription = app.controller.playbackState.item.artist.name
+                        break
+                    case 'playlist':
+                        Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
+                            contextObject = data
+                            pageHeaderDescription = contextObject.name
+                        })
+                        //loadPlaylistTracks(app.id, cid)
+                        break
+                    default:
+                        pageHeaderDescription = ""
+                        break
+                    }
+                }
+            } else {
+                // no context (a single track?)
+                currentId = app.controller.playbackState.item.id
+                contextObject = null
+                pageHeaderDescription = ""
+            }
+
+            playbackProgress = app.controller.playbackState.progress_ms
+        }
     }
 
     Connections {
         target: app
-
-        onNewPlayingTrackInfo: {
-            // track change?
-            if(currentTrackId !== track.id)
-                refresh()
-        }
 
         onAddedToPlaylist: {
             if(getContextType() === Spotify.ItemType.Playlist
                && contextObject.id === playlistId) {
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
-                refresh()
+                //refresh()
             }
         }
 
@@ -784,5 +643,5 @@ Page {
         }
     }
 
-    Component.onCompleted: refresh()
+    Component.onCompleted: app.controller.refreshPlaybackState()
 }

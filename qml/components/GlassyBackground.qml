@@ -1,11 +1,11 @@
 import QtQuick 2.1
 import Sailfish.Silica 1.0
-import QtGraphicalEffects 1.0
 
-Item {
+Rectangle {
     property alias source: backgroundImage.source
     property alias sourceSize: backgroundImage.sourceSize
     property real dimmedOpacity: 0.15
+    color: "#000"
 
     Image {
         id: backgroundImage
@@ -14,13 +14,8 @@ Item {
         asynchronous: true
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
-        visible: false
-    }
-    BrightnessContrast {
-        anchors.fill: backgroundImage
-        source: backgroundImage
-        brightness: -1 + dimmedOpacity
-        contrast: 0
+        visible: parent.visible
+        opacity: dimmedOpacity
     }
 
     Image {
@@ -28,5 +23,6 @@ Item {
         fillMode:  Image.Tile
         source: "image://theme/graphic-shader-texture"
         opacity: 0.1
+        visible: parent.visible
     }
 }
