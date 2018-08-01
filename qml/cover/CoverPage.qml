@@ -7,19 +7,14 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+import "../Util.js" as Util
+
 CoverBackground {
     id: cover
-
-    property string defaultImageSource : "image://theme/icon-m-music"
-    property string imageSource : defaultImageSource
-    property string titleText : ""
-    property string albumText : ""
-    property string artistsText : ""
-
     Image {
-        id: articleImage
+        id: coverImage
         anchors.fill: parent
-        source: imageSource
+        source: app.controller.getCoverArt(app.controller.playbackState, "image://theme/icon-m-music")
         fillMode: Image.PreserveAspectCrop
     }
 
@@ -27,7 +22,7 @@ CoverBackground {
         slope: 1.0
         offset: 0.15
         opacity: 0.5
-        sourceItem: articleImage
+        sourceItem: coverImage
         direction: OpacityRamp.TopToBottom
     }
 
@@ -42,7 +37,7 @@ CoverBackground {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             maximumLineCount: 6
             elide: Text.ElideRight
-            text: titleText
+            text: app.controller.playbackState.item.name
         }
         Label {
             anchors.left: parent.left
@@ -51,11 +46,13 @@ CoverBackground {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             maximumLineCount: 6
             elide: Text.ElideRight
-            text: artistsText
+            text: Util.createItemsString(app.controller.playbackState.item.artists, "")
             color: Theme.secondaryColor
+            visible: text != ""
         }
         Row {
             spacing: Theme.paddingMedium
+            visible: app.controller.playbackState.item.id !== -1
             Image {
                 height: Theme.iconSizeSmall
                 width: Theme.iconSizeSmall
@@ -125,14 +122,6 @@ CoverBackground {
                ? parent.width
                : (parent.width-otherLabel.width) / 2
             text: artistsText
-            /*{
-                var s = ""
-                if(albumText)
-                    s += albumText
-                if(artistsText && artistsText.length > 0)
-                    s += (s.length > 0 ? ", " : "") + artistsText
-                return s
-            }*/
             /*horizontalAlignment: otherLabel.width > cover.width
                                  ? Text.AlignLeft
                                  : Text.AlignHCenter
@@ -153,11 +142,11 @@ CoverBackground {
             id: coverAction
             CoverAction {
                 iconSource: "image://theme/icon-cover-previous-song"
-                onTriggered: app.previous()
+                onTriggered: app.controller.previous()
             }
 
             CoverAction {
-                iconSource: app.controller.isPlaying
+                iconSource: app.controller.playbackState.is_playing
                             ? "image://theme/icon-cover-pause"
                             : "image://theme/icon-cover-play"
                 onTriggered: app.controller.playPause()
@@ -165,17 +154,10 @@ CoverBackground {
 
             CoverAction {
                 iconSource: "image://theme/icon-cover-next-song"
-                onTriggered: app.next()
+                onTriggered: app.controller.next()
             }
 
         }
-    }
-
-    function updateDisplayData(metaData) {
-        titleText = metaData['title']
-        albumText = metaData['album']
-        artistsText = metaData['artist']
-        cover.imageSource = metaData['artUrl'] ? metaData['artUrl'] : defaultImageSource
     }
 }
 

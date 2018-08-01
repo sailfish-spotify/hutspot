@@ -8,7 +8,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import org.nemomobile.configuration 1.0
-import org.nemomobile.mpris 1.0
 
 import "Spotify.js" as Spotify
 import "Util.js" as Util
@@ -31,7 +30,6 @@ ApplicationWindow {
     property alias auth_using_browser: auth_using_browser
     property alias start_stop_librespot: start_stop_librespot
     property alias confirm_un_follow_save: confirm_un_follow_save
-    property alias mprisPlayer: mprisPlayer
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -71,98 +69,6 @@ ApplicationWindow {
             } else
                 showErrorMessage(error, qsTr("Transfer Failed"))
         })
-    }
-
-    function playTrack(track) {
-        Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(error, data) {
-            if(!error) {
-                spotifyController.refreshPlaybackState();
-            } else
-                showErrorMessage(error, qsTr("Play Failed"))
-        })
-    }
-
-    function playContext(context) {
-        Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(error, data) {
-            if(!error) {
-              spotifyController.refreshPlaybackState();
-            } else
-                showErrorMessage(error, qsTr("Play Failed"))
-        })
-    }
-
-    function next(callback) {
-        Spotify.skipToNext({}, function(error, data) {
-            if(callback)
-                callback(error, data)
-            spotifyController.refreshPlaybackState();
-        })
-    }
-
-    function previous(callback) {
-        Spotify.skipToPrevious({}, function(error, data) {
-            if(callback)
-                callback(error, data)
-            spotifyController.refreshPlaybackState();
-        })
-    }
-
-    function setRepeat(state, callback) {
-        Spotify.setRepeat(state, {}, function(error, data) {
-            if (callback) callback(error, data)
-        })
-    }
-
-    function setShuffle(state, callback) {
-        Spotify.setShuffle(state, {}, function(error, data) {
-            if (callback) callback(error, data)
-        })
-    }
-
-    Connections {
-        target: spotifyController
-        onPlaybackStateChanged: {
-            var track = spotifyController.playbackState.item;
-
-            //item.track_number item.duration_ms
-            var uri = track.album.images[0].url
-
-            var metaData = {}
-            metaData['title'] = track.name
-            metaData['album'] = track.album.name
-            metaData['artUrl'] = uri
-            if(track.artists)
-                metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
-            else
-                metaData['artist'] = ''
-            cover.updateDisplayData(metaData)
-            mprisPlayer.metaData = metaData
-        }
-
-    }
-
-    property var myDevices: []
-
-    // using spotify webapi
-    function reloadDevices() {
-        var i
-        //itemsModel.clear()
-
-        myDevices = []
-        Spotify.getMyDevices(function(error, data) {
-            if(data) {
-                try {
-                    console.log("number of devices: " + myDevices.length)
-                    myDevices = data.devices
-                    //refreshDevices()
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyDevices")
-            }
-        })
-
     }
 
     Component.onCompleted: {
@@ -225,15 +131,10 @@ ApplicationWindow {
 
         onLinkingSucceeded: {
             console.log("Connections.onLinkingSucceeded")
-            //console.log("username: " + spotify.getUserName())
-            //console.log("token   : " + spotify.getToken())
-
             tokenExpireTime = spotify.getExpires()
             console.log("expires: " + tokenExpireTime)
             app.connectionText = qsTr("Connected")
             loadUser()
-
-            reloadDevices()
         }
 
         onLinkedChanged: {
@@ -254,16 +155,7 @@ ApplicationWindow {
                                {url: url, scale: Screen.widthRatio})
         }
 
-        onCloseBrowser: {
-            //pageStack.pop()
-            loadFirstPage()
-        }
-    }
-
-    property var foundDevices: []
-    signal devicesChanged()
-    onDevicesChanged: {
-        firstPage.foundDevicesChanged()
+        onCloseBrowser: loadFirstPage()
     }
 
     /* Service Browser has been disabled since it is unknown how to
@@ -575,45 +467,6 @@ ApplicationWindow {
         }
     }
 
-    property string mprisServiceName: "hutspot"
-
-    MprisPlayer {
-        id: mprisPlayer
-        serviceName: mprisServiceName
-        playbackStatus: spotifyController.isPlaying ? Mpris.Playing : Mpris.Paused
-
-        property var metaData
-
-        identity: qsTr("Simple Spotify Controller")
-
-        canControl: true
-
-        canPause: spotifyController.isPlaying
-        canPlay: !spotifyController.isPlaying
-
-        canGoNext: true
-        canGoPrevious: true
-
-        canSeek: false
-
-        onPauseRequested: spotifyController.pause()
-        onPlayRequested: spotifyController.play()
-        onPlayPauseRequested: spotifyController.playPause()
-        onNextRequested: app.next()
-        onPreviousRequested: app.previous()
-
-        onMetaDataChanged: {
-            var metadata = {}
-
-            if (metaData && 'artist' in metaData)
-                metadata[Mpris.metadataToString(Mpris.Artist)] = [metaData['artist']] // List of strings
-            if (metaData && 'title' in metaData)
-                metadata[Mpris.metadataToString(Mpris.Title)] = metaData['title'] // String
-
-            mprisPlayer.metadata = metadata
-        }
-    }
-
     Librespot {
         id: librespot
     }
@@ -674,12 +527,6 @@ ApplicationWindow {
             id: auth_using_browser
             key: "/hutspot/auth_using_browser"
             defaultValue: false
-    }
-
-    ConfigurationValue {
-            id: firstPage
-            key: "/hutspot/first_page"
-            defaultValue: ""
     }
 
     ConfigurationValue {

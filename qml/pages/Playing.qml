@@ -31,7 +31,6 @@ Page {
     property bool canLoadNext: true
     property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
-    property int playbackProgress: 0
 
     property string pageHeaderTitle: qsTr("Playing")
     property string pageHeaderDescription: ""
@@ -41,8 +40,8 @@ Page {
     GlassyBackground {
         anchors.fill: parent
         sourceSize.height: parent.height
-        source: app.controller.playbackState ? app.controller.playbackState.item.album.images[0].url : ""
-        visible: (app.controller.playbackState !== undefined) && app.controller.playbackState.item
+        source: app.controller.getCoverArt(app.controller.playbackState, "")
+        visible: source !== ""
     }
 
     ListModel {
@@ -51,7 +50,6 @@ Page {
 
     SilicaFlickable {
         id: listView
-        //model: searchModel
         anchors.fill: parent
 
         Column {
@@ -63,7 +61,7 @@ Page {
 
             PageHeader {
                 width: parent.width
-                title: (app.controller.playbackState && app.controller.playbackState.context.type) ? qsTr("Playing " + app.controller.playbackState.context.type) : qsTr("Playing")
+                title: (app.controller.playbackState.context !== undefined && app.controller.playbackState.context.type) ? qsTr("Playing " + app.controller.playbackState.context.type) : qsTr("Playing")
 
                 description: pageHeaderDescription
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -75,8 +73,7 @@ Page {
                 Image {
                     id: albumArt
                     anchors.horizontalCenter: parent.horizontalCenter
-                    source: (app.controller.playbackState && app.controller.playbackState.item)
-                             ? app.controller.playbackState.item.album.images[0].url : defaultImageSource
+                    source: app.controller.getCoverArt(app.controller.playbackState, defaultImageSource)
                     width: parent.width - 4*Theme.horizontalPageMargin
                     height: sourceSize.height*(width/sourceSize.width)
                     fillMode: Image.PreserveAspectFit
@@ -94,7 +91,8 @@ Page {
                 x: Theme.horizontalPageMargin
                 width: playingPage.width - Theme.horizontalPageMargin*2
                 horizontalAlignment: Text.AlignHCenter
-                text: app.controller.playbackState ? app.controller.playbackState.item.name : ""
+                text: app.controller.playbackState.item.name
+                truncationMode: TruncationMode.Fade
                 font.pixelSize: Theme.fontSizeLarge
             }
 
@@ -102,7 +100,8 @@ Page {
                 x: Theme.horizontalPageMargin
                 width: playingPage.width - Theme.horizontalPageMargin*2
                 horizontalAlignment: Text.AlignHCenter
-                text: Util.createItemsString(app.controller.playbackState ? app.controller.playbackState.item.artists : [], qsTr("no artist known"))
+                text: app.controller.playbackState.artistsString
+                truncationMode: TruncationMode.Fade
             }
 
             Row {
@@ -112,21 +111,19 @@ Page {
                     id: progressLabel
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Util.getDurationString(playbackProgress)
+                    text: Util.getDurationString(app.controller.playbackState.progress_ms)
                 }
                 Slider {
                     //height: progressLabel.height * 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
-                    maximumValue: (app.controller.playbackState && app.controller.playbackState.item)
-                                  ? app.controller.playbackState.item.duration_ms
-                                  : 0
+                    maximumValue: app.controller.playbackState.item.duration_ms
                     handleVisible: false
-                    value: playbackProgress
+                    value: app.controller.playbackState.progress_ms
                     onReleased: {
                         Spotify.seek(Math.round(value), function(error, data) {
-                            if(!error)
+                            if (!error)
                                 app.controller.refreshPlaybackState()
                         })
                     }
@@ -135,9 +132,7 @@ Page {
                     id: durationLabel
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
-                    text: (app.controller.playbackState && app.controller.playbackState.item)
-                          ? Util.getDurationString(app.controller.playbackState.item.duration_ms)
-                          : ""
+                    text: Util.getDurationString(app.controller.playbackState.item.duration_ms)
                 }
             }
 
@@ -154,43 +149,58 @@ Page {
 
                 IconButton {
                     width: buttonRow.itemWidth
-                    icon.source: (app.controller.playbackState && app.controller.playbackState.shuffle_state)
+                    icon.source: app.controller.playbackState.shuffle_state
                                  ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
                                  : "image://theme/icon-m-shuffle"
-                    onClicked: app.setShuffle(checked, function(error,data) {
-                        if(!error)
-                            app.controller.refreshPlaybackState()
-                    })
+                    onClicked: app.controller.setShuffle(!app.controller.playbackState.shuffle_state)
                 }
 
                 IconButton {
                     width: buttonRow.itemWidth
-                    enabled: app.mprisPlayer.canGoPrevious
+                    //enabled: app.mprisPlayer.canGoPrevious
                     icon.source: "image://theme/icon-m-previous"
-                    onClicked: app.previous()
+                    onClicked: app.controller.previous()
                 }
                 IconButton {
                     width: buttonRow.itemWidth
-                    icon.source: app.controller.isPlaying
+                    icon.source: app.controller.playbackState.is_playing
                                  ? "image://theme/icon-l-pause"
                                  : "image://theme/icon-l-play"
                     onClicked: app.controller.playPause()
                 }
                 IconButton {
                     width: buttonRow.itemWidth
-                    enabled: app.mprisPlayer.canGoNext
+                    //enabled: app.mprisPlayer.canGoNext
                     icon.source: "image://theme/icon-m-next"
-                    onClicked: app.next()
+                    onClicked: app.controller.next()
                 }
                 IconButton {
+                    Rectangle {
+                        visible: app.controller.playbackState.repeat_state === "track"
+                        color: Theme.highlightColor
+                        anchors {
+                            rightMargin: (buttonRow.itemWidth - Theme.iconSizeMedium)/2
+                            right: parent.right
+                            top: parent.top
+                        }
+                        width: Theme.iconSizeSmall
+                        height: width
+                        radius: width/2
+
+                        Label {
+                            text: "1"
+                            anchors.centerIn: parent
+                            color: "#000"
+                            font.pixelSize: Theme.fontSizeSmall
+                            font.bold: true
+                        }
+                    }
+
                     width: buttonRow.itemWidth
-                    icon.source: (app.controller.playbackState && app.controller.playbackState.repeat_state)
+                    icon.source: app.controller.playbackState.repeat_state !== "off"
                                  ? "image://theme/icon-m-repeat?" + Theme.highlightColor
                                  : "image://theme/icon-m-repeat"
-                    onClicked: app.setRepeat(checked, function(error,data) {
-                        if(!error)
-                            app.controller.refreshPlaybackState()
-                    })
+                    onClicked: app.controller.setRepeat(app.controller.playbackState.nextRepeatState())
                 }
             }
 
@@ -220,38 +230,11 @@ Page {
 
                     Label {
                         id: spotifyConnectLabel
-                        text: app.controller.playbackState ? "Listening on <b>" + app.controller.playbackState.device.name + "</b>" : ""
+                        text: app.controller.playbackState.device !== undefined ? "Listening on <b>" + app.controller.playbackState.device.name + "</b>" : ""
                     }
-                    visible: app.controller.playbackState !== undefined && app.controller.playbackState.device !== undefined
+                    visible: app.controller.playbackState.device !== undefined
                 }
             }
-
-            /*Item {
-                id: infoContainer
-
-                // put MetaInfoPanel in Item to be able to make room for context menu
-                width: parent.width
-                height: info.height + (cmenu ? cmenu.height : 0)
-
-                MetaInfoPanel {
-                    id: info
-                    anchors.top: parent.top
-                    firstLabelText: getFirstLabelText(playbackState, contextObject)
-                    secondLabelText: getSecondLabelText(playbackState, contextObject)
-                    thirdLabelText: getThirdLabelText(playbackState, contextObject)
-
-                    isFavorite: isContextFavorite
-                    onToggleFavorite: toggleSavedFollowed(playbackState, contextObject)
-                    onFirstLabelClicked: openMenu()
-                    onSecondLabelClicked: openMenu()
-                    onThirdLabelClicked: openMenu()
-
-                    function openMenu() {
-                        cmenu.update()
-                        cmenu.open(infoContainer)
-                    }
-                }
-            }*/
 
             ContextMenu {
                 id: cmenu
@@ -319,16 +302,6 @@ Page {
                 }
             }
 
-            /*Label {
-                truncationMode: TruncationMode.Fade
-                width: parent.width
-                font.pixelSize: Theme.fontSizeSmall
-                wrapMode: Text.Wrap
-                text:  (playbackState && playbackState.device)
-                        ? qsTr("on: ") + playbackState.device.name + " (" + playbackState.device.type + ")"
-                        : qsTr("none")
-            }*/
-
             Rectangle {
                 width: parent.width
                 height: Theme.paddingMedium
@@ -380,101 +353,8 @@ Page {
                 onToggleFavorite: app.toggleSavedTrack(model)
             }
 
-            onClicked: app.playTrack(track)
+            onClicked: app.controller.playTrackInContext(track, playbackState.context)
         }*/
-    }
-
-    property int failedAttempts: 0
-    property int refreshCount: 0
-    Timer {
-        id: handleRendererInfo
-        interval: 1000;
-        running: app.controller.isPlaying
-        repeat: true
-        onTriggered: {
-            if(++refreshCount>=5) {
-                app.controller.refreshPlaybackState()
-                refreshCount = 0
-            }
-            // pretend progress (ms), refresh() will set the actual value
-            if( app.controller.playbackState.item && playbackProgress < app.controller.playbackState.item.duration_ms)
-                playbackProgress += 1000
-        }
-    }
-
-    function getFirstLabelText(playbackState) {
-        return (playbackState && playbackState.item) ? playbackState.item.name : ""
-    }
-
-    function getSecondLabelText(playbackState, contextObject) {
-        var s = ""
-        if(playbackState === undefined)
-             return s
-        if(!playbackState.context) {
-            // no context (a single track?)
-            if(playbackState.item && playbackState.item.album) {
-                s += playbackState.item.album.name
-                s += ", " + Util.getYearFromReleaseDate(playbackState.item.album.release_date)
-            }
-            return s
-        }
-        switch(playbackState.context.type) {
-        case 'album':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
-            break
-        case 'artist':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
-            break
-        case 'playlist':
-            if(contextObject)
-                s+= contextObject.description
-            break
-        }
-        return s
-    }
-
-    function getThirdLabelText(playbackState, contextObject) {
-        var s = ""
-        if(playbackState === undefined)
-             return s
-        if(!playbackState.context) {
-            // no context (a single track?)
-            if(playbackState.item && playbackState.item.artists)
-                s += Util.createItemsString(playbackState.item.artists, qsTr("no artist known"))
-            return s
-        }
-        switch(playbackState.context.type) {
-        case 'album':
-            if(contextObject) {
-                if(contextObject.tracks)
-                    s += contextObject.tracks.total + " " + qsTr("tracks")
-                else if(contextObject.album_type === "single")
-                    s += "1 " + qsTr("track")
-                s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
-                if(contextObject.genres)
-                    s += ", " + Util.createItemsString(contextObject.genres, "")
-            }
-            break
-        case 'artist':
-            if(contextObject && contextObject.followers.total > 0)
-                s += Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
-            break
-        case 'playlist':
-            if(contextObject) {
-                s += contextObject.tracks.total + " " + qsTr("tracks")
-                s += ", " + qsTr("by") + " " + contextObject.owner.display_name
-                if(contextObject.followers && contextObject.followers.total > 0)
-                    s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
-                if(contextObject["public"])
-                    s += ", " +  qsTr("public")
-                if(contextObject.collaborative)
-                    s += ", " +  qsTr("collaborative")
-            }
-            break
-        }
-        return s
     }
 
     function getContextType() {
@@ -488,9 +368,7 @@ Page {
         case 'playlist':
             return Spotify.ItemType.Playlist
         }
-        if(app.controller.playbackState && app.controller.playbackState.item)
-            return Spotify.ItemType.Track
-        return -1
+        return Spotify.ItemType.Track
     }
 
     function loadPlaylistTracks(id, pid) {
@@ -569,25 +447,23 @@ Page {
             })
             break
         default: // track?
-            if(app.controller.playbackState && app.controller.playbackState.item) { // Note uses globals
-                if(isContextFavorite)
-                    app.unSaveTrack(app.controller.playbackState.item, function(error,data) {
-                        if(!error)
-                            isContextFavorite = false
-                    })
-                else
-                    app.saveTrack(app.controller.playbackState.item, function(error,data) {
-                        if(!error)
-                            isContextFavorite = true
-                    })
-            }
+            if(isContextFavorite)
+                app.unSaveTrack(app.controller.playbackState.item, function(error,data) {
+                    if(!error)
+                        isContextFavorite = false
+                })
+            else
+                app.saveTrack(app.controller.playbackState.item, function(error,data) {
+                    if(!error)
+                        isContextFavorite = true
+                })
             break
         }
     }
 
     Connections {
-        target: app.controller
-        onPlaybackStateChanged: {
+        target: app.controller.playbackState
+        onItemChanged: {
             if(app.controller.playbackState.context) {
                 var cid = Util.getIdFromURI(app.controller.playbackState.context.uri)
                 if(currentId !== cid) {
@@ -598,7 +474,7 @@ Page {
                         pageHeaderDescription = app.controller.playbackState.item.album.name
                         break
                     case 'artist':
-                        pageHeaderDescription = app.controller.playbackState.item.artist.name
+                        pageHeaderDescription = app.controller.playbackState.artistsString
                         break
                     case 'playlist':
                         Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
@@ -618,8 +494,6 @@ Page {
                 contextObject = null
                 pageHeaderDescription = ""
             }
-
-            playbackProgress = app.controller.playbackState.progress_ms
         }
     }
 

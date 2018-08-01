@@ -51,7 +51,8 @@ DISTFILES += \
     qml/pages/GenreMood.qml \
     qml/pages/GenreMoodPlaylist.qml \
     qml/pages/CurrentPlaylist.qml \
-    qml/components/SpotifyController.qml
+    qml/components/SpotifyController.qml \
+    qml/components/PlaybackState.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

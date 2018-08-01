@@ -57,8 +57,6 @@ Page {
             spacing: Theme.paddingMedium
 
             PageHeader {
-                id: pHeader
-                width: parent.width
                 title: qsTr("Playlist")
             }
 
@@ -73,7 +71,7 @@ Page {
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                      anchors.fill: parent
-                     onClicked: app.playContext(playlist)
+                     onClicked: app.controller.playContext(playlist)
                 }
             }
 
@@ -141,7 +139,7 @@ Page {
                 }
             }
 
-            onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
+            onClicked: app.controller.playTrackInContext(track, playlist)
         }
 
         VerticalScrollDecorator {}

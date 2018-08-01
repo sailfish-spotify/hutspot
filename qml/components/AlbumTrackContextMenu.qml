@@ -8,10 +8,10 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 
 ContextMenu {
-
+    property var context;
     MenuItem {
         text: qsTr("Play")
-        onClicked: app.playTrack(track)
+        onClicked: app.controller.playTrackInContext(track, context)
     }
 
     MenuItem {
