@@ -106,6 +106,39 @@ ApplicationWindow {
             pageStack.replace(pageUrl, {}, PageStackAction.Immediate)
     }
 
+    // when using menu dialog
+    function doSelectedMenuItem(selectedIndex) {
+        switch(selectedIndex) {
+        case Util.HutspotMenuItem.ShowPlayingPage:
+            app.showPage('PlayingPage')
+            break
+        case Util.HutspotMenuItem.ShowNewReleasePage:
+            app.showPage('NewReleasePage')
+            break
+        case Util.HutspotMenuItem.ShowMyStuffPage:
+            app.showPage('MyStuffPage')
+            break
+        case Util.HutspotMenuItem.ShowTopStuffPage:
+            app.showPage('TopStuffPage')
+            break
+        case Util.HutspotMenuItem.ShowGenreMoodPage:
+            app.showPage('GenreMoodPage')
+            break
+        case Util.HutspotMenuItem.ShowSearchPage:
+            app.showPage('SearchPage')
+            break
+        case Util.HutspotMenuItem.ShowDevicesPage:
+            pageStack.push(Qt.resolvedUrl("pages/Devices.qml"))
+            break
+        case Util.HutspotMenuItem.ShowSettingsPage:
+            pageStack.push(Qt.resolvedUrl("pages/Settings.qml"))
+            break
+        case Util.HutspotMenuItem.ShowAboutPage:
+            pageStack.push(Qt.resolvedUrl("pages/About.qml"))
+            break;
+        }
+    }
+
     function showErrorMessage(error, text) {
         var msg
         if(error) {
