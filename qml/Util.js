@@ -215,3 +215,10 @@ var HutspotMenuItem = {
     ShowSettingsPage: 7,
     ShowTopStuffPage: 8
 }
+
+var HutspotPage = {
+    AlbumPage: 0,
+    ArtistPage: 1,
+    PlaylistPage: 2,
+    GenreMoodPlaylist: 3
+}

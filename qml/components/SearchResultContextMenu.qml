@@ -7,6 +7,8 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import "../Util.js" as Util
+
 ContextMenu {
 
     property int contextType: -1
@@ -37,13 +39,13 @@ ContextMenu {
         onClicked: {
             switch(type) {
             case 0:
-                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: album})
+                app.pushPage(Util.HutspotPage.Album, {album: album})
                 break
             case 1:
-                pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: artist})
+                app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
                 break
             case 2:
-                pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: playlist})
+                app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
                 break
             }
         }
@@ -52,7 +54,7 @@ ContextMenu {
         enabled: type === 3
         visible: enabled
         text: qsTr("View Album")
-        onClicked: pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: track.album})
+        onClicked: app.pushPage(Util.HutspotPage.Album, {album: track.album})
     }
     MenuItem {
         enabled: type === 3 && contextType !== 2

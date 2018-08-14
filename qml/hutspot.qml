@@ -140,6 +140,24 @@ ApplicationWindow {
         }
     }
 
+    // 0: Album, 1: Artist, 2: Playlist
+    function pushPage(type, options) {
+        switch(type) {
+        case Util.HutspotPage.Album:
+            pageStack.push(Qt.resolvedUrl("pages/Album.qml"), options)
+            break
+        case Util.HutspotPage.Artist:
+            pageStack.push(Qt.resolvedUrl("pages/Artist.qml"), options)
+            break
+        case Util.HutspotPage.Playlist:
+            pageStack.push(Qt.resolvedUrl("pages/Playlist.qml"), options)
+            break
+        case Util.HutspotPage.GenreMoodPlaylist:
+            pageStack.push(Qt.resolvedUrl("pages/GenreMoodPlaylist.qml"), options)
+            break
+        }
+    }
+
     function showErrorMessage(error, text) {
         var msg
         if(error) {
@@ -723,11 +741,11 @@ ApplicationWindow {
                                     { label: qsTr("View an Artist"), artists: artists } );
             ms.accepted.connect(function() {
                 if(ms.selectedItem) {
-                    pageStack.replace(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist: ms.selectedItem.artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist})
                 }
             })
         } else if(artists.length === 1) {
-            pageStack.push(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist:artists[0]})
+            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]})
         }
     }
 

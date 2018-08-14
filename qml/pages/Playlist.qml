@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: playlistPage
@@ -145,7 +146,7 @@ Page {
                 }
             }
 
-            onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
+            onClicked: app.pushPage(Util.HutspotPage.Album, {album: track.album})
         }
 
         VerticalScrollDecorator {}

@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: genreMoodPage
@@ -85,7 +86,7 @@ Page {
                 truncationMode: TruncationMode.Fade
                 text: category.name
             }
-            onClicked: pageStack.push(Qt.resolvedUrl("GenreMoodPlaylist.qml"), {category: category})
+            onClicked: app.pushPage(Util.HutspotPage.GenreMoodPlaylist, {category: category})
         }
 
         VerticalScrollDecorator {}

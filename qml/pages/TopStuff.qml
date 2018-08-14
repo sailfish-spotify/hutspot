@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import "../components"
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 Page {
     id: topStuffPage
@@ -99,10 +100,10 @@ Page {
             onClicked: {
                 switch(type) {
                 case 1:
-                    pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
                     break;
                 case 3:
-                    pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
+                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
                     break;
                 }
             }
