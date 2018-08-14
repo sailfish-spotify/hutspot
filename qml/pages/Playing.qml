@@ -36,6 +36,9 @@ Page {
     property int currentIndex: -1
     property int playbackProgress: 0
 
+    property int mutedVolume: -1
+    property bool muted: false
+
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -308,21 +311,59 @@ Page {
                 }
             }
 
-            Slider {
-                id: volumeSlider
+            // This works but Spotify has no 'mute' so maybe we should not do it as well
+            /*Item {
                 width: parent.width
-                minimumValue: 0
-                maximumValue: 100
-                handleVisible: false
-                value: (playbackState && playbackState.device)
-                       ? playbackState.device.volume_percent : 0
-                onReleased: {
-                    Spotify.setVolume(Math.round(value), function(error, data) {
-                        if(!error)
-                            refresh()
-                    })
+                height: Math.max(muteIcon.height, volumeSlider.height)
+
+                Image {
+                    id: muteIcon
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: muted ? "image://theme/icon-m-speaker" : "image://theme/icon-m-speaker-mute"
+                    MouseArea {
+                         anchors.fill: parent
+                         onClicked: {
+                             if(muted) {
+                                 Spotify.setVolume(mutedVolume, function(error, data) {
+                                     if(!error) {
+                                         volumeSlider.value = mutedVolume
+                                         refresh()
+                                     }
+                                 })
+                             } else {
+                                 mutedVolume = volumeSlider.value
+                                 Spotify.setVolume(0, function(error, data) {
+                                     if(!error) {
+                                         volumeSlider.value = 0
+                                         refresh()
+                                     }
+                                 })
+                             }
+                             muted = !muted
+                         }
+                    }
+                }*/
+
+                Slider {
+                    id: volumeSlider
+                    width: parent.width
+                    /*anchors.left: muteIcon.right
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter*/
+                    minimumValue: 0
+                    maximumValue: 100
+                    handleVisible: false
+                    value: (playbackState && playbackState.device)
+                           ? playbackState.device.volume_percent : 0
+                    onReleased: {
+                        Spotify.setVolume(Math.round(value), function(error, data) {
+                            if(!error)
+                                refresh()
+                        })
+                    }
                 }
-            }
+            /*}*/
 
             Row {
                 id: buttonRow

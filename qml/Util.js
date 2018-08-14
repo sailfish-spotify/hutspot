@@ -203,3 +203,15 @@ var SpotifyItemType = {
     Playlist: 2,
     Track: 3
 }
+
+var HutspotMenuItem = {
+    ShowAboutPage: 0,
+    ShowDevicesPage: 1,
+    ShowGenreMoodPage: 2,
+    ShowMyStuffPage: 3,
+    ShowNewReleasePage: 4,
+    ShowPlayingPage: 5,
+    ShowSearchPage: 6,
+    ShowSettingsPage: 7,
+    ShowTopStuffPage: 8
+}

@@ -26,6 +26,7 @@ ApplicationWindow {
     property alias auth_using_browser: auth_using_browser
     property alias start_stop_librespot: start_stop_librespot
     property alias confirm_un_follow_save: confirm_un_follow_save
+    property alias navigation_menu_type: navigation_menu_type
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -104,6 +105,39 @@ ApplicationWindow {
         }
         if(pageUrl !== undefined )
             pageStack.replace(pageUrl, {}, PageStackAction.Immediate)
+    }
+
+    // when using menu dialog
+    function doSelectedMenuItem(selectedIndex) {
+        switch(selectedIndex) {
+        case Util.HutspotMenuItem.ShowPlayingPage:
+            app.showPage('PlayingPage')
+            break
+        case Util.HutspotMenuItem.ShowNewReleasePage:
+            app.showPage('NewReleasePage')
+            break
+        case Util.HutspotMenuItem.ShowMyStuffPage:
+            app.showPage('MyStuffPage')
+            break
+        case Util.HutspotMenuItem.ShowTopStuffPage:
+            app.showPage('TopStuffPage')
+            break
+        case Util.HutspotMenuItem.ShowGenreMoodPage:
+            app.showPage('GenreMoodPage')
+            break
+        case Util.HutspotMenuItem.ShowSearchPage:
+            app.showPage('SearchPage')
+            break
+        case Util.HutspotMenuItem.ShowDevicesPage:
+            pageStack.push(Qt.resolvedUrl("pages/Devices.qml"))
+            break
+        case Util.HutspotMenuItem.ShowSettingsPage:
+            pageStack.push(Qt.resolvedUrl("pages/Settings.qml"))
+            break
+        case Util.HutspotMenuItem.ShowAboutPage:
+            pageStack.push(Qt.resolvedUrl("pages/About.qml"))
+            break;
+        }
     }
 
     function showErrorMessage(error, text) {
@@ -819,6 +853,13 @@ ApplicationWindow {
             id: confirm_un_follow_save
             key: "/hutspot/confirm_un_follow_save"
             defaultValue: true
+    }
+
+    // 0 for NavigationMenuDialog, 1 for NavigationPanel
+    ConfigurationValue {
+            id: navigation_menu_type
+            key: "/hutspot/navigation_menu_type"
+            defaultValue: 0
     }
 }
 

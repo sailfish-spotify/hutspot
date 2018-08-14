@@ -8,12 +8,24 @@ IconButton {
     anchors.right: parent._titleItem.left
     icon.height: Theme.iconSizeSmall
     icon.fillMode: Image.PreserveAspectFit
-    icon.source: "image://hutspot-icons/icon-m-toolbar"
+    icon.source: app.navigation_menu_type.value === 0
+                 ? "image://theme/icon-m-menu"
+                 : "image://hutspot-icons/icon-m-toolbar"
 
     onClicked: {
-        if(!navPanel.modal && !navPanel.moving) {
-            navPanel.open = true
-            navPanel.modal = true
+        if(app.navigation_menu_type.value === 0 ) {
+            // menu using dialog
+            var dialog = pageStack.push(Qt.resolvedUrl("NavigationMenuDialog.qml")) //, {}, PageStackAction.Immediate)
+            dialog.done.connect(function() {
+                if(dialog.selectedMenuItem > -1)
+                    app.doSelectedMenuItem(dialog.selectedMenuItem)
+            })
+        } else {
+            // menu using docked panel
+            if(!navPanel.modal && !navPanel.moving) {
+              navPanel.open = true
+              navPanel.modal = true
+            }
         }
     }
 }
