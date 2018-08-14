@@ -23,6 +23,7 @@ Page {
             auth_using_browser.checked = app.auth_using_browser.value
             start_stop_librespot.checked = app.start_stop_librespot.value
             confirm_un_follow_save.checked = app.confirm_un_follow_save.value
+            navigation_menu_type.currentIndex = app.navigation_menu_type.value
         }
     }
 
@@ -63,8 +64,8 @@ Page {
                 description: qsTr("Use external Browser to login at Spotify")
                 checked: app.auth_using_browser.value
                 onCheckedChanged: {
-                    app.auth_using_browser.value = checked;
-                    app.auth_using_browser.sync();
+                    app.auth_using_browser.value = checked
+                    app.auth_using_browser.sync()
                 }
             }
 
@@ -74,8 +75,8 @@ Page {
                 description: qsTr("Start Librespot when launched and stop it on exit")
                 checked: app.start_stop_librespot.value
                 onCheckedChanged: {
-                    app.start_stop_librespot.value = checked;
-                    app.start_stop_librespot.sync();
+                    app.start_stop_librespot.value = checked
+                    app.start_stop_librespot.sync()
                 }
             }
 
@@ -100,14 +101,29 @@ Page {
                         librespot.stop()
                 }
             }
+
             TextSwitch {
                 id: confirm_un_follow_save
                 text: qsTr("Confirm Un-Save/Follow")
                 description: qsTr("Ask for confirmation for un-save and un-follow")
                 checked: app.confirm_un_follow_save.value
                 onCheckedChanged: {
-                    app.confirm_un_follow_save.value = checked;
-                    app.confirm_un_follow_save.sync();
+                    app.confirm_un_follow_save.value = checked
+                    app.confirm_un_follow_save.sync()
+                }
+            }
+            ComboBox {
+                id: navigation_menu_type
+                label: qsTr("Navigation Menu Type")
+
+                menu: ContextMenu {
+                    MenuItem { text: qsTr("Dialog with List") }
+                    MenuItem { text: qsTr("Docked Panel with Icons") }
+                }
+
+                onCurrentIndexChanged: {
+                    app.navigation_menu_type.value = currentIndex
+                    app.navigation_menu_type.sync()
                 }
             }
         }
