@@ -87,6 +87,8 @@ Page {
                     var s = ""
                     if(album.tracks)
                         s += album.tracks.total + " " + qsTr("tracks")
+                    else if(album.total_tracks)
+                        s += album.total_tracks + " " + qsTr("tracks")
                     else if(album.album_type === "single")
                         s += "1 " + qsTr("track")
                     if(album.release_date && album.release_date.length > 0)

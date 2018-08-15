@@ -49,16 +49,17 @@
     </message>
     <message>
         <location filename="../qml/pages/Album.qml" line="89"/>
+        <location filename="../qml/pages/Album.qml" line="91"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="91"/>
+        <location filename="../qml/pages/Album.qml" line="93"/>
         <source>track</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="139"/>
+        <location filename="../qml/pages/Album.qml" line="141"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -410,7 +411,7 @@
     <name>Playing</name>
     <message>
         <location filename="../qml/pages/Playing.qml" line="21"/>
-        <location filename="../qml/pages/Playing.qml" line="580"/>
+        <location filename="../qml/pages/Playing.qml" line="583"/>
         <source>Playing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -468,18 +469,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="554"/>
-        <location filename="../qml/pages/Playing.qml" line="572"/>
+        <location filename="../qml/pages/Playing.qml" line="557"/>
+        <location filename="../qml/pages/Playing.qml" line="575"/>
         <source>Playing Album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="561"/>
+        <location filename="../qml/pages/Playing.qml" line="564"/>
         <source>Playing Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="567"/>
+        <location filename="../qml/pages/Playing.qml" line="570"/>
         <source>Playing Playlist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -489,7 +490,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="591"/>
+        <location filename="../qml/pages/Playing.qml" line="594"/>
         <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -827,49 +828,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="206"/>
+        <location filename="../qml/hutspot.qml" line="214"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="216"/>
-        <location filename="../qml/hutspot.qml" line="226"/>
+        <location filename="../qml/hutspot.qml" line="224"/>
+        <location filename="../qml/hutspot.qml" line="234"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="298"/>
+        <location filename="../qml/hutspot.qml" line="306"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="413"/>
+        <location filename="../qml/hutspot.qml" line="422"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="353"/>
-        <location filename="../qml/hutspot.qml" line="425"/>
+        <location filename="../qml/hutspot.qml" line="362"/>
+        <location filename="../qml/hutspot.qml" line="434"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="557"/>
+        <location filename="../qml/hutspot.qml" line="568"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="582"/>
+        <location filename="../qml/hutspot.qml" line="593"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="774"/>
+        <location filename="../qml/hutspot.qml" line="785"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="793"/>
+        <location filename="../qml/hutspot.qml" line="804"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

@@ -158,7 +158,7 @@ ApplicationWindow {
 
     //
     // 0: Album, 1: Artist, 2: Playlist
-    function pushPage(type, options) {
+    function pushPage(type, options, fromPlaying) {
         var pageUrl = undefined
         switch(type) {
         case Util.HutspotPage.Album:
@@ -174,6 +174,14 @@ ApplicationWindow {
             pageUrl = "pages/GenreMoodPlaylist.qml"
             break
         }
+
+        // if the pushPage is called from the Playing page and the Playing page
+        // is an attached page we need to go to the parent first
+        if(fromPlaying) {
+            if(playing_as_attached_page.value)
+                pageStack.navigateBack(PageStackAction.Immediate)
+        }
+
         if(pageUrl !== undefined ) {
             pageStack.push(Qt.resolvedUrl(pageUrl), options, PageStackAction.Immediate)
             if(playing_as_attached_page.value)
@@ -313,6 +321,7 @@ ApplicationWindow {
 
     property bool loggedIn: spotify.isLinked()
     onLoggedInChanged: {
+        // do we need this? isLinked does not mean we have a valid token
         if(loggedIn) {
             refreshPlayingInfo()
             reloadDevices()
@@ -541,6 +550,8 @@ ApplicationWindow {
                 console.log("No Data for getMyCurrentPlaybackState")
             }
         })
+        refreshPlayingInfo()
+        reloadDevices()
     }
 
     function getPlaylist(playlistId, callback) {
@@ -767,18 +778,18 @@ ApplicationWindow {
              })
     }
 
-    function loadArtist(artists) {
+    function loadArtist(artists, fromPlaying) {
         if(artists.length > 1) {
             // choose
             var ms = pageStack.push(Qt.resolvedUrl("components/ArtistPicker.qml"),
                                     { label: qsTr("View an Artist"), artists: artists } );
             ms.done.connect(function() {
                 if(ms.selectedItem) {
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist}, fromPlaying)
                 }
             })
         } else if(artists.length === 1) {
-            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]})
+            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]}, fromPlaying)
         }
     }
 
