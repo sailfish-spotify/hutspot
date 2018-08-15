@@ -448,7 +448,7 @@ void O2::onRefreshFinished() {
        setLinked(true);
        Q_EMIT linkingSucceeded();
        Q_EMIT refreshFinished(QNetworkReply::NoError);
-       qDebug() << " New token expires in" << expires() << "seconds";
+       qDebug() << " New token expires in" << tokens.value(O2_OAUTH2_EXPIRES_IN).toInt() << "seconds";
    } else {
        qDebug() << "O2::onRefreshFinished: Error" << (int)refreshReply->error() << refreshReply->errorString();
    }

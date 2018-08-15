@@ -764,7 +764,7 @@
     </message>
     <message>
         <location filename="../qml/pages/Settings.qml" line="118"/>
-        <source>Dialog with List</source>
+        <source>Page with List of Menu Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -827,49 +827,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="205"/>
+        <location filename="../qml/hutspot.qml" line="206"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="215"/>
-        <location filename="../qml/hutspot.qml" line="225"/>
+        <location filename="../qml/hutspot.qml" line="216"/>
+        <location filename="../qml/hutspot.qml" line="226"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="297"/>
+        <location filename="../qml/hutspot.qml" line="298"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="404"/>
+        <location filename="../qml/hutspot.qml" line="413"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="349"/>
-        <location filename="../qml/hutspot.qml" line="415"/>
+        <location filename="../qml/hutspot.qml" line="353"/>
+        <location filename="../qml/hutspot.qml" line="425"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="546"/>
+        <location filename="../qml/hutspot.qml" line="557"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="571"/>
+        <location filename="../qml/hutspot.qml" line="582"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="763"/>
+        <location filename="../qml/hutspot.qml" line="774"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="782"/>
+        <location filename="../qml/hutspot.qml" line="793"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
