@@ -145,10 +145,10 @@ Page {
                         onClicked: {
                             switch(getContextType()) {
                             case Spotify.ItemType.Album:
-                                app.pushPage(Util.HutspotPage.Album, {album: contextObject})
+                                app.pushPage(Util.HutspotPage.Album, {album: contextObject}, true)
                                 break
                             case Spotify.ItemType.Track:
-                                app.pushPage(Util.HutspotPage.Album, {album: playingObject.item.album})
+                                app.pushPage(Util.HutspotPage.Album, {album: playingObject.item.album}, true)
                                 break
                             }
                         }
@@ -160,13 +160,13 @@ Page {
                         onClicked: {
                             switch(getContextType()) {
                             case Spotify.ItemType.Album:
-                                app.loadArtist(contextObject.artists)
+                                app.loadArtist(contextObject.artists, true)
                                 break
                             case Spotify.ItemType.Artist:
-                                app.pushPage(Util.HutspotPage.Artist, {currentArtist: contextObject})
+                                app.pushPage(Util.HutspotPage.Artist, {currentArtist: contextObject}, true)
                                 break
                             case Spotify.ItemType.Track:
-                                app.loadArtist(playingObject.item.artists)
+                                app.loadArtist(playingObject.item.artists, true)
                                 break
                             }
                         }
@@ -175,7 +175,7 @@ Page {
                         id: viewPlaylist
                         visible: enabled
                         text: qsTr("View Playlist")
-                        onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: contextObject})
+                        onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: contextObject}, true)
                     }
                 }
 
@@ -496,12 +496,12 @@ Page {
                 else if(contextObject.album_type === "single")
                     s += "1 " + qsTr("track")
                 s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
-                if(contextObject.genres)
+                if(contextObject.genres && contextObject.genres.lenght > 0)
                     s += ", " + Util.createItemsString(contextObject.genres, "")
             }
             break
         case 'artist':
-            if(contextObject && contextObject.followers.total > 0)
+            if(contextObject && contextObject.followers && contextObject.followers.total > 0)
                 s += Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
             break
         case 'playlist':
@@ -521,8 +521,11 @@ Page {
     }
 
     function getContextType() {
-        if(!playbackState || !playbackState.context || !contextObject)
+        if(!playbackState || !playbackState.context || !contextObject) {
+            if(playingObject && playingObject.item)
+                return Spotify.ItemType.Track
             return -1
+        }
         switch(playbackState.context.type) {
         case 'album':
             return Spotify.ItemType.Album

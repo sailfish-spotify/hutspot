@@ -91,7 +91,7 @@ function _performRequest(requestData, callback) {
         } else {
           callback(data.error);
           if(data.error)
-              console.error(data.error.status + ": " + data.error.message);
+              console.error("_performRequest: " + data.error.status + ": " + data.error.message);
         }
       }
     }

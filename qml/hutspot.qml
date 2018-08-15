@@ -95,7 +95,10 @@ ApplicationWindow {
         default:
         case "PlayingPage":
             // when not having the Playing page as attached page
-            pageUrl = Qt.resolvedUrl("pages/Playing.qml")
+            if(!playing_as_attached_page.value)
+                pageUrl = Qt.resolvedUrl("pages/Playing.qml")
+            else
+                pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
             break;
         case "NewReleasePage":
             pageUrl = Qt.resolvedUrl("pages/NewRelease.qml")
@@ -115,10 +118,8 @@ ApplicationWindow {
         }
         if(pageUrl !== undefined ) {
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
-            if(firstPage.value !== "PlayingPage") {
-                if(playing_as_attached_page.value)
-                    pageStack.pushAttached(playingPage)
-            }
+            if(playing_as_attached_page.value)
+                pageStack.pushAttached(playingPage)
         }
     }
 
@@ -157,7 +158,7 @@ ApplicationWindow {
 
     //
     // 0: Album, 1: Artist, 2: Playlist
-    function pushPage(type, options) {
+    function pushPage(type, options, fromPlaying) {
         var pageUrl = undefined
         switch(type) {
         case Util.HutspotPage.Album:
@@ -173,6 +174,14 @@ ApplicationWindow {
             pageUrl = "pages/GenreMoodPlaylist.qml"
             break
         }
+
+        // if the pushPage is called from the Playing page and the Playing page
+        // is an attached page we need to go to the parent first
+        if(fromPlaying) {
+            if(playing_as_attached_page.value)
+                pageStack.navigateBack(PageStackAction.Immediate)
+        }
+
         if(pageUrl !== undefined ) {
             pageStack.push(Qt.resolvedUrl(pageUrl), options, PageStackAction.Immediate)
             if(playing_as_attached_page.value)
@@ -312,8 +321,11 @@ ApplicationWindow {
 
     property bool loggedIn: spotify.isLinked()
     onLoggedInChanged: {
-        refreshPlayingInfo()
-        reloadDevices()
+        // do we need this? isLinked does not mean we have a valid token
+        if(loggedIn) {
+            refreshPlayingInfo()
+            reloadDevices()
+        }
     }
 
     // using spotify webapi
@@ -345,7 +357,8 @@ ApplicationWindow {
             Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
             tokenExpireTime = spotify.getExpires()
-            console.log("expires: " + tokenExpireTime)
+            var date = new Date(tokenExpireTime*1000)
+            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
             app.connectionText = qsTr("Connected")
             loadUser()
             loggedIn = true
@@ -380,14 +393,19 @@ ApplicationWindow {
         }
     }
 
-    property int tokenExpireTime: 0 // in seconds
+
+    property int tokenExpireTime: 0 // seconds from epoch
     Timer  {
-        // refresh token on half time
+        // refresh token 10 minutes before expiring
         id: refreshTokenTimer
-        interval: tokenExpireTime*1000/2
+        interval: 60*1000
         running: tokenExpireTime > 0
         repeat: true
-        onTriggered: spotify.refreshToken()
+        onTriggered: {
+            var diff = tokenExpireTime - (Date.now() / 1000)
+            if(diff < (10*60))
+                spotify.refreshToken()
+        }
     }
 
     Connections {
@@ -411,7 +429,8 @@ ApplicationWindow {
             Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
             tokenExpireTime = spotify.getExpires()
-            console.log("expires: " + tokenExpireTime)
+            var date = new Date(tokenExpireTime*1000)
+            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
             app.connectionText = qsTr("Connected")
             loadUser()
             loggedIn = true
@@ -422,9 +441,11 @@ ApplicationWindow {
         }
 
         onRefreshFinished: {
-            console.log("expires: " + tokenExpireTime)
             console.log("Connections.onRefreshFinished")
             console.log("expires: " + tokenExpireTime)
+            tokenExpireTime = spotify.getExpires()
+            var date = new Date(tokenExpireTime*1000)
+            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
         }
 
         onOpenBrowser: {
@@ -436,7 +457,6 @@ ApplicationWindow {
         }
 
         onCloseBrowser: {
-            //pageStack.pop()
             loadFirstPage()
         }
     }
@@ -530,6 +550,8 @@ ApplicationWindow {
                 console.log("No Data for getMyCurrentPlaybackState")
             }
         })
+        refreshPlayingInfo()
+        reloadDevices()
     }
 
     function getPlaylist(playlistId, callback) {
@@ -756,18 +778,18 @@ ApplicationWindow {
              })
     }
 
-    function loadArtist(artists) {
+    function loadArtist(artists, fromPlaying) {
         if(artists.length > 1) {
             // choose
             var ms = pageStack.push(Qt.resolvedUrl("components/ArtistPicker.qml"),
                                     { label: qsTr("View an Artist"), artists: artists } );
             ms.done.connect(function() {
                 if(ms.selectedItem) {
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist}, fromPlaying)
                 }
             })
         } else if(artists.length === 1) {
-            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]})
+            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]}, fromPlaying)
         }
     }
 
