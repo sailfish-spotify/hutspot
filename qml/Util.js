@@ -217,8 +217,8 @@ var HutspotMenuItem = {
 }
 
 var HutspotPage = {
-    AlbumPage: 0,
-    ArtistPage: 1,
-    PlaylistPage: 2,
+    Album: 0,
+    Artist: 1,
+    Playlist: 2,
     GenreMoodPlaylist: 3
 }

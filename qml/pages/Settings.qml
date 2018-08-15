@@ -20,9 +20,6 @@ Page {
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
-            auth_using_browser.checked = app.auth_using_browser.value
-            start_stop_librespot.checked = app.start_stop_librespot.value
-            confirm_un_follow_save.checked = app.confirm_un_follow_save.value
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
         }
     }
@@ -112,12 +109,13 @@ Page {
                     app.confirm_un_follow_save.sync()
                 }
             }
+
             ComboBox {
                 id: navigation_menu_type
                 label: qsTr("Navigation Menu Type")
 
                 menu: ContextMenu {
-                    MenuItem { text: qsTr("Dialog with List") }
+                    MenuItem { text: qsTr("Page with List of Menu Items") }
                     MenuItem { text: qsTr("Docked Panel with Icons") }
                 }
 
@@ -126,6 +124,18 @@ Page {
                     app.navigation_menu_type.sync()
                 }
             }
+
+            TextSwitch {
+                id: playing_as_attached_page
+                text: qsTr("Playing as Attached Page")
+                description: qsTr("Have the Playing page as an Attached Page (available on the Right)")
+                checked: app.playing_as_attached_page.value
+                onCheckedChanged: {
+                    app.playing_as_attached_page.value = checked
+                    app.playing_as_attached_page.sync()
+                }
+            }
+
         }
 
     }

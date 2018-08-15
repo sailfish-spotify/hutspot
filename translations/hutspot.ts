@@ -120,13 +120,8 @@
 <context>
     <name>ArtistPicker</name>
     <message>
-        <location filename="../qml/components/ArtistPicker.qml" line="32"/>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/components/ArtistPicker.qml" line="33"/>
-        <source>Cancel</source>
+        <location filename="../qml/components/ArtistPicker.qml" line="38"/>
+        <source>Choose Artist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -348,52 +343,52 @@
 <context>
     <name>NavigationMenuDialog</name>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="26"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="27"/>
         <source>Playing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="30"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="31"/>
         <source>New Releases</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="34"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="35"/>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="38"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="39"/>
         <source>Top Stuff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="42"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="43"/>
         <source>Genre &amp; Mood</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="46"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="47"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="50"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="51"/>
         <source>Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="54"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="55"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="58"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="59"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/NavigationMenuDialog.qml" line="72"/>
+        <location filename="../qml/components/NavigationMenuDialog.qml" line="73"/>
         <source>Menu</source>
         <translation type="unfinished"></translation>
     </message>
@@ -680,12 +675,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/SearchResultListItem.qml" line="150"/>
+        <location filename="../qml/components/SearchResultListItem.qml" line="151"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/components/SearchResultListItem.qml" line="157"/>
+        <location filename="../qml/components/SearchResultListItem.qml" line="158"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
@@ -693,88 +688,98 @@
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="36"/>
+        <location filename="../qml/pages/Settings.qml" line="33"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="40"/>
+        <location filename="../qml/pages/Settings.qml" line="37"/>
         <source>Refresh Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="51"/>
+        <location filename="../qml/pages/Settings.qml" line="48"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="55"/>
+        <location filename="../qml/pages/Settings.qml" line="52"/>
         <source>Number of results per request (limit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="63"/>
+        <location filename="../qml/pages/Settings.qml" line="60"/>
         <source>Authorize using Browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="64"/>
+        <location filename="../qml/pages/Settings.qml" line="61"/>
         <source>Use external Browser to login at Spotify</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="74"/>
+        <location filename="../qml/pages/Settings.qml" line="71"/>
         <source>Start/Stop Librespot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="75"/>
+        <location filename="../qml/pages/Settings.qml" line="72"/>
         <source>Start Librespot when launched and stop it on exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="85"/>
+        <location filename="../qml/pages/Settings.qml" line="82"/>
         <source>Librespot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="88"/>
+        <location filename="../qml/pages/Settings.qml" line="85"/>
         <source>Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="91"/>
+        <location filename="../qml/pages/Settings.qml" line="88"/>
         <source>Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="92"/>
+        <location filename="../qml/pages/Settings.qml" line="89"/>
         <source>Not Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="107"/>
+        <location filename="../qml/pages/Settings.qml" line="104"/>
         <source>Confirm Un-Save/Follow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="108"/>
+        <location filename="../qml/pages/Settings.qml" line="105"/>
         <source>Ask for confirmation for un-save and un-follow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="117"/>
+        <location filename="../qml/pages/Settings.qml" line="115"/>
         <source>Navigation Menu Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="120"/>
+        <location filename="../qml/pages/Settings.qml" line="118"/>
         <source>Dialog with List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Settings.qml" line="121"/>
+        <location filename="../qml/pages/Settings.qml" line="119"/>
         <source>Docked Panel with Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="130"/>
+        <source>Playing as Attached Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Settings.qml" line="131"/>
+        <source>Have the Playing page as an Attached Page (available on the Right)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -822,49 +827,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="183"/>
+        <location filename="../qml/hutspot.qml" line="205"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="193"/>
-        <location filename="../qml/hutspot.qml" line="203"/>
+        <location filename="../qml/hutspot.qml" line="215"/>
+        <location filename="../qml/hutspot.qml" line="225"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="275"/>
+        <location filename="../qml/hutspot.qml" line="297"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="382"/>
+        <location filename="../qml/hutspot.qml" line="404"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="327"/>
-        <location filename="../qml/hutspot.qml" line="393"/>
+        <location filename="../qml/hutspot.qml" line="349"/>
+        <location filename="../qml/hutspot.qml" line="415"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="524"/>
+        <location filename="../qml/hutspot.qml" line="546"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="549"/>
+        <location filename="../qml/hutspot.qml" line="571"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="741"/>
+        <location filename="../qml/hutspot.qml" line="763"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="760"/>
+        <location filename="../qml/hutspot.qml" line="782"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
