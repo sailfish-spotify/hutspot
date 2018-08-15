@@ -73,7 +73,7 @@ Page {
 
             menu: SearchResultContextMenu {}
 
-            onClicked: pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
+            onClicked: app.pushPage(Util.HutspotPage.Album, {album: album})
         }
 
         VerticalScrollDecorator {}

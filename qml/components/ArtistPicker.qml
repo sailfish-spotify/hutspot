@@ -18,6 +18,8 @@ Dialog {
     property var artists
     property int currentIndex: -1
 
+    canAccept: false
+
     ListModel { id: items }
 
     SilicaListView {
@@ -28,9 +30,12 @@ Dialog {
 
         VerticalScrollDecorator { flickable: view }
 
-        header: DialogHeader {
+        /*header: DialogHeader {
             acceptText: qsTr("OK")
             cancelText: qsTr("Cancel")
+        }*/
+        header: PageHeader {
+            title: qsTr("Choose Artist")
         }
 
         delegate: ListItem {
@@ -43,6 +48,7 @@ Dialog {
             onClicked: {
                 selectedItem = items.get(index)
                 currentIndex = index
+                closeIt()
             }
 
             SearchResultListItem {
@@ -63,6 +69,12 @@ Dialog {
                           name: artists[i].name,
                           artist: artists[i]});
         }
+    }
+
+    function closeIt() {
+        // we want the dialog to be removed from the page stack before
+        // the caller acts. pop() will make sure the 'done' signal is raised.
+        pageStack.pop(undefined, PageStackAction.Immediate)
     }
 }
 

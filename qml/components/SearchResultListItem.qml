@@ -147,7 +147,8 @@ Row {
                if(dataModel.following)
                    s = qsTr("[following], ")
             }
-            s += Util.abbreviateNumber(dataModel.artist.followers.total) + " " + qsTr("followers")
+            if(typeof(dataModel.artist.followers) !== 'undefined')
+                s += Util.abbreviateNumber(dataModel.artist.followers.total) + " " + qsTr("followers")
             return s
         case 2:
             /*if(typeof(following) !== 'undefined') {

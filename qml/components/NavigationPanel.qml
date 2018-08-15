@@ -83,6 +83,7 @@ DockedPanel {
             IconButton {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-music"
+                visible: !app.playing_as_attached_page.value
                 onClicked: {
                     open = false
                     app.showPage('PlayingPage')

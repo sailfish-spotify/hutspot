@@ -22,10 +22,11 @@ Dialog {
     }
 
     Component.onCompleted: {
-        menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowPlayingPage,
-                          name: qsTr("Playing"),
-                          icon: "image://theme/icon-m-music"
-                         })
+        if(!app.playing_as_attached_page.value)
+            menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowPlayingPage,
+                              name: qsTr("Playing"),
+                              icon: "image://theme/icon-m-music"
+                             })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowNewReleasePage,
                           name: qsTr("New Releases"),
                           icon: "image://theme/icon-m-health"
@@ -107,7 +108,8 @@ Dialog {
     }
 
     function closeIt() {
-        pageStack.pop(pageStack.previousPage(), PageStackAction.Immediate)
-        done()
+        // we want the dialog to be removed from the page stack before
+        // the caller acts. pop() will make sure the 'done' signal is raised.
+        pageStack.pop(undefined, PageStackAction.Immediate)
     }
 }

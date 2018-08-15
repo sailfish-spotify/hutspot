@@ -178,16 +178,16 @@ Page {
             onClicked: {
                 switch(type) {
                 case 0:
-                    pageStack.push(Qt.resolvedUrl("Album.qml"), {album: album})
+                    app.pushPage(Util.HutspotPage.Album, {album: album})
                     break;
                 case 1:
-                    pageStack.push(Qt.resolvedUrl("Artist.qml"), {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
                     break;
                 case 2:
-                    pageStack.push(Qt.resolvedUrl("Playlist.qml"), {playlist: playlist})
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
                     break;
                 case 3:
-                    pageStack.push(Qt.resolvedUrl("Album.qml"), {album: track.album})
+                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
                     break;
                 }
             }

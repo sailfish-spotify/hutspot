@@ -145,10 +145,10 @@ Page {
                         onClicked: {
                             switch(getContextType()) {
                             case Spotify.ItemType.Album:
-                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: contextObject})
+                                app.pushPage(Util.HutspotPage.Album, {album: contextObject})
                                 break
                             case Spotify.ItemType.Track:
-                                pageStack.push(Qt.resolvedUrl("../pages/Album.qml"), {album: playingObject.item.album})
+                                app.pushPage(Util.HutspotPage.Album, {album: playingObject.item.album})
                                 break
                             }
                         }
@@ -163,7 +163,7 @@ Page {
                                 app.loadArtist(contextObject.artists)
                                 break
                             case Spotify.ItemType.Artist:
-                                pageStack.push(Qt.resolvedUrl("../pages/Artist.qml"), {currentArtist: contextObject})
+                                app.pushPage(Util.HutspotPage.Artist, {currentArtist: contextObject})
                                 break
                             case Spotify.ItemType.Track:
                                 app.loadArtist(playingObject.item.artists)
@@ -175,7 +175,7 @@ Page {
                         id: viewPlaylist
                         visible: enabled
                         text: qsTr("View Playlist")
-                        onClicked: pageStack.push(Qt.resolvedUrl("../pages/Playlist.qml"), {playlist: contextObject})
+                        onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: contextObject})
                     }
                 }
 

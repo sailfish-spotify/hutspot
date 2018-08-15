@@ -27,6 +27,7 @@ ApplicationWindow {
     property alias start_stop_librespot: start_stop_librespot
     property alias confirm_un_follow_save: confirm_un_follow_save
     property alias navigation_menu_type: navigation_menu_type
+    property alias playing_as_attached_page: playing_as_attached_page
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -42,42 +43,50 @@ ApplicationWindow {
         id: msgBox
     }
 
-    function showPage(page) {
-        switch(page) {
+    Playing {
+        id: playingPage
+    }
+
+    function showPage(pageName) {
+        var page
+        switch(pageName) {
         case 'PlayingPage':
+            // when not having the Playing page as attached page
             // pop all pages above playing page or add it
-            var playingPage = pageStack.find(function(page) {
+            var pPage = pageStack.find(function(page) {
                 return page.objectName === "PlayingPage"
             })
-            if(playingPage !== null)
-                pageStack.pop(playingPage)
+            if(pPage !== null)
+                pageStack.pop(pPage)
             else
-                pageStack.push(Qt.resolvedUrl("pages/Playing.qml"))
+                pageStack.push(playingPage)
             break;
         case 'NewReleasePage':
             pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
             break;
         case 'MyStuffPage':
             pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/MyStuff.qml"))
             break;
         case 'TopStuffPage':
             pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/TopStuff.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/TopStuff.qml"))
             break;
         case 'SearchPage':
             pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/Search.qml"))
             break;
         case 'GenreMoodPage':
             pageStack.clear()
-            pageStack.push(Qt.resolvedUrl("pages/GenreMoodPage.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/GenreMoodPage.qml"))
             break;
         default:
             return
         }
-        firstPage.value = page
+        if(playing_as_attached_page.value)
+            pageStack.pushAttached(playingPage)
+        firstPage.value = pageName
     }
 
     function loadFirstPage() {
@@ -85,6 +94,7 @@ ApplicationWindow {
         switch(firstPage.value) {
         default:
         case "PlayingPage":
+            // when not having the Playing page as attached page
             pageUrl = Qt.resolvedUrl("pages/Playing.qml")
             break;
         case "NewReleasePage":
@@ -103,8 +113,13 @@ ApplicationWindow {
             pageUrl = Qt.resolvedUrl("pages/GenreMood.qml")
             break;
         }
-        if(pageUrl !== undefined )
-            pageStack.replace(pageUrl, {}, PageStackAction.Immediate)
+        if(pageUrl !== undefined ) {
+            pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
+            if(firstPage.value !== "PlayingPage") {
+                if(playing_as_attached_page.value)
+                    pageStack.pushAttached(playingPage)
+            }
+        }
     }
 
     // when using menu dialog
@@ -137,6 +152,31 @@ ApplicationWindow {
         case Util.HutspotMenuItem.ShowAboutPage:
             pageStack.push(Qt.resolvedUrl("pages/About.qml"))
             break;
+        }
+    }
+
+    //
+    // 0: Album, 1: Artist, 2: Playlist
+    function pushPage(type, options) {
+        var pageUrl = undefined
+        switch(type) {
+        case Util.HutspotPage.Album:
+            pageUrl = "pages/Album.qml"
+            break
+        case Util.HutspotPage.Artist:
+            pageUrl = "pages/Artist.qml"
+            break
+        case Util.HutspotPage.Playlist:
+            pageUrl = "pages/Playlist.qml"
+            break
+        case Util.HutspotPage.GenreMoodPlaylist:
+            pageUrl = "pages/GenreMoodPlaylist.qml"
+            break
+        }
+        if(pageUrl !== undefined ) {
+            pageStack.push(Qt.resolvedUrl(pageUrl), options, PageStackAction.Immediate)
+            if(playing_as_attached_page.value)
+                pageStack.pushAttached(playingPage)
         }
     }
 
@@ -721,13 +761,13 @@ ApplicationWindow {
             // choose
             var ms = pageStack.push(Qt.resolvedUrl("components/ArtistPicker.qml"),
                                     { label: qsTr("View an Artist"), artists: artists } );
-            ms.accepted.connect(function() {
+            ms.done.connect(function() {
                 if(ms.selectedItem) {
-                    pageStack.replace(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist: ms.selectedItem.artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist})
                 }
             })
         } else if(artists.length === 1) {
-            pageStack.push(Qt.resolvedUrl("pages/Artist.qml"), {currentArtist:artists[0]})
+            app.pushPage(Util.HutspotPage.Artist, {currentArtist:artists[0]})
         }
     }
 
@@ -860,6 +900,12 @@ ApplicationWindow {
             id: navigation_menu_type
             key: "/hutspot/navigation_menu_type"
             defaultValue: 0
+    }
+
+    ConfigurationValue {
+            id: playing_as_attached_page
+            key: "/hutspot/playing_as_attached_page"
+            defaultValue: true
     }
 }
 
