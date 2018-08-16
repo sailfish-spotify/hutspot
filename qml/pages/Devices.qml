@@ -164,12 +164,13 @@ Page {
             if(app.loggedIn)
                 reloadDevices()
         }
+        onLinked: reloadDevices()
     }
 
-    Component.onCompleted: {
+    /*Component.onCompleted: {
         if(app.loggedIn)
             reloadDevices()
-    }
+    }*/
 
     property var myDevices: []
 

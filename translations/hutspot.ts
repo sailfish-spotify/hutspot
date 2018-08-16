@@ -844,33 +844,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="422"/>
+        <location filename="../qml/hutspot.qml" line="424"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="362"/>
-        <location filename="../qml/hutspot.qml" line="434"/>
+        <location filename="../qml/hutspot.qml" line="436"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="568"/>
+        <location filename="../qml/hutspot.qml" line="571"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="593"/>
+        <location filename="../qml/hutspot.qml" line="596"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="785"/>
+        <location filename="../qml/hutspot.qml" line="788"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="804"/>
+        <location filename="../qml/hutspot.qml" line="807"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
