@@ -167,10 +167,10 @@ Page {
         onLinked: reloadDevices()
     }
 
-    /*Component.onCompleted: {
+    Component.onCompleted: {
         if(app.loggedIn)
             reloadDevices()
-    }*/
+    }
 
     property var myDevices: []
 
@@ -183,8 +183,8 @@ Page {
         Spotify.getMyDevices(function(error, data) {
             if(data) {
                 try {
-                    console.log("number of devices: " + myDevices.length)
                     myDevices = data.devices
+                    console.log("number of devices: " + myDevices.length)
                     refreshDevices()
                 } catch (err) {
                     console.log(err)
