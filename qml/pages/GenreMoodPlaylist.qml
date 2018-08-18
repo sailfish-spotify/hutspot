@@ -133,6 +133,7 @@ Page {
             if(app.loggedIn)
                 refresh()
         }
+        onLinked: refresh()
     }
 
     Component.onCompleted: {

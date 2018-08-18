@@ -354,14 +354,14 @@ ApplicationWindow {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
-            Spotify._accessToken = spotify.getToken()
+            /*Spotify._accessToken = spotify.getToken()
             Spotify._username = spotify.getUserName()
             tokenExpireTime = spotify.getExpires()
             var date = new Date(tokenExpireTime*1000)
             console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
             app.connectionText = qsTr("Connected")
             loadUser()
-            loggedIn = true
+            loggedIn = true*/
 
             // with Spotify's stupid short living tokens, we can totally assume
             // it's already expired
@@ -408,6 +408,8 @@ ApplicationWindow {
         }
     }
 
+    signal linked();
+
     Connections {
         target: spotify
 
@@ -434,6 +436,7 @@ ApplicationWindow {
             app.connectionText = qsTr("Connected")
             loadUser()
             loggedIn = true
+            linked()
         }
 
         onLinkedChanged: {
