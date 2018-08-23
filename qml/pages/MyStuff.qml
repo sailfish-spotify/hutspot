@@ -31,129 +31,134 @@ Page {
         id: searchModel
     }
 
-    SilicaListView {
-        id: listView
-        model: searchModel
+    //GestureArea {
+    //    anchors.fill: parent
 
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        SilicaListView {
+            id: listView
+            model: searchModel
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+            width: parent.width
+            anchors.top: parent.top
+            anchors.bottom: navPanel.top
+            clip: navPanel.expanded
 
-        header: Column {
-            id: lvColumn
+            LoadPullMenus {}
+            LoadPushMenus {}
 
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
-            anchors.bottomMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
+            header: Column {
+                id: lvColumn
 
-            PageHeader {
-                id: pHeader
-                width: parent.width
-                title: qsTr("My Stuff")
-                MenuButton {}
-            }
-
-        }
-
-        section.property: "stype"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                height: childrenRect.height
+                anchors.bottomMargin: Theme.paddingLarge
+                spacing: Theme.paddingLarge
 
-                Text {
+                PageHeader {
+                    id: pHeader
                     width: parent.width
-                    text: {
-                        switch(section) {
-                        case "0": return qsTr("Saved Albums")
-                        case "1": return qsTr("Followed Artists")
-                        case "2": return qsTr("Playlists")
-                        case "3": return qsTr("Recently Played Tracks")
-                        case "4": return qsTr("Saved Tracks")
+                    title: qsTr("My Stuff")
+                    MenuButton {}
+                }
+
+            }
+
+            section.property: "stype"
+            section.delegate : Component {
+                id: sectionHeading
+                Item {
+                    width: parent.width - 2*Theme.paddingMedium
+                    x: Theme.paddingMedium
+                    height: childrenRect.height
+
+                    Text {
+                        width: parent.width
+                        text: {
+                            switch(section) {
+                            case "0": return qsTr("Saved Albums")
+                            case "1": return qsTr("Followed Artists")
+                            case "2": return qsTr("Playlists")
+                            case "3": return qsTr("Recently Played Tracks")
+                            case "4": return qsTr("Saved Tracks")
+                            }
+                        }
+                        font.bold: true
+                        font.pixelSize: Theme.fontSizeMedium
+                        color: Theme.highlightColor
+                        horizontalAlignment: Text.AlignRight
+                    }
+                }
+            }
+
+            delegate: ListItem {
+                id: listItem
+                width: parent.width - 2*Theme.paddingMedium
+                x: Theme.paddingMedium
+                contentHeight: Theme.itemSizeLarge
+
+                SearchResultListItem {
+                    id: searchResultListItem
+                    dataModel: model
+                }
+
+                menu: SearchResultContextMenu {
+                    MenuItem {
+                        enabled: type === 1 || type === 2
+                        visible: enabled
+                        text: qsTr("Unfollow")
+                        onClicked: {
+                            var idx = index
+                            var model = searchModel
+                            if(type === 1)
+                                app.unfollowArtist(artist, function(error,data) {
+                                   if(!error)
+                                       model.remove(idx, 1)
+                                })
+                            else
+                                app.unfollowPlaylist(playlist, function(error,data) {
+                                   if(!error)
+                                       model.remove(idx, 1)
+                                })
                         }
                     }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
                 }
-            }
-        }
 
-        delegate: ListItem {
-            id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
-            contentHeight: Theme.itemSizeLarge
-
-            SearchResultListItem {
-                id: searchResultListItem
-                dataModel: model
-            }
-
-            menu: SearchResultContextMenu {
-                MenuItem {
-                    enabled: type === 1 || type === 2
-                    visible: enabled
-                    text: qsTr("Unfollow")
-                    onClicked: {
-                        var idx = index
-                        var model = searchModel
-                        if(type === 1)
-                            app.unfollowArtist(artist, function(error,data) {
-                               if(!error)
-                                   model.remove(idx, 1)
-                            })
-                        else
-                            app.unfollowPlaylist(playlist, function(error,data) {
-                               if(!error)
-                                   model.remove(idx, 1)
-                            })
+                onClicked: {
+                    switch(type) {
+                    case 0:
+                        app.pushPage(Util.HutspotPage.Album, {album: album})
+                        break;
+                    case 1:
+                        app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                        break;
+                    case 2:
+                        app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                        break;
+                    case 3:
+                        app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                        break;
                     }
                 }
             }
 
-            onClicked: {
-                switch(type) {
-                case 0:
-                    app.pushPage(Util.HutspotPage.Album, {album: album})
-                    break;
-                case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
-                    break;
-                case 2:
-                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
-                    break;
-                case 3:
-                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
-                    break;
-                }
+            VerticalScrollDecorator {}
+
+            Label {
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignBottom
+                visible: parent.count == 0
+                text: qsTr("Nothing found")
+                color: Theme.secondaryColor
             }
+
         }
 
-        VerticalScrollDecorator {}
-
-        Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
-            text: qsTr("Nothing found")
-            color: Theme.secondaryColor
+        NavigationPanel {
+            id: navPanel
         }
 
-    }
-
-    NavigationPanel {
-        id: navPanel
-    }
+    //} // GestureArea
 
     // when the page is on the stack but not on top a refresh can wait
     property bool _needsRefresh: false
@@ -309,9 +314,9 @@ Page {
         onLinked: refresh()
     }
 
-    /*Component.onCompleted: {
+    Component.onCompleted: {
         if(app.loggedIn)
             refresh()
-    }*/
+    }
 
 }

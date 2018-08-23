@@ -188,9 +188,9 @@ Page {
         onLinked: refresh()
     }
 
-    /*Component.onCompleted: {
+    Component.onCompleted: {
         if(app.loggedIn)
             refresh()
-    }*/
+    }
 
 }

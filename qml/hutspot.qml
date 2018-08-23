@@ -47,6 +47,12 @@ ApplicationWindow {
         id: playingPage
     }
 
+    /*NavigationMenu {
+        id: navigationMenuPage
+    }*/
+
+    property int _attachedPage: 0 // 0 for playingPage, 1 for navigationMenuPage
+
     function showPage(pageName) {
         var page
         switch(pageName) {
@@ -187,6 +193,19 @@ ApplicationWindow {
             if(playing_as_attached_page.value)
                 pageStack.pushAttached(playingPage)
         }
+    }
+
+    function setPlayingAsAttachedPage() {
+        pageStack.pushAttached(playingPage)
+        _attachedPage = 0
+    }
+
+    function setMenuAsAttachedPage() {
+        //navigationMenuPage.selectedMenuItem = -1
+        //navigationMenuPage._currentIndex = -1
+        //pageStack.pushAttached(navigationMenuPage)
+        pageStack.pushAttached(Qt.resolvedUrl("pages/NavigationMenu.qml"))
+        _attachedPage = 1
     }
 
     function showErrorMessage(error, text) {

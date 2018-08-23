@@ -301,43 +301,91 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="57"/>
+        <location filename="../qml/pages/MyStuff.qml" line="60"/>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="75"/>
+        <location filename="../qml/pages/MyStuff.qml" line="78"/>
         <source>Saved Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="76"/>
+        <location filename="../qml/pages/MyStuff.qml" line="79"/>
         <source>Followed Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="77"/>
+        <location filename="../qml/pages/MyStuff.qml" line="80"/>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="78"/>
+        <location filename="../qml/pages/MyStuff.qml" line="81"/>
         <source>Recently Played Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="79"/>
+        <location filename="../qml/pages/MyStuff.qml" line="82"/>
         <source>Saved Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="105"/>
+        <location filename="../qml/pages/MyStuff.qml" line="108"/>
         <source>Unfollow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="148"/>
+        <location filename="../qml/pages/MyStuff.qml" line="151"/>
         <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NavigationMenu</name>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="31"/>
+        <source>New Releases</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="35"/>
+        <source>My Stuff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="39"/>
+        <source>Top Stuff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="43"/>
+        <source>Genre &amp; Mood</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="47"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="51"/>
+        <source>Devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="55"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="59"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NavigationMenu.qml" line="69"/>
+        <source>Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -828,48 +876,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="214"/>
+        <location filename="../qml/hutspot.qml" line="233"/>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="224"/>
-        <location filename="../qml/hutspot.qml" line="234"/>
+        <location filename="../qml/hutspot.qml" line="243"/>
+        <location filename="../qml/hutspot.qml" line="253"/>
         <source>Play Failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="306"/>
+        <location filename="../qml/hutspot.qml" line="325"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="424"/>
+        <location filename="../qml/hutspot.qml" line="443"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="436"/>
+        <location filename="../qml/hutspot.qml" line="455"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="571"/>
+        <location filename="../qml/hutspot.qml" line="590"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="596"/>
+        <location filename="../qml/hutspot.qml" line="615"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="788"/>
+        <location filename="../qml/hutspot.qml" line="807"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="807"/>
+        <location filename="../qml/hutspot.qml" line="826"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

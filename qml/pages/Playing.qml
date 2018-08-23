@@ -737,4 +737,8 @@ Page {
             refresh()
     }
 
+    onStatusChanged: {
+        if(status === PageStatus.Active)
+            pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
+    }
 }
