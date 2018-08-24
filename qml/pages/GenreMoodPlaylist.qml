@@ -13,7 +13,7 @@ import "../Spotify.js" as Spotify
 import "../Util.js" as Util
 
 Page {
-    id: genreMoodPage
+    id: genreMoodPlaylistPage
     objectName: "GenreMoodPlaylistPage"
 
     property string defaultImageSource : "image://theme/icon-l-music"
