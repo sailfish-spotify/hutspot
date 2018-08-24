@@ -85,7 +85,7 @@ ApplicationWindow {
             break;
         case 'GenreMoodPage':
             pageStack.clear()
-            page = pageStack.push(Qt.resolvedUrl("pages/GenreMoodPage.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/GenreMood.qml"))
             break;
         default:
             return
