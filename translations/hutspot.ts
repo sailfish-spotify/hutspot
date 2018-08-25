@@ -937,32 +937,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="451"/>
+        <location filename="../qml/hutspot.qml" line="460"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="463"/>
+        <location filename="../qml/hutspot.qml" line="472"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="598"/>
+        <location filename="../qml/hutspot.qml" line="608"/>
         <source>Edit Playlist Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="623"/>
+        <location filename="../qml/hutspot.qml" line="633"/>
         <source>Select a Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="815"/>
+        <location filename="../qml/hutspot.qml" line="825"/>
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/hutspot.qml" line="834"/>
+        <location filename="../qml/hutspot.qml" line="844"/>
         <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>

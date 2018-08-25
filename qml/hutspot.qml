@@ -390,6 +390,16 @@ ApplicationWindow {
             loadUser()
             loggedIn = true*/
 
+            var now = new Date ()
+            console.log("Currently it is " + now.toDateString() + " " + now.toTimeString())
+            var tokenExpireTime = spotify.getExpires()
+            var tokenExpireDate = new Date(tokenExpireTime*1000)
+            console.log("Current token expires on: " + tokenExpireDate.toDateString() + " " + tokenExpireDate.toTimeString())
+            // do not set the 'global' hasValidToken since we will refresh anyway
+            // and that will interfere
+            var hasValidToken = tokenExpireDate > now
+            console.log("Token is " + hasValidToken ? "still valid" : "expired")
+
             // with Spotify's stupid short living tokens, we can totally assume
             // it's already expired
             spotify.refreshToken();
@@ -420,7 +430,6 @@ ApplicationWindow {
         }
     }
 
-
     property int tokenExpireTime: 0 // seconds from epoch
     Timer  {
         // refresh token 10 minutes before expiring
@@ -435,7 +444,7 @@ ApplicationWindow {
         }
     }
 
-    signal linked();
+    property bool hasValidToken: false
 
     Connections {
         target: spotify
@@ -463,7 +472,6 @@ ApplicationWindow {
             app.connectionText = qsTr("Connected")
             loadUser()
             loggedIn = true
-            linked()
         }
 
         onLinkedChanged: {
@@ -474,8 +482,10 @@ ApplicationWindow {
             console.log("Connections.onRefreshFinished")
             console.log("expires: " + tokenExpireTime)
             tokenExpireTime = spotify.getExpires()
-            var date = new Date(tokenExpireTime*1000)
-            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
+            var expDate = new Date(tokenExpireTime*1000)
+            console.log("expires on: " + expDate.toDateString() + " " + expDate.toTimeString())
+            var now = new Date()
+            hasValidToken = expDate > now
         }
 
         onOpenBrowser: {

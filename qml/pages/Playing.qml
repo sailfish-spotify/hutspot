@@ -722,10 +722,7 @@ Page {
     Connections {
         target: app
 
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
+        onHasValidTokenChanged: refresh()
 
         onNewPlayingTrackInfo: {
             // track change?
@@ -751,7 +748,7 @@ Page {
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 

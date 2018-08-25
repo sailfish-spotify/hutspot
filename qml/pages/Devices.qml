@@ -161,11 +161,11 @@ Page {
             if(app.loggedIn)
                 reloadDevices()
         }
-        onLinked: reloadDevices()
+        onHasValidTokenChanged: reloadDevices()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             reloadDevices()
     }
 
