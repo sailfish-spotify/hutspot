@@ -234,8 +234,16 @@ ApplicationWindow {
         })
     }
 
-    function playTrack(track) {
-        Spotify.play({'device_id': deviceId.value, 'uris': [track.uri]}, function(error, data) {
+    function playTrack(track, context) {
+        var options = {}
+        if(context && context.uri)
+            options = {'device_id': deviceId.value,
+                       'context_uri': context.uri,
+                       'offset': {'uri': track.uri}}
+        else
+            options = {'device_id': deviceId.value,
+                       'uris': [track.uri]}
+        Spotify.play(options, function(error, data) {
             if(!error) {
                 playing = true
                 refreshPlayingInfo()
