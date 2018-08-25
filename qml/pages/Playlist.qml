@@ -22,11 +22,13 @@ Page {
     property var playlist
     property bool isFollowed: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
 
     // binding to playlist properties does not seem to work
     // (not updated when modified)
@@ -227,11 +229,12 @@ Page {
         searchModel.clear()        
 
         Spotify.getPlaylistTracks(playlist.owner.id, playlist.id,
-                                  {offset: offset, limit: limit}, function(error, data) {
+                                  {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    offset = data.offset
+                    cursor_offset = data.offset
+                    cursor_total = data.total
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,

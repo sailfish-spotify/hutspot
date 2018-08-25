@@ -18,11 +18,13 @@ Page {
 
     property bool showBusy: false
 
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
-    property int offset: 0
-    property int limit: app.searchLimit.value
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
 
     allowedOrientations: Orientation.All
 
@@ -95,9 +97,10 @@ Page {
         showBusy = true
         searchModel.clear()
 
-        Spotify.getNewReleases({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getNewReleases({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
-                offset = data.albums.offset
+                cursor_offset = data.albums.offset
+                cursor_total = data.albums.total
                 try {
                     // albums
                     for(i=0;i<data.albums.items.length;i++) {

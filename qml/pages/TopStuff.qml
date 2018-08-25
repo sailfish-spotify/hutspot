@@ -19,11 +19,13 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
 
     allowedOrientations: Orientation.All
 
@@ -125,6 +127,8 @@ Page {
     property var topTracks
     property var topArtists
     property int pendingRequests
+    property var topTracksCursor
+    property var topArtistsCursor
 
     function loadData() {
         var i
@@ -153,26 +157,33 @@ Page {
         topArtists = undefined
         pendingRequests = 2
 
-        Spotify.getMyTopTracks({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMyTopTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
+                cursor_offset = data.offset
+                cursor_total = data.total
                 console.log("number of TopTracks: " + data.items.length)
                 topTracks = data
+                topTracksCursor = Util.loadCursor(data)
             } else
                 console.log("No Data for getMyTopTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMyTopArtists({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMyTopArtists({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of MyTopArtists: " + data.items.length)
                 topArtists = data
+                topArtistsCursor = Util.loadCursor(data)
             } else
                 console.log("No Data for getMyTopArtists")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
+        var cinfo = Util.getCursorsInfo([topArtistsCursor, topTracksCursor])
+        cursor_offset = cinfo.offset
+        cursor_total = cinfo.maxTotal
     }
 
     Connections {

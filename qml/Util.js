@@ -196,6 +196,63 @@ function removeFromListModel(model, type, id) {
     return true;
 }
 
+function getCursorsInfo(cursors) {
+    var maxTotal = 0
+    var offset = 0
+    for(var i=0;i<cursors.length;i++) {
+        if(cursors[i] === undefined)
+            continue
+        if(cursors[i].total > maxTotal)
+            maxTotal = cursors[i].total
+        offset = cursors[i].offset // ToDo: they will probably all be the same
+    }
+    return {offset: offset, maxTotal: maxTotal}
+}
+
+function loadCursor(data) {
+    var tmp
+    var cursor = {}
+    cursor.limit = data.limit ? data.limit : -1
+    cursor.offset = data.offset ? data.offset : 0
+    cursor.total = data.total ? data.total : -1
+
+    cursor.next_offset = -1
+    cursor.next_limit = -1
+    if(data.next) {
+        if(tmp = data.next.match(/offset=(\d+)/))
+            cursor.next_offset = parseInt(tmp[1], 10)
+        if(tmp = data.next.match(/limit=(\d+)+/))
+            cursor.next_limit = parseInt(tmp[1], 10)
+    }
+
+    cursor.previous_offset = -1
+    cursor.previous_limit = -1
+    if(data.previous) {
+        if(tmp = data.previous.match(/offset=(\d+)/))
+            cursor.previous_offset = parseInt(tmp[1], 10)
+        if(tmp = data.previous.match(/limit=(\d+)+/))
+            cursor.previous_limit = parseInt(tmp[1], 10)
+    }
+
+    return cursor
+}
+
+/*function getNextCursorText(offset, limit, total) {
+    var lower = offset + limit
+    var upper = lower + limit
+    if(upper > total)
+        upper = total
+    return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
+}
+
+function getPreviousCursorText(offset, limit, total) {
+    var lower = offset - limit
+    if(lower < 0)
+        lower = 0
+    var upper = lower + limit
+    return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
+}*/
+
 // keep in sync with Spotify.js ItemType
 var SpotifyItemType = {
     Album: 0,

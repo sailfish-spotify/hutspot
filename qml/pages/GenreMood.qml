@@ -19,11 +19,13 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
 
     allowedOrientations: Orientation.All
 
@@ -108,11 +110,12 @@ Page {
         //showBusy = true
         searchModel.clear()
 
-        Spotify.getCategories({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getCategories({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of Categories: " + data.categories.items.length)
-                    offset = data.categories.offset
+                    cursor_offset = data.categories.offset
+                    cursor_total = data.categories.total
                     for(i=0;i<data.categories.items.length;i++) {
                         searchModel.append({category: data.categories.items[i]})
                     }

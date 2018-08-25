@@ -22,9 +22,11 @@ Page {
 
     property bool canLoadNext: searchString.length >= 1
     property bool canLoadPrevious: searchString.length >= 1 && offset >= limit
-    property int offset: 0
-    property int limit: app.searchLimit.value
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
 
     property var searchTargets: [qsTr("Albums"), qsTr("Artists"), qsTr("Playlists"), qsTr("Tracks")]
     property int selectedSearchTargetsMask: app.selected_search_targets.value
@@ -225,40 +227,51 @@ Page {
             types.push('playlist')
         if(selectedSearchTargetsMask & 0x08)
             types.push('track')
-        Spotify.search(searchString, types, {offset: offset, limit: limit}, function(error, data) {
+        Spotify.search(searchString, types, {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 var artistIds = []
-                // for now assume offset is the same for all 4 catagories
-                offset = data.albums.offset
+                var cursors = []
                 try {
                     // albums
-                    for(i=0;i<data.albums.items.length;i++) {
-                        searchModel.append({type: 0,
-                                            name: data.albums.items[i].name,
-                                            album: data.albums.items[i]})
+                    if(data.albums) {
+                        for(i=0;i<data.albums.items.length;i++) {
+                            searchModel.append({type: 0,
+                                                name: data.albums.items[i].name,
+                                                album: data.albums.items[i]})
+                        }
+                        cursors.push(Util.loadCursor(data.albums))
                     }
 
                     // artists
-                    for(i=0;i<data.artists.items.length;i++) {
-                        searchModel.append({type: 1,
-                                            name: data.artists.items[i].name,
-                                            following: false,
-                                            artist: data.artists.items[i]})
-                        artistIds.push(data.artists.items[i].id)
+                    if(data.artists) {
+                        for(i=0;i<data.artists.items.length;i++) {
+                            searchModel.append({type: 1,
+                                                name: data.artists.items[i].name,
+                                                following: false,
+                                                artist: data.artists.items[i]})
+                            artistIds.push(data.artists.items[i].id)
+                        }
+                        cursors.push(Util.loadCursor(data.artists))
                     }
 
                     // playlists
-                    for(i=0;i<data.playlists.items.length;i++) {
-                        searchModel.append({type: 2,
-                                            name: data.playlists.items[i].name,
-                                            playlist: data.playlists.items[i]})
+                    if(data.playlists) {
+                        for(i=0;i<data.playlists.items.length;i++) {
+                            searchModel.append({type: 2,
+                                                name: data.playlists.items[i].name,
+                                                playlist: data.playlists.items[i]})
+                        }
+                        cursors.push(Util.loadCursor(data.playlists))
                     }
 
                     // tracks
-                    for(i=0;i<data.tracks.items.length;i++) {
-                        searchModel.append({type: 3,
-                                            name: data.tracks.items[i].name,
-                                            track: data.tracks.items[i]})
+                    if(data.tracks) {
+                        for(i=0;i<data.tracks.items.length;i++) {
+                            searchModel.append({type: 3,
+                                                name: data.tracks.items[i].name,
+                                                track: data.tracks.items[i]})
+                        }
+                        cursors.push(Util.loadCursor(data.tracks))
                     }
 
                     // request additional Info
@@ -267,6 +280,11 @@ Page {
                             Util.setFollowedInfo(1, artistIds, data, searchModel)
                         }
                     })
+
+                    // cursors
+                    var cinfo = Util.getCursorsInfo(cursors)
+                    cursor_offset = cinfo.offset
+                    cursor_total = cinfo.maxTotal
 
                 } catch (err) {
                     console.log(err)

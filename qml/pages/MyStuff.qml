@@ -19,11 +19,13 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
 
     allowedOrientations: Orientation.All
 
@@ -196,6 +198,8 @@ Page {
     property var followedArtists
     property int pendingRequests
 
+    property var cursors: []
+
     function loadData() {
         var i
         if(savedAlbums)
@@ -234,6 +238,9 @@ Page {
                                     artist: followedArtists.artists.items[i]})
             }
 
+        var cinfo = Util.getCursorsInfo(cursors)
+        cursor_offset = cinfo.offset
+        cursor_total = cinfo.maxTotal
     }
 
     function refresh() {
@@ -247,42 +254,44 @@ Page {
         followedArtists = undefined
         pendingRequests = 5
 
-        Spotify.getMySavedAlbums({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMySavedAlbums({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
                 savedAlbums = data
+                cursors[0] = Util.loadCursor(data)
             } else
                 console.log("No Data for getMySavedAlbums")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getUserPlaylists({offset: offset, limit: limit},function(error, data) {
+        Spotify.getUserPlaylists({offset: cursor_offset, limit: cursor_limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 userPlaylists = data
+                cursors[1] = Util.loadCursor(data)
             } else
                 console.log("No Data for getUserPlaylists")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMyRecentlyPlayedTracks({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMyRecentlyPlayedTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of RecentlyPlayedTracks: " + data.items.length)
                 recentlyPlayedTracks = data
-                // todo offset per request type
+                cursors[2] = Util.loadCursor(data)
             } else
                 console.log("No Data for getMyRecentlyPlayedTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMySavedTracks({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMySavedTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
-                offset = data.offset
                 savedTracks = data
+                cursors[3] = Util.loadCursor(data)
             } else
                 console.log("No Data for getMySavedTracks")
             if(--pendingRequests == 0) // load when all requests are done
@@ -293,6 +302,7 @@ Page {
             if(data) {
                 console.log("number of FollowedArtists: " + data.artists.items.length)
                 followedArtists = data
+                cursors[4] = Util.loadCursor(data)
             } else
                 console.log("No Data for getFollowedArtists")
             if(--pendingRequests == 0) // load when all requests are done

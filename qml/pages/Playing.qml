@@ -30,10 +30,14 @@ Page {
     property string viewMenuText: ""
 
     property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
+
     property int playbackProgress: 0
 
     property int mutedVolume: -1
@@ -629,11 +633,12 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        Spotify.getPlaylistTracks(id, pid, {offset: offset, limit: limit}, function(error, data) {
+        Spotify.getPlaylistTracks(id, pid, {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    offset = data.offset
+                    cursor_offset = data.offset
+                    cursor_total = data.total
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
@@ -653,12 +658,14 @@ Page {
     function loadAlbumTracks(id) {
         searchModel.clear()
         Spotify.getAlbumTracks(id,
-                               {offset: offset, limit: limit},
+                               {offset: cursor_offset, limit: cursor_limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    offset = data.offset
+                    // ToDo: this is silly. cursor is per query
+                    cursor_offset = data.offset
+                    cursor_total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,

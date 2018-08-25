@@ -22,11 +22,13 @@ Page {
     property var albumArtists
     property bool isAlbumSaved: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
+
+    property int cursor_limit: app.searchLimit.value
+    property int cursor_offset: 0
+    property int cursor_total: 0
+    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: cursor_offset >= cursor_limit
 
     property string currentTrackId: ""
 
@@ -155,12 +157,13 @@ Page {
         searchModel.clear()        
 
         Spotify.getAlbumTracks(album.id,
-                               {offset: offset, limit: limit},
+                               {offset: cursor_offset, limit: cursor_limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    offset = data.offset
+                    cursor_offset = data.offset
+                    cursor_total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
