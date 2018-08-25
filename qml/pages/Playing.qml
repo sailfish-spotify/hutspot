@@ -245,7 +245,7 @@ Page {
                     onToggleFavorite: app.toggleSavedTrack(model)
                 }
 
-                onClicked: app.playTrack(track)
+                onClicked: app.playTrack(track, contextObject)
             }
 
             VerticalScrollDecorator {}
