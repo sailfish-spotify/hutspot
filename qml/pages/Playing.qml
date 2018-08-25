@@ -291,6 +291,8 @@ Page {
                     text: Util.getDurationString(playbackProgress)
                 }
                 Slider {
+                    id: progressSlider
+                    property bool isPressed: false
                     height: progressLabel.height * 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
@@ -299,12 +301,22 @@ Page {
                                   ? playbackState.item.duration_ms
                                   : 0
                     handleVisible: false
-                    value: playbackProgress
+                    onPressed: isPressed = true
                     onReleased: {
                         Spotify.seek(Math.round(value), function(error, data) {
                             if(!error)
                                 refresh()
-                        })
+                         })
+                        isPressed = false
+                    }
+                    Connections {
+                        target: playingPage
+                        // cannot use 'value: playbackProgress' since press/drag
+                        // breaks the link between them
+                        onPlaybackProgressChanged: {
+                            if(!progressSlider.isPressed)
+                                progressSlider.value = playbackProgress
+                        }
                     }
                 }
                 Label {
