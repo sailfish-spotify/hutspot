@@ -250,15 +250,21 @@ Page {
 
             VerticalScrollDecorator {}
 
-            /*Label {
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignBottom
-                visible: parent.count == 0
-                text: qsTr("No tracks found")
-                color: Theme.secondaryColor
+            /*ViewPlaceholder {
+                enabled: parent.count == 0
+                text: qsTr("Nothing to play")
             }*/
 
+            Connections {
+                target: playingPage
+                onCurrentTrackIdChanged: {
+                    for(var i=0;i<searchModel.count;i++)
+                        if(searchModel.get(i).track.id === currentTrackId) {
+                            listView.positionViewAtIndex(i, ListView.Visible)
+                            break
+                        }
+                }
+            }
         }
     } // Item
 

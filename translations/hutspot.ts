@@ -494,7 +494,7 @@
     <name>Playing</name>
     <message>
         <location filename="../qml/pages/Playing.qml" line="21"/>
-        <location filename="../qml/pages/Playing.qml" line="583"/>
+        <location filename="../qml/pages/Playing.qml" line="606"/>
         <source>Playing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -514,66 +514,66 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="467"/>
-        <location filename="../qml/pages/Playing.qml" line="488"/>
+        <location filename="../qml/pages/Playing.qml" line="490"/>
+        <location filename="../qml/pages/Playing.qml" line="511"/>
         <source>no artist known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="495"/>
-        <location filename="../qml/pages/Playing.qml" line="509"/>
+        <location filename="../qml/pages/Playing.qml" line="518"/>
+        <location filename="../qml/pages/Playing.qml" line="532"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="497"/>
+        <location filename="../qml/pages/Playing.qml" line="520"/>
         <source>track</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="505"/>
-        <location filename="../qml/pages/Playing.qml" line="512"/>
+        <location filename="../qml/pages/Playing.qml" line="528"/>
+        <location filename="../qml/pages/Playing.qml" line="535"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="510"/>
+        <location filename="../qml/pages/Playing.qml" line="533"/>
         <source>by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="514"/>
+        <location filename="../qml/pages/Playing.qml" line="537"/>
         <source>public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="516"/>
+        <location filename="../qml/pages/Playing.qml" line="539"/>
         <source>collaborative</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="557"/>
-        <location filename="../qml/pages/Playing.qml" line="575"/>
+        <location filename="../qml/pages/Playing.qml" line="580"/>
+        <location filename="../qml/pages/Playing.qml" line="598"/>
         <source>Playing Album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="564"/>
+        <location filename="../qml/pages/Playing.qml" line="587"/>
         <source>Playing Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="570"/>
+        <location filename="../qml/pages/Playing.qml" line="593"/>
         <source>Playing Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="471"/>
+        <location filename="../qml/pages/Playing.qml" line="494"/>
         <source>no genre known</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playing.qml" line="594"/>
+        <location filename="../qml/pages/Playing.qml" line="617"/>
         <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
