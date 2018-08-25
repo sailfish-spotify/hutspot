@@ -85,12 +85,15 @@ Page {
                 secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
                 thirdLabelText: {
                     var s = ""
+                    var n = searchModel.count
                     if(album.tracks)
-                        s += album.tracks.total + " " + qsTr("tracks")
+                        n = album.tracks.total
                     else if(album.total_tracks)
-                        s += album.total_tracks + " " + qsTr("tracks")
-                    else if(album.album_type === "single")
-                        s += "1 " + qsTr("track")
+                        n = album.total_tracks
+                    if(n > 1)
+                        s += n + " " + qsTr("tracks")
+                    else if(n === 1)
+                        s += 1 + " " + qsTr("track")
                     if(album.release_date && album.release_date.length > 0)
                         s += ", " + Util.getYearFromReleaseDate(album.release_date)
                     if(album.genres && album.genres.length > 0)

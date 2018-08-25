@@ -48,23 +48,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="89"/>
-        <location filename="../qml/pages/Album.qml" line="91"/>
+        <location filename="../qml/pages/Album.qml" line="94"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="93"/>
+        <location filename="../qml/pages/Album.qml" line="96"/>
         <source>track</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="138"/>
+        <location filename="../qml/pages/Album.qml" line="141"/>
         <source>No Albums found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="139"/>
+        <location filename="../qml/pages/Album.qml" line="142"/>
         <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
