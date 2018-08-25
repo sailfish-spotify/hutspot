@@ -59,8 +59,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Album.qml" line="141"/>
-        <source>No tracks found</source>
+        <location filename="../qml/pages/Album.qml" line="138"/>
+        <source>No Albums found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Album.qml" line="139"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -113,8 +118,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Artist.qml" line="160"/>
-        <source>No albums found</source>
+        <location filename="../qml/pages/Artist.qml" line="157"/>
+        <source>No Artists found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Artist.qml" line="158"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -228,8 +238,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Devices.qml" line="111"/>
-        <source>No Items</source>
+        <location filename="../qml/pages/Devices.qml" line="108"/>
+        <source>Nothing Devices found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Devices.qml" line="109"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -241,16 +256,26 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/GenreMood.qml" line="99"/>
-        <source>No Genres nor Moods found</source>
+        <location filename="../qml/pages/GenreMood.qml" line="96"/>
+        <source>No Genres or Moods found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/GenreMood.qml" line="97"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
-        <location filename="../qml/pages/GenreMoodPlaylist.qml" line="95"/>
+        <location filename="../qml/pages/GenreMoodPlaylist.qml" line="92"/>
         <source>No Playlists found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/GenreMoodPlaylist.qml" line="93"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -336,8 +361,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/MyStuff.qml" line="151"/>
+        <location filename="../qml/pages/MyStuff.qml" line="148"/>
         <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MyStuff.qml" line="149"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -450,8 +480,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/NewRelease.qml" line="86"/>
+        <location filename="../qml/pages/NewRelease.qml" line="83"/>
         <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NewRelease.qml" line="84"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -551,27 +586,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="216"/>
+        <location filename="../qml/pages/Playlist.qml" line="157"/>
+        <source>Pull down to reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/Playlist.qml" line="213"/>
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="217"/>
+        <location filename="../qml/pages/Playlist.qml" line="214"/>
         <source>by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="219"/>
+        <location filename="../qml/pages/Playlist.qml" line="216"/>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="221"/>
+        <location filename="../qml/pages/Playlist.qml" line="218"/>
         <source>public</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="223"/>
+        <location filename="../qml/pages/Playlist.qml" line="220"/>
         <source>collaborative</source>
         <translation type="unfinished"></translation>
     </message>
@@ -586,7 +626,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/Playlist.qml" line="159"/>
+        <location filename="../qml/pages/Playlist.qml" line="156"/>
         <source>No tracks found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -850,8 +890,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/TopStuff.qml" line="119"/>
+        <location filename="../qml/pages/TopStuff.qml" line="116"/>
         <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/TopStuff.qml" line="117"/>
+        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

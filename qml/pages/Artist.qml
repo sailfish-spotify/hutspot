@@ -152,13 +152,10 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
-            text: qsTr("No albums found")
-            color: Theme.secondaryColor
+        ViewPlaceholder {
+            enabled: parent.count == 0
+            text: qsTr("No Artists found")
+            hintText: qsTr("Pull down to reload")
         }
 
     }

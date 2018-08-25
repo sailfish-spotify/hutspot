@@ -151,13 +151,10 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
+        ViewPlaceholder {
+            enabled: parent.count == 0
             text: qsTr("No tracks found")
-            color: Theme.secondaryColor
+            hintText: qsTr("Pull down to reload")
         }
 
     }
