@@ -103,13 +103,10 @@ Page {
 
         }
 
-        Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
-            text: qsTr("No Items")
-            color: Theme.secondaryColor
+        ViewPlaceholder {
+            enabled: parent.count == 0
+            text: qsTr("Nothing Devices found")
+            hintText: qsTr("Pull down to reload")
         }
 
         VerticalScrollDecorator {}
