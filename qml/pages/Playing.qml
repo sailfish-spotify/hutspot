@@ -30,8 +30,12 @@ Page {
     property string viewMenuText: ""
 
     property int offset: 0
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
+    property bool canLoad: {
+        var ct = getContextType()
+        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
+    }
+    property bool canLoadNext: canLoad && (cursor_offset + cursor_limit) <= cursor_total
+    property bool canLoadPrevious: canLoad && cursor_offset >= cursor_limit
     property int currentIndex: -1
 
     property int cursor_limit: app.searchLimit.value
@@ -70,6 +74,9 @@ Page {
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
                 anchors.bottomMargin: Theme.paddingLarge
+
+                LoadPullMenus {}
+                LoadPushMenus {}
 
                 PageHeader {
                     id: pHeader
@@ -269,6 +276,15 @@ Page {
                         }
                 }
             }
+            /* atYEnd is never true. caused by the docked panel?
+            onContentYChanged: {
+                 if(atYEnd && canLoadNext) {
+                     app.showConfirmDialog(qsTr("Reached end of list.<br>Try to the load next set?"),
+                         function() {
+                            loadNext()
+                         })
+                 }
+            }*/
         }
     } // Item
 
@@ -561,6 +577,18 @@ Page {
         return -1
     }
 
+    function loadNext() {
+        cursor_offset += cursor_limit
+        reloadTracks()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        reloadTracks()
+    }
+
     function refresh() {
         var i;
 
@@ -629,6 +657,19 @@ Page {
             }
         })
 
+    }
+
+    function reloadTracks() {
+        switch(playbackState.context.type) {
+        case 'album':
+            loadAlbumTracks(currentId)
+            break
+        case 'playlist':
+            loadPlaylistTracks(app.id, currentId)
+            break
+        default:
+            break
+        }
     }
 
     function loadPlaylistTracks(id, pid) {
