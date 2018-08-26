@@ -94,7 +94,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No Genres or Moods found")
             hintText: qsTr("Pull down to reload")
         }
@@ -103,6 +103,18 @@ Page {
 
     NavigationPanel {
         id: navPanel
+    }
+
+    function loadNext() {
+        cursor_offset += cursor_limit
+        refresh()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        refresh()
     }
 
     function refresh() {

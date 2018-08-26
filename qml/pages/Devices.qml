@@ -104,7 +104,7 @@ Page {
         }
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("Nothing Devices found")
             hintText: qsTr("Pull down to reload")
         }

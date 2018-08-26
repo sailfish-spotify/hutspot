@@ -10,26 +10,12 @@ PullDownMenu {
     }
     MenuItem {
         text: qsTr("Load Next Set")
-              //+ (enabled
-              //   ? " " + Util.getNextCursorText(cursor_offset, cursor_limit, cursor_total)
-              //   : "")
         enabled: canLoadNext
-        onClicked: {
-            cursor_offset += cursor_limit
-            refresh()
-        }
+        onClicked: loadNext()
     }
     MenuItem {
         text: qsTr("Load Previous Set")
-              //+ (enabled
-              //   ? " " + Util.getPreviousCursorText(cursor_offset, cursor_limit, cursor_total)
-              //   : "")
         enabled: canLoadPrevious
-        onClicked: {
-            cursor_offset -= cursor_limit
-            if(cursor_offset < 0)
-                cursor_offset = 0
-            refresh()
-        }
+        onClicked: loadPrevious()
     }
 }

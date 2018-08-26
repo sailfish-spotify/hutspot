@@ -155,7 +155,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No Artists found")
             hintText: qsTr("Pull down to reload")
         }
@@ -205,6 +205,18 @@ Page {
         var cinfo = Util.getCursorsInfo([artistAlbumsCursor, relatedArtistsCursor])
         cursor_offset = cinfo.offset
         cursor_total = cinfo.maxTotal
+    }
+
+    function loadNext() {
+        cursor_offset += cursor_limit
+        refresh()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        refresh()
     }
 
     function refresh() {

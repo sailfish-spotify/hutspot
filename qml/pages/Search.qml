@@ -212,6 +212,18 @@ Page {
         id: navPanel
     }
 
+    function loadNext() {
+        cursor_offset += cursor_limit
+        refresh()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        refresh()
+    }
+
     function refresh() {
         var i;
         if(searchString === "")

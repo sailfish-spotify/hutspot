@@ -19,13 +19,15 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
 
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
     property int currentIndex: -1
 
     property int cursor_limit: app.searchLimit.value
     property int cursor_offset: 0
     property int cursor_total: 0
+    property bool cursor_canNext: false
+    property bool cursor_canPrevious: false
+    property bool canLoadNext: ((cursor_offset + cursor_limit) <= cursor_total) || cursor_canNext
+    property bool canLoadPrevious: cursor_offset >= cursor_limit || cursor_canPrevious
 
     allowedOrientations: Orientation.All
 
@@ -33,130 +35,155 @@ Page {
         id: searchModel
     }
 
-    //GestureArea {
-    //    anchors.fill: parent
+    SilicaListView {
+        id: listView
+        model: searchModel
 
-        SilicaListView {
-            id: listView
-            model: searchModel
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
-            width: parent.width
-            anchors.top: parent.top
-            anchors.bottom: navPanel.top
-            clip: navPanel.expanded
+        LoadPullMenus {}
+        LoadPushMenus {}
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+        header: Column {
+            id: lvColumn
 
-            header: Column {
-                id: lvColumn
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            anchors.bottomMargin: Theme.paddingLarge
+            spacing: Theme.paddingLarge
 
+            PageHeader {
+                id: pHeader
+                width: parent.width
+                title: qsTr("My Stuff")
+                MenuButton {}
+            }
+
+        }
+
+        section.property: "stype"
+        section.delegate : Component {
+            id: sectionHeading
+            Item {
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                anchors.bottomMargin: Theme.paddingLarge
-                spacing: Theme.paddingLarge
+                height: childrenRect.height
 
-                PageHeader {
-                    id: pHeader
+                Text {
                     width: parent.width
-                    title: qsTr("My Stuff")
-                    MenuButton {}
-                }
-
-            }
-
-            section.property: "stype"
-            section.delegate : Component {
-                id: sectionHeading
-                Item {
-                    width: parent.width - 2*Theme.paddingMedium
-                    x: Theme.paddingMedium
-                    height: childrenRect.height
-
-                    Text {
-                        width: parent.width
-                        text: {
-                            switch(section) {
-                            case "0": return qsTr("Saved Albums")
-                            case "1": return qsTr("Followed Artists")
-                            case "2": return qsTr("Playlists")
-                            case "3": return qsTr("Recently Played Tracks")
-                            case "4": return qsTr("Saved Tracks")
-                            }
-                        }
-                        font.bold: true
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: Theme.highlightColor
-                        horizontalAlignment: Text.AlignRight
-                    }
-                }
-            }
-
-            delegate: ListItem {
-                id: listItem
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                contentHeight: Theme.itemSizeLarge
-
-                SearchResultListItem {
-                    id: searchResultListItem
-                    dataModel: model
-                }
-
-                menu: SearchResultContextMenu {
-                    MenuItem {
-                        enabled: type === 1 || type === 2
-                        visible: enabled
-                        text: qsTr("Unfollow")
-                        onClicked: {
-                            var idx = index
-                            var model = searchModel
-                            if(type === 1)
-                                app.unfollowArtist(artist, function(error,data) {
-                                   if(!error)
-                                       model.remove(idx, 1)
-                                })
-                            else
-                                app.unfollowPlaylist(playlist, function(error,data) {
-                                   if(!error)
-                                       model.remove(idx, 1)
-                                })
+                    text: {
+                        switch(section) {
+                        case "0": return qsTr("Saved Albums")
+                        case "1": return qsTr("Followed Artists")
+                        case "2": return qsTr("Playlists")
+                        case "3": return qsTr("Recently Played Tracks")
+                        case "4": return qsTr("Saved Tracks")
                         }
                     }
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.highlightColor
+                    horizontalAlignment: Text.AlignRight
+                    /*MouseArea {
+                        anchors.fill: parent
+                        onClicked: app.showErrorMessage(getSectionHeadingText(section))
+                    }*/
                 }
-
-                onClicked: {
-                    switch(type) {
-                    case 0:
-                        app.pushPage(Util.HutspotPage.Album, {album: album})
-                        break;
-                    case 1:
-                        app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
-                        break;
-                    case 2:
-                        app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
-                        break;
-                    case 3:
-                        app.pushPage(Util.HutspotPage.Album, {album: track.album})
-                        break;
-                    }
-                }
-            }
-
-            VerticalScrollDecorator {}
-
-            ViewPlaceholder {
-                enabled: parent.count == 0
-                text: qsTr("Nothing found")
-                hintText: qsTr("Pull down to reload")
             }
         }
 
-        NavigationPanel {
-            id: navPanel
+        delegate: ListItem {
+            id: listItem
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            contentHeight: Theme.itemSizeLarge
+
+            SearchResultListItem {
+                id: searchResultListItem
+                dataModel: model
+            }
+
+            menu: SearchResultContextMenu {
+                MenuItem {
+                    enabled: type === 1 || type === 2
+                    visible: enabled
+                    text: qsTr("Unfollow")
+                    onClicked: {
+                        var idx = index
+                        var model = searchModel
+                        if(type === 1)
+                            app.unfollowArtist(artist, function(error,data) {
+                               if(!error)
+                                   model.remove(idx, 1)
+                            })
+                        else
+                            app.unfollowPlaylist(playlist, function(error,data) {
+                               if(!error)
+                                   model.remove(idx, 1)
+                            })
+                    }
+                }
+            }
+
+            onClicked: {
+                switch(type) {
+                case 0:
+                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    break;
+                case 1:
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    break;
+                case 2:
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                    break;
+                case 3:
+                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                    break;
+                }
+            }
         }
 
-    //} // GestureArea
+        VerticalScrollDecorator {}
+
+        ViewPlaceholder {
+            enabled: listView.count === 0
+            text: qsTr("Nothing found")
+            hintText: qsTr("Pull down to reload")
+        }
+    }
+
+    NavigationPanel {
+        id: navPanel
+    }
+
+    /*function getSectionHeadingText(section) {
+        var s = ""
+        switch(section) {
+        case "0":
+            s += qsTr("Saved Albums<br>")
+            s += "total: " + cursors[0].total
+            break
+        case "1":
+            s += qsTr("Followed Artists")
+            break
+        case "2":
+            s += qsTr("Playlists<br>")
+            s += "total: " + cursors[1].total
+            break
+        case "3":
+            s += qsTr("Recently Played Tracks")
+            s += qsTr("between ") + Date(cursors[2].cursors.before) + qsTr(" and ") + Date(cursors[2].cursors.after)
+            break
+        case "4":
+            s += qsTr("Saved Tracks<br>")
+            s += "total: " + cursors[3].total
+            break
+        }
+        return s
+    }*/
 
     // when the page is on the stack but not on top a refresh can wait
     property bool _needsRefresh: false
@@ -241,6 +268,24 @@ Page {
         var cinfo = Util.getCursorsInfo(cursors)
         cursor_offset = cinfo.offset
         cursor_total = cinfo.maxTotal
+        cursor_canNext = cinfo.canNext
+        cursor_canPrevious = cinfo.canPrevious
+    }
+
+    property int nextPrevious: 0
+
+    function loadNext() {
+        cursor_offset += cursor_limit
+        nextPrevious = 1
+        refresh()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        nextPrevious = -1
+        refresh()
     }
 
     function refresh() {
@@ -252,8 +297,9 @@ Page {
         savedTracks = undefined
         recentlyPlayedTracks = undefined
         followedArtists = undefined
-        pendingRequests = 5
+        pendingRequests = 0
 
+        pendingRequests++
         Spotify.getMySavedAlbums({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
@@ -265,6 +311,7 @@ Page {
                 loadData()
         })
 
+        pendingRequests++
         Spotify.getUserPlaylists({offset: cursor_offset, limit: cursor_limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
@@ -276,17 +323,27 @@ Page {
                 loadData()
         })
 
-        Spotify.getMyRecentlyPlayedTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        var options = {limit: cursor_limit}
+        // nextPrevious is reversed here
+        if(cursors[2] && cursors[2].cursors) {
+            if(nextPrevious < 0 && cursors[2].cursors.after)
+               options.after = cursors[2].cursors.after
+            else if(nextPrevious > 0 && cursors[2].cursors.before)
+                options.before = cursors[2].cursors.before
+        }
+        pendingRequests++
+        Spotify.getMyRecentlyPlayedTracks(options, function(error, data) {
             if(data) {
                 console.log("number of RecentlyPlayedTracks: " + data.items.length)
                 recentlyPlayedTracks = data
-                cursors[2] = Util.loadCursor(data)
+                cursors[2] = Util.loadCursor(data, Util.CursorType.RecentlyPlayed)
             } else
                 console.log("No Data for getMyRecentlyPlayedTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
+        pendingRequests++
         Spotify.getMySavedTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
@@ -298,17 +355,29 @@ Page {
                 loadData()
         })
 
-        Spotify.getFollowedArtists({}, function(error, data) {
-            if(data) {
-                console.log("number of FollowedArtists: " + data.artists.items.length)
-                followedArtists = data
-                cursors[4] = Util.loadCursor(data)
-            } else
-                console.log("No Data for getFollowedArtists")
-            if(--pendingRequests == 0) // load when all requests are done
-                loadData()
-        })
-
+        options = {limit: cursor_limit}
+        var perform = true
+        if(cursors[4] && cursors[4].cursors) {
+            if(nextPrevious > 0 && cursors[4].cursors.after)
+               options.after = cursors[4].cursors.after
+            else if(nextPrevious < 0 && cursors[4].cursors.before)
+                options.before = cursors[4].cursors.before
+            if(nextPrevious > 0 && cursors[4].cursors.after === null)
+                perform = false // no more followed artists
+        }
+        if(perform) {
+            pendingRequests++
+            Spotify.getFollowedArtists(options, function(error, data) {
+                if(data) {
+                    console.log("number of FollowedArtists: " + data.artists.items.length)
+                    followedArtists = data
+                    cursors[4] = Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)
+                } else
+                    console.log("No Data for getFollowedArtists")
+                if(--pendingRequests == 0) // load when all requests are done
+                    loadData()
+            })
+        }
     }
 
     Connections {

@@ -5,17 +5,11 @@ PushUpMenu {
     MenuItem {
         text: qsTr("Load Next Set")
         enabled: canLoadNext
-        onClicked: {
-            offset += limit
-            refresh()
-        }
+        onClicked: loadNext()
     }
     MenuItem {
          text: qsTr("Load Previous Set")
          enabled: canLoadPrevious
-         onClicked: {
-             offset -= limit
-             refresh()
-         }
+         onClicked: loadPrevious()
      }
 }

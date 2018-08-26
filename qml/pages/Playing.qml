@@ -255,7 +255,7 @@ Page {
             VerticalScrollDecorator {}
 
             /*ViewPlaceholder {
-                enabled: parent.count == 0
+                enabled: listView.count === 0
                 text: qsTr("Nothing to play")
             }*/
 

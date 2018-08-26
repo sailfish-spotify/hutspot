@@ -139,7 +139,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count == 0
             text: qsTr("No Albums found")
             hintText: qsTr("Pull down to reload")
         }
@@ -151,6 +151,18 @@ Page {
     }
 
     onAlbumChanged: refresh()
+
+    function loadNext() {
+        cursor_offset += cursor_limit
+        refresh()
+    }
+
+    function loadPrevious() {
+        cursor_offset -= cursor_limit
+        if(cursor_offset < 0)
+            cursor_offset = 0
+        refresh()
+    }
 
     function refresh() {
         //showBusy = true
