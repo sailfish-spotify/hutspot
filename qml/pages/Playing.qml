@@ -89,8 +89,7 @@ Page {
                 Image {
                     id: imageItem
                     anchors.horizontalCenter: parent.horizontalCenter
-                    source:  (playingObject && playingObject.item)
-                             ? playingObject.item.album.images[0].url : defaultImageSource
+                    source:  getImage()
                     width: parent.width * 0.75
                     height: width
                     fillMode: Image.PreserveAspectFit
@@ -483,15 +482,45 @@ Page {
         }
     }
 
+    function getImage() {
+        if(app.show_track_info_playing.value || !playbackState.context)
+            return (playingObject && playingObject.item)
+                   ? playingObject.item.album.images[0].url
+                   : defaultImageSource
+
+        switch(playbackState.context.type) {
+        case 'album':
+            return contextObject.album.images[0].url
+        case 'artist':
+            return contextObject.artist.images[0].url
+        case 'playlist':
+            return contextObject.playlist.images[0].url
+        }
+        return defaultImageSource
+    }
+
     function getFirstLabelText(playbackState) {
-        return (playbackState && playbackState.item) ? playbackState.item.name : ""
+        var s = ""
+        if(playbackState === undefined)
+             return s
+        if(!playbackState.context || app.show_track_info_playing.value)
+            return playbackState.item ? playbackState.item.name : ""
+        switch(playbackState.context.type) {
+        case 'album':
+            return contextObject.album.name
+        case 'artist':
+            return contextObject.artist.name
+        case 'playlist':
+            return contextObject.playlist.name
+        }
+        return s
     }
 
     function getSecondLabelText(playbackState, contextObject) {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context) {
+        if(!playbackState.context || app.show_track_info_playing.value) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.album) {
                 s += playbackState.item.album.name
@@ -520,7 +549,7 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context) {
+        if(!playbackState.context || app.show_track_info_playing.value) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.artists)
                 s += Util.createItemsString(playbackState.item.artists, qsTr("no artist known"))

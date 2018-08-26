@@ -136,6 +136,16 @@ Page {
                 }
             }
 
+            TextSwitch {
+                id: show_track_info_playing
+                text: qsTr("Show Track info in Player")
+                description: qsTr("selected: show Track Info, deselected: show Context Info")
+                checked: app.show_track_info_playing.value
+                onCheckedChanged: {
+                    app.show_track_info_playing.value = checked
+                    app.show_track_info_playing.sync()
+                }
+            }
         }
 
     }
