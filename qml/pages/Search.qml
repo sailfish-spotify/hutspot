@@ -197,15 +197,10 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Label {
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            visible: parent.count == 0
+        ViewPlaceholder {
+            enabled: listView.count === 0
             text: qsTr("Nothing found")
-            color: Theme.secondaryColor
         }
-
     }
 
     NavigationPanel {
