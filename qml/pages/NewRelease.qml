@@ -18,10 +18,6 @@ Page {
 
     property bool showBusy: false
 
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
-    property int offset: 0
-    property int limit: app.searchLimit.value
     property int currentIndex: -1
 
     allowedOrientations: Orientation.All
@@ -79,7 +75,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("Nothing found")
             hintText: qsTr("Pull down to reload")
         }
@@ -95,9 +91,10 @@ Page {
         showBusy = true
         searchModel.clear()
 
-        Spotify.getNewReleases({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getNewReleases({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
-                offset = data.albums.offset
+                cursorHelper.offset = data.albums.offset
+                cursorHelper.total = data.albums.total
                 try {
                     // albums
                     for(i=0;i<data.albums.items.length;i++) {
@@ -115,17 +112,26 @@ Page {
         })
     }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
+    }
+
     Connections {
         target: app
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
         }
-        onLinked: refresh()
+        onHasValidTokenChanged: refresh()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 

@@ -19,10 +19,6 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     property var category
@@ -88,7 +84,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No Playlists found")
             hintText: qsTr("Pull down to reload")
         }
@@ -103,11 +99,12 @@ Page {
         //showBusy = true
         searchModel.clear()
 
-        Spotify.getCategoryPlaylists(category.id, {offset: offset, limit: limit}, function(error, data) {
+        Spotify.getCategoryPlaylists(category.id, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of Playlists: " + data.playlists.items.length)
-                    offset = data.playlists.offset
+                    cursorHelper.offset = data.playlists.offset
+                    cursorHelper.total = data.playlists.total
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
@@ -123,17 +120,26 @@ Page {
 
     }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
+    }
+
     Connections {
         target: app
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
         }
-        onLinked: refresh()
+        onHasValidTokenChanged: refresh()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 }

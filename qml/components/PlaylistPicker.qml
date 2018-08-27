@@ -104,11 +104,12 @@ Dialog {
     onLabelChanged: refresh() // ToDo come up with a better trigger
 
     function refresh() {
-        Spotify.getUserPlaylists({offset: offset, limit: limit},function(error, data) {
+        Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 items.clear()
-                offset = data.offset
+                cursorHelper.offset = data.offset
+                cursorHelper.total = data.total
                 for (var i=0;i<data.items.length;i++) {
                     items.append({type: 2,
                                   stype: 2,

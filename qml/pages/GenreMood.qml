@@ -19,10 +19,6 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     allowedOrientations: Orientation.All
@@ -92,7 +88,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No Genres or Moods found")
             hintText: qsTr("Pull down to reload")
         }
@@ -108,11 +104,12 @@ Page {
         //showBusy = true
         searchModel.clear()
 
-        Spotify.getCategories({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getCategories({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of Categories: " + data.categories.items.length)
-                    offset = data.categories.offset
+                    cursorHelper.offset = data.categories.offset
+                    cursorHelper.total = data.categories.total
                     for(i=0;i<data.categories.items.length;i++) {
                         searchModel.append({category: data.categories.items[i]})
                     }
@@ -126,17 +123,26 @@ Page {
 
     }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
+    }
+
     Connections {
         target: app
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
         }
-        onLinked: refresh()
+        onHasValidTokenChanged: refresh()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 }

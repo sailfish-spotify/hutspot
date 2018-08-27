@@ -16,14 +16,11 @@ Page {
     id: topStuffPage
     objectName: "TopStuffPage"
 
+
     property int searchInType: 0
     property bool showBusy: false
-
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
+
 
     allowedOrientations: Orientation.All
 
@@ -112,7 +109,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("Nothing found")
             hintText: qsTr("Pull down to reload")
         }
@@ -125,6 +122,8 @@ Page {
     property var topTracks
     property var topArtists
     property int pendingRequests
+    property var topTracksCursor
+    property var topArtistsCursor
 
     function loadData() {
         var i
@@ -143,6 +142,7 @@ Page {
                                     artist: topArtists.items[i]})
             }
 
+        cursorHelper.update([topArtistsCursor, topTracksCursor])
     }
 
     function refresh() {
@@ -153,26 +153,36 @@ Page {
         topArtists = undefined
         pendingRequests = 2
 
-        Spotify.getMyTopTracks({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMyTopTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of TopTracks: " + data.items.length)
                 topTracks = data
+                topTracksCursor = Util.loadCursor(data)
             } else
                 console.log("No Data for getMyTopTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMyTopArtists({offset: offset, limit: limit}, function(error, data) {
+        Spotify.getMyTopArtists({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of MyTopArtists: " + data.items.length)
                 topArtists = data
+                topArtistsCursor = Util.loadCursor(data)
             } else
                 console.log("No Data for getMyTopArtists")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
+    }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {
@@ -181,11 +191,11 @@ Page {
             if(app.loggedIn)
                 refresh()
         }
-        onLinked: refresh()
+        onHasValidTokenChanged: refresh()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 

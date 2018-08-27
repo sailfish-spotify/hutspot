@@ -22,10 +22,6 @@ Page {
     property var playlist
     property bool isFollowed: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     // binding to playlist properties does not seem to work
@@ -152,7 +148,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No tracks found")
             hintText: qsTr("Pull down to reload")
         }
@@ -173,6 +169,15 @@ Page {
                 refresh()
             }
         }
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {
@@ -227,11 +232,12 @@ Page {
         searchModel.clear()        
 
         Spotify.getPlaylistTracks(playlist.owner.id, playlist.id,
-                                  {offset: offset, limit: limit}, function(error, data) {
+                                  {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    offset = data.offset
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,

@@ -19,10 +19,6 @@ Page {
     property int searchInType: 0
     property bool showBusy: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     allowedOrientations: Orientation.All
@@ -31,130 +27,155 @@ Page {
         id: searchModel
     }
 
-    //GestureArea {
-    //    anchors.fill: parent
+    SilicaListView {
+        id: listView
+        model: searchModel
 
-        SilicaListView {
-            id: listView
-            model: searchModel
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: navPanel.top
+        clip: navPanel.expanded
 
-            width: parent.width
-            anchors.top: parent.top
-            anchors.bottom: navPanel.top
-            clip: navPanel.expanded
+        LoadPullMenus {}
+        LoadPushMenus {}
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+        header: Column {
+            id: lvColumn
 
-            header: Column {
-                id: lvColumn
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            anchors.bottomMargin: Theme.paddingLarge
+            spacing: Theme.paddingLarge
 
+            PageHeader {
+                id: pHeader
+                width: parent.width
+                title: qsTr("My Stuff")
+                MenuButton {}
+            }
+
+        }
+
+        section.property: "stype"
+        section.delegate : Component {
+            id: sectionHeading
+            Item {
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                anchors.bottomMargin: Theme.paddingLarge
-                spacing: Theme.paddingLarge
+                height: childrenRect.height
 
-                PageHeader {
-                    id: pHeader
+                Text {
                     width: parent.width
-                    title: qsTr("My Stuff")
-                    MenuButton {}
-                }
-
-            }
-
-            section.property: "stype"
-            section.delegate : Component {
-                id: sectionHeading
-                Item {
-                    width: parent.width - 2*Theme.paddingMedium
-                    x: Theme.paddingMedium
-                    height: childrenRect.height
-
-                    Text {
-                        width: parent.width
-                        text: {
-                            switch(section) {
-                            case "0": return qsTr("Saved Albums")
-                            case "1": return qsTr("Followed Artists")
-                            case "2": return qsTr("Playlists")
-                            case "3": return qsTr("Recently Played Tracks")
-                            case "4": return qsTr("Saved Tracks")
-                            }
-                        }
-                        font.bold: true
-                        font.pixelSize: Theme.fontSizeMedium
-                        color: Theme.highlightColor
-                        horizontalAlignment: Text.AlignRight
-                    }
-                }
-            }
-
-            delegate: ListItem {
-                id: listItem
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                contentHeight: Theme.itemSizeLarge
-
-                SearchResultListItem {
-                    id: searchResultListItem
-                    dataModel: model
-                }
-
-                menu: SearchResultContextMenu {
-                    MenuItem {
-                        enabled: type === 1 || type === 2
-                        visible: enabled
-                        text: qsTr("Unfollow")
-                        onClicked: {
-                            var idx = index
-                            var model = searchModel
-                            if(type === 1)
-                                app.unfollowArtist(artist, function(error,data) {
-                                   if(!error)
-                                       model.remove(idx, 1)
-                                })
-                            else
-                                app.unfollowPlaylist(playlist, function(error,data) {
-                                   if(!error)
-                                       model.remove(idx, 1)
-                                })
+                    text: {
+                        switch(section) {
+                        case "0": return qsTr("Saved Albums")
+                        case "1": return qsTr("Followed Artists")
+                        case "2": return qsTr("Playlists")
+                        case "3": return qsTr("Recently Played Tracks")
+                        case "4": return qsTr("Saved Tracks")
                         }
                     }
+                    font.bold: true
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.highlightColor
+                    horizontalAlignment: Text.AlignRight
+                    /*MouseArea {
+                        anchors.fill: parent
+                        onClicked: app.showErrorMessage(getSectionHeadingText(section))
+                    }*/
                 }
-
-                onClicked: {
-                    switch(type) {
-                    case 0:
-                        app.pushPage(Util.HutspotPage.Album, {album: album})
-                        break;
-                    case 1:
-                        app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
-                        break;
-                    case 2:
-                        app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
-                        break;
-                    case 3:
-                        app.pushPage(Util.HutspotPage.Album, {album: track.album})
-                        break;
-                    }
-                }
-            }
-
-            VerticalScrollDecorator {}
-
-            ViewPlaceholder {
-                enabled: parent.count == 0
-                text: qsTr("Nothing found")
-                hintText: qsTr("Pull down to reload")
             }
         }
 
-        NavigationPanel {
-            id: navPanel
+        delegate: ListItem {
+            id: listItem
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            contentHeight: Theme.itemSizeLarge
+
+            SearchResultListItem {
+                id: searchResultListItem
+                dataModel: model
+            }
+
+            menu: SearchResultContextMenu {
+                MenuItem {
+                    enabled: type === 1 || type === 2
+                    visible: enabled
+                    text: qsTr("Unfollow")
+                    onClicked: {
+                        var idx = index
+                        var model = searchModel
+                        if(type === 1)
+                            app.unfollowArtist(artist, function(error,data) {
+                               if(!error)
+                                   model.remove(idx, 1)
+                            })
+                        else
+                            app.unfollowPlaylist(playlist, function(error,data) {
+                               if(!error)
+                                   model.remove(idx, 1)
+                            })
+                    }
+                }
+            }
+
+            onClicked: {
+                switch(type) {
+                case 0:
+                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    break;
+                case 1:
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    break;
+                case 2:
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                    break;
+                case 3:
+                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                    break;
+                }
+            }
         }
 
-    //} // GestureArea
+        VerticalScrollDecorator {}
+
+        ViewPlaceholder {
+            enabled: listView.count === 0
+            text: qsTr("Nothing found")
+            hintText: qsTr("Pull down to reload")
+        }
+    }
+
+    NavigationPanel {
+        id: navPanel
+    }
+
+    /*function getSectionHeadingText(section) {
+        var s = ""
+        switch(section) {
+        case "0":
+            s += qsTr("Saved Albums<br>")
+            s += "total: " + cursors[0].total
+            break
+        case "1":
+            s += qsTr("Followed Artists")
+            break
+        case "2":
+            s += qsTr("Playlists<br>")
+            s += "total: " + cursors[1].total
+            break
+        case "3":
+            s += qsTr("Recently Played Tracks")
+            s += qsTr("between ") + Date(cursors[2].cursors.before) + qsTr(" and ") + Date(cursors[2].cursors.after)
+            break
+        case "4":
+            s += qsTr("Saved Tracks<br>")
+            s += "total: " + cursors[3].total
+            break
+        }
+        return s
+    }*/
 
     // when the page is on the stack but not on top a refresh can wait
     property bool _needsRefresh: false
@@ -196,6 +217,8 @@ Page {
     property var followedArtists
     property int pendingRequests
 
+    property var cursors: []
+
     function loadData() {
         var i
         if(savedAlbums)
@@ -234,7 +257,11 @@ Page {
                                     artist: followedArtists.artists.items[i]})
             }
 
+        cursorHelper.update(cursors)
     }
+
+    property int nextPrevious: 0
+
 
     function refresh() {
         var i;
@@ -245,60 +272,97 @@ Page {
         savedTracks = undefined
         recentlyPlayedTracks = undefined
         followedArtists = undefined
-        pendingRequests = 5
+        pendingRequests = 0
 
-        Spotify.getMySavedAlbums({offset: offset, limit: limit}, function(error, data) {
+        pendingRequests++
+        Spotify.getMySavedAlbums({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
                 savedAlbums = data
+                cursors[0] = Util.loadCursor(data)
             } else
                 console.log("No Data for getMySavedAlbums")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getUserPlaylists({offset: offset, limit: limit},function(error, data) {
+        pendingRequests++
+        Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 userPlaylists = data
+                cursors[1] = Util.loadCursor(data)
             } else
                 console.log("No Data for getUserPlaylists")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMyRecentlyPlayedTracks({offset: offset, limit: limit}, function(error, data) {
+        var options = {limit: cursorHelper.limit}
+        // nextPrevious is reversed here
+        if(cursors[2] && cursors[2].cursors) {
+            if(nextPrevious < 0 && cursors[2].cursors.after)
+               options.after = cursors[2].cursors.after
+            else if(nextPrevious > 0 && cursors[2].cursors.before)
+                options.before = cursors[2].cursors.before
+        }
+        pendingRequests++
+        Spotify.getMyRecentlyPlayedTracks(options, function(error, data) {
             if(data) {
                 console.log("number of RecentlyPlayedTracks: " + data.items.length)
                 recentlyPlayedTracks = data
-                // todo offset per request type
+                cursors[2] = Util.loadCursor(data, Util.CursorType.RecentlyPlayed)
             } else
                 console.log("No Data for getMyRecentlyPlayedTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getMySavedTracks({offset: offset, limit: limit}, function(error, data) {
+        pendingRequests++
+        Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
-                offset = data.offset
                 savedTracks = data
+                cursors[3] = Util.loadCursor(data)
             } else
                 console.log("No Data for getMySavedTracks")
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
 
-        Spotify.getFollowedArtists({}, function(error, data) {
-            if(data) {
-                console.log("number of FollowedArtists: " + data.artists.items.length)
-                followedArtists = data
-            } else
-                console.log("No Data for getFollowedArtists")
-            if(--pendingRequests == 0) // load when all requests are done
-                loadData()
-        })
+        options = {limit: cursorHelper.limit}
+        var perform = true
+        if(cursors[4] && cursors[4].cursors) {
+            if(nextPrevious > 0 && cursors[4].cursors.after)
+               options.after = cursors[4].cursors.after
+            else if(nextPrevious < 0 && cursors[4].cursors.before)
+                options.before = cursors[4].cursors.before
+            if(nextPrevious > 0 && cursors[4].cursors.after === null)
+                perform = false // no more followed artists
+        }
+        if(perform) {
+            pendingRequests++
+            Spotify.getFollowedArtists(options, function(error, data) {
+                if(data) {
+                    console.log("number of FollowedArtists: " + data.artists.items.length)
+                    followedArtists = data
+                    cursors[4] = Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)
+                } else
+                    console.log("No Data for getFollowedArtists")
+                if(--pendingRequests == 0) // load when all requests are done
+                    loadData()
+            })
+        }
+    }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        useHas: true
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {
@@ -307,11 +371,11 @@ Page {
             if(app.loggedIn)
                 refresh()
         }
-        onLinked: refresh()
+        onHasValidTokenChanged: refresh()
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 

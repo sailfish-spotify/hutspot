@@ -22,10 +22,6 @@ Page {
     property var albumArtists
     property bool isAlbumSaved: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     property string currentTrackId: ""
@@ -85,12 +81,15 @@ Page {
                 secondLabelText: Util.createItemsString(album.artists, qsTr("no artist known"))
                 thirdLabelText: {
                     var s = ""
+                    var n = searchModel.count
                     if(album.tracks)
-                        s += album.tracks.total + " " + qsTr("tracks")
+                        n = album.tracks.total
                     else if(album.total_tracks)
-                        s += album.total_tracks + " " + qsTr("tracks")
-                    else if(album.album_type === "single")
-                        s += "1 " + qsTr("track")
+                        n = album.total_tracks
+                    if(n > 1)
+                        s += n + " " + qsTr("tracks")
+                    else if(n === 1)
+                        s += 1 + " " + qsTr("track")
                     if(album.release_date && album.release_date.length > 0)
                         s += ", " + Util.getYearFromReleaseDate(album.release_date)
                     if(album.genres && album.genres.length > 0)
@@ -134,7 +133,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count == 0
             text: qsTr("No Albums found")
             hintText: qsTr("Pull down to reload")
         }
@@ -147,17 +146,27 @@ Page {
 
     onAlbumChanged: refresh()
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
+    }
+
     function refresh() {
         //showBusy = true
         searchModel.clear()        
 
         Spotify.getAlbumTracks(album.id,
-                               {offset: offset, limit: limit},
+                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    offset = data.offset
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,

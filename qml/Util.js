@@ -196,6 +196,106 @@ function removeFromListModel(model, type, id) {
     return true;
 }
 
+function getCursorsInfo(cursors) {
+    var maxTotal = 0
+    var offset = 0
+    var canNext = false
+    var canPrevious = false
+    for(var i=0;i<cursors.length;i++) {
+        if(cursors[i] === undefined)
+            continue
+        if(cursors[i].total > maxTotal)
+            maxTotal = cursors[i].total
+        if(cursors[i].offset != 0)
+            offset = cursors[i].offset // ToDo: they will probably all be the same
+        if(cursors[i].canNext)
+            canNext = true
+        if(cursors[i].canPrevious)
+            canPrevious = true
+    }
+    return {offset: offset, maxTotal: maxTotal,
+            canPrevious: canPrevious, canNext: canNext}
+}
+
+var CursorType = {
+  Normal: 0,
+  FollowedArtists: 1,
+  RecentlyPlayed: 2
+};
+
+function loadCursor(data, cursorType) {
+    var tmp
+    var cursor = {}
+
+    cursor.type = CursorType.Normal
+    if(cursorType)
+        cursor.type = cursorType
+
+    cursor.limit = data.limit ? data.limit : -1
+    cursor.offset = data.offset ? data.offset : 0
+    cursor.total = data.total ? data.total : -1
+
+    cursor.next_offset = -1
+    cursor.next_limit = -1
+    if(data.next) {
+        if(tmp = data.next.match(/offset=(\d+)/))
+            cursor.next_offset = parseInt(tmp[1], 10)
+        if(tmp = data.next.match(/limit=(\d+)+/))
+            cursor.next_limit = parseInt(tmp[1], 10)
+    }
+
+    cursor.previous_offset = -1
+    cursor.previous_limit = -1
+    if(data.previous) {
+        if(tmp = data.previous.match(/offset=(\d+)/))
+            cursor.previous_offset = parseInt(tmp[1], 10)
+        if(tmp = data.previous.match(/limit=(\d+)+/))
+            cursor.previous_limit = parseInt(tmp[1], 10)
+    }
+
+    // recently played cursor has a before- or after time
+    //   "cursors": { "after": "1481661844589", "before": "1481661737016"}
+    cursor.cursors = undefined
+    if(cursorType
+       && cursorType === CursorType.RecentlyPlayed
+       && data.cursors) {
+        var cursors = {}
+        if(data.cursors.before)
+            cursors.before = parseInt(data.cursors.before, 10)
+        if(data.cursors.after)
+            cursors.after = parseInt(data.cursors.after, 10)
+        cursor.cursors = cursors
+    }
+
+    // cursor of following artists has an 'after' artist id
+    if(cursorType
+       && cursorType === CursorType.FollowedArtists
+       && data.cursors)
+      cursor.cursors = data.cursors
+
+    // are prev/next queries provided
+    cursor.hasNext = (data.next && data.next !== null)
+    cursor.hasPrevious = (data.previous && data.previous !== null)
+
+    return cursor
+}
+
+/*function getNextCursorText(offset, limit, total) {
+    var lower = offset + limit
+    var upper = lower + limit
+    if(upper > total)
+        upper = total
+    return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
+}
+
+function getPreviousCursorText(offset, limit, total) {
+    var lower = offset - limit
+    if(lower < 0)
+        lower = 0
+    var upper = lower + limit
+    return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
+}*/
+
 // keep in sync with Spotify.js ItemType
 var SpotifyItemType = {
     Album: 0,

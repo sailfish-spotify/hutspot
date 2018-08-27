@@ -22,10 +22,6 @@ Page {
     property var currentArtist
     property bool isFollowed: false
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
 
     allowedOrientations: Orientation.All
@@ -153,7 +149,7 @@ Page {
         VerticalScrollDecorator {}
 
         ViewPlaceholder {
-            enabled: parent.count == 0
+            enabled: listView.count === 0
             text: qsTr("No Artists found")
             hintText: qsTr("Pull down to reload")
         }
@@ -169,6 +165,8 @@ Page {
     property var artistAlbums
     property var relatedArtists
     property int pendingRequests
+    property var artistAlbumsCursor
+    property var relatedArtistsCursor
 
     function loadData() {
         var i;
@@ -197,6 +195,18 @@ Page {
                 }
             })
         }
+
+        cursorHelper.update([artistAlbumsCursor, relatedArtistsCursor])
+
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     function refresh() {
@@ -208,12 +218,12 @@ Page {
         pendingRequests = 2
 
         Spotify.getArtistAlbums(currentArtist.id,
-                                {offset: offset, limit: limit},
+                                {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                 function(error, data) {
             if(data) {
                 console.log("number of ArtistAlbums: " + data.items.length)
                 artistAlbums = data
-                offset = data.offset
+                artistAlbumsCursor = Util.loadCursor(data)
             } else {
                 console.log("No Data for getArtistAlbums")
             }
@@ -222,11 +232,12 @@ Page {
         })
 
         Spotify.getArtistRelatedArtists(currentArtist.id,
-                                        {offset: offset, limit: limit},
+                                        {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                         function(error, data) {
             if(data) {
                 console.log("number of ArtistRelatedArtists: " + data.artists.length)
                 relatedArtists = data
+                relatedArtistsCursor = Util.loadCursor(data)
             } else {
                 console.log("No Data for getArtistRelatedArtists")
             }

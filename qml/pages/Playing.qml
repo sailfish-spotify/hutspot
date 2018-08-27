@@ -28,11 +28,8 @@ Page {
     property string currentTrackId: ""
 
     property string viewMenuText: ""
+    property bool showTrackInfo: true
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
-    property bool canLoadNext: true
-    property bool canLoadPrevious: offset >= limit
     property int currentIndex: -1
     property int playbackProgress: 0
 
@@ -67,6 +64,9 @@ Page {
                 x: Theme.paddingMedium
                 anchors.bottomMargin: Theme.paddingLarge
 
+                LoadPullMenus {}
+                LoadPushMenus {}
+
                 PageHeader {
                     id: pHeader
                     width: parent.width
@@ -78,12 +78,15 @@ Page {
                 Image {
                     id: imageItem
                     anchors.horizontalCenter: parent.horizontalCenter
-                    source:  (playingObject && playingObject.item)
-                             ? playingObject.item.album.images[0].url : defaultImageSource
+                    source:  getImage()
                     width: parent.width * 0.75
                     height: width
                     fillMode: Image.PreserveAspectFit
                     onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: showTrackInfo = !showTrackInfo
+                    }
                 }
 
                 Item {
@@ -251,7 +254,7 @@ Page {
             VerticalScrollDecorator {}
 
             /*ViewPlaceholder {
-                enabled: parent.count == 0
+                enabled: listView.count === 0
                 text: qsTr("Nothing to play")
             }*/
 
@@ -265,6 +268,15 @@ Page {
                         }
                 }
             }
+            /* atYEnd is never true. caused by the docked panel?
+            onContentYChanged: {
+                 if(atYEnd && canLoadNext) {
+                     app.showConfirmDialog(qsTr("Reached end of list.<br>Try to the load next set?"),
+                         function() {
+                            loadNext()
+                         })
+                 }
+            }*/
         }
     } // Item
 
@@ -463,15 +475,50 @@ Page {
         }
     }
 
+    function getImage() {
+        if(showTrackInfo || !playbackState.context)
+            return (playingObject && playingObject.item)
+                   ? playingObject.item.album.images[0].url
+                   : defaultImageSource
+
+        if(contextObject === null)
+            return defaultImageSource
+
+        switch(playbackState.context.type) {
+        case 'album':
+            return contextObject.album.images[0].url
+        case 'artist':
+            return contextObject.artist.images[0].url
+        case 'playlist':
+            return contextObject.images[0].url
+        }
+        return defaultImageSource
+    }
+
     function getFirstLabelText(playbackState) {
-        return (playbackState && playbackState.item) ? playbackState.item.name : ""
+        var s = ""
+        if(playbackState === undefined)
+             return s
+        if(!playbackState.context || showTrackInfo)
+            return playbackState.item ? playbackState.item.name : ""
+        if(contextObject === null)
+            return s
+        switch(playbackState.context.type) {
+        case 'album':
+            return contextObject.album.name
+        case 'artist':
+            return contextObject.artist.name
+        case 'playlist':
+            return contextObject.name
+        }
+        return s
     }
 
     function getSecondLabelText(playbackState, contextObject) {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context) {
+        if(!playbackState.context || showTrackInfo) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.album) {
                 s += playbackState.item.album.name
@@ -479,18 +526,17 @@ Page {
             }
             return s
         }
+        if(contextObject === null)
+            return s
         switch(playbackState.context.type) {
         case 'album':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
+            s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
             break
         case 'artist':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
+            s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
             break
         case 'playlist':
-            if(contextObject)
-                s+= contextObject.description
+            s+= contextObject.description
             break
         }
         return s
@@ -500,39 +546,37 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context) {
+        if(!playbackState.context || showTrackInfo) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.artists)
                 s += Util.createItemsString(playbackState.item.artists, qsTr("no artist known"))
             return s
         }
+        if(!contextObject)
+            return
         switch(playbackState.context.type) {
         case 'album':
-            if(contextObject) {
-                if(contextObject.tracks)
-                    s += contextObject.tracks.total + " " + qsTr("tracks")
-                else if(contextObject.album_type === "single")
-                    s += "1 " + qsTr("track")
-                s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
-                if(contextObject.genres && contextObject.genres.lenght > 0)
-                    s += ", " + Util.createItemsString(contextObject.genres, "")
-            }
+            if(contextObject.tracks)
+                s += contextObject.tracks.total + " " + qsTr("tracks")
+            else if(contextObject.album_type === "single")
+                s += "1 " + qsTr("track")
+            s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
+            if(contextObject.genres && contextObject.genres.lenght > 0)
+                s += ", " + Util.createItemsString(contextObject.genres, "")
             break
         case 'artist':
-            if(contextObject && contextObject.followers && contextObject.followers.total > 0)
+            if(contextObject.followers && contextObject.followers.total > 0)
                 s += Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
             break
         case 'playlist':
-            if(contextObject) {
-                s += contextObject.tracks.total + " " + qsTr("tracks")
-                s += ", " + qsTr("by") + " " + contextObject.owner.display_name
-                if(contextObject.followers && contextObject.followers.total > 0)
-                    s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
-                if(contextObject["public"])
-                    s += ", " +  qsTr("public")
-                if(contextObject.collaborative)
-                    s += ", " +  qsTr("collaborative")
-            }
+            s += contextObject.tracks.total + " " + qsTr("tracks")
+            s += ", " + qsTr("by") + " " + contextObject.owner.display_name
+            if(contextObject.followers && contextObject.followers.total > 0)
+                s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
+            if(contextObject["public"])
+                s += ", " +  qsTr("public")
+            if(contextObject.collaborative)
+                s += ", " +  qsTr("collaborative")
             break
         }
         return s
@@ -627,13 +671,27 @@ Page {
 
     }
 
+    function reloadTracks() {
+        switch(playbackState.context.type) {
+        case 'album':
+            loadAlbumTracks(currentId)
+            break
+        case 'playlist':
+            loadPlaylistTracks(app.id, currentId)
+            break
+        default:
+            break
+        }
+    }
+
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        Spotify.getPlaylistTracks(id, pid, {offset: offset, limit: limit}, function(error, data) {
+        Spotify.getPlaylistTracks(id, pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    offset = data.offset
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
@@ -653,12 +711,14 @@ Page {
     function loadAlbumTracks(id) {
         searchModel.clear()
         Spotify.getAlbumTracks(id,
-                               {offset: offset, limit: limit},
+                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    offset = data.offset
+                    // ToDo: this is silly. cursor is per query
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
@@ -719,13 +779,24 @@ Page {
         }
     }
 
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: reloadTracks()
+        onLoadPrevious: reloadTracks()
+    }
+
+    /*property bool canLoad: {
+        var ct = getContextType()
+        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
+    }*/
+
     Connections {
         target: app
 
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
+        onHasValidTokenChanged: refresh()
 
         onNewPlayingTrackInfo: {
             // track change?
@@ -751,7 +822,7 @@ Page {
     }
 
     Component.onCompleted: {
-        if(app.loggedIn)
+        if(app.hasValidToken)
             refresh()
     }
 

@@ -4,18 +4,12 @@ import Sailfish.Silica 1.0
 PushUpMenu {
     MenuItem {
         text: qsTr("Load Next Set")
-        enabled: canLoadNext
-        onClicked: {
-            offset += limit
-            refresh()
-        }
+        enabled: cursorHelper.canLoadNext
+        onClicked: cursorHelper.next()
     }
     MenuItem {
          text: qsTr("Load Previous Set")
-         enabled: canLoadPrevious
-         onClicked: {
-             offset -= limit
-             refresh()
-         }
+         enabled: cursorHelper.canLoadPrevious
+         onClicked: cursorHelper.previous()
      }
 }

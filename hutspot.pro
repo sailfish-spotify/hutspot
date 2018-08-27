@@ -50,7 +50,8 @@ DISTFILES += \
     qml/components/AlbumTrackContextMenu.qml \
     qml/pages/GenreMood.qml \
     qml/pages/GenreMoodPlaylist.qml \
-    qml/components/GestureArea.qml
+    qml/components/GestureArea.qml \
+    qml/components/CursorHelper.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
