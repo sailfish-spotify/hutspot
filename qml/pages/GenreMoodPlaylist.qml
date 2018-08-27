@@ -19,13 +19,7 @@ Page {
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
 
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
     property int currentIndex: -1
-
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
 
     property var category
 
@@ -100,29 +94,17 @@ Page {
         id: navPanel
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
-
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
-    }
-
     function refresh() {
         var i;
         //showBusy = true
         searchModel.clear()
 
-        Spotify.getCategoryPlaylists(category.id, {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getCategoryPlaylists(category.id, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of Playlists: " + data.playlists.items.length)
-                    cursor_offset = data.playlists.offset
-                    cursor_total = data.playlists.total
+                    cursorHelper.offset = data.playlists.offset
+                    cursorHelper.total = data.playlists.total
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
@@ -136,6 +118,15 @@ Page {
             }
         })
 
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {

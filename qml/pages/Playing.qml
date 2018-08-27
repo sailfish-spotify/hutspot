@@ -29,19 +29,7 @@ Page {
 
     property string viewMenuText: ""
 
-    property int offset: 0
-    property bool canLoad: {
-        var ct = getContextType()
-        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
-    }
-    property bool canLoadNext: canLoad && (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: canLoad && cursor_offset >= cursor_limit
     property int currentIndex: -1
-
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-
     property int playbackProgress: 0
 
     property int mutedVolume: -1
@@ -606,18 +594,6 @@ Page {
         return -1
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        reloadTracks()
-    }
-
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        reloadTracks()
-    }
-
     function refresh() {
         var i;
 
@@ -703,12 +679,12 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        Spotify.getPlaylistTracks(id, pid, {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getPlaylistTracks(id, pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
-                    cursor_offset = data.offset
-                    cursor_total = data.total
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
@@ -728,14 +704,14 @@ Page {
     function loadAlbumTracks(id) {
         searchModel.clear()
         Spotify.getAlbumTracks(id,
-                               {offset: cursor_offset, limit: cursor_limit},
+                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
                     // ToDo: this is silly. cursor is per query
-                    cursor_offset = data.offset
-                    cursor_total = data.total
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,
@@ -795,6 +771,20 @@ Page {
             break
         }
     }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: reloadTracks()
+        onLoadPrevious: reloadTracks()
+    }
+
+    /*property bool canLoad: {
+        var ct = getContextType()
+        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
+    }*/
 
     Connections {
         target: app

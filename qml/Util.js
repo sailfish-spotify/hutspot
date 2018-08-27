@@ -274,8 +274,8 @@ function loadCursor(data, cursorType) {
       cursor.cursors = data.cursors
 
     // are prev/next queries provided
-    cursor.canNext = (data.next && data.next !== null)
-    cursor.canPrevious = (data.previous && data.previous !== null)
+    cursor.hasNext = (data.next && data.next !== null)
+    cursor.hasPrevious = (data.previous && data.previous !== null)
 
     return cursor
 }

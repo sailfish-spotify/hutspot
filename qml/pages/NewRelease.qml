@@ -20,12 +20,6 @@ Page {
 
     property int currentIndex: -1
 
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
-
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -92,27 +86,15 @@ Page {
         id: navPanel
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
-
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
-    }
-
     function refresh() {
         var i;
         showBusy = true
         searchModel.clear()
 
-        Spotify.getNewReleases({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getNewReleases({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
-                cursor_offset = data.albums.offset
-                cursor_total = data.albums.total
+                cursorHelper.offset = data.albums.offset
+                cursorHelper.total = data.albums.total
                 try {
                     // albums
                     for(i=0;i<data.albums.items.length;i++) {
@@ -128,6 +110,15 @@ Page {
             }
             showBusy = false
         })
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {

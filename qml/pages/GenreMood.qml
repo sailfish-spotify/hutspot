@@ -21,12 +21,6 @@ Page {
 
     property int currentIndex: -1
 
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
-
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -105,29 +99,17 @@ Page {
         id: navPanel
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
-
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
-    }
-
     function refresh() {
         var i;
         //showBusy = true
         searchModel.clear()
 
-        Spotify.getCategories({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getCategories({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of Categories: " + data.categories.items.length)
-                    cursor_offset = data.categories.offset
-                    cursor_total = data.categories.total
+                    cursorHelper.offset = data.categories.offset
+                    cursorHelper.total = data.categories.total
                     for(i=0;i<data.categories.items.length;i++) {
                         searchModel.append({category: data.categories.items[i]})
                     }
@@ -139,6 +121,15 @@ Page {
             }
         })
 
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {

@@ -24,12 +24,6 @@ Page {
 
     property int currentIndex: -1
 
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
-
     property string currentTrackId: ""
 
     allowedOrientations: Orientation.All
@@ -152,16 +146,13 @@ Page {
 
     onAlbumChanged: refresh()
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
+    property alias cursorHelper: cursorHelper
 
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     function refresh() {
@@ -169,13 +160,13 @@ Page {
         searchModel.clear()        
 
         Spotify.getAlbumTracks(album.id,
-                               {offset: cursor_offset, limit: cursor_limit},
+                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    cursor_offset = data.offset
-                    cursor_total = data.total
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         searchModel.append({type: Spotify.ItemType.Track,

@@ -21,14 +21,6 @@ Page {
 
     property int currentIndex: -1
 
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-    property bool cursor_canNext: false
-    property bool cursor_canPrevious: false
-    property bool canLoadNext: ((cursor_offset + cursor_limit) <= cursor_total) || cursor_canNext
-    property bool canLoadPrevious: cursor_offset >= cursor_limit || cursor_canPrevious
-
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -265,28 +257,11 @@ Page {
                                     artist: followedArtists.artists.items[i]})
             }
 
-        var cinfo = Util.getCursorsInfo(cursors)
-        cursor_offset = cinfo.offset
-        cursor_total = cinfo.maxTotal
-        cursor_canNext = cinfo.canNext
-        cursor_canPrevious = cinfo.canPrevious
+        cursorHelper.update(cursors)
     }
 
     property int nextPrevious: 0
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        nextPrevious = 1
-        refresh()
-    }
-
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        nextPrevious = -1
-        refresh()
-    }
 
     function refresh() {
         var i;
@@ -300,7 +275,7 @@ Page {
         pendingRequests = 0
 
         pendingRequests++
-        Spotify.getMySavedAlbums({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getMySavedAlbums({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedAlbums: " + data.items.length)
                 savedAlbums = data
@@ -312,7 +287,7 @@ Page {
         })
 
         pendingRequests++
-        Spotify.getUserPlaylists({offset: cursor_offset, limit: cursor_limit},function(error, data) {
+        Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
             if(data) {
                 console.log("number of playlists: " + data.items.length)
                 userPlaylists = data
@@ -323,7 +298,7 @@ Page {
                 loadData()
         })
 
-        var options = {limit: cursor_limit}
+        var options = {limit: cursorHelper.limit}
         // nextPrevious is reversed here
         if(cursors[2] && cursors[2].cursors) {
             if(nextPrevious < 0 && cursors[2].cursors.after)
@@ -344,7 +319,7 @@ Page {
         })
 
         pendingRequests++
-        Spotify.getMySavedTracks({offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 console.log("number of SavedTracks: " + data.items.length)
                 savedTracks = data
@@ -355,7 +330,7 @@ Page {
                 loadData()
         })
 
-        options = {limit: cursor_limit}
+        options = {limit: cursorHelper.limit}
         var perform = true
         if(cursors[4] && cursors[4].cursors) {
             if(nextPrevious > 0 && cursors[4].cursors.after)
@@ -378,6 +353,16 @@ Page {
                     loadData()
             })
         }
+    }
+
+    property alias cursorHelper: cursorHelper
+
+    CursorHelper {
+        id: cursorHelper
+
+        useHas: true
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     Connections {

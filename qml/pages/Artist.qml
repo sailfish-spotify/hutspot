@@ -24,12 +24,6 @@ Page {
 
     property int currentIndex: -1
 
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
-    property bool canLoadNext: (cursor_offset + cursor_limit) <= cursor_total
-    property bool canLoadPrevious: cursor_offset >= cursor_limit
-
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -202,21 +196,17 @@ Page {
             })
         }
 
-        var cinfo = Util.getCursorsInfo([artistAlbumsCursor, relatedArtistsCursor])
-        cursor_offset = cinfo.offset
-        cursor_total = cinfo.maxTotal
+        cursorHelper.update([artistAlbumsCursor, relatedArtistsCursor])
+
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
+    property alias cursorHelper: cursorHelper
 
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     function refresh() {
@@ -228,7 +218,7 @@ Page {
         pendingRequests = 2
 
         Spotify.getArtistAlbums(currentArtist.id,
-                                {offset: cursor_offset, limit: cursor_limit},
+                                {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                 function(error, data) {
             if(data) {
                 console.log("number of ArtistAlbums: " + data.items.length)
@@ -242,7 +232,7 @@ Page {
         })
 
         Spotify.getArtistRelatedArtists(currentArtist.id,
-                                        {offset: cursor_offset, limit: cursor_limit},
+                                        {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                         function(error, data) {
             if(data) {
                 console.log("number of ArtistRelatedArtists: " + data.artists.length)

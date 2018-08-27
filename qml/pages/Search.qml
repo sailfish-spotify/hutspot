@@ -20,13 +20,7 @@ Page {
     property bool showBusy: false
     property string searchString: ""
 
-    property bool canLoadNext: searchString.length >= 1
-    property bool canLoadPrevious: searchString.length >= 1 && offset >= limit
     property int currentIndex: -1
-
-    property int cursor_limit: app.searchLimit.value
-    property int cursor_offset: 0
-    property int cursor_total: 0
 
     property var searchTargets: [qsTr("Albums"), qsTr("Artists"), qsTr("Playlists"), qsTr("Tracks")]
     property int selectedSearchTargetsMask: app.selected_search_targets.value
@@ -207,16 +201,13 @@ Page {
         id: navPanel
     }
 
-    function loadNext() {
-        cursor_offset += cursor_limit
-        refresh()
-    }
+    property alias cursorHelper: cursorHelper
 
-    function loadPrevious() {
-        cursor_offset -= cursor_limit
-        if(cursor_offset < 0)
-            cursor_offset = 0
-        refresh()
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     function refresh() {
@@ -234,7 +225,7 @@ Page {
             types.push('playlist')
         if(selectedSearchTargetsMask & 0x08)
             types.push('track')
-        Spotify.search(searchString, types, {offset: cursor_offset, limit: cursor_limit}, function(error, data) {
+        Spotify.search(searchString, types, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 var artistIds = []
                 var cursors = []
@@ -289,9 +280,7 @@ Page {
                     })
 
                     // cursors
-                    var cinfo = Util.getCursorsInfo(cursors)
-                    cursor_offset = cinfo.offset
-                    cursor_total = cinfo.maxTotal
+                    cursorHelper.update(cursors)
 
                 } catch (err) {
                     console.log(err)
