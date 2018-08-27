@@ -476,13 +476,16 @@ Page {
                    ? playingObject.item.album.images[0].url
                    : defaultImageSource
 
+        if(contextObject === null)
+            return defaultImageSource
+
         switch(playbackState.context.type) {
         case 'album':
             return contextObject.album.images[0].url
         case 'artist':
             return contextObject.artist.images[0].url
         case 'playlist':
-            return contextObject.playlist.images[0].url
+            return contextObject.images[0].url
         }
         return defaultImageSource
     }
@@ -493,13 +496,15 @@ Page {
              return s
         if(!playbackState.context || app.show_track_info_playing.value)
             return playbackState.item ? playbackState.item.name : ""
+        if(contextObject === null)
+            return s
         switch(playbackState.context.type) {
         case 'album':
             return contextObject.album.name
         case 'artist':
             return contextObject.artist.name
         case 'playlist':
-            return contextObject.playlist.name
+            return contextObject.name
         }
         return s
     }
@@ -516,18 +521,17 @@ Page {
             }
             return s
         }
+        if(contextObject === null)
+            return s
         switch(playbackState.context.type) {
         case 'album':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
+            s += Util.createItemsString(contextObject.artists, qsTr("no artist known"))
             break
         case 'artist':
-            if(contextObject)
-                s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
+            s += Util.createItemsString(contextObject.genres, qsTr("no genre known"))
             break
         case 'playlist':
-            if(contextObject)
-                s+= contextObject.description
+            s+= contextObject.description
             break
         }
         return s
