@@ -28,6 +28,7 @@ Page {
     property string currentTrackId: ""
 
     property string viewMenuText: ""
+    property bool showTrackInfo: true
 
     property int currentIndex: -1
     property int playbackProgress: 0
@@ -82,6 +83,10 @@ Page {
                     height: width
                     fillMode: Image.PreserveAspectFit
                     onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: showTrackInfo = !showTrackInfo
+                    }
                 }
 
                 Item {
@@ -471,7 +476,7 @@ Page {
     }
 
     function getImage() {
-        if(app.show_track_info_playing.value || !playbackState.context)
+        if(showTrackInfo || !playbackState.context)
             return (playingObject && playingObject.item)
                    ? playingObject.item.album.images[0].url
                    : defaultImageSource
@@ -494,7 +499,7 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context || app.show_track_info_playing.value)
+        if(!playbackState.context || showTrackInfo)
             return playbackState.item ? playbackState.item.name : ""
         if(contextObject === null)
             return s
@@ -513,7 +518,7 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context || app.show_track_info_playing.value) {
+        if(!playbackState.context || showTrackInfo) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.album) {
                 s += playbackState.item.album.name
@@ -541,39 +546,37 @@ Page {
         var s = ""
         if(playbackState === undefined)
              return s
-        if(!playbackState.context || app.show_track_info_playing.value) {
+        if(!playbackState.context || showTrackInfo) {
             // no context (a single track?)
             if(playbackState.item && playbackState.item.artists)
                 s += Util.createItemsString(playbackState.item.artists, qsTr("no artist known"))
             return s
         }
+        if(!contextObject)
+            return
         switch(playbackState.context.type) {
         case 'album':
-            if(contextObject) {
-                if(contextObject.tracks)
-                    s += contextObject.tracks.total + " " + qsTr("tracks")
-                else if(contextObject.album_type === "single")
-                    s += "1 " + qsTr("track")
-                s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
-                if(contextObject.genres && contextObject.genres.lenght > 0)
-                    s += ", " + Util.createItemsString(contextObject.genres, "")
-            }
+            if(contextObject.tracks)
+                s += contextObject.tracks.total + " " + qsTr("tracks")
+            else if(contextObject.album_type === "single")
+                s += "1 " + qsTr("track")
+            s += ", " + Util.getYearFromReleaseDate(contextObject.release_date)
+            if(contextObject.genres && contextObject.genres.lenght > 0)
+                s += ", " + Util.createItemsString(contextObject.genres, "")
             break
         case 'artist':
-            if(contextObject && contextObject.followers && contextObject.followers.total > 0)
+            if(contextObject.followers && contextObject.followers.total > 0)
                 s += Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
             break
         case 'playlist':
-            if(contextObject) {
-                s += contextObject.tracks.total + " " + qsTr("tracks")
-                s += ", " + qsTr("by") + " " + contextObject.owner.display_name
-                if(contextObject.followers && contextObject.followers.total > 0)
-                    s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
-                if(contextObject["public"])
-                    s += ", " +  qsTr("public")
-                if(contextObject.collaborative)
-                    s += ", " +  qsTr("collaborative")
-            }
+            s += contextObject.tracks.total + " " + qsTr("tracks")
+            s += ", " + qsTr("by") + " " + contextObject.owner.display_name
+            if(contextObject.followers && contextObject.followers.total > 0)
+                s += ", " + Util.abbreviateNumber(contextObject.followers.total) + " " + qsTr("followers")
+            if(contextObject["public"])
+                s += ", " +  qsTr("public")
+            if(contextObject.collaborative)
+                s += ", " +  qsTr("collaborative")
             break
         }
         return s

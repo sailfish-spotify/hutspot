@@ -28,7 +28,6 @@ ApplicationWindow {
     property alias confirm_un_follow_save: confirm_un_follow_save
     property alias navigation_menu_type: navigation_menu_type
     property alias playing_as_attached_page: playing_as_attached_page
-    property alias show_track_info_playing: show_track_info_playing
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -969,12 +968,6 @@ ApplicationWindow {
             id: playing_as_attached_page
             key: "/hutspot/playing_as_attached_page"
             defaultValue: true
-    }
-
-    ConfigurationValue {
-            id: show_track_info_playing
-            key: "/hutspot/show_track_info_playing"
-            defaultValue: false
     }
 
 }
