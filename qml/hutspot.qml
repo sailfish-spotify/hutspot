@@ -28,6 +28,7 @@ ApplicationWindow {
     property alias confirm_un_follow_save: confirm_un_follow_save
     property alias navigation_menu_type: navigation_menu_type
     property alias playing_as_attached_page: playing_as_attached_page
+    property alias history_store: history_store
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -87,6 +88,10 @@ ApplicationWindow {
             pageStack.clear()
             page = pageStack.push(Qt.resolvedUrl("pages/GenreMood.qml"))
             break;
+        case 'HistoryPage':
+            pageStack.clear()
+            page = pageStack.push(Qt.resolvedUrl("pages/History.qml"))
+            break;
         default:
             return
         }
@@ -121,6 +126,9 @@ ApplicationWindow {
         case 'GenreMoodPage':
             pageUrl = Qt.resolvedUrl("pages/GenreMood.qml")
             break;
+        case 'HistoryPage':
+            pageUrl = Qt.resolvedUrl("pages/History.qml")
+            break;
         }
         if(pageUrl !== undefined ) {
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
@@ -146,6 +154,9 @@ ApplicationWindow {
             break
         case Util.HutspotMenuItem.ShowGenreMoodPage:
             app.showPage('GenreMoodPage')
+            break
+        case Util.HutspotMenuItem.ShowHistoryPage:
+            app.showPage('HistoryPage')
             break
         case Util.HutspotMenuItem.ShowSearchPage:
             app.showPage('SearchPage')
@@ -407,6 +418,7 @@ ApplicationWindow {
             loadFirstPage()
         }
 
+        history = history_store.value
         //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
@@ -909,6 +921,18 @@ ApplicationWindow {
             dialog.rejected.connect(arguments[3])
     }
 
+    /**
+     * List of last visited albums/artists/playlists
+     */
+    property var history: []
+    function notifyHistoryUri(uri) {
+        if(history.length === 0 || history[0] !== uri)
+            history.unshift(uri)
+        if(history.length > 100) // make configurable
+            history.pop()
+        history_store.value = history
+    }
+
     ConfigurationValue {
             id: deviceId
             key: "/hutspot/device_id"
@@ -970,5 +994,10 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue {
+            id: history_store
+            key: "/hutspot/history"
+            defaultValue: []
+    }
 }
 

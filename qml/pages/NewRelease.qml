@@ -110,6 +110,12 @@ Page {
             }
             showBusy = false
         })
+
+        for(var i=0;i<app.history.length;i++) {
+            var parsed = Util.parseSpotifyUri(app.history[i])
+            if(parsed.type !== undefined)
+                console.log("history: type=" + parsed.type +", id=" + parsed.id)
+        }
     }
 
     property alias cursorHelper: cursorHelper

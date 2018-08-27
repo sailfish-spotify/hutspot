@@ -202,6 +202,8 @@ Page {
             if(data)
                 isAlbumSaved = data[0]
         })
+
+        app.notifyHistoryUri(album.uri)
     }
 
 }

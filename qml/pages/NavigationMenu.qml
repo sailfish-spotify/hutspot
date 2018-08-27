@@ -43,6 +43,10 @@ Page {
                           name: qsTr("Genre & Mood"),
                           icon: "image://hutspot-icons/compass"
                          })
+        menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowHistoryPage,
+                          name: qsTr("History"),
+                          icon: "image://theme/icon-m-backup"
+                         })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowSearchPage,
                           name: qsTr("Search"),
                           icon: "image://theme/icon-m-search"

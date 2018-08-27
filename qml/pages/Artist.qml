@@ -244,6 +244,8 @@ Page {
             if(--pendingRequests == 0) // load when all requests are done
                 loadData()
         })
+
+        app.notifyHistoryUri(currentArtist.uri)
     }
 
 }
