@@ -925,12 +925,34 @@ ApplicationWindow {
      * List of last visited albums/artists/playlists
      */
     property var history: []
+    signal historyModified(int added, int removed)
     function notifyHistoryUri(uri) {
-        if(history.length === 0 || history[0] !== uri)
+        var removedIndex = -1
+        if(history.length === 0) {
             history.unshift(uri)
-        if(history.length > 100) // make configurable
-            history.pop()
+        } else if(history[0] !== uri) {
+            // add to the top
+            history.unshift(uri)
+            // remove if already present
+            for(var i=1;i<history.length;i++)
+                if(history[i] === uri) {
+                    history.splice(i, 1)
+                    removedIndex = i - 1 // -1 since the model does not have the new one yet
+                    break
+                }
+        }
         history_store.value = history
+        historyModified(0, removedIndex)
+        if(history.length > 50) { // make configurable
+            history.pop()
+            historyModified(-1, 50-1)
+        }
+    }
+
+    function clearHistory() {
+        history = []
+        history_store.value = history
+        historyModified(-1, -1)
     }
 
     ConfigurationValue {

@@ -50,8 +50,14 @@ Page {
                 MenuButton {}
             }
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+            //LoadPullMenus {}
+            //LoadPushMenus {}
+            PullDownMenu {
+                MenuItem {
+                    text: qsTr("Clear History")
+                    onClicked: app.clearHistory()
+                }
+            }
 
         }
 
@@ -98,6 +104,20 @@ Page {
         id: navPanel
     }
 
+    Connections {
+        target: app
+        onHistoryModified: {
+            if(added >= 0 && removed === -1)          // a new one
+                loadFirstOne()
+            else if(added >= 0)                       // a moved one
+                searchModel.move(removed, added, 1)
+            else if(added === -1 && removed >= 0)     // a removed one
+                searchModel.remove(removed)
+            else if(added === -1 && removed === -1)   // new history
+                refresh()
+        }
+    }
+
     function reload() {
         searchModel.clear()
 
@@ -129,56 +149,66 @@ Page {
 
     function checkReload() {
         retrievedCount++
-        if(retrievedCount === app.history.length || retrievedCount === 20)
+        if(retrievedCount === app.history.length || retrievedCount === numberToRetrieve)
             reload()
     }
 
     property var retrieved: []
     property var parsed: []
     property int retrievedCount: 0
+    property int numberToRetrieve: 0
 
     function refresh() {
         var i;
         showBusy = true
         retrieved = []
         retrievedCount = 0
+        numberToRetrieve = 20
         parsed = []
-        for(var i=0;i<app.history.length && i < 20;i++) {
+        _refresh(app.history.length)
+    }
+
+    function loadFirstOne() {
+        retrieved.unshift({})
+        parsed.unshift({})
+        numberToRetrieve = 1
+        _refresh(1)
+    }
+
+    function _refresh(count) {
+        for(var i=0;i<count && i < numberToRetrieve;i++) {
             var p = Util.parseSpotifyUri(app.history[i])
             parsed[i] = p
             if(p.type === undefined)
                 continue
-            // console.log("history: type=" + p.type +", id=" + p.id)
-            if(p.type !== undefined) {
-                switch(p.type) {
-                case Util.SpotifyItemType.Album:
-                    Spotify.getAlbum([p.id], function(error, data) {
-                        if(data) {
-                            retrieved.push({type: p.type, data: data})
-                        } else
-                            console.log("No Data for getAlbum " + p.id)
-                        checkReload()
-                    })
-                    break
-                case Util.SpotifyItemType.Artist:
-                    Spotify.getArtist([p.id], function(error, data) {
-                        if(data) {
-                            retrieved.push({type: p.type, data: data})
-                        } else
-                            console.log("No Data for getArtist " + p.id)
-                        checkReload()
-                    })
-                    break
-                case Util.SpotifyItemType.Playlist:
-                    Spotify.getPlaylist(app.id, p.id, function(error, data) {
-                        if(data) {
-                            retrieved.push({type: p.type, data: data})
-                        } else
-                            console.log("No Data for getPlaylist" + p.id)
-                        checkReload()
-                    })
-                    break
-                }
+            switch(p.type) {
+            case Util.SpotifyItemType.Album:
+                Spotify.getAlbum([p.id], function(error, data) {
+                    if(data) {
+                        retrieved.push({type: 0, data: data})
+                    } else
+                        console.log("No Data for getAlbum " + p.id)
+                    checkReload()
+                })
+                break
+            case Util.SpotifyItemType.Artist:
+                Spotify.getArtist([p.id], function(error, data) {
+                    if(data) {
+                        retrieved.push({type: 1, data: data})
+                    } else
+                        console.log("No Data for getArtist " + p.id)
+                    checkReload()
+                })
+                break
+            case Util.SpotifyItemType.Playlist:
+                Spotify.getPlaylist(app.id, p.id, function(error, data) {
+                    if(data) {
+                        retrieved.push({type: 2, data: data})
+                    } else
+                        console.log("No Data for getPlaylist" + p.id)
+                    checkReload()
+                })
+                break
             }
         }
     }
