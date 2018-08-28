@@ -256,6 +256,8 @@ Page {
                 isFollowed = data[0]
         })
 
+        app.notifyHistoryUri(playlist.uri)
+
         // description is not send with getUserPlaylists so get it using getPlaylist
         refreshDetails()
 

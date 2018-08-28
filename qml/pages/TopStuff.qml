@@ -51,34 +51,16 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Top Stuff")
-                MenuButton {}
-            }
+                title: _itemClass === 0 ? qsTr("Top [ Tracks ]") : qsTr("Top [ Artists ]")
 
-        }
-
-        section.property: "stype"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                height: childrenRect.height
-
-                Text {
-                    width: parent.width
-                    text: {
-                        switch(section) {
-                        case "1": return qsTr("Top Artists")
-                        case "3": return qsTr("Top Tracks")
-                        }
-                    }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
+                MenuButton { z: 1} // set z so you can still click the button
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: nextItemClass()
                 }
             }
+
         }
 
         delegate: ListItem {
@@ -121,28 +103,38 @@ Page {
 
     property var topTracks
     property var topArtists
-    property int pendingRequests
-    property var topTracksCursor
-    property var topArtistsCursor
+    property int _itemClass: 0
+
+    function nextItemClass() {
+        _itemClass++;
+        if(_itemClass > 1)
+            _itemClass = 0
+        refresh()
+    }
 
     function loadData() {
         var i
+
+        // I don't understand why I have to make the objects being appended
+        // have the same properties. Before I did that the artist property
+        // would be missing in the delegate of the ListView. That did never happen
+        // when both tracks as well as artists were added in this function.
+
         if(topTracks)
             for(i=0;i<topTracks.items.length;i++)
                 searchModel.append({type: 3,
-                                    stype: 3,
                                     name: topTracks.items[i].name,
-                                    track: topTracks.items[i]})
+                                    following: false,
+                                    track: topTracks.items[i],
+                                    artist: {}})
         if(topArtists)
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
-                                    stype: 1,
-                                    name: topArtists.items[i].name,
+                                     name: topArtists.items[i].name,
                                     following: true,
+                                    track: {},
                                     artist: topArtists.items[i]})
             }
-
-        cursorHelper.update([topArtistsCursor, topTracksCursor])
     }
 
     function refresh() {
@@ -151,29 +143,33 @@ Page {
         searchModel.clear()
         topTracks = undefined
         topArtists = undefined
-        pendingRequests = 2
 
-        Spotify.getMyTopTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-            if(data) {
-                console.log("number of TopTracks: " + data.items.length)
-                topTracks = data
-                topTracksCursor = Util.loadCursor(data)
-            } else
-                console.log("No Data for getMyTopTracks")
-            if(--pendingRequests == 0) // load when all requests are done
+        switch(_itemClass) {
+        case 0:
+            Spotify.getMyTopTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+                if(data) {
+                    console.log("number of TopTracks: " + data.items.length)
+                    topTracks = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else
+                    console.log("No Data for getMyTopTracks")
                 loadData()
-        })
-
-        Spotify.getMyTopArtists({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-            if(data) {
-                console.log("number of MyTopArtists: " + data.items.length)
-                topArtists = data
-                topArtistsCursor = Util.loadCursor(data)
-            } else
-                console.log("No Data for getMyTopArtists")
-            if(--pendingRequests == 0) // load when all requests are done
+            })
+            break
+        case 1:
+            Spotify.getMyTopArtists({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+                if(data) {
+                    console.log("number of MyTopArtists: " + data.items.length)
+                    topArtists = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else
+                    console.log("No Data for getMyTopArtists")
                 loadData()
-        })
+            })
+            break
+        }
     }
 
     property alias cursorHelper: cursorHelper

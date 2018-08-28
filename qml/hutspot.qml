@@ -28,6 +28,7 @@ ApplicationWindow {
     property alias confirm_un_follow_save: confirm_un_follow_save
     property alias navigation_menu_type: navigation_menu_type
     property alias playing_as_attached_page: playing_as_attached_page
+    property alias history_store: history_store
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -87,6 +88,10 @@ ApplicationWindow {
             pageStack.clear()
             page = pageStack.push(Qt.resolvedUrl("pages/GenreMood.qml"))
             break;
+        case 'HistoryPage':
+            pageStack.clear()
+            page = pageStack.push(Qt.resolvedUrl("pages/History.qml"))
+            break;
         default:
             return
         }
@@ -121,6 +126,9 @@ ApplicationWindow {
         case 'GenreMoodPage':
             pageUrl = Qt.resolvedUrl("pages/GenreMood.qml")
             break;
+        case 'HistoryPage':
+            pageUrl = Qt.resolvedUrl("pages/History.qml")
+            break;
         }
         if(pageUrl !== undefined ) {
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
@@ -146,6 +154,9 @@ ApplicationWindow {
             break
         case Util.HutspotMenuItem.ShowGenreMoodPage:
             app.showPage('GenreMoodPage')
+            break
+        case Util.HutspotMenuItem.ShowHistoryPage:
+            app.showPage('HistoryPage')
             break
         case Util.HutspotMenuItem.ShowSearchPage:
             app.showPage('SearchPage')
@@ -407,6 +418,7 @@ ApplicationWindow {
             loadFirstPage()
         }
 
+        history = history_store.value
         //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
@@ -909,6 +921,41 @@ ApplicationWindow {
             dialog.rejected.connect(arguments[3])
     }
 
+    /**
+     * List of last visited albums/artists/playlists
+     */
+    readonly property int historySize: 50
+    property var history: []
+    signal historyModified(int added, int removed)
+    function notifyHistoryUri(uri) {
+        var removedIndex = -1
+        if(history.length === 0) {
+            history.unshift(uri)
+        } else if(history[0] !== uri) {
+            // add to the top
+            history.unshift(uri)
+            // remove if already present
+            for(var i=1;i<history.length;i++)
+                if(history[i] === uri) {
+                    history.splice(i, 1)
+                    removedIndex = i - 1 // -1 since the model does not have the new one yet
+                    break
+                }
+        }
+        history_store.value = history
+        historyModified(0, removedIndex)
+        if(history.length > historySize) { // make configurable
+            history.pop()
+            historyModified(-1, historySize-1)
+        }
+    }
+
+    function clearHistory() {
+        history = []
+        history_store.value = history
+        historyModified(-1, -1)
+    }
+
     ConfigurationValue {
             id: deviceId
             key: "/hutspot/device_id"
@@ -970,5 +1017,10 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue {
+            id: history_store
+            key: "/hutspot/history"
+            defaultValue: []
+    }
 }
 

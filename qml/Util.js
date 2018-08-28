@@ -217,6 +217,30 @@ function getCursorsInfo(cursors) {
             canPrevious: canPrevious, canNext: canNext}
 }
 
+function startsWith(str, start) {
+    return str.match("^"+start) !== null;
+}
+
+function parseSpotifyUri(uri) {
+    // "spotify:artist:2BQWHuvxG4kMYnfghdaCIy"
+    // "​spotify:​album:​2XhuJQah9yLvEBZCSBKh0q"​
+    // "spotify:playlist:37i9dQZF1DZ06evO3OC4Te"               coming api
+    // "spotify:user:ukfmusic:playlist:0Zarq4BVkFkZOWkmqsfrjA" current api
+    var parsed = {type: undefined}
+    if(startsWith(uri, "spotify:")) {
+        var typeStr = uri.slice(8)
+        if(startsWith(typeStr, "album:"))
+            parsed.type = SpotifyItemType.Album
+        else if(startsWith(typeStr, "artist:"))
+            parsed.type = SpotifyItemType.Artist
+        else if(startsWith(typeStr, "playlist:")
+                || startsWith(typeStr, "user:"))
+            parsed.type = SpotifyItemType.Playlist
+    }
+    parsed.id = uri.slice(uri.lastIndexOf(":")+1)
+    return parsed
+}
+
 var CursorType = {
   Normal: 0,
   FollowedArtists: 1,
@@ -313,7 +337,8 @@ var HutspotMenuItem = {
     ShowPlayingPage: 5,
     ShowSearchPage: 6,
     ShowSettingsPage: 7,
-    ShowTopStuffPage: 8
+    ShowTopStuffPage: 8,
+    ShowHistoryPage: 9
 }
 
 var HutspotPage = {

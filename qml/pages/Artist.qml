@@ -53,8 +53,15 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Artist")
-                MenuButton {}
+                title: _itemClass === 0
+                       ? qsTr("Artist [ Albums ]")
+                       : qsTr("Artist [ Related Artists ]")
+                MenuButton { z: 1} // set z so you can still click the button
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: nextItemClass()
+                }
             }
 
             Image {
@@ -95,30 +102,6 @@ Page {
                 height:Theme.paddingLarge
                 opacity: 0
             }*/
-        }
-
-        section.property: "type"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                height: childrenRect.height
-
-                Text {
-                    width: parent.width
-                    text: {
-                        switch(section) {
-                        case "0": return qsTr("Albums")
-                        case "1": return qsTr("Related Artists")
-                        }
-                    }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
-                }
-            }
         }
 
         delegate: ListItem {
@@ -164,23 +147,33 @@ Page {
 
     property var artistAlbums
     property var relatedArtists
-    property int pendingRequests
-    property var artistAlbumsCursor
-    property var relatedArtistsCursor
+    property int _itemClass: 0
+
+    function nextItemClass() {
+        _itemClass++;
+        if(_itemClass > 1)
+            _itemClass = 0
+        refresh()
+    }
 
     function loadData() {
         var i;
+
         if(artistAlbums)
             for(i=0;i<artistAlbums.items.length;i++) {
                 searchModel.append({type: 0,
                                     name: artistAlbums.items[i].name,
-                                    album: artistAlbums.items[i]})
+                                    album: artistAlbums.items[i],
+                                    following: false,
+                                    artist: {}})
             }
+
         if(relatedArtists) {
             var artistIds = [currentArtist.id]
             for(i=0;i<relatedArtists.artists.length;i++) {
                 searchModel.append({type: 1,
                                     name: relatedArtists.artists[i].name,
+                                    album: {},
                                     following: false,
                                     artist: relatedArtists.artists[i]})
                 artistIds.push(relatedArtists.artists[i].id)
@@ -195,8 +188,6 @@ Page {
                 }
             })
         }
-
-        cursorHelper.update([artistAlbumsCursor, relatedArtistsCursor])
 
     }
 
@@ -215,35 +206,40 @@ Page {
         searchModel.clear()        
         artistAlbums = undefined
         relatedArtists = undefined
-        pendingRequests = 2
 
-        Spotify.getArtistAlbums(currentArtist.id,
-                                {offset: cursorHelper.offset, limit: cursorHelper.limit},
-                                function(error, data) {
-            if(data) {
-                console.log("number of ArtistAlbums: " + data.items.length)
-                artistAlbums = data
-                artistAlbumsCursor = Util.loadCursor(data)
-            } else {
-                console.log("No Data for getArtistAlbums")
-            }
-            if(--pendingRequests == 0) // load when all requests are done
+        switch(_itemClass) {
+        case 0:
+            Spotify.getArtistAlbums(currentArtist.id,
+                                    {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                                    function(error, data) {
+                if(data) {
+                    console.log("number of ArtistAlbums: " + data.items.length)
+                    artistAlbums = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else {
+                    console.log("No Data for getArtistAlbums")
+                }
                 loadData()
-        })
-
-        Spotify.getArtistRelatedArtists(currentArtist.id,
-                                        {offset: cursorHelper.offset, limit: cursorHelper.limit},
-                                        function(error, data) {
-            if(data) {
-                console.log("number of ArtistRelatedArtists: " + data.artists.length)
-                relatedArtists = data
-                relatedArtistsCursor = Util.loadCursor(data)
-            } else {
-                console.log("No Data for getArtistRelatedArtists")
-            }
-            if(--pendingRequests == 0) // load when all requests are done
+            })
+            break
+        case 1:
+            Spotify.getArtistRelatedArtists(currentArtist.id,
+                                            {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                                            function(error, data) {
+                if(data) {
+                    console.log("number of ArtistRelatedArtists: " + data.artists.length)
+                    relatedArtists = data
+                    cursorHelper.offset = 0 // no cursor, always 20
+                    cursorHelper.total = data.artists.length
+                } else {
+                    console.log("No Data for getArtistRelatedArtists")
+                }
                 loadData()
-        })
+            })
+            break
+        }
+        app.notifyHistoryUri(currentArtist.uri)
     }
 
 }
