@@ -924,6 +924,7 @@ ApplicationWindow {
     /**
      * List of last visited albums/artists/playlists
      */
+    readonly property int historySize: 50
     property var history: []
     signal historyModified(int added, int removed)
     function notifyHistoryUri(uri) {
@@ -943,9 +944,9 @@ ApplicationWindow {
         }
         history_store.value = history
         historyModified(0, removedIndex)
-        if(history.length > 50) { // make configurable
+        if(history.length > historySize) { // make configurable
             history.pop()
-            historyModified(-1, 50-1)
+            historyModified(-1, historySize-1)
         }
     }
 

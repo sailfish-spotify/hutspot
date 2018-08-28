@@ -147,9 +147,9 @@ Page {
         }
     }
 
-    function checkReload() {
-        retrievedCount++
-        if(retrievedCount === app.history.length || retrievedCount === numberToRetrieve)
+    function checkReload(count) {
+        retrievedCount += count
+        if(retrievedCount === numberToRetrieve)
             reload()
     }
 
@@ -163,7 +163,6 @@ Page {
         showBusy = true
         retrieved = []
         retrievedCount = 0
-        numberToRetrieve = 20
         parsed = []
         _refresh(app.history.length)
     }
@@ -171,46 +170,74 @@ Page {
     function loadFirstOne() {
         retrieved.unshift({})
         parsed.unshift({})
-        numberToRetrieve = 1
+        retrievedCount = 0
         _refresh(1)
     }
 
     function _refresh(count) {
-        for(var i=0;i<count && i < numberToRetrieve;i++) {
+        if(count > app.history.length)
+            count = app.history.length
+        numberToRetrieve = count
+
+        // group the requests
+        var qalbums = []
+        var qartists = []
+        for(var i=0;i<count;i++) {
             var p = Util.parseSpotifyUri(app.history[i])
             parsed[i] = p
             if(p.type === undefined)
                 continue
+
             switch(p.type) {
             case Util.SpotifyItemType.Album:
-                Spotify.getAlbum([p.id], function(error, data) {
-                    if(data) {
-                        retrieved.push({type: 0, data: data})
-                    } else
-                        console.log("No Data for getAlbum " + p.id)
-                    checkReload()
-                })
+                qalbums.push(p.id)
+                if(qalbums.length == 20) { // Spotify allows 20 max
+                    getAlbums(qalbums)
+                    qalbums = []
+                }
                 break
             case Util.SpotifyItemType.Artist:
-                Spotify.getArtist([p.id], function(error, data) {
-                    if(data) {
-                        retrieved.push({type: 1, data: data})
-                    } else
-                        console.log("No Data for getArtist " + p.id)
-                    checkReload()
-                })
+                qartists.push(p.id)
+                // Spotify allows 50 max. our max as well
                 break
             case Util.SpotifyItemType.Playlist:
+                // unfortunately getting playlists cannot be grouped
                 Spotify.getPlaylist(app.id, p.id, function(error, data) {
                     if(data) {
                         retrieved.push({type: 2, data: data})
                     } else
                         console.log("No Data for getPlaylist" + p.id)
-                    checkReload()
+                    checkReload(1)
                 })
                 break
             }
         }
+        if(qalbums.length > 0)
+            getAlbums(qalbums)
+        if(qartists.length > 0)
+            getArtists(qartists)
+    }
+
+    function getAlbums(albumIds) {
+        Spotify.getAlbums(albumIds, function(error, data) {
+            if(data) {
+                for(var i=0;i<albumIds.length;i++)
+                    retrieved.push({type: 0, data: data.albums[i]})
+            } else
+                console.log("No Data for getAlbums")
+            checkReload(albumIds.length)
+        })
+    }
+
+    function getArtists(artistIds) {
+        Spotify.getArtists(artistIds, function(error, data) {
+            if(data) {
+                for(var i=0;i<artistIds.length;i++)
+                    retrieved.push({type: 1, data: data.artists[i]})
+            } else
+                console.log("No Data for getArtists")
+            checkReload(artistIds.length)
+        })
     }
 
     property alias cursorHelper: cursorHelper
