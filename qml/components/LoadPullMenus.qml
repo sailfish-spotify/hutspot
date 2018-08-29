@@ -7,13 +7,13 @@ PullDownMenu {
         onClicked: refresh()
     }
     MenuItem {
-        text: qsTr("Load Next Set")
-        enabled: cursorHelper.canLoadNext
-        onClicked: cursorHelper.next()
-    }
-    MenuItem {
         text: qsTr("Load Previous Set")
         enabled: cursorHelper.canLoadPrevious
         onClicked: cursorHelper.previous()
+    }
+    MenuItem {
+        text: qsTr("Load Next Set")
+        enabled: cursorHelper.canLoadNext
+        onClicked: cursorHelper.next()
     }
 }
