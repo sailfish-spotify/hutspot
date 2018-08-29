@@ -177,6 +177,7 @@ Page {
         _itemClass++;
         if(_itemClass > 4)
             _itemClass = 0
+        refreshDirection = 0
         refresh()
     }
 
@@ -274,11 +275,11 @@ Page {
             break
         case 2:
             options = {limit: cursorHelper.limit}
-            // nextPrevious is reversed here
-            //if(nextPrevious < 0 && cursorHelper.after)
-            //   options.after = cursorHelper.after
-            //else if(nextPrevious > 0 && cursorHelper.before)
-            //    options.before = cursorHelper.before
+            // 'RecentlyPlayedTracks' has 'before' and 'after' fields
+            if(refreshDirection < 0) // previous set is looking forward in time
+                options.after = cursorHelper.after
+            else if(refreshDirection > 0) // next set is looking back in time
+                options.before = cursorHelper.before
             Spotify.getMyRecentlyPlayedTracks(options, function(error, data) {
                 if(data) {
                     console.log("number of RecentlyPlayedTracks: " + data.items.length)
@@ -302,37 +303,38 @@ Page {
             })
             break
         case 4:
+            // 'Followed Artists' only has an 'after' field
             options = {limit: cursorHelper.limit}
-            var perform = true
-            //if(nextPrevious > 0 && cursorHelper.after)
-            //   options.after = cursorHelper.after
-            //else if(nextPrevious < 0 && cursorHelper.before)
-            //    options.before = cursorHelper.before
-            //if(nextPrevious > 0 && cursorHelper.after === null)
-            //    perform = false // no more followed artists
-            //if(perform) {
-                Spotify.getFollowedArtists(options, function(error, data) {
-                    if(data) {
-                        console.log("number of FollowedArtists: " + data.artists.items.length)
-                        followedArtists = data
-                        cursorHelper.update([Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)])
-                    } else
-                        console.log("No Data for getFollowedArtists")
-                    loadData()
-                })
-            //}
+            if(refreshDirection > 0)
+                options.after = cursorHelper.after
+            Spotify.getFollowedArtists(options, function(error, data) {
+                if(data) {
+                    console.log("number of FollowedArtists: " + data.artists.items.length)
+                    followedArtists = data
+                    cursorHelper.update([Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)])
+                } else
+                    console.log("No Data for getFollowedArtists")
+                loadData()
+            })
             break
         }
     }
 
+    property int refreshDirection: 0
     property alias cursorHelper: cursorHelper
 
     CursorHelper {
         id: cursorHelper
 
         useHas: true
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
+        onLoadNext: {
+            refreshDirection = 1
+            refresh()
+        }
+        onLoadPrevious: {
+            refreshDirection = -1
+            refresh()
+        }
     }
 
     Connections {

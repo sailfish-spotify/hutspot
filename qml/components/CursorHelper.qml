@@ -7,8 +7,10 @@ Item {
     property int limit: app.searchLimit.value
     property int offset: 0
     property int total: 0
-    property bool canLoadNext: ((offset + limit) <= total) || (useHas && hasNext)
-    property bool canLoadPrevious: offset >= limit || (useHas && hasPrevious)
+    property bool canLoadNext: ((offset + limit) <= total)
+                               || (useHas && hasNext)
+    property bool canLoadPrevious: offset >= limit
+                                   || (useHas && hasPrevious)
     property bool useHas: false
     property bool hasNext: false
     property bool hasPrevious: false
