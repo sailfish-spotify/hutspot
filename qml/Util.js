@@ -201,20 +201,30 @@ function getCursorsInfo(cursors) {
     var offset = 0
     var canNext = false
     var canPrevious = false
+    var hasNext = false
+    var hasPrevious = false
+    var before = 0
+    var after = 0
     for(var i=0;i<cursors.length;i++) {
         if(cursors[i] === undefined)
             continue
         if(cursors[i].total > maxTotal)
             maxTotal = cursors[i].total
-        if(cursors[i].offset != 0)
+        if(cursors[i].offset !== 0)
             offset = cursors[i].offset // ToDo: they will probably all be the same
         if(cursors[i].canNext)
             canNext = true
         if(cursors[i].canPrevious)
             canPrevious = true
+        if(cursors[i].hasNext)
+            hasNext = true
+        if(cursors[i].hasPrevious)
+            hasPrevious = true
     }
     return {offset: offset, maxTotal: maxTotal,
-            canPrevious: canPrevious, canNext: canNext}
+            canPrevious: canPrevious, canNext: canNext,
+            hasPrevious: hasPrevious, hasNext: hasNext,
+            before: before, after: after}
 }
 
 function startsWith(str, start) {
