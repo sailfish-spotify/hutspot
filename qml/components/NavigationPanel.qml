@@ -57,7 +57,7 @@ DockedPanel {
             }
             IconButton {
                 width: bar.itemWidth
-                icon.source: "image://hutspot-icons/compass"
+                icon.source: "image://theme/icon-m-ambience"
                 onClicked: {
                     open = false
                     app.showPage('GenreMoodPage')
@@ -87,6 +87,14 @@ DockedPanel {
                 onClicked: {
                     open = false
                     app.showPage('PlayingPage')
+                }
+            }
+            IconButton {
+                width: bar.itemWidth
+                icon.source: "image://theme/icon-m-backup"
+                onClicked: {
+                    open = false
+                    app.showPage('HistoryPage')
                 }
             }
             IconButton {
