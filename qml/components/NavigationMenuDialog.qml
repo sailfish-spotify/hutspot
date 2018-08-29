@@ -41,7 +41,7 @@ Dialog {
                          })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowGenreMoodPage,
                           name: qsTr("Genre & Mood"),
-                          icon: "image://hutspot-icons/compass"
+                          icon: "image://theme/icon-m-ambience"
                          })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowHistoryPage,
                           name: qsTr("History"),
