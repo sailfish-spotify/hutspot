@@ -7,11 +7,15 @@ Item {
     property int limit: app.searchLimit.value
     property int offset: 0
     property int total: 0
-    property bool canLoadNext: ((offset + limit) <= total) || (useHas && hasNext)
-    property bool canLoadPrevious: offset >= limit || (useHas && hasPrevious)
+    property bool canLoadNext: ((offset + limit) <= total)
+                               || (useHas && hasNext)
+    property bool canLoadPrevious: offset >= limit
+                                   || (useHas && hasPrevious)
     property bool useHas: false
     property bool hasNext: false
     property bool hasPrevious: false
+    property var before
+    property var after
 
     signal loadNext()
     signal loadPrevious()
@@ -34,6 +38,8 @@ Item {
         total = cinfo.maxTotal
         hasNext = cinfo.hasNext
         hasPrevious = cinfo.hasPrevious
+        after = cinfo.after
+        before = cinfo.before
     }
 }
 

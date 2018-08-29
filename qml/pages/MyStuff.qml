@@ -50,41 +50,23 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("My Stuff")
-                MenuButton {}
-            }
-
-        }
-
-        section.property: "stype"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                height: childrenRect.height
-
-                Text {
-                    width: parent.width
-                    text: {
-                        switch(section) {
-                        case "0": return qsTr("Saved Albums")
-                        case "1": return qsTr("Followed Artists")
-                        case "2": return qsTr("Playlists")
-                        case "3": return qsTr("Recently Played Tracks")
-                        case "4": return qsTr("Saved Tracks")
-                        }
+                title: {
+                    switch(_itemClass) {
+                    case 0: return qsTr("My [ Saved Albums ]")
+                    case 1: return qsTr("My [ Playlists ]")
+                    case 2: return qsTr("My [ Recently Played ]")
+                    case 3: return qsTr("My [ Saved Tracks ]")
+                    case 4: return qsTr("My [ Followed Artists ]")
                     }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
-                    /*MouseArea {
-                        anchors.fill: parent
-                        onClicked: app.showErrorMessage(getSectionHeadingText(section))
-                    }*/
+                }
+                MenuButton { z: 1} // set z so you can still click the button
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: nextItemClass()
                 }
             }
+
         }
 
         delegate: ListItem {
@@ -151,32 +133,6 @@ Page {
         id: navPanel
     }
 
-    /*function getSectionHeadingText(section) {
-        var s = ""
-        switch(section) {
-        case "0":
-            s += qsTr("Saved Albums<br>")
-            s += "total: " + cursors[0].total
-            break
-        case "1":
-            s += qsTr("Followed Artists")
-            break
-        case "2":
-            s += qsTr("Playlists<br>")
-            s += "total: " + cursors[1].total
-            break
-        case "3":
-            s += qsTr("Recently Played Tracks")
-            s += qsTr("between ") + Date(cursors[2].cursors.before) + qsTr(" and ") + Date(cursors[2].cursors.after)
-            break
-        case "4":
-            s += qsTr("Saved Tracks<br>")
-            s += "total: " + cursors[3].total
-            break
-        }
-        return s
-    }*/
-
     // when the page is on the stack but not on top a refresh can wait
     property bool _needsRefresh: false
 
@@ -215,9 +171,15 @@ Page {
     property var recentlyPlayedTracks
     property var savedTracks
     property var followedArtists
-    property int pendingRequests
+    property int _itemClass: 0
 
-    property var cursors: []
+    function nextItemClass() {
+        _itemClass++;
+        if(_itemClass > 4)
+            _itemClass = 0
+        refreshDirection = 0
+        refresh()
+    }
 
     function loadData() {
         var i
@@ -226,27 +188,39 @@ Page {
                 searchModel.append({type: 0,
                                     stype: 0,
                                     name: savedAlbums.items[i].album.name,
-                                    album: savedAlbums.items[i].album})
+                                    album: savedAlbums.items[i].album,
+                                    playlist: {},
+                                    track: {},
+                                    artist: {}})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
                 searchModel.append({type: 2,
                                     stype: 2,
                                     name: userPlaylists.items[i].name,
-                                    playlist: userPlaylists.items[i]})
+                                    album: {},
+                                    playlist: userPlaylists.items[i],
+                                    track: {},
+                                    artist: {}})
             }
         if(recentlyPlayedTracks)
             for(i=0;i<recentlyPlayedTracks.items.length;i++) {
                 searchModel.append({type: 3,
                                     stype: 3,
                                     name: recentlyPlayedTracks.items[i].track.name,
-                                    track: recentlyPlayedTracks.items[i].track})
+                                    album: {},
+                                    playlist: {},
+                                    track: recentlyPlayedTracks.items[i].track,
+                                    artist: {}})
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
                 searchModel.append({type: 3,
                                     stype: 4,
                                     name: savedTracks.items[i].track.name,
-                                    track: savedTracks.items[i].track})
+                                    album: {},
+                                    playlist: {},
+                                    track: savedTracks.items[i].track,
+                                    artist: {}})
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
@@ -254,17 +228,18 @@ Page {
                                     stype: 1,
                                     name: followedArtists.artists.items[i].name,
                                     following: true,
+                                    album: {},
+                                    playlist: {},
+                                    track: {},
                                     artist: followedArtists.artists.items[i]})
             }
-
-        cursorHelper.update(cursors)
     }
 
     property int nextPrevious: 0
 
 
     function refresh() {
-        var i;
+        var i, options;
 
         searchModel.clear()
         savedAlbums = undefined
@@ -272,97 +247,94 @@ Page {
         savedTracks = undefined
         recentlyPlayedTracks = undefined
         followedArtists = undefined
-        pendingRequests = 0
 
-        pendingRequests++
-        Spotify.getMySavedAlbums({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-            if(data) {
-                console.log("number of SavedAlbums: " + data.items.length)
-                savedAlbums = data
-                cursors[0] = Util.loadCursor(data)
-            } else
-                console.log("No Data for getMySavedAlbums")
-            if(--pendingRequests == 0) // load when all requests are done
+        switch(_itemClass) {
+        case 0:
+            Spotify.getMySavedAlbums({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+                if(data) {
+                    console.log("number of SavedAlbums: " + data.items.length)
+                    savedAlbums = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else
+                    console.log("No Data for getMySavedAlbums")
                 loadData()
-        })
-
-        pendingRequests++
-        Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
-            if(data) {
-                console.log("number of playlists: " + data.items.length)
-                userPlaylists = data
-                cursors[1] = Util.loadCursor(data)
-            } else
-                console.log("No Data for getUserPlaylists")
-            if(--pendingRequests == 0) // load when all requests are done
+            })
+            break
+        case 1:
+            Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
+                if(data) {
+                    console.log("number of playlists: " + data.items.length)
+                    userPlaylists = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else
+                    console.log("No Data for getUserPlaylists")
                 loadData()
-        })
-
-        var options = {limit: cursorHelper.limit}
-        // nextPrevious is reversed here
-        if(cursors[2] && cursors[2].cursors) {
-            if(nextPrevious < 0 && cursors[2].cursors.after)
-               options.after = cursors[2].cursors.after
-            else if(nextPrevious > 0 && cursors[2].cursors.before)
-                options.before = cursors[2].cursors.before
-        }
-        pendingRequests++
-        Spotify.getMyRecentlyPlayedTracks(options, function(error, data) {
-            if(data) {
-                console.log("number of RecentlyPlayedTracks: " + data.items.length)
-                recentlyPlayedTracks = data
-                cursors[2] = Util.loadCursor(data, Util.CursorType.RecentlyPlayed)
-            } else
-                console.log("No Data for getMyRecentlyPlayedTracks")
-            if(--pendingRequests == 0) // load when all requests are done
+            })
+            break
+        case 2:
+            options = {limit: cursorHelper.limit}
+            // 'RecentlyPlayedTracks' has 'before' and 'after' fields
+            if(refreshDirection < 0) // previous set is looking forward in time
+                options.after = cursorHelper.after
+            else if(refreshDirection > 0) // next set is looking back in time
+                options.before = cursorHelper.before
+            Spotify.getMyRecentlyPlayedTracks(options, function(error, data) {
+                if(data) {
+                    console.log("number of RecentlyPlayedTracks: " + data.items.length)
+                    recentlyPlayedTracks = data
+                    cursorHelper.update([Util.loadCursor(data, Util.CursorType.RecentlyPlayed)])
+                } else
+                    console.log("No Data for getMyRecentlyPlayedTracks")
                 loadData()
-        })
-
-        pendingRequests++
-        Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-            if(data) {
-                console.log("number of SavedTracks: " + data.items.length)
-                savedTracks = data
-                cursors[3] = Util.loadCursor(data)
-            } else
-                console.log("No Data for getMySavedTracks")
-            if(--pendingRequests == 0) // load when all requests are done
+            })
+            break
+        case 3:
+            Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+                if(data) {
+                    console.log("number of SavedTracks: " + data.items.length)
+                    savedTracks = data
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                } else
+                    console.log("No Data for getMySavedTracks")
                 loadData()
-        })
-
-        options = {limit: cursorHelper.limit}
-        var perform = true
-        if(cursors[4] && cursors[4].cursors) {
-            if(nextPrevious > 0 && cursors[4].cursors.after)
-               options.after = cursors[4].cursors.after
-            else if(nextPrevious < 0 && cursors[4].cursors.before)
-                options.before = cursors[4].cursors.before
-            if(nextPrevious > 0 && cursors[4].cursors.after === null)
-                perform = false // no more followed artists
-        }
-        if(perform) {
-            pendingRequests++
+            })
+            break
+        case 4:
+            // 'Followed Artists' only has an 'after' field
+            options = {limit: cursorHelper.limit}
+            if(refreshDirection > 0)
+                options.after = cursorHelper.after
             Spotify.getFollowedArtists(options, function(error, data) {
                 if(data) {
                     console.log("number of FollowedArtists: " + data.artists.items.length)
                     followedArtists = data
-                    cursors[4] = Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)
+                    cursorHelper.update([Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)])
                 } else
                     console.log("No Data for getFollowedArtists")
-                if(--pendingRequests == 0) // load when all requests are done
-                    loadData()
+                loadData()
             })
+            break
         }
     }
 
+    property int refreshDirection: 0
     property alias cursorHelper: cursorHelper
 
     CursorHelper {
         id: cursorHelper
 
         useHas: true
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
+        onLoadNext: {
+            refreshDirection = 1
+            refresh()
+        }
+        onLoadPrevious: {
+            refreshDirection = -1
+            refresh()
+        }
     }
 
     Connections {

@@ -201,20 +201,41 @@ function getCursorsInfo(cursors) {
     var offset = 0
     var canNext = false
     var canPrevious = false
+    var hasNext = false
+    var hasPrevious = false
+    var hasBefore = false
+    var hasAfter = false
+    var before = 0
+    var after = 0
     for(var i=0;i<cursors.length;i++) {
         if(cursors[i] === undefined)
             continue
         if(cursors[i].total > maxTotal)
             maxTotal = cursors[i].total
-        if(cursors[i].offset != 0)
+        if(cursors[i].offset !== 0)
             offset = cursors[i].offset // ToDo: they will probably all be the same
         if(cursors[i].canNext)
             canNext = true
         if(cursors[i].canPrevious)
             canPrevious = true
+        if(cursors[i].hasNext)
+            hasNext = true
+        if(cursors[i].hasPrevious)
+            hasPrevious = true
+        if(cursors[i].hasBefore)
+            hasBefore = true
+        if(cursors[i].hasAfter)
+            hasAfter = true
+        if(cursors[i].cursors && cursors[i].cursors.after)
+            after = cursors[i].cursors.after
+        if(cursors[i].cursors && cursors[i].cursors.before)
+            before = cursors[i].cursors.before
     }
     return {offset: offset, maxTotal: maxTotal,
-            canPrevious: canPrevious, canNext: canNext}
+            canPrevious: canPrevious, canNext: canNext,
+            hasPrevious: hasPrevious, hasNext: hasNext,
+            before: before, after: after,
+            hasBefore: hasBefore, hasAfter: hasAfter}
 }
 
 function startsWith(str, start) {
@@ -277,6 +298,9 @@ function loadCursor(data, cursorType) {
             cursor.previous_limit = parseInt(tmp[1], 10)
     }
 
+    cursor.hasBefore = false
+    cursor.hasAfter = false
+
     // recently played cursor has a before- or after time
     //   "cursors": { "after": "1481661844589", "before": "1481661737016"}
     cursor.cursors = undefined
@@ -284,23 +308,30 @@ function loadCursor(data, cursorType) {
        && cursorType === CursorType.RecentlyPlayed
        && data.cursors) {
         var cursors = {}
-        if(data.cursors.before)
+        if(data.cursors.before) {
             cursors.before = parseInt(data.cursors.before, 10)
-        if(data.cursors.after)
+            cursor.hasBefore = true
+        }
+        if(data.cursors.after) {
             cursors.after = parseInt(data.cursors.after, 10)
+            cursor.hasAfter = true
+        }
         cursor.cursors = cursors
     }
 
     // cursor of following artists has an 'after' artist id
     if(cursorType
        && cursorType === CursorType.FollowedArtists
-       && data.cursors)
+       && data.cursors) {
       cursor.cursors = data.cursors
+      cursor.hasAfter = data.cursors.after
+    }
 
-    // are prev/next queries provided
+    // are prev/next queries provided or the cursors
     cursor.hasNext = (data.next && data.next !== null)
+                     || (cursor.hasAfter)
     cursor.hasPrevious = (data.previous && data.previous !== null)
-
+                          || (cursor.hasBefore)
     return cursor
 }
 
