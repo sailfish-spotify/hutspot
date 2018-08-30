@@ -128,6 +128,8 @@ Page {
                                 genreSeeds.push(name)
                             }
                         }
+                        if(genreSeeds.length > 5)
+                            app.showErrorMessage(undefined, qsTr("Spotify allows max. 5 seeds"))
                         refresh()
                         app.genre_seeds.value = genreSeeds
                         app.genre_seeds.sync();
@@ -177,7 +179,8 @@ Page {
         if(genreSeeds.length === 0)
             return
 
-        var options = {seed_genres: genreSeeds.join(',')}
+        var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
+        var options = {seed_genres: gs.join(',')}
         options.limit = app.searchLimit.value
         Spotify.getRecommendations(options, function(error, data) {
             if(data) {
