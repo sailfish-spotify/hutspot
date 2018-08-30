@@ -41,6 +41,10 @@ Page {
                 text: qsTr("Reload")
                 onClicked: refresh()
             }
+            MenuItem {
+                text: qsTr("Play as Playlist")
+                onClicked: playAsPlaylist()
+            }
         }
 
         header: Column {
@@ -75,7 +79,12 @@ Page {
                     onHasValidTokenChanged: genresButton.loadItems()
                 }
 
+                Component.onCompleted: genresButton.loadItems()
+
                 function loadItems() {
+                    if(searchModel.count > 0)
+                        return
+
                     value = qsTr("None")
                     indexes = []
 
@@ -194,11 +203,70 @@ Page {
                 } catch (err) {
                     console.log(err)
                 }
-            } else {
+            } else
                 console.log("No Data for getRecommendations")
-            }
         })
 
+    }
+
+    property string hutspotPlaylistId: ""
+    property string hutspotPlaylistUri: ""
+    property string hutspotPlaylistSnapshotId: ""
+
+    // states: 0 get id
+    //         1 create playlist
+    //         2 replace tracks
+    function playAsPlaylist(state) {
+        if(state === undefined)
+            state = 0
+        switch(state) {
+        case 0:
+            // get id of playlist
+            if(hutspotPlaylistId.length === 0) {
+                // get or create the playlist
+                Spotify.searchPlaylists(app.hutspotPlaylistName, {}, function(error, data) {
+                    if(data && data.playlists && data.playlists.total >= 1) {
+                        // there can be more then one due to whatever error
+                        // maybe ask to clean them up?
+                        hutspotPlaylistId = data.playlists[0].id
+                        hutspotPlaylistUri = data.playlists[0].uri
+                        hutspotPlaylistSnapshotId = data.snapshot_id
+                        playAsPlaylist(2)
+                    } else {
+                        playAsPlaylist(1)
+                        console.log("No Data while looking for Playlist " + app.hutspotPlaylistName)
+                    }
+                })
+            } else
+                playAsPlaylist(2)
+            break
+        case 1:
+            // create the playlist
+            var options = {name: app.hutspotPlaylistName}
+            options.description = app.hutspotPlaylistDescription
+            Spotify.createPlaylist(app.id, options, function(error, data) {
+                if(data && data.id) {
+                    hutspotPlaylistId = data.id
+                    hutspotPlaylistUri = data.uri
+                    hutspotPlaylistSnapshotId = data.snapshot_id
+                    playAsPlaylist(2)
+                } else
+                    console.log("No Data while creating Playlist " + app.hutspotPlaylistName)
+            })
+            break
+        case 2:
+            // replace the tracks
+            var tracks = [searchModel.count]
+            for(var i=0;i<searchModel.count;i++)
+                tracks[i] = searchModel.get(i).track.uri
+            Spotify.replaceTracksInPlaylist(app.id, hutspotPlaylistId, tracks, function(error, data) {
+                if(data && data.snapshot_id) {
+                    app.playContext({uri: hutspotPlaylistUri})
+                } else
+                    console.log("No Data while replacing tracks in Playlist " + app.hutspotPlaylistName)
+            })
+            break
+        }
     }
 
     Connections {

@@ -35,6 +35,9 @@ ApplicationWindow {
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
 
+    readonly property string hutspotPlaylistName: "Hutspot Queue"
+    readonly property string hutspotPlaylistDescription: "Playlist used as a queue by Hutspot"
+
     allowedOrientations: defaultAllowedOrientations
 
     cover: CoverPage {
