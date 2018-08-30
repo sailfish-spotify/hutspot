@@ -242,7 +242,7 @@ Page {
             break
         case 1:
             // create the playlist
-            var options = {name: app.hutspotPlaylistName}
+            var options = {name: app.hutspot_queue_playlist_name.value}
             options.description = app.hutspotPlaylistDescription
             Spotify.createPlaylist(app.id, options, function(error, data) {
                 if(data && data.id) {

@@ -31,12 +31,13 @@ ApplicationWindow {
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
 
+    property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
+    readonly property string hutspotPlaylistDescription: qsTr("Playlist used as a queue by Hutspot")
+
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
 
-    readonly property string hutspotPlaylistName: "Hutspot Queue"
-    readonly property string hutspotPlaylistDescription: "Playlist used as a queue by Hutspot"
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -1042,5 +1043,12 @@ ApplicationWindow {
             key: "/hutspot/genre_seeds"
             defaultValue: []
     }
+
+    ConfigurationValue {
+            id: hutspot_queue_playlist_name
+            key: "/hutspot/hutspot_queue_playlist_name"
+            defaultValue: "Hutspot Queue"
+    }
+
 }
 
