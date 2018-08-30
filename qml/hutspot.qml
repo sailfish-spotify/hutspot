@@ -29,6 +29,7 @@ ApplicationWindow {
     property alias navigation_menu_type: navigation_menu_type
     property alias playing_as_attached_page: playing_as_attached_page
     property alias history_store: history_store
+    property alias genre_seeds: genre_seeds
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
@@ -92,6 +93,10 @@ ApplicationWindow {
             pageStack.clear()
             page = pageStack.push(Qt.resolvedUrl("pages/History.qml"))
             break;
+        case 'RecommendedPage':
+            pageStack.clear()
+            page = pageStack.push(Qt.resolvedUrl("pages/Recommended.qml"))
+            break;
         default:
             return
         }
@@ -129,6 +134,9 @@ ApplicationWindow {
         case 'HistoryPage':
             pageUrl = Qt.resolvedUrl("pages/History.qml")
             break;
+        case 'RecommendedPage':
+            pageUrl = Qt.resolvedUrl("pages/Recommended.qml")
+            break;
         }
         if(pageUrl !== undefined ) {
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
@@ -157,6 +165,9 @@ ApplicationWindow {
             break
         case Util.HutspotMenuItem.ShowHistoryPage:
             app.showPage('HistoryPage')
+            break
+        case Util.HutspotMenuItem.ShowRecommendedPage:
+            app.showPage('RecommendedPage')
             break
         case Util.HutspotMenuItem.ShowSearchPage:
             app.showPage('SearchPage')
@@ -1020,6 +1031,12 @@ ApplicationWindow {
     ConfigurationValue {
             id: history_store
             key: "/hutspot/history"
+            defaultValue: []
+    }
+
+    ConfigurationValue {
+            id: genre_seeds
+            key: "/hutspot/genre_seeds"
             defaultValue: []
     }
 }

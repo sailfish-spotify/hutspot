@@ -47,6 +47,10 @@ Page {
                           name: qsTr("History"),
                           icon: "image://theme/icon-m-backup"
                          })
+        menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowRecommendedPage,
+                          name: qsTr("Recommended"),
+                          icon: "image://theme/icon-m-acknowledge"
+                         })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowSearchPage,
                           name: qsTr("Search"),
                           icon: "image://theme/icon-m-search"

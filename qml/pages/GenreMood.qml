@@ -16,7 +16,6 @@ Page {
     id: genreMoodPage
     objectName: "GenreMoodPage"
 
-    property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
 
     property int currentIndex: -1
