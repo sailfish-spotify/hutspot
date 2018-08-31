@@ -860,6 +860,69 @@ ApplicationWindow {
         }
     }
 
+    property string hutspotQueuePlaylistId: ""
+    property string hutspotQueuePlaylistUri: ""
+    property string hutspotQueuePlaylistSnapshotId: ""
+    property int _hutspotQueuePlaylistOffset: 0
+
+    signal loadHutspotQueuePlaylistDone(bool success)
+
+    // states: 0 search for it
+    //         1 create playlist
+    function loadHutspotQueuePlaylist(state) {
+        var i
+        if(hutspotQueuePlaylistUri.length > 0)
+            return
+        if(state === undefined)
+            state = 0
+        switch(state) {
+        case 0: // search in user's playlists
+            Spotify.getUserPlaylists(id, {offset: _hutspotQueuePlaylistOffset, limit: 50}, function(error, data) {
+                if(data && data.items) {
+                    for(i=0;i<data.items.length;i++) {
+                        if(data.items[i].name === hutspot_queue_playlist_name.value) {
+                            hutspotQueuePlaylistId = data.items[i].id
+                            hutspotQueuePlaylistUri = data.items[i].uri
+                            loadHutspotQueuePlaylistDone(true)
+                            return
+                        }
+                    }
+                    // not found, are there more playlists to search in?
+                    if(data.next) {
+                        _hutspotQueuePlaylistOffset = data.offset + data.limit
+                        loadHutspotQueuePlaylist(0)
+                    } else // or we have to create it
+                        loadHutspotQueuePlaylist(1)
+                } else {
+                    loadHutspotQueuePlaylistDone(false)
+                    console.log("No Data while looking for Playlist " + app.hutspot_queue_playlist_name.value)
+                }
+            })
+            break
+        case 1: // create it
+            app.showConfirmDialog(qsTr("Hutspot wants to create playlist:<br><br><b>") + app.hutspot_queue_playlist_name.value + "</b><br><br>"
+                                       +qsTr("which will be used as it's player queue. Is that Ok?"),
+                                  function() {
+                // create the playlist
+                var options = {name: hutspot_queue_playlist_name.value}
+                options.description = hutspotPlaylistDescription
+                Spotify.createPlaylist(id, options, function(error, data) {
+                    if(data && data.id) {
+                        hutspotQueuePlaylistId = data.id
+                        hutspotQueuePlaylistUri = data.uri
+                        hutspotQueuePlaylistSnapshotId = data.snapshot_id
+                        loadHutspotQueuePlaylistDone(true)
+                    } else {
+                        console.log("No Data while creating Playlist " + app.hutspot_queue_playlist_name.value)
+                        loadHutspotQueuePlaylistDone(false)
+                    }
+                })
+            }, function() {
+                loadHutspotQueuePlaylistDone(false)
+            })
+        }
+    }
+
     property string mprisServiceName: "hutspot"
 
     MprisPlayer {

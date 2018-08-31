@@ -209,73 +209,47 @@ Page {
 
     }
 
-    property string hutspotPlaylistId: ""
-    property string hutspotPlaylistUri: ""
-    property string hutspotPlaylistSnapshotId: ""
-
-    // states: 0 get id
-    //         1 create playlist
-    //         2 replace tracks
+    property bool _waitingForHutspotQueue: false
     function playAsPlaylist(state) {
-        if(state === undefined)
-            state = 0
-        switch(state) {
-        case 0:
-            // get id of playlist
-            if(hutspotPlaylistId.length === 0) {
-                // get or create the playlist
-                Spotify.searchPlaylists(app.hutspotPlaylistName, {}, function(error, data) {
-                    if(data && data.playlists && data.playlists.total >= 1) {
-                        // there can be more then one due to whatever error
-                        // maybe ask to clean them up?
-                        hutspotPlaylistId = data.playlists[0].id
-                        hutspotPlaylistUri = data.playlists[0].uri
-                        hutspotPlaylistSnapshotId = data.snapshot_id
-                        playAsPlaylist(2)
-                    } else {
-                        playAsPlaylist(1)
-                        console.log("No Data while looking for Playlist " + app.hutspotPlaylistName)
-                    }
-                })
+        if(app.hutspotQueuePlaylistId.length === 0) {
+            _waitingForHutspotQueue = true
+            app.loadHutspotQueuePlaylist()
+        } else
+            replaceTracksInQueuePlaylist()
+    }
+
+    function replaceTracksInQueuePlaylist() {
+        // replace the tracks
+        var tracks = [searchModel.count]
+        for(var i=0;i<searchModel.count;i++)
+            tracks[i] = searchModel.get(i).track.uri
+        Spotify.replaceTracksInPlaylist(app.id, app.hutspotQueuePlaylistId, tracks, function(error, data) {
+            if(data && data.snapshot_id) {
+                app.playContext({uri: app.hutspotQueuePlaylistUri})
             } else
-                playAsPlaylist(2)
-            break
-        case 1:
-            // create the playlist
-            var options = {name: app.hutspot_queue_playlist_name.value}
-            options.description = app.hutspotPlaylistDescription
-            Spotify.createPlaylist(app.id, options, function(error, data) {
-                if(data && data.id) {
-                    hutspotPlaylistId = data.id
-                    hutspotPlaylistUri = data.uri
-                    hutspotPlaylistSnapshotId = data.snapshot_id
-                    playAsPlaylist(2)
-                } else
-                    console.log("No Data while creating Playlist " + app.hutspotPlaylistName)
-            })
-            break
-        case 2:
-            // replace the tracks
-            var tracks = [searchModel.count]
-            for(var i=0;i<searchModel.count;i++)
-                tracks[i] = searchModel.get(i).track.uri
-            Spotify.replaceTracksInPlaylist(app.id, hutspotPlaylistId, tracks, function(error, data) {
-                if(data && data.snapshot_id) {
-                    app.playContext({uri: hutspotPlaylistUri})
-                } else
-                    console.log("No Data while replacing tracks in Playlist " + app.hutspotPlaylistName)
-            })
-            break
-        }
+                console.log("No Data while replacing tracks in Playlist " + app.hutspot_queue_playlist_name.value)
+        })
     }
 
     Connections {
         target: app
+
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
         }
+
         onHasValidTokenChanged: refresh()
+
+        onLoadHutspotQueuePlaylistDone: {
+            if(!_waitingForHutspotQueue)
+                return
+            if(!success) {
+                _waitingForHutspotQueue = false
+                return
+            }
+            replaceTracksInQueuePlaylist()
+        }
     }
 
     Component.onCompleted: {
