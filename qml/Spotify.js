@@ -664,10 +664,16 @@ function getUserPlaylists(userId, options, callback) {
  * @param {function(Object,Object)} callback An optional callback that receives 2 parameters. The first
  * one is the error object (null if no error), and the second is the value if the request succeeded.
  * @return {Object} Null if a callback is provided, a `Promise` object otherwise
- */
+ * /
 function getPlaylist(userId, playlistId, options, callback) {
   var requestData = {
     url: _baseUri + '/users/' + encodeURIComponent(userId) + '/playlists/' + playlistId
+  };
+  return _checkParamsAndPerformRequest(requestData, options, callback);
+};*/
+function getPlaylist(playlistId, options, callback) {
+  var requestData = {
+    url: _baseUri + '/playlists/' + playlistId
   };
   return _checkParamsAndPerformRequest(requestData, options, callback);
 };

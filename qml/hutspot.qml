@@ -622,7 +622,7 @@ ApplicationWindow {
     }
 
     function getPlaylist(playlistId, callback) {
-        Spotify.getPlaylist(id, playlistId, {}, function(error, data) {
+        Spotify.getPlaylist(playlistId, {}, function(error, data) {
             if(callback)
                 callback(error, data)
         })
@@ -883,6 +883,7 @@ ApplicationWindow {
                         if(data.items[i].name === hutspot_queue_playlist_name.value) {
                             hutspotQueuePlaylistId = data.items[i].id
                             hutspotQueuePlaylistUri = data.items[i].uri
+                            hutspotQueuePlaylistSnapshotId = data.items[i].snapshot_id
                             loadHutspotQueuePlaylistDone(true)
                             return
                         }

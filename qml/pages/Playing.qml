@@ -25,6 +25,7 @@ Page {
     property var contextObject: null
     property bool isContextFavorite: false
     property string currentId: ""
+    property string currentSnapshotId: ""
     property string currentTrackId: ""
 
     property string viewMenuText: ""
@@ -260,13 +261,7 @@ Page {
 
             Connections {
                 target: playingPage
-                onCurrentTrackIdChanged: {
-                    for(var i=0;i<searchModel.count;i++)
-                        if(searchModel.get(i).track.id === currentTrackId) {
-                            listView.positionViewAtIndex(i, ListView.Visible)
-                            break
-                        }
-                }
+                onCurrentTrackIdChanged: updateForCurrentTrack()
             }
             /* atYEnd is never true. caused by the docked panel?
             onContentYChanged: {
@@ -601,6 +596,17 @@ Page {
         return -1
     }
 
+    function updateForCurrentTrack() {
+        // keep current track visible
+        currentIndex = -1
+        for(var i=0;i<searchModel.count;i++)
+            if(searchModel.get(i).track.id === currentTrackId) {
+                listView.positionViewAtIndex(i, ListView.Visible)
+                currentIndex = i
+                break
+            }
+    }
+
     function refresh() {
         var i;
 
@@ -609,7 +615,12 @@ Page {
                 playbackState = data
                 if(playbackState.context) {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
-                    if(currentId !== cid) {
+                    // if id changed we need to refresh
+                    // if the queue playlist changed the id is still the same
+                    // so we also need to check it's snapshot_id
+                    if(currentId !== cid
+                       || (cid === app.hutspotQueuePlaylistId
+                           && currentSnapshotId != app.hutspotQueuePlaylistSnapshotId)) {
                         currentId = cid
                         contextObject = null
                         switch(playbackState.context.type) {
@@ -627,8 +638,11 @@ Page {
                             })
                             break
                         case 'playlist':
-                            Spotify.getPlaylist(app.id, cid, {}, function(error, data) {
+                            // Todo assumes my playlist
+                            Spotify.getPlaylist(cid, {}, function(error, data) {
                                 contextObject = data
+                                if(data)
+                                    currentSnapshotId = data.snapshot_id
                                 pageHeaderText = qsTr("Playing Playlist")
                             })
                             loadPlaylistTracks(app.id, cid)
@@ -699,6 +713,7 @@ Page {
                                             saved: false,
                                             track: data.items[i].track})
                     }
+                    updateForCurrentTrack()
                 } catch (err) {
                     console.log(err)
                 }
@@ -716,7 +731,6 @@ Page {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
-                    // ToDo: this is silly. cursor is per query
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
                     var trackIds = []
@@ -734,6 +748,7 @@ Page {
                             }
                         })
                     }
+                    updateForCurrentTrack()
                 } catch (err) {
                     console.log(err)
                 }

@@ -202,7 +202,7 @@ Page {
                 break
             case Util.SpotifyItemType.Playlist:
                 // unfortunately getting playlists cannot be grouped
-                Spotify.getPlaylist(app.id, p.id, function(error, data) {
+                Spotify.getPlaylist(p.id, function(error, data) {
                     if(data) {
                         retrieved.push({type: 2, data: data})
                     } else
