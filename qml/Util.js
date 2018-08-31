@@ -369,7 +369,8 @@ var HutspotMenuItem = {
     ShowSearchPage: 6,
     ShowSettingsPage: 7,
     ShowTopStuffPage: 8,
-    ShowHistoryPage: 9
+    ShowHistoryPage: 9,
+    ShowRecommendedPage: 10
 }
 
 var HutspotPage = {

@@ -99,12 +99,25 @@ DockedPanel {
             }
             IconButton {
                 width: bar.itemWidth
+                icon.source: "image://theme/icon-m-acknowledge"
+                onClicked: {
+                    open = false
+                    app.showPage('RecommendedPage')
+                }
+            }
+            IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-accessory-speaker"
                 onClicked: {
                     open = false
                     pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
                 }
             }
+        }
+
+        Row {
+            id: thirdRow
+
             IconButton {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-developer-mode"
@@ -113,6 +126,7 @@ DockedPanel {
                     pageStack.push(Qt.resolvedUrl("../pages/Settings.qml"))
                 }
             }
+
             IconButton {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-about"

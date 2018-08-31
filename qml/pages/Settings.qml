@@ -21,6 +21,7 @@ Page {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
+            hutspotQueueName.text = app.hutspot_queue_playlist_name.value
         }
     }
 
@@ -96,6 +97,16 @@ Page {
                             librespot.start()
                     } else
                         librespot.stop()
+                }
+            }
+
+            TextField {
+                id: hutspotQueueName
+                label: qsTr("Hutspot Queue Playlist name")
+                width: parent.width
+                onTextChanged: {
+                    if(text.length > 0) // ToDo: can we cancel an edit?
+                        app.hutspot_queue_playlist_name.value = text
                 }
             }
 
