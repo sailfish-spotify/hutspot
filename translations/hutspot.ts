@@ -617,10 +617,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Search text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -634,6 +630,26 @@
     </message>
     <message>
         <source>Nothing found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search [ Albums ]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search [ Artists ]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search [ Playlists ]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search [ Tracks ]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

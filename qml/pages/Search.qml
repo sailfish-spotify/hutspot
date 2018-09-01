@@ -46,32 +46,30 @@ Page {
 
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
-            spacing: Theme.paddingLarge
+            //spacing: Theme.paddingSmall
 
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Search")
-                MenuButton {}
+                title: {
+                    switch(_itemClass) {
+                    case 0: return qsTr("Search [ Albums ]")
+                    case 1: return qsTr("Search [ Artists ]")
+                    case 2: return qsTr("Search [ Playlists ]")
+                    case 3: return qsTr("Search [ Tracks ]")
+                    default: qsTr("Search")
+                    }
+                }
+                MenuButton { z: 1} // set z so you can still click the button
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: nextItemClass()
+                }
             }
 
             LoadPullMenus {}
             LoadPushMenus {}
-
-            SearchField {
-                id: searchField
-                width: parent.width
-                placeholderText: qsTr("Search text")
-                Binding {
-                    target: searchPage
-                    property: "searchString"
-                    value: searchField.text.toLowerCase().trim()
-                }
-                EnterKey.enabled: text.length > 0
-                EnterKey.onClicked: refresh()
-                EnterKey.iconSource: "image://theme/icon-m-search"
-                Component.onCompleted: searchField.forceActiveFocus()
-            }
 
             /* What to search for */
             ValueButton {
@@ -129,32 +127,21 @@ Page {
 
             }
 
-        }
-
-        section.property: "type"
-        section.delegate : Component {
-            id: sectionHeading
-            Item {
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
-                height: childrenRect.height
-
-                Text {
-                    width: parent.width
-                    text: {
-                        switch(section) {
-                        case "0": return qsTr("Albums")
-                        case "1": return qsTr("Artists")
-                        case "2": return qsTr("Playlists")
-                        case "3": return qsTr("Tracks")
-                        }
-                    }
-                    font.bold: true
-                    font.pixelSize: Theme.fontSizeMedium
-                    color: Theme.highlightColor
-                    horizontalAlignment: Text.AlignRight
+            SearchField {
+                id: searchField
+                width: parent.width
+                placeholderText: qsTr("Search text")
+                Binding {
+                    target: searchPage
+                    property: "searchString"
+                    value: searchField.text.toLowerCase().trim()
                 }
+                EnterKey.enabled: text.length > 0
+                EnterKey.onClicked: refresh()
+                EnterKey.iconSource: "image://theme/icon-m-search"
+                Component.onCompleted: searchField.forceActiveFocus()
             }
+
         }
 
         delegate: ListItem {
@@ -210,34 +197,55 @@ Page {
         onLoadPrevious: refresh()
     }
 
+    property int _itemClass: -1
+
+    function nextItemClass() {
+        var i = _itemClass // use i to dont trigger stuff while iterating
+        do {
+            i++
+        } while((selectedSearchTargetsMask & (0x01 << i)) === 0 && i <= 3)
+        if(i > 3)
+            i = 0
+        _itemClass = i
+        refresh()
+    }
+
     function refresh() {
         var i;
         if(searchString === "")
             return
+        if(selectedSearchTargetsMask === 0)
+            return
+        if(_itemClass === -1)
+            nextItemClass()
         showBusy = true
         searchModel.clear()
         var types = []
-        if(selectedSearchTargetsMask & 0x01)
+        if(_itemClass === 0)
             types.push('album')
-        if(selectedSearchTargetsMask & 0x02)
+        else if(_itemClass === 1)
             types.push('artist')
-        if(selectedSearchTargetsMask & 0x04)
+        else if(_itemClass === 2)
             types.push('playlist')
-        if(selectedSearchTargetsMask & 0x08)
+        else if(_itemClass === 3)
             types.push('track')
         Spotify.search(searchString, types, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 var artistIds = []
-                var cursors = []
                 try {
                     // albums
                     if(data.albums) {
                         for(i=0;i<data.albums.items.length;i++) {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
-                                                album: data.albums.items[i]})
+                                                album: data.albums.items[i],
+                                                following: false,
+                                                artist: {},
+                                                playlist: {},
+                                                track: {}})
                         }
-                        cursors.push(Util.loadCursor(data.albums))
+                        cursorHelper.offset = data.albums.offset
+                        cursorHelper.total = data.albums.total
                     }
 
                     // artists
@@ -246,10 +254,21 @@ Page {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
                                                 following: false,
-                                                artist: data.artists.items[i]})
+                                                album: {},
+                                                artist: data.artists.items[i],
+                                                playlist: {},
+                                                track: {}})
                             artistIds.push(data.artists.items[i].id)
                         }
-                        cursors.push(Util.loadCursor(data.artists))
+                        cursorHelper.offset = data.artists.offset
+                        cursorHelper.total = data.artists.total
+
+                        // request additional Info
+                        Spotify.isFollowingArtists(artistIds, function(error, data) {
+                            if(data) {
+                                Util.setFollowedInfo(1, artistIds, data, searchModel)
+                            }
+                        })
                     }
 
                     // playlists
@@ -257,9 +276,14 @@ Page {
                         for(i=0;i<data.playlists.items.length;i++) {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
-                                                playlist: data.playlists.items[i]})
+                                                album: {},
+                                                following: false,
+                                                artist: {},
+                                                playlist: data.playlists.items[i],
+                                                track: {}})
                         }
-                        cursors.push(Util.loadCursor(data.playlists))
+                        cursorHelper.offset = data.playlists.offset
+                        cursorHelper.total = data.playlists.total
                     }
 
                     // tracks
@@ -267,20 +291,15 @@ Page {
                         for(i=0;i<data.tracks.items.length;i++) {
                             searchModel.append({type: 3,
                                                 name: data.tracks.items[i].name,
+                                                album: {},
+                                                following: false,
+                                                artist: {},
+                                                playlist: {},
                                                 track: data.tracks.items[i]})
                         }
-                        cursors.push(Util.loadCursor(data.tracks))
+                        cursorHelper.offset = data.tracks.offset
+                        cursorHelper.total = data.tracks.total
                     }
-
-                    // request additional Info
-                    Spotify.isFollowingArtists(artistIds, function(error, data) {
-                        if(data) {
-                            Util.setFollowedInfo(1, artistIds, data, searchModel)
-                        }
-                    })
-
-                    // cursors
-                    cursorHelper.update(cursors)
 
                 } catch (err) {
                     console.log(err)
