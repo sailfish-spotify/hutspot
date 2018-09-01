@@ -379,3 +379,17 @@ var HutspotPage = {
     Playlist: 2,
     GenreMoodPlaylist: 3
 }
+
+var PlaylistEventType = {
+    AddedTrack: 0,
+    RemovedTrack: 1,
+    ReplacedAllTracks: 2,
+    ChangedDetails: 3,
+    CreatedPlaylist: 4
+}
+
+function PlayListEvent(type, playlistId, snapshotId) {
+    this.type = type
+    this.playlistId = playlistId
+    this.snapshotId = snapshotId
+}

@@ -24,6 +24,7 @@ Page {
     property var playbackState
     property var contextObject: null
     property bool isContextFavorite: false
+
     property string currentId: ""
     property string currentSnapshotId: ""
     property string currentTrackId: ""
@@ -312,7 +313,7 @@ Page {
                     onReleased: {
                         Spotify.seek(Math.round(value), function(error, data) {
                             if(!error)
-                                refresh()
+                                refreshPlaybackState()
                          })
                         isPressed = false
                     }
@@ -353,7 +354,7 @@ Page {
                                  Spotify.setVolume(mutedVolume, function(error, data) {
                                      if(!error) {
                                          volumeSlider.value = mutedVolume
-                                         refresh()
+                                         refreshPlaybackState()
                                      }
                                  })
                              } else {
@@ -361,7 +362,7 @@ Page {
                                  Spotify.setVolume(0, function(error, data) {
                                      if(!error) {
                                          volumeSlider.value = 0
-                                         refresh()
+                                         refreshPlaybackState()
                                      }
                                  })
                              }
@@ -384,7 +385,7 @@ Page {
                     onReleased: {
                         Spotify.setVolume(Math.round(value), function(error, data) {
                             if(!error)
-                                refresh()
+                                refreshPlaybackState()
                         })
                     }
                 }
@@ -401,7 +402,7 @@ Page {
                     icon.source: "image://theme/icon-m-previous"
                     onClicked: app.previous(function(error,data) {
                         if(!error)
-                            refresh()
+                            refreshPlaybackState()
                     })
                 }
                 IconButton {
@@ -411,7 +412,7 @@ Page {
                                  : "image://theme/icon-cover-play"
                     onClicked: app.pause(function(error,data) {
                         if(!error)
-                            refresh()
+                            refreshPlaybackState()
                     })
                 }
                 IconButton {
@@ -420,7 +421,7 @@ Page {
                     icon.source: "image://theme/icon-m-next"
                     onClicked: app.next(function(error,data) {
                         if(!error)
-                            refresh()
+                            refreshPlaybackState()
                     })
                 }
                 IconButton {
@@ -430,7 +431,7 @@ Page {
                                  : "image://theme/icon-m-repeat"
                     onClicked: app.setRepeat(checked, function(error,data) {
                         if(!error)
-                            refresh()
+                            refreshPlaybackState()
                     })
                 }
                 IconButton {
@@ -440,7 +441,7 @@ Page {
                                  : "image://theme/icon-m-shuffle"
                     onClicked: app.setShuffle(checked, function(error,data) {
                         if(!error)
-                            refresh()
+                            refreshPlaybackState()
                     })
                 }
             }
@@ -461,10 +462,10 @@ Page {
         repeat: true
         onTriggered: {
             if(++refreshCount>=5) {
-                refresh()
+                refreshPlaybackState()
                 refreshCount = 0
             }
-            // pretend progress (ms), refresh() will set the actual value
+            // pretend progress (ms), refreshPlaybackState() will set the actual value
             if( playbackState.item && playbackProgress < playbackState.item.duration_ms)
                 playbackProgress += 1000
         }
@@ -607,7 +608,12 @@ Page {
             }
     }
 
+    // called by menus
     function refresh() {
+        reloadTracks()
+    }
+
+    function refreshPlaybackState() {
         var i;
 
         Spotify.getMyCurrentPlaybackState({}, function(error, data) {
@@ -615,12 +621,8 @@ Page {
                 playbackState = data
                 if(playbackState.context) {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
-                    // if id changed we need to refresh
-                    // if the queue playlist changed the id is still the same
-                    // so we also need to check it's snapshot_id
-                    if(currentId !== cid
-                       || (cid === app.hutspotQueuePlaylistId
-                           && currentSnapshotId != app.hutspotQueuePlaylistSnapshotId)) {
+                    // If id changed we need to refresh.
+                    if(currentId !== cid) {
                         currentId = cid
                         contextObject = null
                         switch(playbackState.context.type) {
@@ -811,34 +813,42 @@ Page {
     Connections {
         target: app
 
-        onHasValidTokenChanged: refresh()
+        onHasValidTokenChanged: refreshPlaybackState()
 
         onNewPlayingTrackInfo: {
             // track change?
             if(currentTrackId !== track.id)
-                refresh()
+                refreshPlaybackState()
         }
 
-        onAddedToPlaylist: {
-            if(getContextType() === Spotify.ItemType.Playlist
-               && contextObject.id === playlistId) {
+        onPlaylistEvent: {
+            if(getContextType() !== Spotify.ItemType.Playlist
+               || contextObject.id !== event.playlistId)
+                return
+            switch(event.type) {
+            case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
-                refresh()
-            }
-        }
-
-        onRemovedFromPlaylist: {
-            if(getContextType() === Spotify.ItemType.Playlist
-               && contextObject.id === playlistId) {
-                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, trackId)
+                loadPlaylistTracks(app.id, currentId)
+                currentSnapshotId = event.snapshotId
+                break
+            case Util.PlaylistEventType.RemovedTrack:
+                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
+                currentSnapshotId = event.snapshotId
+                break
+            case Util.PlaylistEventType.ReplacedAllTracks:
+                if(currentSnapshotId !== event.snapshotId) {
+                    loadPlaylistTracks(app.id, currentId)
+                    currentSnapshotId = event.snapshotId
+                }
+                break
             }
         }
     }
 
     Component.onCompleted: {
         if(app.hasValidToken)
-            refresh()
+            refreshPlaybackState()
     }
 
     onStatusChanged: {

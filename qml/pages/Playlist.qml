@@ -183,8 +183,11 @@ Page {
     Connections {
         target: app
 
-        onAddedToPlaylist: {
-            if(playlist.id === playlistId) {
+        onPlaylistEvent: {
+            if(playlist.id !== event.playlistId)
+                return
+            switch(event.type) {
+            case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but
                 // we schedule a refresh
@@ -192,18 +195,13 @@ Page {
                     refresh()
                 else
                     _needsRefresh = true
-            }
-        }
-
-        onDetailsChangedOfPlaylist: {
-            if(playlist.id === playlistId) {
+                break
+            case Util.PlaylistEventType.RemovedTrack:
+                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
+                break
+            case Util.PlaylistEventType.ChangedDetails:
                 refreshDetails()
-            }
-        }
-
-        onRemovedFromPlaylist: {
-            if(playlist.id === playlistId) {
-                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, trackId)
+                break
             }
         }
     }

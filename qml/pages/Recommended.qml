@@ -223,13 +223,9 @@ Page {
         var tracks = [searchModel.count]
         for(var i=0;i<searchModel.count;i++)
             tracks[i] = searchModel.get(i).track.uri
-        Spotify.replaceTracksInPlaylist(app.id, app.hutspotQueuePlaylistId, tracks, function(error, data) {
-            if(data && data.snapshot_id) {
-                // update snapshot id
-                app.hutspotQueuePlaylistSnapshotId = data.snapshot_id
+        app.replaceTracksInPlaylist(app.hutspotQueuePlaylistId, tracks, function(error, data) {
+            if(data)
                 app.playContext({uri: app.hutspotQueuePlaylistUri})
-            } else
-                console.log("No Data while replacing tracks in Playlist " + app.hutspot_queue_playlist_name.value)
         })
     }
 

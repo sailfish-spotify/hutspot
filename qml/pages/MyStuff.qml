@@ -148,21 +148,25 @@ Page {
     Connections {
         target: app
 
-        onDetailsChangedOfPlaylist: {
-            // check if the playist is in the current list if so trigger a refresh
-            var i = Util.doesListModelContain(searchModel, Spotify.ItemType.Playlist, playlistId)
-            if(i >= 0) {
-                if(myStuffPage.status === PageStatus.Active)
-                    refresh()
-                else
-                    _needsRefresh = true
+        onPlaylistEvent: {
+            switch(event.type) {
+            case Util.PlaylistEventType.ChangedDetails:
+                // check if the playist is in the current list if so trigger a refresh
+                var i = Util.doesListModelContain(searchModel, Spotify.ItemType.Playlist, event.playlistId)
+                if(i >= 0) {
+                    if(myStuffPage.status === PageStatus.Active)
+                        refresh()
+                    else
+                        _needsRefresh = true
+                }
+                break
+             case Util.PlaylistEventType.CreatedPlaylist:
+                 if(myStuffPage.status === PageStatus.Active)
+                     refresh()
+                 else
+                     _needsRefresh = true
+                 break
             }
-        }
-        onCreatedPlaylist: {
-            if(myStuffPage.status === PageStatus.Active)
-                refresh()
-            else
-                _needsRefresh = true
         }
     }
 

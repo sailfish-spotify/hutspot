@@ -628,7 +628,7 @@ ApplicationWindow {
         })
     }
 
-    signal detailsChangedOfPlaylist(string playlistId, var playlistDetails)
+    signal playlistEvent(var event)
 
     function editPlaylistDetails(playlist, callback) {
         var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
@@ -645,14 +645,16 @@ ApplicationWindow {
                 Spotify.changePlaylistDetails(id, playlist.id, options, function(error, data) {
                     if(callback)
                         callback(error, data)
-                    if(!error)
-                        detailsChangedOfPlaylist(playlist.id, options)
+                    if(!error) {
+                        var ev = new Util.PlayListEvent(Util.PlaylistEventType.ChangedDetails,
+                                                        playlist.id, playlist.snapshot_id)
+                        ev.newDetails = options
+                        playlistEvent(ev)
+                    }
                 })
             }
         })
     }
-
-    signal addedToPlaylist(string playlistId, string trackId)
 
     function addToPlaylist(track) {
 
@@ -664,7 +666,10 @@ ApplicationWindow {
                                             ms.selectedItem.playlist.id,
                                             [track.uri], {}, function(error, data) {
                     if(data) {
-                        addedToPlaylist(ms.selectedItem.playlist.id, track.id)
+                        var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
+                                                        ms.selectedItem.playlist.id, data.snapshot_id)
+                        ev.trackId = track.id
+                        playlistEvent(ev)
                         console.log("addToPlaylist: added \"")
                     } else
                         console.log("addToPlaylist: failed to add \"")
@@ -674,19 +679,18 @@ ApplicationWindow {
         })
     }
 
-    signal removedFromPlaylist(string playlistId, string trackId)
-
     function removeFromPlaylist(playlist, track, callback) {
         app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
                               function() {
             Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
                 callback(error, data)
-                removedFromPlaylist(playlist.id, track.id)
+                var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
+                                                ms.selectedItem.playlist.id, data.snapshot_id)
+                ev.trackId = track.id
+                playlistEvent(ev)
             })
         })
     }
-
-    signal createdPlaylist(var playlist)
 
     function createPlaylist(callback) {
         var ms = pageStack.push(Qt.resolvedUrl("components/CreatePlaylist.qml"),
@@ -700,10 +704,27 @@ ApplicationWindow {
                     options.description = ms.description
                 Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
-                    if(data)
-                        createdPlaylist(data)
+                    if(data) {
+                        var ev = new Util.PlayListEvent(Util.PlaylistEventType.CreatedPlaylist,
+                                                        data.id, data.snapshot_id)
+                        ev.playlist = data
+                        playlistEvent(ev)
+                    }
                 })
             }
+        })
+    }
+
+    function replaceTracksInPlaylist(playlistId, tracks, callback) {
+        Spotify.replaceTracksInPlaylist(app.id, playlistId, tracks, function(error, data) {
+            if(callback)
+                callback(error, data)
+            if(data && data.snapshot_id) {
+                var ev = new Util.PlayListEvent(Util.PlaylistEventType.ReplacedAllTracks,
+                                                playlistId, data.snapshot_id)
+                playlistEvent(ev)
+            } else
+                console.log("No Data while replacing tracks in Playlist " + playlistId)
         })
     }
 
