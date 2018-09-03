@@ -143,13 +143,24 @@ Page {
                 }
                 EnterKey.enabled: text.length > 0
                 EnterKey.onClicked: {
-                    Util.updateSearchHistory(searchField.text.trim(), app.search_history)
+                    Util.updateSearchHistory(searchField.text.trim(),
+                                             app.search_history,
+                                             app.search_history_max_size.value)
                     refresh()
                 }
                 EnterKey.iconSource: "image://theme/icon-m-search"
                 Component.onCompleted: searchField.forceActiveFocus()
 
                 menu: ContextMenu {
+                    onActiveChanged: {
+                        if(!active) {
+                            // somehow the menu is opened by scrolling up. very annoying.
+                            // and also causing the button to become too close to the 'next page' bulb
+                            // so if the menu closes scroll back to the top
+                            listView.positionViewAtBeginning()
+                        }
+                    }
+
                     MenuItem {
                         text: qsTr("Clear")
                         onClicked: {
@@ -172,7 +183,10 @@ Page {
                                 searchField.text = ms.items.get(ms.selectedIndex).name
                                 searchField.forceActiveFocus()
                                 refresh()
-                            })
+                                Util.updateSearchHistory(searchField.text.trim(),
+                                                         app.search_history,
+                                                         app.search_history_max_size.value)                            })
+                                listView.positionViewAtBeginning() // see above
                         }
                     }
                     MenuItem {

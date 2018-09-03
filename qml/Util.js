@@ -262,9 +262,10 @@ function parseSpotifyUri(uri) {
     return parsed
 }
 
-function updateSearchHistory(searchString, search_history) {
+function updateSearchHistory(searchString, search_history, maxSize) {
     if(!searchString || searchString.length === 0)
         return
+
     var sh = search_history.value
     var pos = sh.indexOf(searchString)
     if(pos > -1) {
@@ -275,6 +276,10 @@ function updateSearchHistory(searchString, search_history) {
     } else
         // a new item
         sh.unshift(searchString)
+
+    while(sh.length > maxSize)
+        sh.pop()
+
     search_history.value = sh
 }
 

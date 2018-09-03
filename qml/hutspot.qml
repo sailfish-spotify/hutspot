@@ -31,6 +31,7 @@ ApplicationWindow {
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
     property alias search_history: search_history
+    property alias search_history_max_size: search_history_max_size
 
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     readonly property string hutspotPlaylistDescription: qsTr("Playlist used as a queue by Hutspot")
@@ -1142,6 +1143,12 @@ ApplicationWindow {
         id: search_history
         key: "/hutspot/search_history"
         defaultValue: []
+    }
+
+    ConfigurationValue {
+        id: search_history_max_size
+        key: "/hutspot/search_history_max_size"
+        defaultValue: 50
     }
 
     /*function updateConfigurationData() {

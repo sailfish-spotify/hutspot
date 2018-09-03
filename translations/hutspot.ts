@@ -813,6 +813,10 @@
         <source>Have the Playing page as an Attached Page (available on the Right)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Maximum size of Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TopStuff</name>
