@@ -53,7 +53,9 @@ DISTFILES += \
     qml/components/GestureArea.qml \
     qml/components/CursorHelper.qml \
     qml/pages/History.qml \
-    qml/pages/Recommended.qml
+    qml/pages/Recommended.qml \
+    qml/components/SearchFieldWithMenu.qml \
+    qml/components/MySearchField.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

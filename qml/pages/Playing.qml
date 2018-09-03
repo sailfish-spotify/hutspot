@@ -466,7 +466,7 @@ Page {
                 refreshCount = 0
             }
             // pretend progress (ms), refreshPlaybackState() will set the actual value
-            if( playbackState.item && playbackProgress < playbackState.item.duration_ms)
+            if(playbackState.item && playbackProgress < playbackState.item.duration_ms)
                 playbackProgress += 1000
         }
     }

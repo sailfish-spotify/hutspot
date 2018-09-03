@@ -262,6 +262,22 @@ function parseSpotifyUri(uri) {
     return parsed
 }
 
+function updateSearchHistory(searchString, search_history) {
+    if(!searchString || searchString.length === 0)
+        return
+    var sh = search_history.value
+    var pos = sh.indexOf(searchString)
+    if(pos > -1) {
+        // already in the list so reorder
+        for(var i=pos;i>0;i--)
+            sh[i] = sh[i-1]
+        sh[0] = searchString
+    } else
+        // a new item
+        sh.unshift(searchString)
+    search_history.value = sh
+}
+
 var CursorType = {
   Normal: 0,
   FollowedArtists: 1,

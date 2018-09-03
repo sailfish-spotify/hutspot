@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name></name>
+    <message id="components-ph-search">
+        <source>Search</source>
+        <extracomment>Placeholder text of SearchField</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>About</name>
     <message>
         <source>About</source>
@@ -617,10 +625,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Search For</source>
         <translation type="unfinished"></translation>
     </message>
@@ -650,6 +654,30 @@
     </message>
     <message>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Recently used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Recently used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm Clearing the Search History</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

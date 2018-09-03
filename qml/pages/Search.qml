@@ -32,6 +32,10 @@ Page {
         id: searchModel
     }
 
+    ListModel {
+        id: searchHistoryModel
+    }
+
     SilicaListView {
         id: listView
         model: searchModel
@@ -73,6 +77,7 @@ Page {
 
             /* What to search for */
             ValueButton {
+                id: searchTypes
                 property var indexes: []
                 width: parent.width
 
@@ -127,7 +132,7 @@ Page {
 
             }
 
-            SearchField {
+            SearchFieldWithMenu {
                 id: searchField
                 width: parent.width
                 placeholderText: qsTr("Search text")
@@ -137,12 +142,58 @@ Page {
                     value: searchField.text.toLowerCase().trim()
                 }
                 EnterKey.enabled: text.length > 0
-                EnterKey.onClicked: refresh()
+                EnterKey.onClicked: {
+                    Util.updateSearchHistory(searchField.text.trim(), app.search_history)
+                    refresh()
+                }
                 EnterKey.iconSource: "image://theme/icon-m-search"
                 Component.onCompleted: searchField.forceActiveFocus()
+
+                menu: ContextMenu {
+                    MenuItem {
+                        text: qsTr("Clear")
+                        onClicked: {
+                            searchField.text = ""
+                            searchField.forceActiveFocus()
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Select Recently used")
+                        onClicked: {
+                            searchHistoryModel.clear()
+                            var sh = app.search_history.value
+                            for(var i=0;i<sh.length;i++)
+                                searchHistoryModel.append({id: i, name: sh[i]})
+                            var ms = pageStack.push(Qt.resolvedUrl("../components/ItemPicker.qml"),
+                                                    {items: searchHistoryModel, label: qsTr("Search History")} );
+                            ms.accepted.connect(function() {
+                                if(ms.selectedIndex === -1)
+                                    return
+                                searchField.text = ms.items.get(ms.selectedIndex).name
+                                searchField.forceActiveFocus()
+                                refresh()
+                            })
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Clear Recently used")
+                        onClicked: {
+                            app.showConfirmDialog(qsTr("Please confirm Clearing the Search History"), function() {
+                                app.search_history.value = []
+                            })
+                        }
+                    }
+                }
             }
 
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
         }
+
+
 
         delegate: ListItem {
             id: listItem
