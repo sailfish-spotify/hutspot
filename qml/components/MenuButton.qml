@@ -12,6 +12,11 @@ IconButton {
                  ? "image://theme/icon-m-menu"
                  : "image://hutspot-icons/icon-m-toolbar"
 
+    // hide button when menu is an attached page of the player
+    enabled: !(app.playing_as_attached_page.value
+             && app.navigation_menu_type.value === 0)
+    visible: enabled
+
     onClicked: {
         if(app.navigation_menu_type.value === 0 ) {
             // menu using dialog
