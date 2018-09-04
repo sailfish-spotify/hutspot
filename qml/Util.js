@@ -284,9 +284,18 @@ function updateSearchHistory(searchString, search_history, maxSize) {
 }
 
 function processSearchString(searchString) {
-    // if no wildcard present add one at the end
-    var pos = searchString.indexOf('*')
-    if(pos < 0)
+    // if no wildcard present and no dash and no quote
+    // we add a wildcard at the end
+    var canAdd = true
+    var symbols = "*-'\""
+    for(var i=0;i<symbols.length;i++) {
+        var pos = searchString.indexOf(symbols[i])
+        if(pos >= 0) {
+            canAdd = false
+            break
+        }
+    }
+    if(canAdd)
         searchString = searchString + '*'
     return searchString
 }
