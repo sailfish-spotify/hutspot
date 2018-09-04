@@ -294,7 +294,10 @@ Page {
             types.push('playlist')
         else if(_itemClass === 3)
             types.push('track')
-        Spotify.search(searchString, types, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+        Spotify.search(Util.processSearchString(searchString),
+                       types,
+                       {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                       function(error, data) {
             if(data) {
                 var artistIds = []
                 try {

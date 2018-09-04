@@ -283,6 +283,14 @@ function updateSearchHistory(searchString, search_history, maxSize) {
     search_history.value = sh
 }
 
+function processSearchString(searchString) {
+    // if no wildcard present add one at the end
+    var pos = searchString.indexOf('*')
+    if(pos < 0)
+        searchString = searchString + '*'
+    return searchString
+}
+
 var CursorType = {
   Normal: 0,
   FollowedArtists: 1,
