@@ -405,7 +405,8 @@ function followArtists(artistIds, callback) {
     params: {
       ids: artistIds.join(','),
       type: 'artist'
-    }
+    },
+    postData: {}
   };
   return _checkParamsAndPerformRequest(requestData, callback);
 };

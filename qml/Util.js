@@ -262,6 +262,44 @@ function parseSpotifyUri(uri) {
     return parsed
 }
 
+function updateSearchHistory(searchString, search_history, maxSize) {
+    if(!searchString || searchString.length === 0)
+        return
+
+    var sh = search_history.value
+    var pos = sh.indexOf(searchString)
+    if(pos > -1) {
+        // already in the list so reorder
+        for(var i=pos;i>0;i--)
+            sh[i] = sh[i-1]
+        sh[0] = searchString
+    } else
+        // a new item
+        sh.unshift(searchString)
+
+    while(sh.length > maxSize)
+        sh.pop()
+
+    search_history.value = sh
+}
+
+function processSearchString(searchString) {
+    // if no wildcard present and no dash and no quote
+    // we add a wildcard at the end
+    var canAdd = true
+    var symbols = "*-'\""
+    for(var i=0;i<symbols.length;i++) {
+        var pos = searchString.indexOf(symbols[i])
+        if(pos >= 0) {
+            canAdd = false
+            break
+        }
+    }
+    if(canAdd)
+        searchString = searchString + '*'
+    return searchString
+}
+
 var CursorType = {
   Normal: 0,
   FollowedArtists: 1,

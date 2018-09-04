@@ -93,7 +93,8 @@ Page {
                 wrapMode: Text.WordWrap
                 text:
 "Willem-Jan de Hoog
-Maciej Janiszewski"
+Maciej Janiszewski
+rgrnetalk"
             }
             SectionHeader {
                 text: qsTr("Thanks to")

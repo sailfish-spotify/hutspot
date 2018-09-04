@@ -20,6 +20,7 @@ Page {
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
+            searchHistoryLimit.text = app.search_history_max_size.value
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
             hutspotQueueName.text = app.hutspot_queue_playlist_name.value
         }
@@ -56,20 +57,19 @@ Page {
                 onTextChanged: app.searchLimit.value = Math.floor(text)
                 validator: IntValidator {bottom: 1; top: 50;}
             }
-            TextSwitch {
-                id: auth_using_browser
-                text: qsTr("Authorize using Browser")
-                description: qsTr("Use external Browser to login at Spotify")
-                checked: app.auth_using_browser.value
-                onCheckedChanged: {
-                    app.auth_using_browser.value = checked
-                    app.auth_using_browser.sync()
-                }
+
+            TextField {
+                id: searchHistoryLimit
+                label: qsTr("Maximum size of Search History")
+                inputMethodHints: Qt.ImhDigitsOnly
+                width: parent.width
+                onTextChanged: app.search_history_max_size.value = Math.floor(text)
+                validator: IntValidator {bottom: 1; top: 50;}
             }
 
             TextSwitch {
                 id: start_stop_librespot
-                text: qsTr("Start/Stop Librespot")
+                text: qsTr("Control Librespot")
                 description: qsTr("Start Librespot when launched and stop it on exit")
                 checked: app.start_stop_librespot.value
                 onCheckedChanged: {
@@ -80,10 +80,17 @@ Page {
 
             TextSwitch {
                 id: launchLibrespot
-                text: qsTr("Librespot")
+                text: {
+                    if(!librespot.serviceEnabled)
+                        return qsTr("Cannot start Librespot")
+                    else
+                        return librespot.serviceRunning
+                                ? qsTr("Stop Librespot")
+                                : qsTr("Start Librespot")
+                }
                 description: {
                     if(!librespot.serviceEnabled)
-                        return qsTr("Unavailable")
+                        return qsTr("Libresot is not available")
                     else
                         return librespot.serviceRunning
                                 ? qsTr("Running")
@@ -146,6 +153,18 @@ Page {
                     app.playing_as_attached_page.sync()
                 }
             }
+
+            TextSwitch {
+                id: auth_using_browser
+                text: qsTr("Authorize using Browser")
+                description: qsTr("Use external Browser to login at Spotify")
+                checked: app.auth_using_browser.value
+                onCheckedChanged: {
+                    app.auth_using_browser.value = checked
+                    app.auth_using_browser.sync()
+                }
+            }
+
 
         }
 

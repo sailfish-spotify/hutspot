@@ -30,6 +30,8 @@ ApplicationWindow {
     property alias playing_as_attached_page: playing_as_attached_page
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
+    property alias search_history: search_history
+    property alias search_history_max_size: search_history_max_size
 
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     readonly property string hutspotPlaylistDescription: qsTr("Playlist used as a queue by Hutspot")
@@ -843,12 +845,12 @@ ApplicationWindow {
     function toggleFollowArtist(artist, isFollowed, callback) {
         if(isFollowed)
             unfollowArtist(artist, function(error,data) {
-                if(data)
+                if(!error)
                     callback(false)
             })
         else
             followArtist(artist, function(error,data) {
-                if(data)
+                if(!error)
                     callback(true)
             })
     }
@@ -1104,7 +1106,9 @@ ApplicationWindow {
             defaultValue: true
     }
 
-    // 0 for NavigationMenuDialog, 1 for NavigationPanel
+    // 0 for NavigationMenuDialog
+    // 1 for NavigationMenu as attacted page
+    // 2 for NavigationPanel
     ConfigurationValue {
             id: navigation_menu_type
             key: "/hutspot/navigation_menu_type"
@@ -1134,6 +1138,38 @@ ApplicationWindow {
             key: "/hutspot/hutspot_queue_playlist_name"
             defaultValue: "Hutspot Queue"
     }
+
+    ConfigurationValue {
+        id: search_history
+        key: "/hutspot/search_history"
+        defaultValue: []
+    }
+
+    ConfigurationValue {
+        id: search_history_max_size
+        key: "/hutspot/search_history_max_size"
+        defaultValue: 50
+    }
+
+    /*function updateConfigurationData() {
+        if(configuration_data_version.value === currentConfigurationDataVersion)
+            return
+
+        if(configuration_data_version.value === 0) {
+            // menu type from 0..1 to 0..2
+            if(navigation_menu_type.value === 1)
+                navigation_menu_type.value = 2
+        }
+
+        configuration_data_version.value = currentConfigurationDataVersion
+    }
+
+    readonly property int currentConfigurationDataVersion: 2
+    ConfigurationValue {
+            id: configuration_data_version
+            key: "/hutspot/configuration_data_version"
+            defaultValue: 0
+    }*/
 
 }
 

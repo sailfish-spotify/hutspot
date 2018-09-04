@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name></name>
+    <message id="components-ph-search">
+        <source>Search</source>
+        <extracomment>Placeholder text of SearchField</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>About</name>
     <message>
         <source>About</source>
@@ -617,10 +625,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Search For</source>
         <translation type="unfinished"></translation>
     </message>
@@ -650,6 +654,34 @@
     </message>
     <message>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Recently used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Recently used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please confirm Clearing the Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search Failed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -730,19 +762,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start/Stop Librespot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Start Librespot when launched and stop it on exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Librespot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -783,6 +803,30 @@
     </message>
     <message>
         <source>Have the Playing page as an Attached Page (available on the Right)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum size of Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Control Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot start Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Libresot is not available</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

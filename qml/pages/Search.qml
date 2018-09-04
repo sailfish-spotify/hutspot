@@ -32,6 +32,10 @@ Page {
         id: searchModel
     }
 
+    ListModel {
+        id: searchHistoryModel
+    }
+
     SilicaListView {
         id: listView
         model: searchModel
@@ -64,7 +68,10 @@ Page {
                 MouseArea {
                     anchors.fill: parent
                     propagateComposedEvents: true
-                    onClicked: nextItemClass()
+                    onClicked: {
+                        nextItemClass()
+                        refresh()
+                    }
                 }
             }
 
@@ -73,6 +80,7 @@ Page {
 
             /* What to search for */
             ValueButton {
+                id: searchTypes
                 property var indexes: []
                 width: parent.width
 
@@ -127,7 +135,7 @@ Page {
 
             }
 
-            SearchField {
+            SearchFieldWithMenu {
                 id: searchField
                 width: parent.width
                 placeholderText: qsTr("Search text")
@@ -137,12 +145,72 @@ Page {
                     value: searchField.text.toLowerCase().trim()
                 }
                 EnterKey.enabled: text.length > 0
-                EnterKey.onClicked: refresh()
+                EnterKey.onClicked: {
+                    refresh()
+                    Util.updateSearchHistory(searchField.text.trim(),
+                                             app.search_history,
+                                             app.search_history_max_size.value)
+                }
                 EnterKey.iconSource: "image://theme/icon-m-search"
                 Component.onCompleted: searchField.forceActiveFocus()
+
+                menu: ContextMenu {
+                    onActiveChanged: {
+                        if(!active) {
+                            // somehow the menu is opened by scrolling up. very annoying.
+                            // and also causing the button to become too close to the 'next page' bulb
+                            // so if the menu closes scroll back to the top
+                            listView.positionViewAtBeginning()
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Clear")
+                        onClicked: {
+                            searchField.text = ""
+                            searchField.forceActiveFocus()
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Select Recently used")
+                        onClicked: {
+                            searchHistoryModel.clear()
+                            var sh = app.search_history.value
+                            for(var i=0;i<sh.length;i++)
+                                searchHistoryModel.append({id: i, name: sh[i]})
+                            var ms = pageStack.push(Qt.resolvedUrl("../components/ItemPicker.qml"),
+                                                    {items: searchHistoryModel, label: qsTr("Search History")} );
+                            ms.accepted.connect(function() {
+                                if(ms.selectedIndex === -1)
+                                    return
+                                searchField.text = ms.items.get(ms.selectedIndex).name
+                                searchField.forceActiveFocus()
+                                refresh()
+                                Util.updateSearchHistory(searchField.text.trim(),
+                                                         app.search_history,
+                                                         app.search_history_max_size.value)                            })
+                                listView.positionViewAtBeginning() // see above
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Clear Recently used")
+                        onClicked: {
+                            app.showConfirmDialog(qsTr("Please confirm Clearing the Search History"), function() {
+                                app.search_history.value = []
+                            })
+                        }
+                    }
+                }
             }
 
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
         }
+
+
 
         delegate: ListItem {
             id: listItem
@@ -200,14 +268,17 @@ Page {
     property int _itemClass: -1
 
     function nextItemClass() {
-        var i = _itemClass // use i to dont trigger stuff while iterating
+        if(selectedSearchTargetsMask === 0) {
+            _itemClass = -1
+            return
+        }
+        var i = _itemClass // use i to not trigger stuff while iterating
         do {
             i++
-        } while((selectedSearchTargetsMask & (0x01 << i)) === 0 && i <= 3)
-        if(i > 3)
-            i = 0
+            if(i > 3)
+                i = 0
+        } while((selectedSearchTargetsMask & (0x01 << i)) === 0)
         _itemClass = i
-        refresh()
     }
 
     function refresh() {
@@ -229,12 +300,15 @@ Page {
             types.push('playlist')
         else if(_itemClass === 3)
             types.push('track')
-        Spotify.search(searchString, types, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+        Spotify.search(Util.processSearchString(searchString),
+                       types,
+                       {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                       function(error, data) {
             if(data) {
                 var artistIds = []
                 try {
                     // albums
-                    if(data.albums) {
+                    if(data.hasOwnProperty('albums')) {
                         for(i=0;i<data.albums.items.length;i++) {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
@@ -249,7 +323,7 @@ Page {
                     }
 
                     // artists
-                    if(data.artists) {
+                    if(data.hasOwnProperty('artists')) {
                         for(i=0;i<data.artists.items.length;i++) {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
@@ -272,7 +346,7 @@ Page {
                     }
 
                     // playlists
-                    if(data.playlists) {
+                    if(data.hasOwnProperty('playlists')) {
                         for(i=0;i<data.playlists.items.length;i++) {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
@@ -287,7 +361,7 @@ Page {
                     }
 
                     // tracks
-                    if(data.tracks) {
+                    if(data.hasOwnProperty('tracks')) {
                         for(i=0;i<data.tracks.items.length;i++) {
                             searchModel.append({type: 3,
                                                 name: data.tracks.items[i].name,
@@ -302,11 +376,13 @@ Page {
                     }
 
                 } catch (err) {
-                    console.log(err)
+                    console.log("Search.refresh error: " + err)
                 }
             } else {
                 console.log("Search for: " + searchString + " returned no results.")
             }
+            if(error)
+                app.showErrorMessage(error, qsTr("Search Failed"))
             showBusy = false
         })
     }
