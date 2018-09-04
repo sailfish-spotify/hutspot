@@ -381,6 +381,8 @@ Page {
             } else {
                 console.log("Search for: " + searchString + " returned no results.")
             }
+            if(error)
+                app.showErrorMessage(error, qsTr("Search Failed"))
             showBusy = false
         })
     }

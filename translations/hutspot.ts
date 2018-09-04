@@ -680,6 +680,10 @@
         <source>Please confirm Clearing the Search History</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Search Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SearchResultContextMenu</name>
