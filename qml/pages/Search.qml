@@ -68,7 +68,10 @@ Page {
                 MouseArea {
                     anchors.fill: parent
                     propagateComposedEvents: true
-                    onClicked: nextItemClass()
+                    onClicked: {
+                        nextItemClass()
+                        refresh()
+                    }
                 }
             }
 
@@ -143,10 +146,10 @@ Page {
                 }
                 EnterKey.enabled: text.length > 0
                 EnterKey.onClicked: {
+                    refresh()
                     Util.updateSearchHistory(searchField.text.trim(),
                                              app.search_history,
                                              app.search_history_max_size.value)
-                    refresh()
                 }
                 EnterKey.iconSource: "image://theme/icon-m-search"
                 Component.onCompleted: searchField.forceActiveFocus()
@@ -265,14 +268,17 @@ Page {
     property int _itemClass: -1
 
     function nextItemClass() {
-        var i = _itemClass // use i to dont trigger stuff while iterating
+        if(selectedSearchTargetsMask === 0) {
+            _itemClass = -1
+            return
+        }
+        var i = _itemClass // use i to not trigger stuff while iterating
         do {
             i++
-        } while((selectedSearchTargetsMask & (0x01 << i)) === 0 && i <= 3)
-        if(i > 3)
-            i = 0
+            if(i > 3)
+                i = 0
+        } while((selectedSearchTargetsMask & (0x01 << i)) === 0)
         _itemClass = i
-        refresh()
     }
 
     function refresh() {
@@ -302,7 +308,7 @@ Page {
                 var artistIds = []
                 try {
                     // albums
-                    if(data.albums) {
+                    if(data.hasOwnProperty('albums')) {
                         for(i=0;i<data.albums.items.length;i++) {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
@@ -317,7 +323,7 @@ Page {
                     }
 
                     // artists
-                    if(data.artists) {
+                    if(data.hasOwnProperty('artists')) {
                         for(i=0;i<data.artists.items.length;i++) {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
@@ -340,7 +346,7 @@ Page {
                     }
 
                     // playlists
-                    if(data.playlists) {
+                    if(data.hasOwnProperty('playlists')) {
                         for(i=0;i<data.playlists.items.length;i++) {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
@@ -355,7 +361,7 @@ Page {
                     }
 
                     // tracks
-                    if(data.tracks) {
+                    if(data.hasOwnProperty('tracks')) {
                         for(i=0;i<data.tracks.items.length;i++) {
                             searchModel.append({type: 3,
                                                 name: data.tracks.items[i].name,
@@ -370,7 +376,7 @@ Page {
                     }
 
                 } catch (err) {
-                    console.log(err)
+                    console.log("Search.refresh error: " + err)
                 }
             } else {
                 console.log("Search for: " + searchString + " returned no results.")
