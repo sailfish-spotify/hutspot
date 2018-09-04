@@ -845,12 +845,12 @@ ApplicationWindow {
     function toggleFollowArtist(artist, isFollowed, callback) {
         if(isFollowed)
             unfollowArtist(artist, function(error,data) {
-                if(data)
+                if(!error)
                     callback(false)
             })
         else
             followArtist(artist, function(error,data) {
-                if(data)
+                if(!error)
                     callback(true)
             })
     }
