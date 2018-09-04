@@ -69,7 +69,7 @@ Page {
 
             TextSwitch {
                 id: start_stop_librespot
-                text: qsTr("Start/Stop Librespot")
+                text: qsTr("Control Librespot")
                 description: qsTr("Start Librespot when launched and stop it on exit")
                 checked: app.start_stop_librespot.value
                 onCheckedChanged: {
@@ -80,10 +80,17 @@ Page {
 
             TextSwitch {
                 id: launchLibrespot
-                text: qsTr("Librespot")
+                text: {
+                    if(!librespot.serviceEnabled)
+                        return qsTr("Cannot start Librespot")
+                    else
+                        return librespot.serviceRunning
+                                ? qsTr("Stop Librespot")
+                                : qsTr("Start Librespot")
+                }
                 description: {
                     if(!librespot.serviceEnabled)
-                        return qsTr("Unavailable")
+                        return qsTr("Libresot is not available")
                     else
                         return librespot.serviceRunning
                                 ? qsTr("Running")

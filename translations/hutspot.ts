@@ -758,19 +758,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start/Stop Librespot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Start Librespot when launched and stop it on exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Librespot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -815,6 +803,26 @@
     </message>
     <message>
         <source>Maximum size of Search History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Control Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot start Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Libresot is not available</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
