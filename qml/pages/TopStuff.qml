@@ -106,9 +106,11 @@ Page {
     property int _itemClass: 0
 
     function nextItemClass() {
-        _itemClass++;
-        if(_itemClass > 1)
-            _itemClass = 0
+        var i = _itemClass
+        i++
+        if(i > 1)
+            i = 0
+        _itemClass = i
         refresh()
     }
 
@@ -130,7 +132,7 @@ Page {
         if(topArtists)
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
-                                     name: topArtists.items[i].name,
+                                    name: topArtists.items[i].name,
                                     following: true,
                                     track: {},
                                     artist: topArtists.items[i]})

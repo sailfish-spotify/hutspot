@@ -381,6 +381,7 @@ Page {
             } else {
                 console.log("Search for: " + searchString + " returned no results.")
             }
+            // unfortunately Spotify does not return an error when it has an invalid query
             if(error)
                 app.showErrorMessage(error, qsTr("Search Failed"))
             showBusy = false
