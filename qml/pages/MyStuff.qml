@@ -23,8 +23,9 @@ Page {
 
     allowedOrientations: Orientation.All
 
-    ListModel {
+    SortedListModel {
         id: searchModel
+        sortKey: "name"
     }
 
     SilicaListView {
@@ -68,6 +69,9 @@ Page {
             }
 
         }
+
+        section.property: "nameFirstChar"
+        section.delegate : SectionDelegate {}
 
         delegate: ListItem {
             id: listItem
@@ -189,8 +193,9 @@ Page {
         var i
         if(savedAlbums)
             for(i=0;i<savedAlbums.items.length;i++)
-                searchModel.append({type: 0,
+                searchModel.add({type: 0,
                                     stype: 0,
+                                    nameFirstChar: Util.getFirstCharForSection(savedAlbums.items[i].album.name),
                                     name: savedAlbums.items[i].album.name,
                                     album: savedAlbums.items[i].album,
                                     playlist: {},
@@ -198,8 +203,9 @@ Page {
                                     artist: {}})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
-                searchModel.append({type: 2,
+                searchModel.add({type: 2,
                                     stype: 2,
+                                    nameFirstChar: Util.getFirstCharForSection(userPlaylists.items[i].name),
                                     name: userPlaylists.items[i].name,
                                     album: {},
                                     playlist: userPlaylists.items[i],
@@ -208,8 +214,9 @@ Page {
             }
         if(recentlyPlayedTracks)
             for(i=0;i<recentlyPlayedTracks.items.length;i++) {
-                searchModel.append({type: 3,
+                searchModel.add({type: 3,
                                     stype: 3,
+                                    nameFirstChar: Util.getFirstCharForSection(recentlyPlayedTracks.items[i].track.name),
                                     name: recentlyPlayedTracks.items[i].track.name,
                                     album: {},
                                     playlist: {},
@@ -218,8 +225,9 @@ Page {
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
-                searchModel.append({type: 3,
+                searchModel.add({type: 3,
                                     stype: 4,
+                                    nameFirstChar: Util.getFirstCharForSection(savedTracks.items[i].track.name),
                                     name: savedTracks.items[i].track.name,
                                     album: {},
                                     playlist: {},
@@ -228,8 +236,9 @@ Page {
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
-                searchModel.append({type: 1,
+                searchModel.add({type: 1,
                                     stype: 1,
+                                    nameFirstChar: Util.getFirstCharForSection(followedArtists.artists.items[i].name),
                                     name: followedArtists.artists.items[i].name,
                                     following: true,
                                     album: {},

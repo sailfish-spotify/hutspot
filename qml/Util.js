@@ -300,6 +300,13 @@ function processSearchString(searchString) {
     return searchString
 }
 
+function getFirstCharForSection(str) {
+    var c = str[0]
+    if (c >= '0' && c <= '9')
+        return "#"
+    return c
+}
+
 var CursorType = {
   Normal: 0,
   FollowedArtists: 1,
