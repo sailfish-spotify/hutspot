@@ -46,6 +46,11 @@ ListModel {
             return;
         }
 
+        if(sortKey.length === 0) {
+            append(item);
+            return;
+        }
+
         var cmp = compare(item, get(0));
 
         if (cmp === 0) {
@@ -91,6 +96,8 @@ ListModel {
     }
 
     function update() {
+        if(sortKey.length === 0)
+            return
         var indexes = new Array(count);
         for (var i = 0; i < count; i++) {
             indexes[i] = i;
