@@ -209,11 +209,12 @@ Page {
 
     }
 
-    property bool _waitingForHutspotQueue: false
     function playAsPlaylist(state) {
         if(app.hutspotQueuePlaylistId.length === 0) {
-            _waitingForHutspotQueue = true
-            app.loadHutspotQueuePlaylist()
+            app.getHutspotQueuePlaylist(function(success) {
+                if(success)
+                    replaceTracksInQueuePlaylist()
+            })
         } else
             replaceTracksInQueuePlaylist()
     }
@@ -239,15 +240,6 @@ Page {
 
         onHasValidTokenChanged: refresh()
 
-        onLoadHutspotQueuePlaylistDone: {
-            if(!_waitingForHutspotQueue)
-                return
-            if(!success) {
-                _waitingForHutspotQueue = false
-                return
-            }
-            replaceTracksInQueuePlaylist()
-        }
     }
 
     Component.onCompleted: {

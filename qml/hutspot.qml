@@ -886,39 +886,38 @@ ApplicationWindow {
     property string hutspotQueuePlaylistId: ""
     property string hutspotQueuePlaylistUri: ""
     property string hutspotQueuePlaylistSnapshotId: ""
-    property int _hutspotQueuePlaylistOffset: 0
 
-    signal loadHutspotQueuePlaylistDone(bool success)
+    function getHutspotQueuePlaylist(callback) {
+        loadHutspotQueuePlaylist(0, 0, callback)
+    }
 
     // states: 0 search for it
     //         1 create playlist
-    function loadHutspotQueuePlaylist(state) {
+    function loadHutspotQueuePlaylist(state, searchOffset, callback) {
         var i
         if(hutspotQueuePlaylistUri.length > 0)
             return
-        if(state === undefined)
-            state = 0
         switch(state) {
         case 0: // search in user's playlists
-            Spotify.getUserPlaylists(id, {offset: _hutspotQueuePlaylistOffset, limit: 50}, function(error, data) {
+            Spotify.getUserPlaylists(id, {offset: searchOffset, limit: 50}, function(error, data) {
                 if(data && data.items) {
                     for(i=0;i<data.items.length;i++) {
                         if(data.items[i].name === hutspot_queue_playlist_name.value) {
                             hutspotQueuePlaylistId = data.items[i].id
                             hutspotQueuePlaylistUri = data.items[i].uri
                             hutspotQueuePlaylistSnapshotId = data.items[i].snapshot_id
-                            loadHutspotQueuePlaylistDone(true)
+                            callback(true)
                             return
                         }
                     }
                     // not found, are there more playlists to search in?
                     if(data.next) {
-                        _hutspotQueuePlaylistOffset = data.offset + data.limit
-                        loadHutspotQueuePlaylist(0)
+                        searchOffset = data.offset + data.limit
+                        loadHutspotQueuePlaylist(0, searchOffset)
                     } else // or we have to create it
                         loadHutspotQueuePlaylist(1)
                 } else {
-                    loadHutspotQueuePlaylistDone(false)
+                    callback(false)
                     console.log("No Data while looking for Playlist " + app.hutspot_queue_playlist_name.value)
                 }
             })
@@ -935,14 +934,14 @@ ApplicationWindow {
                         hutspotQueuePlaylistId = data.id
                         hutspotQueuePlaylistUri = data.uri
                         hutspotQueuePlaylistSnapshotId = data.snapshot_id
-                        loadHutspotQueuePlaylistDone(true)
+                        callback(true)
                     } else {
                         console.log("No Data while creating Playlist " + app.hutspot_queue_playlist_name.value)
-                        loadHutspotQueuePlaylistDone(false)
+                        callback(false)
                     }
                 })
             }, function() {
-                loadHutspotQueuePlaylistDone(false)
+                callback(false)
             })
         }
     }
