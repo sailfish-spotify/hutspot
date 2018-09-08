@@ -74,6 +74,14 @@
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
@@ -916,6 +924,14 @@
     </message>
     <message>
         <source>Simple Spotify Controller</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to add Track to the Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to find Playlist for Queue</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

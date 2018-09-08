@@ -15,6 +15,16 @@ ContextMenu {
     }
 
     MenuItem {
+        text: qsTr("Add to Queue")
+        onClicked: app.addToQueue(track)
+    }
+
+    MenuItem {
+        text: qsTr("Replace Queue")
+        onClicked: app.replaceQueueWith([track])
+    }
+
+    MenuItem {
         text: qsTr("Add to Playlist")
         onClicked: app.addToPlaylist(track)
     }

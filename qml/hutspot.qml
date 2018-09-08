@@ -895,8 +895,10 @@ ApplicationWindow {
     //         1 create playlist
     function loadHutspotQueuePlaylist(state, searchOffset, callback) {
         var i
-        if(hutspotQueuePlaylistUri.length > 0)
+        if(hutspotQueuePlaylistUri.length > 0) { // Todo check if it still exists?
+            callback(true)
             return
+        }
         switch(state) {
         case 0: // search in user's playlists
             Spotify.getUserPlaylists(id, {offset: searchOffset, limit: 50}, function(error, data) {
@@ -944,6 +946,57 @@ ApplicationWindow {
                 callback(false)
             })
         }
+    }
+
+    function ensureQueueIsPlaying() {
+        getHutspotQueuePlaylist(function(success) {
+            if(!success)
+                return
+            if(playingPage.currentId !== hutspotQueuePlaylistId)
+                playContext({uri: hutspotQueuePlaylistUri})
+            else if(!playingPage.playbackState.is_playing)
+                Spotify.play({}, function(error, data) {})
+        })
+    }
+
+    function addToQueue(track) {
+        app.getHutspotQueuePlaylist(function(success) {
+            if(success) {
+                Spotify.addTracksToPlaylist(id, hutspotQueuePlaylistId, [track.uri], {}, function(error, data) {
+                    if(data) {
+                        var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
+                                                        hutspotQueuePlaylistId, data.snapshot_id)
+                        ev.trackId = track.id
+                        playlistEvent(ev)
+                        ensureQueueIsPlaying()
+                        console.log("addToQueue: added " + track.name)
+                    } else {
+                        showErrorMessage(undefined, qsTr("Failed to add Track to the Queue"))
+                        console.log("addToPlaylist: failed to add " + track.name)
+                    }
+                })
+            } else {
+                showErrorMessage(undefined, qsTr("Failed to find Playlist for Queue"))
+                console.log("addToPlaylist: failed to find  Playlist for Queue")
+            }
+        })
+    }
+
+    function replaceQueueWith(tracks) {
+        app.getHutspotQueuePlaylist(function(success) {
+            if(success) {
+                var uris = [tracks.length]
+                for(var i=0;i<tracks.length;i++)
+                    uris[i] = tracks[i].uri
+                app.replaceTracksInPlaylist(hutspotQueuePlaylistId, uris, function(error, data) {
+                    if(data)
+                        ensureQueueIsPlaying()
+                })
+            } else {
+                showErrorMessage(undefined, qsTr("Failed to find Playlist for Queue"))
+                console.log("replaceQueueWith: failed to find  Playlist for Queue")
+            }
+        })
     }
 
     property string mprisServiceName: "hutspot"

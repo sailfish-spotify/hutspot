@@ -210,13 +210,10 @@ Page {
     }
 
     function playAsPlaylist(state) {
-        if(app.hutspotQueuePlaylistId.length === 0) {
-            app.getHutspotQueuePlaylist(function(success) {
-                if(success)
-                    replaceTracksInQueuePlaylist()
-            })
-        } else
-            replaceTracksInQueuePlaylist()
+        app.getHutspotQueuePlaylist(function(success) {
+            if(success)
+                replaceTracksInQueuePlaylist()
+        })
     }
 
     function replaceTracksInQueuePlaylist() {
