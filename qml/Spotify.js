@@ -839,7 +839,7 @@ function reorderTracksInPlaylist(userId, playlistId, rangeStart, insertBefore, o
  * @param {function(Object,Object)} callback An optional callback that receives 2 parameters. The first
  * one is the error object (null if no error), and the second is the value if the request succeeded.
  * @return {Object} Null if a callback is provided, a `Promise` object otherwise
- */
+ * /
 function removeTracksFromPlaylist(userId, playlistId, uris, callback) {
   var dataToBeSent = uris.map(function(uri) {
     if (typeof uri === 'string') {
@@ -852,6 +852,23 @@ function removeTracksFromPlaylist(userId, playlistId, uris, callback) {
   var requestData = {
     url: _baseUri + '/users/' + encodeURIComponent(userId) + '/playlists/' + playlistId + '/tracks',
     type: 'DELETE',
+    postData: { tracks: dataToBeSent }
+  };
+  return _checkParamsAndPerformRequest(requestData, {}, callback);
+};*/
+function removeTracksFromPlaylist(playlistId, uris, callback) {
+  var dataToBeSent = uris.map(function(uri) {
+    if (typeof uri === 'string') {
+      return { uri: uri };
+    } else {
+      return uri;
+    }
+  });
+
+  var requestData = {
+    url: _baseUri + '/playlists/' + playlistId + '/tracks',
+    type: 'DELETE',
+    contentType: 'application/json',
     postData: { tracks: dataToBeSent }
   };
   return _checkParamsAndPerformRequest(requestData, {}, callback);
@@ -1485,7 +1502,7 @@ function transferMyPlayback(deviceIds, options, callback) {
 function play(options, callback) {
   var params = 'device_id' in options ? {device_id: options.device_id} : null;
   var postData = {};
-  ['context_uri', 'uris', 'offset'].forEach(function(field) {
+  ['context_uri', 'uris', 'offset', 'position_ms'].forEach(function(field) {
     if (field in options) {
       postData[field] = options[field];
     }

@@ -9,6 +9,7 @@ import Sailfish.Silica 1.0
 
 import org.nemomobile.configuration 1.0
 import org.nemomobile.mpris 1.0
+import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
 import "Util.js" as Util
@@ -280,8 +281,14 @@ ApplicationWindow {
         })
     }
 
-    function playContext(context) {
-        Spotify.play({'device_id': deviceId.value, 'context_uri': context.uri}, function(error, data) {
+    function playContext(context, options) {
+        if(options === undefined)
+            options = {'device_id': deviceId.value, 'context_uri': context.uri}
+        else {
+            options.device_id = deviceId.value
+            options.context_uri = context.uri
+        }
+        Spotify.play(options, function(error, data) {
             if(!error) {
               playing = true
               refreshPlayingInfo()
@@ -671,6 +678,7 @@ ApplicationWindow {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
                                                         ms.selectedItem.playlist.id, data.snapshot_id)
                         ev.trackId = track.id
+                        ev.trackUri = track.uri
                         playlistEvent(ev)
                         console.log("addToPlaylist: added \"")
                     } else
@@ -684,10 +692,18 @@ ApplicationWindow {
     function removeFromPlaylist(playlist, track, callback) {
         app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
                               function() {
-            Spotify.removeTracksFromPlaylist(id, playlist.id, [track.uri], function(error, data) {
+            // does not work due to Qt. cannot have DELETE request with a body
+            /*Spotify.removeTracksFromPlaylist(playlist.id, [track.uri], function(error, data) {
                 callback(error, data)
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
-                                                ms.selectedItem.playlist.id, data.snapshot_id)
+                                                playlist.id, data.snapshot_id)
+                ev.trackId = track.id
+                playlistEvent(ev)
+            })*/
+            removeTracksFromPlaylistUsingCurl(playlist.id, [track.uri], function(error, data) {
+                callback(error, data)
+                var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
+                                                playlist.id, data.snapshot_id)
                 ev.trackId = track.id
                 playlistEvent(ev)
             })
@@ -725,6 +741,7 @@ ApplicationWindow {
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.ReplacedAllTracks,
                                                 playlistId, data.snapshot_id)
                 playlistEvent(ev)
+                console.log("replaceTracksInPlaylist: snapshot: " + data.snapshot_id)
             } else
                 console.log("No Data while replacing tracks in Playlist " + playlistId)
         })
@@ -952,10 +969,27 @@ ApplicationWindow {
         getHutspotQueuePlaylist(function(success) {
             if(!success)
                 return
-            if(playingPage.currentId !== hutspotQueuePlaylistId)
+            // There is a big problem with the Spotify API.
+            // When adding a track to an already playing playlist it is ignored.
+            // See https://github.com/spotify/web-api/issues/462
+            // We can only restart playing but it will affect the current playing track
+            if(playingPage.currentId !== hutspotQueuePlaylistId) {
                 playContext({uri: hutspotQueuePlaylistUri})
-            else if(!playingPage.playbackState.is_playing)
-                Spotify.play({}, function(error, data) {})
+            /*} else if(playingPage.currentSnapshotId !== hutspotQueuePlaylistSnapshotId) {
+                // Due to the above mentioned issue #462 we request to play the same playlist again
+                // and asking to continue with the current track at the current position.
+                // This will result in 'skipping' but for now I see no other way
+                // Mmm. This does not work as well. Maybe Spotify thinks 'hey you are already plying this playlist'.
+                var currentTrackUri = playingPage.currentTrackUri
+                var currentTrackPosition = playingPage.playbackState.progress_ms
+                var options = {}
+                if(currentTrackUri !== undefined && currentTrackUri.length > 0) {
+                    options.offset = {uri: currentTrackUri}
+                    options.position_ms = currentTrackPosition
+                }
+                playContext({uri: hutspotQueuePlaylistUri}, options)*/
+            } else if(!playingPage.playbackState.is_playing)
+                pause(function(error, data){})
         })
     }
 
@@ -966,10 +1000,11 @@ ApplicationWindow {
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
                                                         hutspotQueuePlaylistId, data.snapshot_id)
+                        ev.uri = hutspotQueuePlaylistUri
                         ev.trackId = track.id
                         playlistEvent(ev)
                         ensureQueueIsPlaying()
-                        console.log("addToQueue: added " + track.name)
+                        console.log("addToQueue: snapshot: " + data.snapshot_id + "added " + track.name)
                     } else {
                         showErrorMessage(undefined, qsTr("Failed to add Track to the Queue"))
                         console.log("addToPlaylist: failed to add " + track.name)
@@ -981,6 +1016,19 @@ ApplicationWindow {
             }
         })
     }
+
+    // Debugging
+    /*Timer {
+        interval: 5000
+        running: app.hasValidToken && hutspotQueuePlaylistId.length > 0
+        repeat: true
+        onTriggered: {
+            Spotify.getPlaylist(hutspotQueuePlaylistId, function(error, data) {
+                if(data)
+                    console.log("Timer.getPlaylist snapshot: " + data.snapshot_id + ", tracks: " + data.tracks.total)
+            })
+        }
+    }*/
 
     function replaceQueueWith(tracks) {
         app.getHutspotQueuePlaylist(function(success) {
@@ -1223,5 +1271,63 @@ ApplicationWindow {
             defaultValue: 0
     }*/
 
+    // QML seems unable to send a http DELETE request with a body.
+    // Therefore this is done using curl
+    //
+    // curl -X DELETE -i -H "Authorization: Bearer {your access token}"
+    //      -H "Content-Type: application/json" "https://api.spotify.com/v1/playlists/71m0QB5fUFrnqfnxVerUup/tracks"
+    //      --data "{\"tracks\":[{\"uri\": \"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\", \"positions\": [2] },{\"uri\":\"spotify:track:1301WleyT98MSxVHPZCA6M\", \"positions\": [7] }] }"
+
+    function removeTracksFromPlaylistUsingCurl(playlistId, uris, callback) {
+        var command = "/usr/bin/curl"
+        var args = []
+        args.push("-X")
+        args.push("DELETE")
+        //args.push("-i") // include headers in the output
+        args.push("-H")
+        args.push("Authorization: Bearer " + Spotify.getAccessToken())
+        args.push("-H")
+        args.push("Content-Type: application/json")
+        args.push(Spotify._baseUri + "/playlists/" + playlistId + "/tracks")
+        args.push("--data")
+        args.push("@-")
+
+        var data = "{\"tracks\":["
+        for(var i=0;i<uris.length;i++) {
+            if(i>0)
+                data += ","
+            data += "{\"uri\": \"" + uris[i] + "\"}"
+        }
+        data += "]}"
+
+        process.callback = callback
+        process.start(command, args)
+        process.write(data)
+        process.closeWriteChannel()
+    }
+
+    Process {
+        id: process
+
+        property var callback: undefined
+
+        workingDirectory: "/home/nemo"
+
+        onError: {
+            if(callback !== undefined)
+                callback(process.error, undefined)
+            console.log("Process.Error: " + process.error)
+            callback = undefined
+        }
+
+        onFinished: {
+            var output = process.readAllStandardOutput()
+            console.log("Process.Finished: " + process.exitStatus + ", code: " + process.exitCode)
+            console.log(output)
+            if(callback !== undefined)
+                callback(null, JSON.parse(output))
+            callback = undefined
+        }
+    }
 }
 

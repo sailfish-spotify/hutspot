@@ -23,7 +23,8 @@ SOURCES += \
     src/o2/o2spotify.cpp \
     src/o2/o2simplecrypt.cpp \
     src/spotify.cpp \
-    src/hutspot.cpp
+    src/hutspot.cpp \
+    src/qdeclarativeprocess.cpp
 
 DISTFILES += \
     qml/cover/CoverPage.qml \
@@ -80,6 +81,7 @@ HEADERS += \
     src/o2/o2replyserver.h \
     src/o2/o2spotify.h \
     src/spotify.h \
-    src/IconProvider.h
+    src/IconProvider.h \
+    src/qdeclarativeprocess.h
 
 #QMAKE_LFLAGS += -lavahi-client -lavahi-common

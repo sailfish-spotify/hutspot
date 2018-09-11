@@ -923,15 +923,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Simple Spotify Controller</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Failed to add Track to the Queue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Failed to find Playlist for Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
