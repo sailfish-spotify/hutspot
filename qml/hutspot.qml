@@ -35,11 +35,12 @@ ApplicationWindow {
     property alias search_history_max_size: search_history_max_size
 
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
-    readonly property string hutspotPlaylistDescription: qsTr("Playlist used as a queue by Hutspot")
 
     property string playbackStateDeviceId: ""
     property string playbackStateDeviceName: ""
     property alias mprisPlayer: mprisPlayer
+    property alias queue: queue
+    property alias playingPage: playingPage
 
 
     allowedOrientations: defaultAllowedOrientations
@@ -701,7 +702,8 @@ ApplicationWindow {
                 playlistEvent(ev)
             })*/
             removeTracksFromPlaylistUsingCurl(playlist.id, [track.uri], function(error, data) {
-                callback(error, data)
+                if(callback)
+                    callback(error, data)
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
                                                 playlist.id, data.snapshot_id)
                 ev.trackId = track.id
@@ -900,151 +902,8 @@ ApplicationWindow {
         }
     }
 
-    property string hutspotQueuePlaylistId: ""
-    property string hutspotQueuePlaylistUri: ""
-    property string hutspotQueuePlaylistSnapshotId: ""
-
-    function getHutspotQueuePlaylist(callback) {
-        loadHutspotQueuePlaylist(0, 0, callback)
-    }
-
-    // states: 0 search for it
-    //         1 create playlist
-    function loadHutspotQueuePlaylist(state, searchOffset, callback) {
-        var i
-        if(hutspotQueuePlaylistUri.length > 0) { // Todo check if it still exists?
-            callback(true)
-            return
-        }
-        switch(state) {
-        case 0: // search in user's playlists
-            Spotify.getUserPlaylists(id, {offset: searchOffset, limit: 50}, function(error, data) {
-                if(data && data.items) {
-                    for(i=0;i<data.items.length;i++) {
-                        if(data.items[i].name === hutspot_queue_playlist_name.value) {
-                            hutspotQueuePlaylistId = data.items[i].id
-                            hutspotQueuePlaylistUri = data.items[i].uri
-                            hutspotQueuePlaylistSnapshotId = data.items[i].snapshot_id
-                            callback(true)
-                            return
-                        }
-                    }
-                    // not found, are there more playlists to search in?
-                    if(data.next) {
-                        searchOffset = data.offset + data.limit
-                        loadHutspotQueuePlaylist(0, searchOffset)
-                    } else // or we have to create it
-                        loadHutspotQueuePlaylist(1)
-                } else {
-                    callback(false)
-                    console.log("No Data while looking for Playlist " + app.hutspot_queue_playlist_name.value)
-                }
-            })
-            break
-        case 1: // create it
-            app.showConfirmDialog(qsTr("Hutspot wants to create playlist:<br><br><b>") + app.hutspot_queue_playlist_name.value + "</b><br><br>"
-                                       +qsTr("which will be used as it's player queue. Is that Ok?"),
-                                  function() {
-                // create the playlist
-                var options = {name: hutspot_queue_playlist_name.value}
-                options.description = hutspotPlaylistDescription
-                Spotify.createPlaylist(id, options, function(error, data) {
-                    if(data && data.id) {
-                        hutspotQueuePlaylistId = data.id
-                        hutspotQueuePlaylistUri = data.uri
-                        hutspotQueuePlaylistSnapshotId = data.snapshot_id
-                        callback(true)
-                    } else {
-                        console.log("No Data while creating Playlist " + app.hutspot_queue_playlist_name.value)
-                        callback(false)
-                    }
-                })
-            }, function() {
-                callback(false)
-            })
-        }
-    }
-
-    function ensureQueueIsPlaying() {
-        getHutspotQueuePlaylist(function(success) {
-            if(!success)
-                return
-            // There is a big problem with the Spotify API.
-            // When adding a track to an already playing playlist it is ignored.
-            // See https://github.com/spotify/web-api/issues/462
-            // We can only restart playing but it will affect the current playing track
-            if(playingPage.currentId !== hutspotQueuePlaylistId) {
-                playContext({uri: hutspotQueuePlaylistUri})
-            /*} else if(playingPage.currentSnapshotId !== hutspotQueuePlaylistSnapshotId) {
-                // Due to the above mentioned issue #462 we request to play the same playlist again
-                // and asking to continue with the current track at the current position.
-                // This will result in 'skipping' but for now I see no other way
-                // Mmm. This does not work as well. Maybe Spotify thinks 'hey you are already plying this playlist'.
-                var currentTrackUri = playingPage.currentTrackUri
-                var currentTrackPosition = playingPage.playbackState.progress_ms
-                var options = {}
-                if(currentTrackUri !== undefined && currentTrackUri.length > 0) {
-                    options.offset = {uri: currentTrackUri}
-                    options.position_ms = currentTrackPosition
-                }
-                playContext({uri: hutspotQueuePlaylistUri}, options)*/
-            } else if(!playingPage.playbackState.is_playing)
-                pause(function(error, data){})
-        })
-    }
-
-    function addToQueue(track) {
-        app.getHutspotQueuePlaylist(function(success) {
-            if(success) {
-                Spotify.addTracksToPlaylist(id, hutspotQueuePlaylistId, [track.uri], {}, function(error, data) {
-                    if(data) {
-                        var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
-                                                        hutspotQueuePlaylistId, data.snapshot_id)
-                        ev.uri = hutspotQueuePlaylistUri
-                        ev.trackId = track.id
-                        playlistEvent(ev)
-                        ensureQueueIsPlaying()
-                        console.log("addToQueue: snapshot: " + data.snapshot_id + "added " + track.name)
-                    } else {
-                        showErrorMessage(undefined, qsTr("Failed to add Track to the Queue"))
-                        console.log("addToPlaylist: failed to add " + track.name)
-                    }
-                })
-            } else {
-                showErrorMessage(undefined, qsTr("Failed to find Playlist for Queue"))
-                console.log("addToPlaylist: failed to find  Playlist for Queue")
-            }
-        })
-    }
-
-    // Debugging
-    /*Timer {
-        interval: 5000
-        running: app.hasValidToken && hutspotQueuePlaylistId.length > 0
-        repeat: true
-        onTriggered: {
-            Spotify.getPlaylist(hutspotQueuePlaylistId, function(error, data) {
-                if(data)
-                    console.log("Timer.getPlaylist snapshot: " + data.snapshot_id + ", tracks: " + data.tracks.total)
-            })
-        }
-    }*/
-
-    function replaceQueueWith(tracks) {
-        app.getHutspotQueuePlaylist(function(success) {
-            if(success) {
-                var uris = [tracks.length]
-                for(var i=0;i<tracks.length;i++)
-                    uris[i] = tracks[i].uri
-                app.replaceTracksInPlaylist(hutspotQueuePlaylistId, uris, function(error, data) {
-                    if(data)
-                        ensureQueueIsPlaying()
-                })
-            } else {
-                showErrorMessage(undefined, qsTr("Failed to find Playlist for Queue"))
-                console.log("replaceQueueWith: failed to find  Playlist for Queue")
-            }
-        })
+    QueueController {
+        id: queue
     }
 
     property string mprisServiceName: "hutspot"

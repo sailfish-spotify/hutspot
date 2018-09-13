@@ -210,21 +210,10 @@ Page {
     }
 
     function playAsPlaylist(state) {
-        app.getHutspotQueuePlaylist(function(success) {
-            if(success)
-                replaceTracksInQueuePlaylist()
-        })
-    }
-
-    function replaceTracksInQueuePlaylist() {
-        // replace the tracks
-        var tracks = [searchModel.count]
+        var uris = [searchModel.count]
         for(var i=0;i<searchModel.count;i++)
-            tracks[i] = searchModel.get(i).track.uri
-        app.replaceTracksInPlaylist(app.hutspotQueuePlaylistId, tracks, function(error, data) {
-            if(data)
-                app.playContext({uri: app.hutspotQueuePlaylistUri})
-        })
+            uris[i] = searchModel.get(i).track.uri
+        app.queue.replaceQueueWith(uris)
     }
 
     Connections {

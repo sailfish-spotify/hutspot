@@ -838,9 +838,11 @@ Page {
     function pluOnStopped() {
         if(waitForEndOfSnapshot) {
             waitForEndOfSnapshot = false
-            currentId = "" // trigger reload
-            playContext({uri: waitForEndSnapshotData.uri},
-                        {offset: {uri: waitForEndSnapshotData.trackUri}})
+            if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
+                currentId = "" // trigger reload
+                playContext({uri: waitForEndSnapshotData.uri},
+                            {offset: {uri: waitForEndSnapshotData.trackUri}})
+            }
         }
     }
 
@@ -892,7 +894,7 @@ Page {
                 if(_isPlaying)
                     app.pause(function(error, data) {
                         currentId = "" // trigger reload)
-                        playContext({context: contextObject.uri})
+                        playContext({uri: contextObject.uri})
                     })
                 else
                     loadPlaylistTracks(app.id, currentId)

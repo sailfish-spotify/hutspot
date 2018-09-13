@@ -58,7 +58,8 @@ DISTFILES += \
     qml/components/SearchFieldWithMenu.qml \
     qml/components/MySearchField.qml \
     qml/components/SectionDelegate.qml \
-    qml/components/SortedListModel.qml
+    qml/components/SortedListModel.qml \
+    qml/components/QueueController.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
