@@ -41,7 +41,7 @@ CoverBackground {
             }
         }
 
-        Text {
+        /*Text {
             id: titleLabel
             x: titleLabel.width > cover.width
                ? parent.width
@@ -69,14 +69,7 @@ CoverBackground {
                ? parent.width
                : (parent.width-otherLabel.width) / 2
             text: artistsText
-            /*{
-                var s = ""
-                if(albumText)
-                    s += albumText
-                if(artistsText && artistsText.length > 0)
-                    s += (s.length > 0 ? ", " : "") + artistsText
-                return s
-            }*/
+
             horizontalAlignment: otherLabel.width > cover.width
                                  ? Text.AlignLeft
                                  : Text.AlignHCenter
@@ -90,6 +83,39 @@ CoverBackground {
                 to: -1 * otherLabel.width //+ cover.width)
                 loops: Animation.Infinite
                 duration: 5000
+            }
+        }*/
+
+        /*{
+            var s = ""
+            if(albumText)
+                s += albumText
+            if(artistsText && artistsText.length > 0)
+                s += (s.length > 0 ? ", " : "") + artistsText
+            return s
+        }*/
+
+        Rectangle {
+            width: parent.width
+            height: Theme.paddingLarge
+            opacity: 0
+        }
+
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Theme.paddingMedium
+            /*Image {
+                height: Theme.iconSizeSmall
+                width: height
+                sourceSize.height: Theme.iconSizeSmall
+                sourceSize.width: sourceSize.height
+                smooth: true
+                anchors.verticalCenter: spotifyLabel.verticalCenter
+                source: app.getAppIconSource()
+            }*/
+            Label {
+                id: spotifyLabel
+                text: qsTr("Hutspot")
             }
         }
 
