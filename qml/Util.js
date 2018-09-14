@@ -46,6 +46,13 @@ function getYearFromReleaseDate(releaseDate) {
     return parts[0]
 }
 
+function getPlayedAtText(playedAt) {
+    // "played_at": "2016-12-13T20:44:04.589Z"
+    //var date = new Date(playedAt)
+    //return date.toLocaleDateString()
+    return playedAt.split('T')[0]
+}
+
 function deviceInfoRequest(avahi, callback) {
   var req = new XMLHttpRequest();
     var tmp;
@@ -298,6 +305,13 @@ function processSearchString(searchString) {
     if(canAdd)
         searchString = searchString + '*'
     return searchString
+}
+
+function getFirstCharForSection(str) {
+    var c = str[0]
+    if (c >= '0' && c <= '9')
+        return "#"
+    return c
 }
 
 var CursorType = {

@@ -74,6 +74,14 @@
         <source>Add to Playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Add to Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
@@ -572,6 +580,29 @@
     </message>
 </context>
 <context>
+    <name>QueueController</name>
+    <message>
+        <source>Playlist used as a queue by Hutspot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hutspot wants to create playlist:&lt;br&gt;&lt;br&gt;&lt;b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>which will be used as it&apos;s player queue. Is that Ok?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to add Track to the Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to find Playlist for Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Recommended</name>
     <message>
         <source>Reload</source>
@@ -734,6 +765,10 @@
         <source>tracks</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>played at </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -867,10 +902,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playlist used as a queue by Hutspot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Transfer Failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -900,14 +931,6 @@
     </message>
     <message>
         <source>View an Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hutspot wants to create playlist:&lt;br&gt;&lt;br&gt;&lt;b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>which will be used as it&apos;s player queue. Is that Ok?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

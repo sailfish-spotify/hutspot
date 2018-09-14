@@ -159,8 +159,10 @@ Row {
             return s
         case 3:
             if(dataModel.track.album)
-                return dataModel.track.album.name
-            break;
+                s += dataModel.track.album.name
+            if(dataModel.played_at && dataModel.played_at.length>0)
+                s += (s.length>0?", ":"") + qsTr("played at ") + Util.getPlayedAtText(dataModel.played_at)
+            return s
         }
         return ""
     }

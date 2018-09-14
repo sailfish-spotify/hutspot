@@ -23,7 +23,8 @@ SOURCES += \
     src/o2/o2spotify.cpp \
     src/o2/o2simplecrypt.cpp \
     src/spotify.cpp \
-    src/hutspot.cpp
+    src/hutspot.cpp \
+    src/qdeclarativeprocess.cpp
 
 DISTFILES += \
     qml/cover/CoverPage.qml \
@@ -55,7 +56,10 @@ DISTFILES += \
     qml/pages/History.qml \
     qml/pages/Recommended.qml \
     qml/components/SearchFieldWithMenu.qml \
-    qml/components/MySearchField.qml
+    qml/components/MySearchField.qml \
+    qml/components/SectionDelegate.qml \
+    qml/components/SortedListModel.qml \
+    qml/components/QueueController.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -78,6 +82,7 @@ HEADERS += \
     src/o2/o2replyserver.h \
     src/o2/o2spotify.h \
     src/spotify.h \
-    src/IconProvider.h
+    src/IconProvider.h \
+    src/qdeclarativeprocess.h
 
 #QMAKE_LFLAGS += -lavahi-client -lavahi-common

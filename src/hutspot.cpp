@@ -19,6 +19,7 @@
 #include "IconProvider.h"
 #include "spotify.h"
 //#include "servicebrowser.h"
+#include "qdeclarativeprocess.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +32,9 @@ int main(int argc, char *argv[])
 
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
+
+    qmlRegisterUncreatableType<QDeclarativeProcessEnums>("org.hildon.components", 1, 0, "Processes", "");
+    qmlRegisterType<QDeclarativeProcess>("org.hildon.components", 1, 0, "Process");
 
     // custom icon loader
     QQmlEngine *engine = view->engine();

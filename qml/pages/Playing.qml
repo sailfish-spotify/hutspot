@@ -28,6 +28,7 @@ Page {
     property string currentId: ""
     property string currentSnapshotId: ""
     property string currentTrackId: ""
+    property string currentTrackUri: ""
 
     property string viewMenuText: ""
     property bool showTrackInfo: true
@@ -613,6 +614,22 @@ Page {
         reloadTracks()
     }
 
+    // try to detect end of playlist play
+    property bool _isPlaying: false
+    onPlaybackStateChanged: {
+        if(playbackState === undefined)
+            return
+
+        if(!_isPlaying && playbackState.is_playing)
+            console.log("Started Playing")
+        else if(_isPlaying && !playbackState.is_playing) {
+            console.log("Stopped Playing")
+            pluOnStopped()
+        }
+
+        _isPlaying = playbackState.is_playing
+    }
+
     function refreshPlaybackState() {
         var i;
 
@@ -645,6 +662,7 @@ Page {
                                 contextObject = data
                                 if(data)
                                     currentSnapshotId = data.snapshot_id
+                                console.log("Now playing snaphot: " + data.snapshot_id)
                                 pageHeaderText = qsTr("Playing Playlist")
                             })
                             loadPlaylistTracks(app.id, cid)
@@ -682,6 +700,7 @@ Page {
                 playingObject = data
                 app.newPlayingTrackInfo(data.item)
                 currentTrackId = playingObject.item.id
+                currentTrackUri = playingObject.item.uri
             }
         })
 
@@ -810,6 +829,23 @@ Page {
         return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
     }*/
 
+    //
+    // Playlist Utilities
+    //
+
+    property var waitForEndSnapshotData: ({})
+    property bool waitForEndOfSnapshot : false
+    function pluOnStopped() {
+        if(waitForEndOfSnapshot) {
+            waitForEndOfSnapshot = false
+            if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
+                currentId = "" // trigger reload
+                playContext({uri: waitForEndSnapshotData.uri},
+                            {offset: {uri: waitForEndSnapshotData.trackUri}})
+            }
+        }
+    }
+
     Connections {
         target: app
 
@@ -825,22 +861,43 @@ Page {
             if(getContextType() !== Spotify.ItemType.Playlist
                || contextObject.id !== event.playlistId)
                 return
+
+            // When a plylist is modified while being played the modifications
+            // are ignored, it keeps on playing the snapshot that was started.
+            // To try to fix this we:
+            //   AddedTrack:
+            //      wait for playing to end (last track of original snapshot) and then restart playing
+            //   RemovedTrack:
+            //      for now nothing
+            //   ReplacedAllTracks:
+            //      restart playing
+
             switch(event.type) {
             case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
                 loadPlaylistTracks(app.id, currentId)
-                currentSnapshotId = event.snapshotId
+                if(_isPlaying) {
+                    waitForEndOfSnapshot = true
+                    waitForEndSnapshotData.uri = event.uri
+                    waitForEndSnapshotData.snapshotId = event.snapshotId
+                    waitForEndSnapshotData.index = contextObject.tracks.total // not used
+                    waitForEndSnapshotData.trackUri = event.trackUri
+                } else
+                    currentSnapshotId = event.snapshotId
                 break
             case Util.PlaylistEventType.RemovedTrack:
-                Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
-                currentSnapshotId = event.snapshotId
+                //Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
+                //currentSnapshotId = event.snapshotId
                 break
             case Util.PlaylistEventType.ReplacedAllTracks:
-                if(currentSnapshotId !== event.snapshotId) {
+                if(_isPlaying)
+                    app.pause(function(error, data) {
+                        currentId = "" // trigger reload)
+                        playContext({uri: contextObject.uri})
+                    })
+                else
                     loadPlaylistTracks(app.id, currentId)
-                    currentSnapshotId = event.snapshotId
-                }
                 break
             }
         }

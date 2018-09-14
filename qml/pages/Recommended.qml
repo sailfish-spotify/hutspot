@@ -209,24 +209,11 @@ Page {
 
     }
 
-    property bool _waitingForHutspotQueue: false
     function playAsPlaylist(state) {
-        if(app.hutspotQueuePlaylistId.length === 0) {
-            _waitingForHutspotQueue = true
-            app.loadHutspotQueuePlaylist()
-        } else
-            replaceTracksInQueuePlaylist()
-    }
-
-    function replaceTracksInQueuePlaylist() {
-        // replace the tracks
-        var tracks = [searchModel.count]
+        var uris = [searchModel.count]
         for(var i=0;i<searchModel.count;i++)
-            tracks[i] = searchModel.get(i).track.uri
-        app.replaceTracksInPlaylist(app.hutspotQueuePlaylistId, tracks, function(error, data) {
-            if(data)
-                app.playContext({uri: app.hutspotQueuePlaylistUri})
-        })
+            uris[i] = searchModel.get(i).track.uri
+        app.queue.replaceQueueWith(uris)
     }
 
     Connections {
@@ -239,15 +226,6 @@ Page {
 
         onHasValidTokenChanged: refresh()
 
-        onLoadHutspotQueuePlaylistDone: {
-            if(!_waitingForHutspotQueue)
-                return
-            if(!success) {
-                _waitingForHutspotQueue = false
-                return
-            }
-            replaceTracksInQueuePlaylist()
-        }
     }
 
     Component.onCompleted: {

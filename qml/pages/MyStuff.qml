@@ -23,8 +23,9 @@ Page {
 
     allowedOrientations: Orientation.All
 
-    ListModel {
+    SortedListModel {
         id: searchModel
+        sortKey: _itemClass != 2 ? "name" : ""
     }
 
     SilicaListView {
@@ -68,6 +69,14 @@ Page {
             }
 
         }
+
+        SectionDelegate {
+            id: sectionDelegate
+        }
+
+        // no name section for Recently Played
+        section.property: _itemClass != 2 ? "nameFirstChar" : ""
+        section.delegate: sectionDelegate
 
         delegate: ListItem {
             id: listItem
@@ -178,64 +187,65 @@ Page {
     property int _itemClass: 0
 
     function nextItemClass() {
-        _itemClass++;
-        if(_itemClass > 4)
-            _itemClass = 0
+        var i = _itemClass
+        i++
+        if(i > 4)
+            i = 0
+        _itemClass = i
         refreshDirection = 0
         refresh()
+    }
+
+    function addData(obj) {
+        obj.nameFirstChar = Util.getFirstCharForSection(obj.name)
+        if(!obj.hasOwnProperty('album'))
+            obj.album = {}
+        if(!obj.hasOwnProperty('playlist'))
+            obj.playlist = {}
+        if(!obj.hasOwnProperty('track'))
+            obj.track = {}
+        if(!obj.hasOwnProperty('artist'))
+            obj.artist = {}
+        if(!obj.hasOwnProperty('played_at'))
+            obj.played_at = ""
+        if(!obj.hasOwnProperty('following'))
+            obj.following = false
+        searchModel.add(obj)
     }
 
     function loadData() {
         var i
         if(savedAlbums)
             for(i=0;i<savedAlbums.items.length;i++)
-                searchModel.append({type: 0,
-                                    stype: 0,
-                                    name: savedAlbums.items[i].album.name,
-                                    album: savedAlbums.items[i].album,
-                                    playlist: {},
-                                    track: {},
-                                    artist: {}})
+                addData({type: 0, stype: 0,
+                         name: savedAlbums.items[i].album.name,
+                         album: savedAlbums.items[i].album})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
-                searchModel.append({type: 2,
-                                    stype: 2,
-                                    name: userPlaylists.items[i].name,
-                                    album: {},
-                                    playlist: userPlaylists.items[i],
-                                    track: {},
-                                    artist: {}})
+                addData({type: 2, stype: 2,
+                         name: userPlaylists.items[i].name,
+                         playlist: userPlaylists.items[i]})
             }
         if(recentlyPlayedTracks)
+            // context, played_at, track
             for(i=0;i<recentlyPlayedTracks.items.length;i++) {
-                searchModel.append({type: 3,
-                                    stype: 3,
-                                    name: recentlyPlayedTracks.items[i].track.name,
-                                    album: {},
-                                    playlist: {},
-                                    track: recentlyPlayedTracks.items[i].track,
-                                    artist: {}})
+                addData({type: 3, stype: 3,
+                         name: recentlyPlayedTracks.items[i].track.name,
+                         track: recentlyPlayedTracks.items[i].track,
+                         played_at: recentlyPlayedTracks.items[i].played_at})
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
-                searchModel.append({type: 3,
-                                    stype: 4,
-                                    name: savedTracks.items[i].track.name,
-                                    album: {},
-                                    playlist: {},
-                                    track: savedTracks.items[i].track,
-                                    artist: {}})
+                addData({type: 3, stype: 4,
+                         name: savedTracks.items[i].track.name,
+                         track: savedTracks.items[i].track})
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
-                searchModel.append({type: 1,
-                                    stype: 1,
-                                    name: followedArtists.artists.items[i].name,
-                                    following: true,
-                                    album: {},
-                                    playlist: {},
-                                    track: {},
-                                    artist: followedArtists.artists.items[i]})
+                addData({type: 1, stype: 1,
+                         name: followedArtists.artists.items[i].name,
+                         artist: followedArtists.artists.items[i],
+                         following: true})
             }
     }
 
@@ -278,6 +288,10 @@ Page {
             })
             break
         case 2:
+            // unfortunately:
+            //   Any tracks listened to while the user had “Private Session” enabled in
+            //   their client will not be returned in the list of recently played tracks.
+            // and it seems Librespot just does that when using credentials
             options = {limit: cursorHelper.limit}
             // 'RecentlyPlayedTracks' has 'before' and 'after' fields
             if(refreshDirection < 0) // previous set is looking forward in time
