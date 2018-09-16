@@ -598,7 +598,7 @@ Page {
         return -1
     }
 
-    function updateForCurrentTrack() {
+    function updateForCurrentAlbumTrack() {
         // keep current track visible
         currentIndex = -1
         for(var i=0;i<searchModel.count;i++)
@@ -608,6 +608,104 @@ Page {
                 break
             }
     }
+
+    function updateForCurrentTrack() {
+        switch(playbackState.context.type) {
+        case 'album':
+            updateForCurrentAlbumTrack()
+            break
+        case 'playlist':
+            updateForCurrentPlaylistTrack()
+            break
+        default:
+            break
+        }
+    }
+
+    // to be able to find the current track and load the correct set of tracks
+    // we keep a list of all playlist tracks (Id,Uri)
+    // (for albums we just load the first 100 and hope this is enough)
+    property var tracksInfo: []
+
+    function updateForCurrentPlaylistTrack() {
+        currentIndex = -1
+        for(var i=0;i<tracksInfo.length;i++) {
+            if(tracksInfo[i].id === currentTrackId) {
+                // in currently loaded set?
+                if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
+                    listView.positionViewAtIndex(i, ListView.Visible)
+                    currentIndex = i
+                    break
+                } else {
+                    // load set
+                    cursorHelper.offset = i
+                    loadPlaylistTracks(app.id, currentId)
+                    currentIndex = 0
+                }
+            }
+        }
+    }
+
+    function loadPlaylistTrackInfo() {
+        tracksInfo = []
+        _loadPlaylistTrackInfo(0)
+    }
+
+    function _loadPlaylistTrackInfo(offset) {
+        Spotify.getPlaylistTracks(currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
+            function(error, data) {
+                if(data) {
+                    for(var i=0;i<data.items.length;i++)
+                        tracksInfo[i+offset] = {id: data.items[i].track.id, uri: data.items[i].track.uri}
+                    var nextOffset = data.offset+data.items.length
+                    if(nextOffset < data.total)
+                        _loadPlaylistTrackInfo(nextOffset)
+                }
+            })
+    }
+
+    /*property int searchTrackStart: 0
+    property string searchTrackId: ""
+
+    function findTrack(uri) {
+        // already searching?
+        if(searchTrackUri.length > 0)
+            return
+        searchTrackUri = uri
+
+        // assume it is not in the current set so start looking in the next one
+        searchTrackStart = cursorHelper.offset+searchModel.count
+
+        // if complete list is loaded no use to search
+        if(cursorHelper.offset === 0 && searchModel.count === cursorHelper.total)
+            return
+
+        _findTrack(uri, searchTrackStart)
+    }
+
+    function _findTrack(uri, offset) {
+        Spotify.getPlaylistTracks(currentId, {fields: "items(track(id,uri))", offset: offset, limit: 100},
+              function(error, data) {
+                  if(data) {
+                      for(var i=0;i<data.items.length;i++) {
+                          if(data.items[i].uri === uri) {
+                              // found it, load it
+                              cursorHelper.offset = data.offset + i
+                              reloadTracks()
+                              return
+                          }
+                      }
+                      // did not find it, search in next set if still possible
+                      var nextOffset = data.offset+data.items.length
+                      if(nextOffset < cursorHelper.total)
+                          _findTrack(uri, nextOffset)
+                      // ToDo we can restart at 0 and check searchTrackStart so we guard for an endless loop
+                  } else {
+                      app.showErrorMessage(error, qsTr("Failed to fetch data while searching for next track."))
+                      console.log("No data while searching for track " + uri)
+                  }
+              })
+    }*/
 
     // called by menus
     function refresh() {
@@ -620,9 +718,11 @@ Page {
         if(playbackState === undefined)
             return
 
-        if(!_isPlaying && playbackState.is_playing)
+        if(!_isPlaying && playbackState.is_playing) {
+            if(currentIndex === -1)
+                updateForCurrentTrack()
             console.log("Started Playing")
-        else if(_isPlaying && !playbackState.is_playing) {
+        } else if(_isPlaying && !playbackState.is_playing) {
             console.log("Stopped Playing")
             pluOnStopped()
         }
@@ -666,6 +766,7 @@ Page {
                                 pageHeaderText = qsTr("Playing Playlist")
                             })
                             loadPlaylistTracks(app.id, cid)
+                            loadPlaylistTrackInfo()
                             break
                         default:
                             pageHeaderText = qsTr("Playing Album")
@@ -721,7 +822,7 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        Spotify.getPlaylistTracks(id, pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+        Spotify.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
@@ -746,6 +847,7 @@ Page {
 
     function loadAlbumTracks(id) {
         searchModel.clear()
+        cursorHelper.limit = 100 // for now load as much as possible and hope it is enough
         Spotify.getAlbumTracks(id,
                                {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                function(error, data) {
