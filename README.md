@@ -33,7 +33,7 @@ Hutspot has an option in it's Settings page to start/stop the Librespot service.
 See the wiki page on [Operating](https://github.com/sailfish-spotify/hutspot/wiki/Operating)
 
 ### Donations
-Soddy but I do not accept any donations. I really appreciate the gesture but it is a hobby that I am able to do because others are investing their time as well.
+Sorry but I do not accept any donations. I really appreciate the gesture but it is a hobby that I am able to do because others are investing their time as well.
 
 If someone wants to show appreciation for my work by a donation then I suggest to help support openrepos.net.
 
