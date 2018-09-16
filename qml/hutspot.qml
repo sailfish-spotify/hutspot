@@ -652,7 +652,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.changePlaylistDetails(id, playlist.id, options, function(error, data) {
+                Spotify.changePlaylistDetails(playlist.id, options, function(error, data) {
                     if(callback)
                         callback(error, data)
                     if(!error) {
@@ -722,7 +722,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.createPlaylist(id, options, function(error, data) {
+                Spotify.createPlaylist(options, function(error, data) {
                     callback(error, data)
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.CreatedPlaylist,
@@ -736,7 +736,7 @@ ApplicationWindow {
     }
 
     function replaceTracksInPlaylist(playlistId, tracks, callback) {
-        Spotify.replaceTracksInPlaylist(app.id, playlistId, tracks, function(error, data) {
+        Spotify.replaceTracksInPlaylist(playlistId, tracks, function(error, data) {
             if(callback)
                 callback(error, data)
             if(data && data.snapshot_id) {
@@ -756,7 +756,7 @@ ApplicationWindow {
     }
 
     function followPlaylist(playlist, callback) {
-        Spotify.followPlaylist(id, playlist.id, function(error, data) {
+        Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
         })
     }
@@ -765,12 +765,12 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
                                   function() {
-                Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+                Spotify.unfollowPlaylist(playlist.id, function(error, data) {
                     callback(error, data)
                 })
             })
         else
-            Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+            Spotify.unfollowPlaylist(playlist.id, function(error, data) {
                 callback(error, data)
             })
     }
