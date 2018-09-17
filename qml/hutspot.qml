@@ -672,8 +672,7 @@ ApplicationWindow {
                                 { label: qsTr("Select a Playlist") } );
         ms.accepted.connect(function() {
             if(ms.selectedItem && ms.selectedItem.playlist) {
-                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.owner.id,
-                                            ms.selectedItem.playlist.id,
+                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.id,
                                             [track.uri], {}, function(error, data) {
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
