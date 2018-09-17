@@ -16,8 +16,6 @@ Dialog {
     property string label: ""
     property var selectedItem
 
-    property int offset: 0
-    property int limit: app.searchLimit.value
     property int currentIndex: -1
 
     ListModel { id: items }
@@ -83,22 +81,24 @@ Dialog {
             }
             MenuItem {
                 text: qsTr("Load Previous Set")
-                enabled: offset > 0
-                onClicked: {
-                    offset -= limit
-                    refresh()
-                }
+                enabled: cursorHelper.canLoadPrevious
+                onClicked: cursorHelper.previous()
             }
         }
         PushUpMenu {
             MenuItem {
                 text: qsTr("Load Next Set")
-                onClicked: {
-                    offset += limit
-                    refresh()
-                }
+                enabled: cursorHelper.canLoadNext
+                onClicked: cursorHelper.next()
             }
         }
+    }
+
+    CursorHelper {
+        id: cursorHelper
+
+        onLoadNext: refresh()
+        onLoadPrevious: refresh()
     }
 
     onLabelChanged: refresh() // ToDo come up with a better trigger
