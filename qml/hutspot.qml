@@ -749,7 +749,7 @@ ApplicationWindow {
     }
 
     function isFollowingPlaylist(playlist, callback) {
-        Spotify.areFollowingPlaylist(id, playlist.id, [id], function(error, data) {
+        Spotify.areFollowingPlaylist(playlist.id, [id], function(error, data) {
             callback(error, data)
         })
     }
