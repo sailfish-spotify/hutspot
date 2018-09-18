@@ -17,6 +17,9 @@ Row {
     //height: column.height
     spacing: Theme.paddingMedium
 
+    opacity: (dataModel.type !== Util.SpotifyItemType.Track
+              || Util.isTrackPlayable(dataModel.track)) ? 1.0 : 0.4
+
     Image {
         id: image
         width: height
@@ -73,19 +76,19 @@ Row {
     function getImageURL(dataModel) {
         var images
         switch(dataModel.type) {
-        case 0:
+        case Util.SpotifyItemType.Album:
             if(dataModel.album.images)
                 images = dataModel.album.images
             break;
-        case 1:
+        case Util.SpotifyItemType.Artist:
             if(dataModel.artist.images)
                 images = dataModel.artist.images
             break;
-        case 2:
+        case Util.SpotifyItemType.Playlist:
             if(dataModel.playlist.images)
                 images = dataModel.playlist.images
             break;
-        case 3:
+        case Util.SpotifyItemType.Track:
             if(dataModel.track.images)
                 images = dataModel.track.images
             else if(dataModel.track.album && dataModel.track.album.images)
@@ -111,20 +114,20 @@ Row {
         var items = []
         var ts = ""
         switch(dataModel.type) {
-        case 0:
+        case Util.SpotifyItemType.Album:
             if(dataModel.album.artists)
                 items = dataModel.album.artists
             return Util.createItemsString(items, qsTr("no artist known"))
-        case 1:
+        case Util.SpotifyItemType.Artist:
             if(dataModel.artist.genres)
                 items = dataModel.artist.genres
             return Util.createItemsString(items, qsTr("no genre known"))
-        case 2:
+        case Util.SpotifyItemType.Playlist:
             if(dataModel.playlist.owner.display_name)
                 return dataModel.playlist.owner.display_name
             else
                 return qsTr("Id") + ": " + dataModel.playlist.owner.id
-        case 3:
+        case Util.SpotifyItemType.Track:
             if(dataModel.track.duration_ms)
                 ts += Util.getDurationString(dataModel.track.duration_ms) + ", "
             if(dataModel.track.artists)
@@ -140,9 +143,9 @@ Row {
     function getMeta2String() {
         var s = "";
         switch(dataModel.type) {
-        case 0:
+        case Util.SpotifyItemType.Album:
             return Util.getYearFromReleaseDate(dataModel.album.release_date)
-        case 1:
+        case Util.SpotifyItemType.Artist:
             if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)
                    s = qsTr("[following], ")
@@ -150,21 +153,24 @@ Row {
             if(typeof(dataModel.artist.followers) !== 'undefined')
                 s += Util.abbreviateNumber(dataModel.artist.followers.total) + " " + qsTr("followers")
             return s
-        case 2:
+        case Util.SpotifyItemType.Playlist:
             /*if(typeof(following) !== 'undefined') {
                if(following)
                    s = qsTr("[following], ")
             }*/
             s += dataModel.playlist.tracks.total + " " + qsTr("tracks")
             return s
-        case 3:
-            if(dataModel.track.album)
-                s += dataModel.track.album.name
+        case Util.SpotifyItemType.Track:
+            if(dataModel.track.album) {
+                if(dataModel.track.album.name.length === 0)
+                    s += qsTr("name not specified") // should not happen but it does
+                else
+                    s += dataModel.track.album.name
+            }
             if(dataModel.played_at && dataModel.played_at.length>0)
                 s += (s.length>0?", ":"") + qsTr("played at ") + Util.getPlayedAtText(dataModel.played_at)
             return s
         }
         return ""
     }
-
 }

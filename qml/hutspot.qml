@@ -734,6 +734,14 @@ ApplicationWindow {
         })
     }
 
+    function getPlaylistTracks(playlistId, options, callback) {
+        // ToDo make optional
+        if(!options)
+            options = {}
+        options.market = "from_token"
+        Spotify.getPlaylistTracks(playlistId, options, callback)
+    }
+
     function replaceTracksInPlaylist(playlistId, tracks, callback) {
         Spotify.replaceTracksInPlaylist(playlistId, tracks, function(error, data) {
             if(callback)

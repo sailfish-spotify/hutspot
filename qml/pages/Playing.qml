@@ -647,12 +647,13 @@ Page {
     }
 
     function loadPlaylistTrackInfo() {
-        tracksInfo = []
+        if(tracksInfo.length > 0)
+            tracksInfo = []
         _loadPlaylistTrackInfo(0)
     }
 
     function _loadPlaylistTrackInfo(offset) {
-        Spotify.getPlaylistTracks(currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
+        app.getPlaylistTracks(currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
             function(error, data) {
                 if(data) {
                     for(var i=0;i<data.items.length;i++)
@@ -663,49 +664,6 @@ Page {
                 }
             })
     }
-
-    /*property int searchTrackStart: 0
-    property string searchTrackId: ""
-
-    function findTrack(uri) {
-        // already searching?
-        if(searchTrackUri.length > 0)
-            return
-        searchTrackUri = uri
-
-        // assume it is not in the current set so start looking in the next one
-        searchTrackStart = cursorHelper.offset+searchModel.count
-
-        // if complete list is loaded no use to search
-        if(cursorHelper.offset === 0 && searchModel.count === cursorHelper.total)
-            return
-
-        _findTrack(uri, searchTrackStart)
-    }
-
-    function _findTrack(uri, offset) {
-        Spotify.getPlaylistTracks(currentId, {fields: "items(track(id,uri))", offset: offset, limit: 100},
-              function(error, data) {
-                  if(data) {
-                      for(var i=0;i<data.items.length;i++) {
-                          if(data.items[i].uri === uri) {
-                              // found it, load it
-                              cursorHelper.offset = data.offset + i
-                              reloadTracks()
-                              return
-                          }
-                      }
-                      // did not find it, search in next set if still possible
-                      var nextOffset = data.offset+data.items.length
-                      if(nextOffset < cursorHelper.total)
-                          _findTrack(uri, nextOffset)
-                      // ToDo we can restart at 0 and check searchTrackStart so we guard for an endless loop
-                  } else {
-                      app.showErrorMessage(error, qsTr("Failed to fetch data while searching for next track."))
-                      console.log("No data while searching for track " + uri)
-                  }
-              })
-    }*/
 
     // called by menus
     function refresh() {
@@ -757,7 +715,7 @@ Page {
                             })
                             break
                         case 'playlist':
-                            // Todo assumes my playlist
+                            tracksInfo = []
                             Spotify.getPlaylist(cid, {}, function(error, data) {
                                 contextObject = data
                                 if(data)
@@ -822,7 +780,7 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        Spotify.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+        app.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)

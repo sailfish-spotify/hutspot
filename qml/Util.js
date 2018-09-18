@@ -164,6 +164,17 @@ function abbreviateNumber(number) {
     return formatted + postfix;
 }
 
+function isTrackPlayable(track) {
+    if(track && typeof track.is_playable !== "undefined") {
+        if(!track.is_playable)
+            return false
+    } else if(track && typeof track.available_markets !== "undefined") {
+        if(track.available_markets.length === 0)
+            return false
+    }
+    return true
+}
+
 function doesListModelContain(model, type, id) {
     var i;
     for(i=0;i<model.count;i++) {

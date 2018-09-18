@@ -31,6 +31,7 @@ ContextMenu {
                 break;
             }
         }
+        enabled: type !== 3 || Util.isTrackPlayable(track)
     }
     MenuItem {
         text: qsTr("View")
@@ -51,13 +52,13 @@ ContextMenu {
         }
     }
     MenuItem {
-        enabled: type === 3
+        enabled: type === 3 && Util.isTrackPlayable(track)
         visible: enabled
         text: qsTr("View Album")
         onClicked: app.pushPage(Util.HutspotPage.Album, {album: track.album})
     }
     MenuItem {
-        enabled: type === 3 && contextType !== 2
+        enabled: (type === 3 && Util.isTrackPlayable(track)) && contextType !== 2
         visible: enabled
         text: qsTr("Add to Playlist")
         onClicked: app.addToPlaylist(track)

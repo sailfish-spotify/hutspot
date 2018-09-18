@@ -229,10 +229,11 @@ Page {
         //showBusy = true
         searchModel.clear()        
 
-        Spotify.getPlaylistTracks(playlist.id,
+        app.getPlaylistTracks(playlist.id,
                                   {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                   function(error, data) {
             if(data) {
+                console.log(JSON.stringify(data))
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset

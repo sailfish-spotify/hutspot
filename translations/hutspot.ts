@@ -769,6 +769,10 @@
         <source>played at </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>name not specified</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>
