@@ -33,7 +33,7 @@ ApplicationWindow {
     property alias genre_seeds: genre_seeds
     property alias search_history: search_history
     property alias search_history_max_size: search_history_max_size
-
+    property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
 
     property string playbackStateDeviceId: ""
@@ -652,7 +652,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.changePlaylistDetails(id, playlist.id, options, function(error, data) {
+                Spotify.changePlaylistDetails(playlist.id, options, function(error, data) {
                     if(callback)
                         callback(error, data)
                     if(!error) {
@@ -672,8 +672,7 @@ ApplicationWindow {
                                 { label: qsTr("Select a Playlist") } );
         ms.accepted.connect(function() {
             if(ms.selectedItem && ms.selectedItem.playlist) {
-                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.owner.id,
-                                            ms.selectedItem.playlist.id,
+                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.id,
                                             [track.uri], {}, function(error, data) {
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
@@ -722,7 +721,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.createPlaylist(id, options, function(error, data) {
+                Spotify.createPlaylist(options, function(error, data) {
                     callback(error, data)
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.CreatedPlaylist,
@@ -735,8 +734,17 @@ ApplicationWindow {
         })
     }
 
+    function getPlaylistTracks(playlistId, options, callback) {
+        if(query_for_market.value) {
+            if(!options)
+                options = {}
+            options.market = "from_token"
+        }
+        Spotify.getPlaylistTracks(playlistId, options, callback)
+    }
+
     function replaceTracksInPlaylist(playlistId, tracks, callback) {
-        Spotify.replaceTracksInPlaylist(app.id, playlistId, tracks, function(error, data) {
+        Spotify.replaceTracksInPlaylist(playlistId, tracks, function(error, data) {
             if(callback)
                 callback(error, data)
             if(data && data.snapshot_id) {
@@ -750,13 +758,13 @@ ApplicationWindow {
     }
 
     function isFollowingPlaylist(playlist, callback) {
-        Spotify.areFollowingPlaylist(id, playlist.id, [id], function(error, data) {
+        Spotify.areFollowingPlaylist(playlist.id, [id], function(error, data) {
             callback(error, data)
         })
     }
 
     function followPlaylist(playlist, callback) {
-        Spotify.followPlaylist(id, playlist.id, function(error, data) {
+        Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
         })
     }
@@ -765,12 +773,12 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
                                   function() {
-                Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+                Spotify.unfollowPlaylist(playlist.id, function(error, data) {
                     callback(error, data)
                 })
             })
         else
-            Spotify.unfollowPlaylist(id, playlist.id, function(error, data) {
+            Spotify.unfollowPlaylist(playlist.id, function(error, data) {
                 callback(error, data)
             })
     }
@@ -1109,6 +1117,13 @@ ApplicationWindow {
         key: "/hutspot/search_history_max_size"
         defaultValue: 50
     }
+
+    ConfigurationValue {
+            id: query_for_market
+            key: "/hutspot/query_for_market"
+            defaultValue: true
+    }
+
 
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)

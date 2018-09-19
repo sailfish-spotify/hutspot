@@ -769,6 +769,10 @@
         <source>played at </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>name not specified</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -862,6 +866,14 @@
     </message>
     <message>
         <source>Libresot is not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Query for Market</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show only content playable in the country associated with the user account</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

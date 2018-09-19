@@ -219,7 +219,11 @@ Page {
     }
 
     function getAlbums(albumIds) {
-        Spotify.getAlbums(albumIds, function(error, data) {
+        // 'market' enables 'track linking'
+        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        if(app.query_for_market.value)
+            options.market = "from_token"
+        Spotify.getAlbums(albumIds, options, function(error, data) {
             if(data) {
                 for(var i=0;i<albumIds.length;i++)
                     retrieved.push({type: 0, data: data.albums[i]})

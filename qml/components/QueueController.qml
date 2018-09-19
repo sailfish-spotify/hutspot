@@ -64,7 +64,7 @@ Item {
                 // create the playlist
                 var options = {name: queuePlaylistName}
                 options.description = queuePlaylistDescription
-                Spotify.createPlaylist(id, options, function(error, data) {
+                Spotify.createPlaylist(options, function(error, data) {
                     if(data && data.id) {
                         queuePlaylistId = data.id
                         queuePlaylistUri = data.uri
@@ -132,7 +132,7 @@ Item {
     function addToQueue(track) {
         getQueuePlaylist(function(success) {
             if(success) {
-                Spotify.addTracksToPlaylist(id, queuePlaylistId, [track.uri], {}, function(error, data) {
+                Spotify.addTracksToPlaylist(queuePlaylistId, [track.uri], {}, function(error, data) {
                     if(data) {
                         queuePlaylistSnapshotId = data.snapshot_id
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,

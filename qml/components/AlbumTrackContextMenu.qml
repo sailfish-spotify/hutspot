@@ -7,7 +7,12 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
 
+import "../Util.js" as Util
+
 ContextMenu {
+
+    enabled: Util.isTrackPlayable(track)
+    visible: enabled
 
     MenuItem {
         text: qsTr("Play")

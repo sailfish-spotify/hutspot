@@ -18,6 +18,7 @@ Item {
     width: parent.width
     height: Math.max(labelss.height, savedImage.height)
 
+    opacity: Util.isTrackPlayable(dataModel.track) ? 1.0 : 0.4
 
     Image {
         id: savedImage

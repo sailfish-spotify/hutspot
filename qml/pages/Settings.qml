@@ -118,6 +118,17 @@ Page {
             }
 
             TextSwitch {
+                id: queryForMarket
+                text: qsTr("Query for Market")
+                description: qsTr("Show only content playable in the country associated with the user account")
+                checked: app.query_for_market.value
+                onCheckedChanged: {
+                    app.query_for_market.value = checked
+                    app.query_for_market.sync()
+                }
+            }
+
+            TextSwitch {
                 id: confirm_un_follow_save
                 text: qsTr("Confirm Un-Save/Follow")
                 description: qsTr("Ask for confirmation for un-save and un-follow")
