@@ -805,10 +805,12 @@ Page {
 
     function loadAlbumTracks(id) {
         searchModel.clear()
-        cursorHelper.limit = 100 // for now load as much as possible and hope it is enough
-        Spotify.getAlbumTracks(id,
-                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
-                               function(error, data) {
+        cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
+        // 'market' enables 'track linking'
+        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        if(app.query_for_market.value)
+            options.market = "from_token"
+        Spotify.getAlbumTracks(id, options, function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
