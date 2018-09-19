@@ -302,7 +302,7 @@ Page {
             types.push('track')
 
         var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
-        if(query_for_market.value)
+        if(app.query_for_market.value)
             options.market = "from_token"
         Spotify.search(Util.processSearchString(searchString), types, options, function(error, data) {
             if(data) {
