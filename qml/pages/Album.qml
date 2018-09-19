@@ -159,9 +159,10 @@ Page {
         //showBusy = true
         searchModel.clear()        
 
-        Spotify.getAlbumTracks(album.id,
-                               {offset: cursorHelper.offset, limit: cursorHelper.limit},
-                               function(error, data) {
+        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        if(app.query_for_market.value)
+            options.market = "from_token"
+        Spotify.getAlbumTracks(album.id, options, function(error, data) {
             if(data) {
                 try {
                     console.log("number of AlbumTracks: " + data.items.length)
