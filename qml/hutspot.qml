@@ -33,7 +33,7 @@ ApplicationWindow {
     property alias genre_seeds: genre_seeds
     property alias search_history: search_history
     property alias search_history_max_size: search_history_max_size
-
+    property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
 
     property string playbackStateDeviceId: ""
@@ -735,10 +735,11 @@ ApplicationWindow {
     }
 
     function getPlaylistTracks(playlistId, options, callback) {
-        // ToDo make optional
-        if(!options)
-            options = {}
-        options.market = "from_token"
+        if(query_for_market.value) {
+            if(!options)
+                options = {}
+            options.market = "from_token"
+        }
         Spotify.getPlaylistTracks(playlistId, options, callback)
     }
 
@@ -1116,6 +1117,13 @@ ApplicationWindow {
         key: "/hutspot/search_history_max_size"
         defaultValue: 50
     }
+
+    ConfigurationValue {
+            id: query_for_market
+            key: "/hutspot/query_for_market"
+            defaultValue: true
+    }
+
 
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)
