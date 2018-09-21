@@ -1,5 +1,7 @@
 /**
- * Hutspot. Copyright (C) 2018 Willem-Jan de Hoog
+ * Hutspot. 
+ * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -18,16 +20,16 @@ ContextMenu {
         onClicked: {
             switch(type) {
             case 0:
-                app.playContext(album)
+                app.controller.playContext(album)
                 break;
             case 1:
-                app.playContext(artist)
+                app.controller.playContext(artist)
                 break;
             case 2:
-                app.playContext(playlist)
+                app.controller.playContext(playlist)
                 break;
             case 3:
-                app.playTrack(track)
+                app.controller.playTrack(track)
                 break;
             }
         }

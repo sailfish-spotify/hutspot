@@ -1,4 +1,12 @@
-import QtQuick 2.0
+/**
+ * Hutspot. 
+ * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
+ *
+ * License: MIT
+ */
+ 
+ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import "../Util.js" as Util
@@ -144,7 +152,9 @@ Row {
         var s = "";
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
-            return Util.getYearFromReleaseDate(dataModel.album.release_date)
+            if (dataModel.album)
+                return Util.getYearFromReleaseDate(dataModel.album.release_date)
+            return ""
         case Util.SpotifyItemType.Artist:
             if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)

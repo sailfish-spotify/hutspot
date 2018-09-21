@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -70,7 +71,7 @@ Page {
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                      anchors.fill: parent
-                     onClicked: app.playContext(album)
+                     onClicked: app.controller.playContext(album)
                 }
             }
 
@@ -125,9 +126,11 @@ Page {
                 onToggleFavorite: app.toggleSavedTrack(model)
             }
 
-            menu: AlbumTrackContextMenu {}
+            menu: AlbumTrackContextMenu {
+                context: album
+            }
 
-            onClicked: app.playTrack(track)
+            onClicked: app.controller.playTrackInContext(track, album)
         }
 
         VerticalScrollDecorator {}

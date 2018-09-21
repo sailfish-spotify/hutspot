@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -75,7 +76,7 @@ Page {
                 onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
                 MouseArea {
                        anchors.fill: parent
-                       onClicked: app.playContext(currentArtist)
+                       onClicked: app.controller.playContext(currentArtist)
                 }
             }
 

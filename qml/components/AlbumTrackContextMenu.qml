@@ -1,5 +1,7 @@
 /**
- * Hutspot. Copyright (C) 2018 Willem-Jan de Hoog
+ * Hutspot. 
+ * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -10,13 +12,13 @@ import Sailfish.Silica 1.0
 import "../Util.js" as Util
 
 ContextMenu {
-
+    property var context;
     enabled: Util.isTrackPlayable(track)
     visible: enabled
 
     MenuItem {
         text: qsTr("Play")
-        onClicked: app.playTrack(track)
+        onClicked: app.controller.playTrackInContext(track, context)
     }
 
     MenuItem {
