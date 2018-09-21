@@ -1,3 +1,11 @@
+/**
+ * Hutspot. 
+ * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
+ *
+ * License: MIT
+ */
+
 import QtQuick 2.0
 
 import "../Spotify.js" as Spotify
@@ -88,7 +96,7 @@ Item {
 
             // If not yet playing the Queue Playlist then do that
             if(app.playingPage.currentId !== queuePlaylistId) {
-                app.playContext({uri: queuePlaylistUri})
+                app.controller.playContext({uri: queuePlaylistUri})
                 return
             }
 
@@ -96,9 +104,9 @@ Item {
             // ToDo dont use _IsPlaying
             if(!app.playingPage._isPlaying) {
                 if(app.playingPage.currentSnapshotId === queuePlaylistSnapshotId)
-                    app.pause()
+                    app.controller.playPause()
                 else
-                    app.playContext({uri: queuePlaylistUri})
+                    app.controller.playContext({uri: queuePlaylistUri})
                 return
             }
 
@@ -108,7 +116,7 @@ Item {
             case 'AddedTrack':
                 // if not yet playing we can start
                 if(!app.playingPage.playbackState.is_playing)
-                    app.playContext({uri: queuePlaylistUri})
+                    app.controller.playContext({uri: queuePlaylistUri})
                 else {
                     // we cannot restart. it would cause hickups.
                     // since we only allow add or replace all we wait for the current snapshot to end
@@ -120,10 +128,10 @@ Item {
                 // stop if needed and start, hopefully Spotify uses the latest snapshot
                 if(!app.playingPage.playbackState.is_playing)
                     pause(function(error, data) {
-                        app.playContext({uri: queuePlaylistUri})
+                        app.controller.playContext({uri: queuePlaylistUri})
                     })
                 else
-                    app.playContext({uri: queuePlaylistUri})
+                    app.controller.playContext({uri: queuePlaylistUri})
                 break;
             }*/
         })

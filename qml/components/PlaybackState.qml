@@ -1,3 +1,10 @@
+/**
+ * Hutspot. 
+ * Copyright (C) 2018 Maciej Janiszewski
+ *
+ * License: MIT
+ */
+
 import QtQuick 2.0
 
 import org.nemomobile.mpris 1.0
@@ -40,10 +47,19 @@ Item {
     property string artistsString: ""
     property string coverArtUrl: ""
 
-    property var device: undefined
+    property var device: {
+        "id": "-1",
+        "is_active": true,
+        "is_private_session": false,
+        "is_restricted": false,
+        "type": "Nothing",
+        "name": "No device",
+        "volume_percent": 100
+    }
     property string repeat_state: "off"
     property bool shuffle_state: false
     property var context: undefined
+    property var contextDetails: undefined
     property int timestamp: 0
     property int progress_ms: 0
     property bool is_playing: false

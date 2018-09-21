@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -17,19 +18,15 @@ Page {
     //anchors.bottom: navPanel.top
     //clip: navPanel.expanded
 
-    ListModel {
-        id: itemsModel
-    }
-
     SilicaListView {
         id: listView
-        model: itemsModel
+        model: app.controller.devices
         anchors.fill: parent
 
         PullDownMenu {
             MenuItem {
                 text: qsTr("Reload Devices")
-                onClicked: reloadDevices()
+                onClicked: app.controller.reloadDevices()
             }
         }
 
@@ -49,14 +46,14 @@ Page {
                 width: parent.width
                 Label {
                     id: nameLabel
-                    color: deviceId === playbackStateDeviceId ? Theme.highlightColor : Theme.primaryColor
+                    color: is_active ? Theme.highlightColor : Theme.primaryColor
                     textFormat: Text.StyledText
                     truncationMode: TruncationMode.Fade
                     //width: parent.width - countLabel.width
                     text: {
                         var str = name ? name : qsTr("Unknown Name")
-                        if(myDevices[index].type)
-                            str += ", " + myDevices[index].type
+                        if (type)
+                            str += ", " + type
                         /*if(sp && avahi)
                             str += " [Spotify, Avahi]"
                         else if(avahi)
@@ -69,16 +66,16 @@ Page {
                 Label {
                     id: meta1Label
                     width: parent.width
-                    color: deviceId === playbackStateDeviceId ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    color: is_active ? Theme.secondaryHighlightColor : Theme.secondaryColor
                     font.pixelSize: Theme.fontSizeSmall
                     truncationMode: TruncationMode.Fade
                     text: {
-                        var str = myDevices[index].volume_percent + "%"
+                        var str = volume_percent + "%"
                         str += ", "
-                        str += myDevices[index].is_active
+                        str += is_active
                                ? qsTr("active") : qsTr("inactive")
                         str += ", "
-                        str += myDevices[index].is_restricted
+                        str += is_restricted
                                ? qsTr("restricted") : qsTr("unrestricted")
                         return str
                     }
@@ -116,83 +113,18 @@ Page {
         id: navPanel
     }
 
-    signal foundDevicesChanged()
-    onFoundDevicesChanged: refreshDevices()
-
-    function refreshDevices() {
-        var i
-        var j
-
-        itemsModel.clear()
-
-        for(i=0;i<myDevices.length;i++)
-            itemsModel.append({type: 2,
-                               deviceId: myDevices[i].id,
-                               name: myDevices[i].name,
-                               index: i,
-                               sp: 1,
-                               avahi: 0})
-
-        for(i=0;i<app.foundDevices.length;i++) {
-            var found = 0
-            for(j=0;j<itemsModel.count;j++) {
-                if(itemsModel.get(j).name === app.foundDevices[i].remoteName) {
-                    itemsModel.get(j).avahi = 1
-                    found = 1
-                    break
-                }
-            }
-            if(!found) {
-                itemsModel.append({type: 2,
-                                   deviceId: app.foundDevices[i].deviceID,
-                                   name: app.foundDevices[i].remoteName,
-                                   index: i,
-                                   sp: 0,
-                                   avahi: 1})
-            }
-        }
-
-    }
-
+    // signal foundDevicesChanged()
+    // onFoundDevicesChanged: refreshDevices()
 
     Connections {
         target: app
         onLoggedInChanged: {
             if(app.loggedIn)
-                reloadDevices()
+                app.controller.reloadDevices()
         }
-        onHasValidTokenChanged: reloadDevices()
+        onHasValidTokenChanged: app.controller.reloadDevices()
     }
 
-    Component.onCompleted: {
-        if(app.hasValidToken)
-            reloadDevices()
-    }
-
-    property var myDevices: []
-
-    // using spotify webapi
-    function reloadDevices() {
-        var i
-        //itemsModel.clear()
-
-        myDevices = []
-        Spotify.getMyDevices(function(error, data) {
-            if(data) {
-                try {
-                    myDevices = data.devices
-                    console.log("number of devices: " + myDevices.length)
-                    refreshDevices()
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyDevices")
-            }
-        })
-
-    }
-
-
+    Component.onCompleted: app.controller.reloadDevices()
 }
 

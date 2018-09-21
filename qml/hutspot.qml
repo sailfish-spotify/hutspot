@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2018 Willem-Jan de Hoog
+ * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
  */
@@ -8,7 +9,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import org.nemomobile.configuration 1.0
-import org.nemomobile.mpris 1.0
 import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
@@ -19,6 +19,11 @@ import "components"
 
 ApplicationWindow {
     id: app
+
+    property alias controller: spotifyController
+    SpotifyController {
+        id: spotifyController
+    }
 
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
@@ -36,12 +41,8 @@ ApplicationWindow {
     property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
 
-    property string playbackStateDeviceId: ""
-    property string playbackStateDeviceName: ""
-    property alias mprisPlayer: mprisPlayer
     property alias queue: queue
     property alias playingPage: playingPage
-
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -257,160 +258,18 @@ ApplicationWindow {
 
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
-                playbackStateDeviceId = id
-                playbackStateDeviceName = name
+                controller.refreshPlaybackState()
             } else
                 showErrorMessage(error, qsTr("Transfer Failed"))
         })
     }
 
-    function playTrack(track, context) {
-        var options = {}
-        if(context && context.uri)
-            options = {'device_id': deviceId.value,
-                       'context_uri': context.uri,
-                       'offset': {'uri': track.uri}}
-        else
-            options = {'device_id': deviceId.value,
-                       'uris': [track.uri]}
-        Spotify.play(options, function(error, data) {
-            if(!error) {
-                playing = true
-                refreshPlayingInfo()
-            } else
-                showErrorMessage(error, qsTr("Play Failed"))
-        })
-    }
-
-    function playContext(context, options) {
-        if(options === undefined)
-            options = {'device_id': deviceId.value, 'context_uri': context.uri}
-        else {
-            options.device_id = deviceId.value
-            options.context_uri = context.uri
-        }
-        Spotify.play(options, function(error, data) {
-            if(!error) {
-              playing = true
-              refreshPlayingInfo()
-            } else
-                showErrorMessage(error, qsTr("Play Failed"))
-        })
-    }
-
-    property bool playing
-    function pause(callback) {
-        if(playing) {
-            // pause
-            Spotify.pause({}, function(error, data) {
-                if(!error)
-                    playing = false
-                callback(error, data)
-            })
-        } else {
-            // resume
-            Spotify.play({}, function(error, data) {
-                if(!error)
-                    playing = true
-                callback(error, data)
-            })
-        }
-    }
-
-    function next(callback) {
-        Spotify.skipToNext({}, function(error, data) {
-            if(callback)
-                callback(error, data)
-            refreshPlayingInfo()
-        })
-    }
-
-    function previous(callback) {
-        Spotify.skipToPrevious({}, function(error, data) {
-            if(callback)
-                callback(error, data)
-            refreshPlayingInfo()
-        })
-    }
-
-    function setRepeat(state, callback) {
-        Spotify.setRepeat(state, {}, function(error, data) {
-            callback(error, data)
-        })
-    }
-
-    function setShuffle(state, callback) {
-        Spotify.setShuffle(state, {}, function(error, data) {
-            callback(error, data)
-        })
-    }
-
-    onPlayingChanged: {
-        var status = playing ?  Mpris.Playing : Mpris.Paused
-
-        // it seems that in order to use the play button on the Lock screen
-        // when canPlay is true so should canPause be.
-        mprisPlayer.canPlay = status !== Mpris.Playing
-        mprisPlayer.canPause = status !== Mpris.Stopped
-        mprisPlayer.playbackStatus = status
-    }
-
-    signal newPlayingTrackInfo(var track)
-
-    onNewPlayingTrackInfo: {
-        //item.track_number item.duration_ms
-        var uri = track.album.images[0].url
-
-        var metaData = {}
-        metaData['title'] = track.name
-        metaData['album'] = track.album.name
-        metaData['artUrl'] = uri
-        if(track.artists)
-            metaData['artist'] = Util.createItemsString(track.artists, qsTr("no artist known"))
-        else
-            metaData['artist'] = ''
-        cover.updateDisplayData(metaData)
-        mprisPlayer.metaData = metaData
-    }
-
-    function refreshPlayingInfo() {
-        Spotify.getMyCurrentPlayingTrack({}, function(error, data) {
-            if(data)
-                newPlayingTrackInfo(data.item)
-        })
-    }
-
-    property var myDevices: []
-
     property bool loggedIn: spotify.isLinked()
     onLoggedInChanged: {
         // do we need this? isLinked does not mean we have a valid token
         if(loggedIn) {
-            refreshPlayingInfo()
-            reloadDevices()
+            controller.refreshPlaybackState();
         }
-    }
-
-    // using spotify webapi
-    function reloadDevices() {
-        var i
-        //itemsModel.clear()
-
-        myDevices = []
-        Spotify.getMyDevices(function(error, data) {
-            if(data) {
-                try {
-                    console.log("number of devices: " + myDevices.length)
-                    myDevices = data.devices
-                    //refreshDevices()
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyDevices")
-            }
-        })
-
     }
 
     Component.onCompleted: {
@@ -538,11 +397,11 @@ ApplicationWindow {
         }
     }
 
-    property var foundDevices: []
+    /*property var foundDevices: []
     signal devicesChanged()
     onDevicesChanged: {
         firstPage.foundDevicesChanged()
-    }
+    }*/
 
     /* Service Browser has been disabled since it is unknown how to
        register the discovered device at spotify.
@@ -612,23 +471,7 @@ ApplicationWindow {
                 console.log("No Data for getMe")
             }
         })
-        Spotify.getMyCurrentPlaybackState({}, function(error, data) {
-            if(data) {
-                try {
-                    if(data.device) {
-                        playbackStateDeviceId = data.device.id
-                        playbackStateDeviceName = data.device.name
-                        console.log("Current device: " + data.device.name)
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getMyCurrentPlaybackState")
-            }
-        })
-        refreshPlayingInfo()
-        reloadDevices()
+        controller.refreshPlaybackState();
     }
 
     function getPlaylist(playlistId, callback) {
@@ -912,50 +755,6 @@ ApplicationWindow {
 
     QueueController {
         id: queue
-    }
-
-    property string mprisServiceName: "hutspot"
-
-    MprisPlayer {
-        id: mprisPlayer
-        serviceName: mprisServiceName
-
-        property var metaData
-
-        identity: qsTr("Simple Spotify Controller")
-
-        canControl: true
-
-        canPause: playing
-        canPlay: !playing
-
-        canGoNext: true
-        canGoPrevious: true
-
-        canSeek: false
-
-        playbackStatus: Mpris.Stopped
-
-        onPauseRequested: app.pause(function(error, data){})
-
-        onPlayRequested: app.pause(function(error, data){})
-
-        onPlayPauseRequested: app.pause(function(error, data){})
-
-        onNextRequested: app.next(function(error, data){})
-
-        onPreviousRequested: app.previous(function(error, data){})
-
-        onMetaDataChanged: {
-            var metadata = {}
-
-            if (metaData && 'artist' in metaData)
-                metadata[Mpris.metadataToString(Mpris.Artist)] = [metaData['artist']] // List of strings
-            if (metaData && 'title' in metaData)
-                metadata[Mpris.metadataToString(Mpris.Title)] = metaData['title'] // String
-
-            mprisPlayer.metadata = metadata
-        }
     }
 
     Librespot {

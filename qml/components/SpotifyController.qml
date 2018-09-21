@@ -1,6 +1,14 @@
+/**
+ * Hutspot. 
+ * Copyright (C) 2018 Maciej Janiszewski
+ *
+ * License: MIT
+ */
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../Spotify.js" as Spotify
+import "../Util.js" as Util
 
 
 Item {
@@ -8,10 +16,17 @@ Item {
         id: playbackState
     }
 
-    function getCoverArt(state, default_value) {
-        if (state.coverArtUrl !== "")
-            return state.coverArtUrl;
-        return default_value;
+    function getCoverArt(defaultValue, ignoreContext) {
+        if (ignoreContext) {
+            if (playbackState.coverArtUrl)
+                return playbackState.coverArtUrl
+            return defaultValue
+        }
+
+        if (playbackState.contextDetails)
+            if (playbackState.contextDetails.images)
+                return playbackState.contextDetails.images[0].url
+        return defaultValue;
     }
 
     property alias playbackState: playbackState
@@ -119,7 +134,7 @@ Item {
         Spotify.skipToNext({}, function(error, data) {
             if (callback)
                 callback(error, data)
-            delayedRefreshPlaybackState()
+            refreshPlaybackState()
         })
     }
 
@@ -127,7 +142,7 @@ Item {
         Spotify.skipToPrevious({}, function(error, data) {
             if (callback)
                 callback(error, data)
-            delayedRefreshPlaybackState()
+            refreshPlaybackState()
         })
     }
 
@@ -179,9 +194,31 @@ Item {
     }
 
     function refreshPlaybackState() {
+        var oldContextId = playbackState.context ? playbackState.context.uri : undefined;
+
         Spotify.getMyCurrentPlaybackState({}, function (error, state) {
             if (state) {
                 playbackState.importState(state)
+                if (state.context.uri !== oldContextId) {
+                    var cid = Util.getIdFromURI(playbackState.context.uri)
+                    switch (state.context.type) {
+                        case 'album':
+                            Spotify.getAlbum(cid, {}, function(error, data) {
+                                playbackState.contextDetails = data
+                            })
+                            break
+                        case 'artist':
+                            Spotify.getArtist(cid, {}, function(error, data) {
+                                playbackState.contextDetails = data
+                            })
+                            break
+                        case 'playlist':
+                            Spotify.getPlaylist(cid, {}, function(error, data) {
+                                playbackState.contextDetails = data
+                            })
+                            break
+                    }
+                }
             }
         });
         reloadDevices();
