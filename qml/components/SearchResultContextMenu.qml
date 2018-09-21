@@ -29,7 +29,7 @@ ContextMenu {
                 app.controller.playContext(playlist)
                 break;
             case 3:
-                app.controller.playTrackInContext(track)
+                app.controller.playTrack(track)
                 break;
             }
         }
