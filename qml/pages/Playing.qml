@@ -306,7 +306,6 @@ Page {
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
                     maximumValue: app.controller.playbackState.item.duration_ms
-                    value: app.controller.playbackState.progress_ms
                     handleVisible: false
                     onPressed: isPressed = true
                     onReleased: {
@@ -314,6 +313,15 @@ Page {
                             app.controller.playbackState.progress_ms = Math.round(value)
                          })
                         isPressed = false
+                    }
+                    Connections {
+                        target: app.controller.playbackState
+                        // cannot use 'value: playbackProgress' since press/drag
+                        // breaks the link between them
+                        onProgress_msChanged: {
+                            if(!progressSlider.isPressed)
+                                progressSlider.value = app.controller.playbackState.progress_ms
+                        }
                     }
                 }
                 Label {
@@ -533,15 +541,17 @@ Page {
     }
 
     function updateForCurrentTrack() {
-        switch(app.controller.playbackState.context.type) {
-        case 'album':
-            updateForCurrentAlbumTrack()
-            break
-        case 'playlist':
-            updateForCurrentPlaylistTrack()
-            break
-        default:
-            break
+        if (app.controller.playbackState.context) {
+            switch(app.controller.playbackState.context.type) {
+            case 'album':
+                updateForCurrentAlbumTrack()
+                break
+            case 'playlist':
+                updateForCurrentPlaylistTrack()
+                break
+            default:
+                break
+            }
         }
     }
 
@@ -620,7 +630,7 @@ Page {
                 pageHeaderDescription = ""
             }
         }
-        onIsPlayingChanged: {
+        onIs_playingChanged: {
             if(!_isPlaying && app.controller.playbackState.is_playing) {
                 if(currentIndex === -1)
                     updateForCurrentTrack()
