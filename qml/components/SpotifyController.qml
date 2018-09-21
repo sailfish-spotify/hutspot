@@ -199,7 +199,7 @@ Item {
         Spotify.getMyCurrentPlaybackState({}, function (error, state) {
             if (state) {
                 playbackState.importState(state)
-                if (state.context.uri !== oldContextId) {
+                if (state.context && state.context.uri !== oldContextId) {
                     var cid = Util.getIdFromURI(playbackState.context.uri)
                     switch (state.context.type) {
                         case 'album':
@@ -218,6 +218,8 @@ Item {
                             })
                             break
                     }
+                } else {
+                    playbackState.contextDetails = undefined
                 }
             }
         });
