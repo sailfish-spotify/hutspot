@@ -240,16 +240,10 @@ Item {
     }
 
     function playContext(context) {
-        if (!options) {
-            options = {
-                'device_id': playbackState.device.id,
-                'context_uri': context.uri
-            }
-        } else {
-            options.device_id = playbackState.device.id
-            options.context_uri = context.uri
+        var options = {
+            'device_id': playbackState.device.id,
+            'context_uri': context.uri
         }
-
         Spotify.play(options, function(error, data) {
             if (!error) {
               refreshPlaybackState();
