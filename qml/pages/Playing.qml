@@ -612,13 +612,17 @@ Page {
                 switch (app.controller.playbackState.context.type) {
                     case 'album':
                         pageHeaderDescription = app.controller.playbackState.item.album.name
+                        currentId = app.controller.playbackState.item.album.id
+                        loadAlbumTracks(currentId)
                         break
                     case 'artist':
                         pageHeaderDescription = app.controller.playbackState.artistsString
+                        // ?? currentId = app.controller.playbackState.
                         break
                     case 'playlist':
                         pageHeaderDescription = app.controller.playbackState.contextDetails.name
-                        //loadPlaylistTracks(app.id, cid)
+                        currentId = app.controller.playbackState.contextDetails.id
+                        loadPlaylistTracks(app.id, currentId)
                         break
                     default:
                         pageHeaderDescription = ""
@@ -685,6 +689,10 @@ Page {
     function loadAlbumTracks(id) {
         searchModel.clear()
         cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
+        _loadAlbumTracks(id)
+    }
+
+    function _loadAlbumTracks(id) {
         // 'market' enables 'track linking'
         var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
         if(app.query_for_market.value)
@@ -703,12 +711,16 @@ Page {
                                             saved: false,
                                             track: data.items[i]})
                         trackIds.push(data.items[i].id)
-                        // get info about saved tracks
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data) {
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                            }
-                        })
+                    }
+                    // get info about saved tracks
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data)
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                    })
+                    // if the album has more tracks get more
+                    if(cursorHelper.total > (cursorHelper.offset+cursorHelper.limit)) {
+                        cursorHelper.offset += cursorHelper.limit
+                        _loadAlbumTracks(id)
                     }
                     updateForCurrentTrack()
                 } catch (err) {

@@ -447,6 +447,17 @@
     </message>
 </context>
 <context>
+    <name>PlaybackState</name>
+    <message>
+        <source>Simple Spotify Controller</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no artist known</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Playing</name>
     <message>
         <source>Playing</source>
@@ -494,22 +505,6 @@
     </message>
     <message>
         <source>collaborative</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playing Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playing Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playing Playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Connection lost with Spotify servers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -878,6 +873,21 @@
     </message>
 </context>
 <context>
+    <name>SpotifyController</name>
+    <message>
+        <source>Play Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No device selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TopStuff</name>
     <message>
         <source>Top [ Tracks ]</source>
@@ -918,14 +928,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Play Failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>no artist known</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -943,10 +945,6 @@
     </message>
     <message>
         <source>View an Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Simple Spotify Controller</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
