@@ -612,6 +612,7 @@ Page {
                     break;
                 case 'playlist':
                     loadPlaylistTracks(app.id, currentId)
+                    loadPlaylistTrackInfo()
                     break
             }
         }
