@@ -603,26 +603,48 @@ Page {
         reloadTracks()
     }
 
+    onCurrentIdChanged: {
+        console.log("onCurrentIdChanged: " + currentId)
+        if (app.controller.playbackState.context) {
+            switch (app.controller.playbackState.context.type) {
+                case 'album':
+                    loadAlbumTracks(currentId)
+                    break;
+                case 'playlist':
+                    loadPlaylistTracks(app.id, currentId)
+                    break
+            }
+        }
+    }
+
     // try to detect end of playlist play
     property bool _isPlaying: false
     Connections {
         target: app.controller.playbackState
+
+        onContextDetailsChanged: {
+            currentId = app.controller.playbackState.contextDetails.id
+            /*switch (app.controller.playbackState.context.type) {
+                case 'album':
+                    break
+                case 'artist':
+                    break
+                case 'playlist':
+                    break
+            }*/
+        }
+
         onItemChanged: {
             if (app.controller.playbackState.context) {
                 switch (app.controller.playbackState.context.type) {
                     case 'album':
                         pageHeaderDescription = app.controller.playbackState.item.album.name
-                        currentId = app.controller.playbackState.item.album.id
-                        loadAlbumTracks(currentId)
                         break
                     case 'artist':
                         pageHeaderDescription = app.controller.playbackState.artistsString
-                        // ?? currentId = app.controller.playbackState.
                         break
                     case 'playlist':
                         pageHeaderDescription = app.controller.playbackState.contextDetails.name
-                        currentId = app.controller.playbackState.contextDetails.id
-                        loadPlaylistTracks(app.id, currentId)
                         break
                     default:
                         pageHeaderDescription = ""
@@ -631,8 +653,11 @@ Page {
             } else {
                 // no context (a single track?)
                 currentId = app.controller.playbackState.item.id
+                console.log("  no context: " + currentId)
                 pageHeaderDescription = ""
             }
+            currentTrackId = app.controller.playbackState.item.id
+            // still needed? currentTrackUri = app.controller.playbackState.item.uri
         }
         onIs_playingChanged: {
             if(!_isPlaying && app.controller.playbackState.is_playing) {
