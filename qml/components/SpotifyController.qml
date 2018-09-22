@@ -219,7 +219,9 @@ Item {
                             break
                     }
                 } else {
-                    playbackState.contextDetails = undefined
+                    // ToDo why is this?
+                    // Disabled since we lose ifo on what is being played
+                    //playbackState.contextDetails = undefined
                 }
             }
         });
