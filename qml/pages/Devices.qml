@@ -88,11 +88,11 @@ Page {
                 id: contextMenu
                 ContextMenu {
                     MenuItem {
-                        enabled: type === 2
+                        //enabled: type === 2
                         text: qsTr("Set as Current")
                         onClicked: {
                             if(spotify)
-                                app.setDevice(deviceId, name)
+                                app.setDevice(model.id, name)
                         }
                     }
                 }
