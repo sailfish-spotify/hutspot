@@ -234,7 +234,7 @@ Page {
                                   {offset: cursorHelper.offset, limit: cursorHelper.limit},
                                   function(error, data) {
             if(data) {
-                console.log(JSON.stringify(data))
+                //console.log(JSON.stringify(data))
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
