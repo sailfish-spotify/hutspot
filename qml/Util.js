@@ -164,6 +164,13 @@ function abbreviateNumber(number) {
     return formatted + postfix;
 }
 
+function createPageHeaderLabel(s0, s1, theme) {
+    return "<font color=\"" + theme.primaryColor.toString() + "\">"
+           + s0 + "</font>"
+           + "<font color=\"" + theme.highlightColor.toString() + "\">"
+           + s1 + "</font>"
+}
+
 function isTrackPlayable(track) {
     if(track && typeof track.is_playable !== "undefined") {
         if(!track.is_playable)

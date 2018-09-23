@@ -54,9 +54,12 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: _itemClass === 0
-                       ? qsTr("Artist [ Albums ]")
-                       : qsTr("Artist [ Related Artists ]")
+                title: {
+                    switch(_itemClass) {
+                    case 0: return Util.createPageHeaderLabel(qsTr("Artist "), qsTr("Albums"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr("Artist "), qsTr("Related Artists"), Theme)
+                    }
+                }
                 MenuButton { z: 1} // set z so you can still click the button
                 MouseArea {
                     anchors.fill: parent
