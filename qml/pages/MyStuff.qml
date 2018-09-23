@@ -53,11 +53,11 @@ Page {
                 width: parent.width
                 title: {
                     switch(_itemClass) {
-                    case 0: return qsTr("My [ Saved Albums ]")
-                    case 1: return qsTr("My [ Playlists ]")
-                    case 2: return qsTr("My [ Recently Played ]")
-                    case 3: return qsTr("My [ Saved Tracks ]")
-                    case 4: return qsTr("My [ Followed Artists ]")
+                    case 0: return Util.createPageHeaderLabel(qsTr("My "), qsTr("Saved Albums"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr("My "), qsTr("Playlists"), Theme)
+                    case 2: return Util.createPageHeaderLabel(qsTr("My "), qsTr("Recently Played"), Theme)
+                    case 3: return Util.createPageHeaderLabel(qsTr("My "), qsTr("Saved Tracks"), Theme)
+                    case 4: return Util.createPageHeaderLabel(qsTr("My "), qsTr("Followed Artists"), Theme)
                     }
                 }
                 MenuButton { z: 1} // set z so you can still click the button

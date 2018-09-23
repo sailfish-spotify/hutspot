@@ -57,10 +57,10 @@ Page {
                 width: parent.width
                 title: {
                     switch(_itemClass) {
-                    case 0: return qsTr("Search [ Albums ]")
-                    case 1: return qsTr("Search [ Artists ]")
-                    case 2: return qsTr("Search [ Playlists ]")
-                    case 3: return qsTr("Search [ Tracks ]")
+                    case 0: return Util.createPageHeaderLabel(qsTr("Search "), qsTr("Albums"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr("Search "), qsTr("Artists"), Theme)
+                    case 2: return Util.createPageHeaderLabel(qsTr("Search "), qsTr("Playlists"), Theme)
+                    case 3: return Util.createPageHeaderLabel(qsTr("Search "), qsTr("Tracks"), Theme)
                     default: qsTr("Search")
                     }
                 }

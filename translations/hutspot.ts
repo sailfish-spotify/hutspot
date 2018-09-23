@@ -93,14 +93,6 @@
 <context>
     <name>Artist</name>
     <message>
-        <source>Artist [ Albums ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist [ Related Artists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -114,6 +106,18 @@
     </message>
     <message>
         <source>Pull down to reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Related Artists</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -301,26 +305,6 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <source>My [ Saved Albums ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>My [ Playlists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>My [ Recently Played ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>My [ Saved Tracks ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>My [ Followed Artists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Unfollow</source>
         <translation type="unfinished"></translation>
     </message>
@@ -330,6 +314,30 @@
     </message>
     <message>
         <source>Pull down to reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recently Played</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Followed Artists</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -663,22 +671,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search [ Albums ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search [ Artists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search [ Playlists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search [ Tracks ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
@@ -708,6 +700,10 @@
     </message>
     <message>
         <source>Search Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -890,19 +886,23 @@
 <context>
     <name>TopStuff</name>
     <message>
-        <source>Top [ Tracks ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top [ Artists ]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pull down to reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artists</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
