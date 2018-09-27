@@ -40,6 +40,8 @@ ApplicationWindow {
     property alias search_history_max_size: search_history_max_size
     property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
+    property alias deviceId: deviceId
+    property alias deviceName: deviceName
 
     property alias queue: queue
     property alias playingPage: playingPage

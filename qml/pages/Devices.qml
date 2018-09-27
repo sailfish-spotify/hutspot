@@ -92,7 +92,7 @@ Page {
                         text: qsTr("Set as Current")
                         onClicked: {
                             if(spotify)
-                                app.setDevice(model.id, name)
+                                app.setDevice(model.id, model.name)
                         }
                     }
                 }
