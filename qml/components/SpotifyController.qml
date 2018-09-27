@@ -230,7 +230,7 @@ Item {
 
     function playTrack(track) {
         Spotify.play({
-            'device_id': playbackState.device.id,
+            'device_id': getDeviceId(),
             'uris': [track.uri]
         }, function(error, data) {
             if(!error) {
@@ -243,7 +243,7 @@ Item {
 
     function playContext(context) {
         var options = {
-            'device_id': playbackState.device.id,
+            'device_id': getDeviceId(),
             'context_uri': context.uri
         }
         Spotify.play(options, function(error, data) {
@@ -257,7 +257,7 @@ Item {
     function playTrackInContext(track, context) {
         if (playbackState.device) {
             Spotify.play({
-                "device_id": playbackState.device.id,
+                "device_id": getDeviceId(),
                 "context_uri": context.uri,
                 "offset": {"uri": track.uri}
             }, function (error, data) {
@@ -273,4 +273,11 @@ Item {
             app.showErrorMessage(error, qsTr("No device selected"))
         }
     }
+
+    function getDeviceId() {
+        return (playbackState.device && playbackState.device.id !== "-1")
+               ? playbackState.device.id
+               : app.deviceId.value
+    }
+
 }
