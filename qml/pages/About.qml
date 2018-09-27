@@ -74,6 +74,15 @@ Page {
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                     }
+                    Label {
+                        horizontalAlignment: implicitWidth > width ? Text.AlignLeft : Text.AlignHCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        font.pixelSize: Theme.fontSizeExtraSmall
+                        text: BUILD_DATE_TIME
+                        truncationMode: TruncationMode.Fade
+                        width: parent.width
+                    }
+
                 }
 
             }

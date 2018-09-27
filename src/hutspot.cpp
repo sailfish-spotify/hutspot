@@ -30,6 +30,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("wdehoog");
     QCoreApplication::setApplicationName("hutspot");
 
+    QString buildDateTime;
+    buildDateTime.append(__DATE__);
+    buildDateTime.append(" ");
+    buildDateTime.append(__TIME__);
+    view->rootContext()->setContextProperty("BUILD_DATE_TIME", buildDateTime);
+
     Spotify spotify;
     view->rootContext()->setContextProperty("spotify", &spotify);
 
