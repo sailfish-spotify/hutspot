@@ -130,7 +130,7 @@ Page {
                     onClicked: {
                         var idx = index
                         var model = searchModel
-                        app.removeFromPlaylist(playlist, track, function(error, data) {
+                        app.removeFromPlaylist(playlist, track, index+cursorHelper.offset, function(error, data) {
                             if(!error)
                                 model.remove(idx, 1)
                         })

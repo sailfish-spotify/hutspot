@@ -549,7 +549,7 @@ ApplicationWindow {
         })
     }
 
-    function removeFromPlaylist(playlist, track, callback) {
+    function removeFromPlaylist(playlist, track, position, callback) {
         app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
                               function() {
             // does not work due to Qt. cannot have DELETE request with a body
@@ -560,7 +560,7 @@ ApplicationWindow {
                 ev.trackId = track.id
                 playlistEvent(ev)
             })*/
-            removeTracksFromPlaylistUsingCurl(playlist.id, [track.uri], function(error, data) {
+            removeTracksFromPlaylistUsingCurl(playlist.id, playlist.snapshot_id, [track.uri], [position], function(error, data) {
                 if(callback)
                     callback(error, data)
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
@@ -968,7 +968,8 @@ ApplicationWindow {
     //      -H "Content-Type: application/json" "https://api.spotify.com/v1/playlists/71m0QB5fUFrnqfnxVerUup/tracks"
     //      --data "{\"tracks\":[{\"uri\": \"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\", \"positions\": [2] },{\"uri\":\"spotify:track:1301WleyT98MSxVHPZCA6M\", \"positions\": [7] }] }"
 
-    function removeTracksFromPlaylistUsingCurl(playlistId, uris, callback) {
+    // assumes the uris and positions arrays are equal length and 1 uri has 1 position
+    function removeTracksFromPlaylistUsingCurl(playlistId, snapshotId, uris, positions, callback) {
         var command = "/usr/bin/curl"
         var args = []
         args.push("-X")
@@ -980,20 +981,21 @@ ApplicationWindow {
         args.push("Content-Type: application/json")
         args.push(Spotify._baseUri + "/playlists/" + playlistId + "/tracks")
         args.push("--data")
-        args.push("@-")
+        //args.push("@-")
 
         var data = "{\"tracks\":["
         for(var i=0;i<uris.length;i++) {
             if(i>0)
                 data += ","
-            data += "{\"uri\": \"" + uris[i] + "\"}"
+            data += "{\"uri\":\"" + uris[i] + "\",\"positions\":[" +positions[i]+ "]}"
         }
-        data += "]}"
+        data += "],\"snapshot_id\":\"" + snapshotId + "\"}"
+        args.push(data)
 
         process.callback = callback
         process.start(command, args)
-        process.write(data)
-        process.closeWriteChannel()
+        //process.write(data)
+        //process.closeWriteChannel()
     }
 
     Process {
