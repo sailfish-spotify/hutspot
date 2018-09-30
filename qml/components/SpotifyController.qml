@@ -104,6 +104,7 @@ Item {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
                 try {
+                    console.log("reloadDevices() #devices: " + data.devices.length)
                     devicesModel.clear();
                     for (var i=0; i < data.devices.length; i++) {
                         devicesModel.append(data.devices[i]);
@@ -111,7 +112,7 @@ Item {
                             playbackState.device = data.devices[i]
                     }
                 } catch (err) {
-                    console.log(err)
+                    console.log("reloadDevices() error: " + err)
                 }
             } else {
                 console.log("No Data for getMyDevices")
@@ -239,8 +240,8 @@ Item {
                     //playbackState.contextDetails = undefined
                 }
             }
-        });
-        reloadDevices();
+        })
+        //reloadDevices() Why is this here? The info is not used.
     }
 
     function playTrack(track) {

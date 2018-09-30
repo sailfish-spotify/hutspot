@@ -16,7 +16,7 @@ signals:
     void linkingFailed();
     void linkingSucceeded();
     void linkedChanged();
-    void refreshFinished();
+    void refreshFinished(int errorCode, QString errorString);
     void openBrowser(const QUrl &url);
     void closeBrowser();
 
@@ -34,7 +34,7 @@ private slots:
     void onLinkingFailed();
     void onOpenBrowser(const QUrl &url);
     void onCloseBrowser();
-    void onRefreshFinished(QNetworkReply::NetworkError error);
+    void onRefreshFinished(QNetworkReply::NetworkError error, QString errorString);
 
 private:
     O2Spotify * o2Spotify;

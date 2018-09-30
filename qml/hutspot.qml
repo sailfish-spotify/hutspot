@@ -308,12 +308,23 @@ ApplicationWindow {
         //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
-    Connections {
+    // Librespot must be started after we are logged in (have a valid token)
+    // otherwise it is not shown in the devices list
+    /*Connections {
         target: librespot
         onServiceEnabledChanged: {
             if(start_stop_librespot.value) {
                 if(librespot.serviceEnabled)
                     librespot.start()
+            }
+        }
+    }*/
+    onHasValidTokenChanged: {
+        if(start_stop_librespot.value) {
+            if(librespot.serviceEnabled) {
+                if(hasValidToken)
+                    librespot.start()
+                // ToDo: stop Librespot if the token becomes invalid?
             }
         }
     }
@@ -377,13 +388,17 @@ ApplicationWindow {
         }
 
         onRefreshFinished: {
-            console.log("Connections.onRefreshFinished")
-            console.log("expires: " + tokenExpireTime)
-            tokenExpireTime = spotify.getExpires()
-            var expDate = new Date(tokenExpireTime*1000)
-            console.log("expires on: " + expDate.toDateString() + " " + expDate.toTimeString())
-            var now = new Date()
-            hasValidToken = expDate > now
+            console.log("Connections.onRefreshFinished error code: " + errorCode +", msg: " + errorString)
+            if(errorCode !== 0) {
+                showErrorMessage(errorString, qsTr("Failed to Refresh Authorization Token"))
+            } else {
+                console.log("expires: " + tokenExpireTime)
+                tokenExpireTime = spotify.getExpires()
+                var expDate = new Date(tokenExpireTime*1000)
+                console.log("expires on: " + expDate.toDateString() + " " + expDate.toTimeString())
+                var now = new Date()
+                hasValidToken = expDate > now
+            }
         }
 
         onOpenBrowser: {

@@ -947,5 +947,9 @@
         <source>View an Artist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Failed to Refresh Authorization Token</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
