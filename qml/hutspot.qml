@@ -560,7 +560,12 @@ ApplicationWindow {
                 ev.trackId = track.id
                 playlistEvent(ev)
             })*/
-            removeTracksFromPlaylistUsingCurl(playlist.id, playlist.snapshot_id, [track.uri], [position], function(error, data) {
+
+            // if the track is 'linked' we must remove the linked_from one
+            var uri = track.uri
+            if(track.hasOwnProperty('linked_from'))
+                uri = track.linked_from.uri
+            removeTracksFromPlaylistUsingCurl(playlist.id, playlist.snapshot_id, [uri], [position], function(error, data) {
                 if(callback)
                     callback(error, data)
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
@@ -981,7 +986,6 @@ ApplicationWindow {
         args.push("Content-Type: application/json")
         args.push(Spotify._baseUri + "/playlists/" + playlistId + "/tracks")
         args.push("--data")
-        //args.push("@-")
 
         var data = "{\"tracks\":["
         for(var i=0;i<uris.length;i++) {
@@ -989,13 +993,12 @@ ApplicationWindow {
                 data += ","
             data += "{\"uri\":\"" + uris[i] + "\",\"positions\":[" +positions[i]+ "]}"
         }
-        data += "],\"snapshot_id\":\"" + snapshotId + "\"}"
+        //data += "],\"snapshot_id\":\"" + snapshotId + "\"}"
+        data += "]}"
         args.push(data)
 
         process.callback = callback
         process.start(command, args)
-        //process.write(data)
-        //process.closeWriteChannel()
     }
 
     Process {
