@@ -244,10 +244,10 @@ ApplicationWindow {
     function showErrorMessage(error, text) {
         var msg
         if(error) {
-            if(error.status && error.message)
+            if(error.hasOwnProperty('status') && error.hasOwnProperty('message'))
                 msg = text + ":" + error.status + ":" + error.message
             else
-                msg = error + ":" + text
+                msg = text + ": " + error
         } else
             msg = text
         msgBox.showMessage(msg, 3000)
