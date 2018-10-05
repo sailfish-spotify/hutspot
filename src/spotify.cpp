@@ -51,7 +51,7 @@ Spotify::Spotify(QObject *parent) : QObject(parent)
     connect(o2Spotify, SIGNAL(linkingSucceeded()), this, SLOT(onLinkingSucceeded()));
     connect(o2Spotify, SIGNAL(openBrowser(QUrl)), this, SLOT(onOpenBrowser(QUrl)));
     connect(o2Spotify, SIGNAL(closeBrowser()), this, SLOT(onCloseBrowser()));
-    connect(o2Spotify, SIGNAL(refreshFinished(QNetworkReply::NetworkError)), this, SLOT(onRefreshFinished(QNetworkReply::NetworkError)));
+    connect(o2Spotify, SIGNAL(refreshFinished(QNetworkReply::NetworkError, QString)), this, SLOT(onRefreshFinished(QNetworkReply::NetworkError, QString)));
 
 }
 
@@ -99,11 +99,11 @@ void Spotify::onCloseBrowser() {
     emit closeBrowser();
 }
 
-void Spotify::onRefreshFinished(QNetworkReply::NetworkError error) {
+void Spotify::onRefreshFinished(QNetworkReply::NetworkError error, QString errorString) {
     //QNetworkReply *tokenReply = qobject_cast<QNetworkReply *>(sender());
     //qDebug() << "Spotify::onRefreshFinished(): " << error << ", " << tokenReply->errorString();
     qDebug() << "Spotify::onRefreshFinished(): " << error;
-    emit refreshFinished();
+    emit refreshFinished(error, errorString);
 }
 
 void Spotify::onLinkedChanged() {

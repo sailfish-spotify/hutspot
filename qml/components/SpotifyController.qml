@@ -40,7 +40,7 @@ Item {
         id: handleRendererInfo
         interval: 1000
         onRunningChanged: if (running) refreshCount = 0
-        running: playbackState.is_playing || (app.state === Qt.ApplicationActive || cover.status === Cover.Active)
+        running: playbackState.is_playing || Qt.application.active || cover.status === Cover.Active
         property int refreshCount: 0
         repeat: true
         onTriggered: {
@@ -104,6 +104,7 @@ Item {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
                 try {
+                    console.log("reloadDevices() #devices: " + data.devices.length)
                     devicesModel.clear();
                     for (var i=0; i < data.devices.length; i++) {
                         devicesModel.append(data.devices[i]);
@@ -111,7 +112,7 @@ Item {
                             playbackState.device = data.devices[i]
                     }
                 } catch (err) {
-                    console.log(err)
+                    console.log("reloadDevices() error: " + err)
                 }
             } else {
                 console.log("No Data for getMyDevices")
@@ -150,6 +151,8 @@ Item {
         Spotify.play({}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = true;
+                if(_waitForPlaybackState)
+                    _ignorePlaybackState = true
             }
             if (callback) callback(error, data)
         })
@@ -159,6 +162,8 @@ Item {
         Spotify.pause({}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = false;
+                if(_waitForPlaybackState)
+                    _ignorePlaybackState = true
             }
             if (callback) callback(error, data)
         })
@@ -193,10 +198,21 @@ Item {
         })
     }
 
+    // this allows to check if a response is underway (with possibly outdated info)
+    property bool _waitForPlaybackState: false
+    property bool _ignorePlaybackState: false
+
     function refreshPlaybackState() {
+        _waitForPlaybackState = true
         var oldContextId = playbackState.context ? playbackState.context.uri : undefined;
 
         Spotify.getMyCurrentPlaybackState({}, function (error, state) {
+            _waitForPlaybackState = false
+            if(_ignorePlaybackState) {
+                _ignorePlaybackState = false
+                return
+            }
+
             if (state) {
                 playbackState.importState(state)
                 if (state.context && state.context.uri !== oldContextId) {
@@ -224,8 +240,8 @@ Item {
                     //playbackState.contextDetails = undefined
                 }
             }
-        });
-        reloadDevices();
+        })
+        //reloadDevices() Why is this here? The info is not used.
     }
 
     function playTrack(track) {

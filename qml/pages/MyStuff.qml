@@ -158,9 +158,14 @@ Page {
         target: app
 
         onPlaylistEvent: {
+            if(_itemClass !== 1)
+                return
             switch(event.type) {
+            case Util.PlaylistEventType.AddedTrack:
             case Util.PlaylistEventType.ChangedDetails:
-                // check if the playist is in the current list if so trigger a refresh
+            case Util.PlaylistEventType.RemovedTrack:
+            case Util.PlaylistEventType.ReplacedAllTracks:
+                // check if the playlist is in the current list if so trigger a refresh
                 var i = Util.doesListModelContain(searchModel, Spotify.ItemType.Playlist, event.playlistId)
                 if(i >= 0) {
                     if(myStuffPage.status === PageStatus.Active)
@@ -184,6 +189,7 @@ Page {
     property var recentlyPlayedTracks
     property var savedTracks
     property var followedArtists
+    // 0: Saved Albums, 1: User Playlists, 2: Recently Played Tracks, 3: Saved Tracks, 4: Followed Artists
     property int _itemClass: 0
 
     function nextItemClass() {

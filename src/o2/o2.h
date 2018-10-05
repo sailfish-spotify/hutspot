@@ -112,7 +112,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /// Emitted when a token refresh has been completed or failed.
-    void refreshFinished(QNetworkReply::NetworkError error);
+    void refreshFinished(QNetworkReply::NetworkError error, QString errorString);
 
     // Property change signals
     void grantFlowChanged();

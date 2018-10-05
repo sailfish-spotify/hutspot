@@ -142,7 +142,11 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <source>Hutspot</source>
+        <source>Nothing is playing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tap here to play something</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -945,6 +949,10 @@
     </message>
     <message>
         <source>View an Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to Refresh Authorization Token</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

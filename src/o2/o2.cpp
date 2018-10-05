@@ -447,7 +447,7 @@ void O2::onRefreshFinished() {
        timedReplies_.remove(refreshReply);
        setLinked(true);
        Q_EMIT linkingSucceeded();
-       Q_EMIT refreshFinished(QNetworkReply::NoError);
+       Q_EMIT refreshFinished(QNetworkReply::NoError, "");
        qDebug() << " New token expires in" << tokens.value(O2_OAUTH2_EXPIRES_IN).toInt() << "seconds";
    } else {
        qDebug() << "O2::onRefreshFinished: Error" << (int)refreshReply->error() << refreshReply->errorString();
@@ -460,7 +460,7 @@ void O2::onRefreshError(QNetworkReply::NetworkError error) {
     qWarning() << "O2::onRefreshError: " << error;
     unlink();
     timedReplies_.remove(refreshReply);
-    Q_EMIT refreshFinished(error);
+    Q_EMIT refreshFinished(error, refreshReply->errorString());
 }
 
 void O2::serverHasClosed(bool paramsfound)

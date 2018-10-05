@@ -244,10 +244,10 @@ ApplicationWindow {
     function showErrorMessage(error, text) {
         var msg
         if(error) {
-            if(error.status && error.message)
+            if(error.hasOwnProperty('status') && error.hasOwnProperty('message'))
                 msg = text + ":" + error.status + ":" + error.message
             else
-                msg = error + ":" + text
+                msg = text + ": " + error
         } else
             msg = text
         msgBox.showMessage(msg, 3000)
@@ -308,12 +308,23 @@ ApplicationWindow {
         //serviceBrowser.browse("_spotify-connect._tcp")
     }
 
-    Connections {
+    // Librespot must be started after we are logged in (have a valid token)
+    // otherwise it is not shown in the devices list
+    /*Connections {
         target: librespot
         onServiceEnabledChanged: {
             if(start_stop_librespot.value) {
                 if(librespot.serviceEnabled)
                     librespot.start()
+            }
+        }
+    }*/
+    onHasValidTokenChanged: {
+        if(start_stop_librespot.value) {
+            if(librespot.serviceEnabled) {
+                if(hasValidToken)
+                    librespot.start()
+                // ToDo: stop Librespot if the token becomes invalid?
             }
         }
     }
@@ -377,13 +388,17 @@ ApplicationWindow {
         }
 
         onRefreshFinished: {
-            console.log("Connections.onRefreshFinished")
-            console.log("expires: " + tokenExpireTime)
-            tokenExpireTime = spotify.getExpires()
-            var expDate = new Date(tokenExpireTime*1000)
-            console.log("expires on: " + expDate.toDateString() + " " + expDate.toTimeString())
-            var now = new Date()
-            hasValidToken = expDate > now
+            console.log("Connections.onRefreshFinished error code: " + errorCode +", msg: " + errorString)
+            if(errorCode !== 0) {
+                showErrorMessage(errorString, qsTr("Failed to Refresh Authorization Token"))
+            } else {
+                console.log("expires: " + tokenExpireTime)
+                tokenExpireTime = spotify.getExpires()
+                var expDate = new Date(tokenExpireTime*1000)
+                console.log("expires on: " + expDate.toDateString() + " " + expDate.toTimeString())
+                var now = new Date()
+                hasValidToken = expDate > now
+            }
         }
 
         onOpenBrowser: {
@@ -534,7 +549,7 @@ ApplicationWindow {
         })
     }
 
-    function removeFromPlaylist(playlist, track, callback) {
+    function removeFromPlaylist(playlist, track, position, callback) {
         app.showConfirmDialog(qsTr("Please confirm to remove:<br><br><b>" + track.name + "</b>"),
                               function() {
             // does not work due to Qt. cannot have DELETE request with a body
@@ -545,7 +560,12 @@ ApplicationWindow {
                 ev.trackId = track.id
                 playlistEvent(ev)
             })*/
-            removeTracksFromPlaylistUsingCurl(playlist.id, [track.uri], function(error, data) {
+
+            // if the track is 'linked' we must remove the linked_from one
+            var uri = track.uri
+            if(track.hasOwnProperty('linked_from'))
+                uri = track.linked_from.uri
+            removeTracksFromPlaylistUsingCurl(playlist.id, playlist.snapshot_id, [uri], [position], function(error, data) {
                 if(callback)
                     callback(error, data)
                 var ev = new Util.PlayListEvent(Util.PlaylistEventType.RemovedTrack,
@@ -953,7 +973,8 @@ ApplicationWindow {
     //      -H "Content-Type: application/json" "https://api.spotify.com/v1/playlists/71m0QB5fUFrnqfnxVerUup/tracks"
     //      --data "{\"tracks\":[{\"uri\": \"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\", \"positions\": [2] },{\"uri\":\"spotify:track:1301WleyT98MSxVHPZCA6M\", \"positions\": [7] }] }"
 
-    function removeTracksFromPlaylistUsingCurl(playlistId, uris, callback) {
+    // assumes the uris and positions arrays are equal length and 1 uri has 1 position
+    function removeTracksFromPlaylistUsingCurl(playlistId, snapshotId, uris, positions, callback) {
         var command = "/usr/bin/curl"
         var args = []
         args.push("-X")
@@ -965,20 +986,19 @@ ApplicationWindow {
         args.push("Content-Type: application/json")
         args.push(Spotify._baseUri + "/playlists/" + playlistId + "/tracks")
         args.push("--data")
-        args.push("@-")
 
         var data = "{\"tracks\":["
         for(var i=0;i<uris.length;i++) {
             if(i>0)
                 data += ","
-            data += "{\"uri\": \"" + uris[i] + "\"}"
+            data += "{\"uri\":\"" + uris[i] + "\",\"positions\":[" +positions[i]+ "]}"
         }
+        //data += "],\"snapshot_id\":\"" + snapshotId + "\"}"
         data += "]}"
+        args.push(data)
 
         process.callback = callback
         process.start(command, args)
-        process.write(data)
-        process.closeWriteChannel()
     }
 
     Process {

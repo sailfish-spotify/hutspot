@@ -118,10 +118,6 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                app.controller.reloadDevices()
-        }
         onHasValidTokenChanged: app.controller.reloadDevices()
     }
 
