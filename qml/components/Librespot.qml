@@ -85,6 +85,21 @@ Item {
                       })
         }
 
+        function restartUnit(unit) {
+            typedCall("RestartUnit",
+                      [{"type": "s", "value": unit},
+                       {"type": "s", "value": "replace"}],
+                      function(job) {
+                          systemdJob = job
+                          updatePath()
+                          console.log("manager.RestartUnit: " + job)
+                      },
+                      function() {
+                          updatePath()
+                          console.log("manager.RestartUnit failed ")
+                      })
+        }
+
         function stopUnit(unit) {
             typedCall("StopUnit",
                       [{"type": "s", "value": unit},
@@ -149,7 +164,9 @@ Item {
     }
 
     function start() {
-        manager.startUnit(librespotService.serviceName)
+        // when already running we still restart so Librespot will reregister at the Spotify servers
+        // so it hopefully appears in the list of available devices
+        manager.restartUnit(librespotService.serviceName)
     }
 
     function stop() {
