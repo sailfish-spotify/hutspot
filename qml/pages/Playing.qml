@@ -611,6 +611,7 @@ Page {
                     loadAlbumTracks(currentId)
                     break
                 case 'artist':
+                    searchModel.clear()
                     Spotify.isFollowingArtists([currentId], function(error, data) {
                         if(data)
                             isContextFavorite = data[0]
