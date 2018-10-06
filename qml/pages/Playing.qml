@@ -718,6 +718,10 @@ Page {
         cursorHelper.offset = 0
         cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
         _loadAlbumTracks(id)
+        Spotify.containsMySavedAlbums([id], {}, function(error, data) {
+            if(data)
+                isContextFavorite = data[0]
+        })
     }
 
     function _loadAlbumTracks(id) {
@@ -765,7 +769,10 @@ Page {
             return
         switch(app.controller.playbackState.context.type) {
         case 'album':
-            app.toggleSavedAlbum(app.controller.playbackState.context, isContextFavorite, function(saved) {
+            var album = app.controller.playbackState.item
+                        ? app.controller.playbackState.item.album
+                        : app.controller.playbackState.context
+            app.toggleSavedAlbum(album, isContextFavorite, function(saved) {
                 isContextFavorite = saved
             })
             break

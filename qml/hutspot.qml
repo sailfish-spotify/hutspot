@@ -669,21 +669,31 @@ ApplicationWindow {
     }
 
     function saveAlbum(album, callback) {
-        Spotify.addToMySavedAlbums([album.id], function(error, data) {
+        var id
+        if(album.hasOwnProperty("id"))
+            id = album.id
+        else
+            id = Util.parseSpotifyUri(album.uri).id
+        Spotify.addToMySavedAlbums([id], function(error, data) {
             callback(error, data)
         })
     }
 
-    function unSaveAlbum(album, callback) {
+    function unSaveAlbum(album, callback) {        
+        var id
+        if(album.hasOwnProperty("id"))
+            id = album.id
+        else
+            id = Util.parseSpotifyUri(album.uri).id
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+                Spotify.removeFromMySavedAlbums([id], function(error, data) {
                     callback(error, data)
                 })
             })
         else
-            Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+            Spotify.removeFromMySavedAlbums([id], function(error, data) {
                 callback(error, data)
             })
     }
