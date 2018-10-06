@@ -611,6 +611,7 @@ Page {
                     loadAlbumTracks(currentId)
                     break;
                 case 'playlist':
+                    cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
                     loadPlaylistTrackInfo()
                     break
@@ -714,6 +715,7 @@ Page {
 
     function loadAlbumTracks(id) {
         searchModel.clear()
+        cursorHelper.offset = 0
         cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
         _loadAlbumTracks(id)
     }
@@ -847,6 +849,7 @@ Page {
             case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
+                // ToDo what about cursorHelper.offset?
                 loadPlaylistTracks(app.id, currentId)
                 if(app.controller.playbackState.is_playing) {
                     waitForEndOfSnapshot = true
@@ -867,8 +870,10 @@ Page {
                         currentId = "" // trigger reload)
                         playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
-                else
+                else {
+                    cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
+                }
                 break
             }
         }
