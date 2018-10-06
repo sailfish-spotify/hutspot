@@ -622,8 +622,8 @@ ApplicationWindow {
         })
     }
 
-    function isFollowingPlaylist(playlist, callback) {
-        Spotify.areFollowingPlaylist(playlist.id, [id], function(error, data) {
+    function isFollowingPlaylist(pid, callback) {
+        Spotify.areFollowingPlaylist(pid, [id], function(error, data) {
             callback(error, data)
         })
     }
@@ -680,20 +680,15 @@ ApplicationWindow {
     }
 
     function unSaveAlbum(album, callback) {        
-        var id
-        if(album.hasOwnProperty("id"))
-            id = album.id
-        else
-            id = Util.parseSpotifyUri(album.uri).id
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedAlbums([id], function(error, data) {
+                Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
                     callback(error, data)
                 })
             })
         else
-            Spotify.removeFromMySavedAlbums([id], function(error, data) {
+            Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
                 callback(error, data)
             })
     }
@@ -760,12 +755,12 @@ ApplicationWindow {
     function toggleFollowPlaylist(playlist, isFollowed, callback) {
         if(isFollowed)
              unfollowPlaylist(playlist, function(error, data) {
-                 if(data)
+                 if(!error)
                      callback(false)
              })
          else
              followPlaylist(playlist, function(error, data) {
-                 if(data)
+                 if(!error)
                      callback(true)
              })
     }

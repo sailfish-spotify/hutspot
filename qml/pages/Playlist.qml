@@ -252,7 +252,7 @@ Page {
             }
         })
 
-        app.isFollowingPlaylist(playlist, function(error, data) {
+        app.isFollowingPlaylist(playlist.id, function(error, data) {
             if(data)
                 isFollowed = data[0]
         })

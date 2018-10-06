@@ -609,7 +609,13 @@ Page {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
                     loadAlbumTracks(currentId)
-                    break;
+                    break
+                case 'artist':
+                    Spotify.isFollowingArtists([currentId], function(error, data) {
+                        if(data)
+                            isContextFavorite = data[0]
+                    })
+                    break
                 case 'playlist':
                     cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
@@ -711,6 +717,10 @@ Page {
                 console.log("No Data for getPlaylistTracks")
             }
         })
+        app.isFollowingPlaylist(pid, function(error, data) {
+            if(data)
+                isContextFavorite = data[0]
+        })
     }
 
     function loadAlbumTracks(id) {
@@ -765,24 +775,22 @@ Page {
     }
 
     function toggleSavedFollowed() {
-        if(!app.controller.playbackState.context)
+        if(!app.controller.playbackState.context
+           || !app.controller.playbackState.contextDetails)
             return
         switch(app.controller.playbackState.context.type) {
         case 'album':
-            var album = app.controller.playbackState.item
-                        ? app.controller.playbackState.item.album
-                        : app.controller.playbackState.context
-            app.toggleSavedAlbum(album, isContextFavorite, function(saved) {
+            app.toggleSavedAlbum(app.controller.playbackState.contextDetails, isContextFavorite, function(saved) {
                 isContextFavorite = saved
             })
             break
         case 'artist':
-            app.toggleFollowArtist(app.controller.playbackState.context, isContextFavorite, function(followed) {
+            app.toggleFollowArtist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
                 isContextFavorite = followed
             })
             break
         case 'playlist':
-            app.toggleFollowPlaylist(app.controller.playbackState.context, isContextFavorite, function(followed) {
+            app.toggleFollowPlaylist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
                 isContextFavorite = followed
             })
             break
