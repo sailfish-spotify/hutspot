@@ -341,7 +341,7 @@ Page {
                         // request additional Info
                         Spotify.isFollowingArtists(artistIds, function(error, data) {
                             if(data) {
-                                Util.setFollowedInfo(1, artistIds, data, searchModel)
+                                Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
                             }
                         })
                     }

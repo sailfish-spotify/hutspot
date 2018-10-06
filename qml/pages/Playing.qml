@@ -893,6 +893,14 @@ Page {
                 break
             }
         }
+        onFavoriteEvent: {
+            if(currentId === event.id) {
+                isContextFavorite = event.isFavorite
+            } else if(event.type === Util.SpotifyItemType.Track) {
+                // no easy way to check if the track is in the model so just update
+                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
+            }
+        }
     }
 
     onStatusChanged: {

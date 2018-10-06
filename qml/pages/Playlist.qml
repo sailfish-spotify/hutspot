@@ -205,6 +205,16 @@ Page {
                 break
             }
         }
+
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Playlist:
+                if(playlist.id === event.id) {
+                    isFollowed = event.isFavorite
+                }
+                break
+            }
+        }
     }
 
     onPlaylistChanged: refresh()

@@ -210,4 +210,21 @@ Page {
         app.notifyHistoryUri(album.uri)
     }
 
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+                if(album.id === event.id) {
+                    isAlbumSaved = event.isFavorite
+                }
+                break
+            case Util.SpotifyItemType.Track:
+                // no way to check if this track is for this album
+                // so just try to update
+                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
+    }
 }

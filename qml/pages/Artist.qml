@@ -165,7 +165,7 @@ Page {
     function loadData() {
         var i;
 
-        if(artistAlbums)
+        if(artistAlbums) {
             for(i=0;i<artistAlbums.items.length;i++) {
                 searchModel.append({type: 0,
                                     name: artistAlbums.items[i].name,
@@ -173,6 +173,12 @@ Page {
                                     following: false,
                                     artist: {}})
             }
+            // request additional Info
+            Spotify.isFollowingArtists([currentArtist.id], function(error, data) {
+                if(data)
+                    isFollowed = data[0]
+            })
+        }
 
         if(relatedArtists) {
             var artistIds = [currentArtist.id]
@@ -190,7 +196,7 @@ Page {
                     // first one is the currentArtist
                     isFollowed = data[0]
                     data.shift()
-                    Util.setFollowedInfo(1, artistIds, data, searchModel)
+                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
                 }
             })
         }
@@ -248,4 +254,16 @@ Page {
         app.notifyHistoryUri(currentArtist.uri)
     }
 
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Artist:
+                if(currentArtist.id === event.id) {
+                    isFollowed = event.isFavorite
+                }
+                break
+            }
+        }
+    }
 }

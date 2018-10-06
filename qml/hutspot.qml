@@ -622,6 +622,8 @@ ApplicationWindow {
         })
     }
 
+    signal favoriteEvent(var event)
+
     function isFollowingPlaylist(pid, callback) {
         Spotify.areFollowingPlaylist(pid, [id], function(error, data) {
             callback(error, data)
@@ -631,6 +633,16 @@ ApplicationWindow {
     function followPlaylist(playlist, callback) {
         Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unfollowPlaylist(playlist, callback) {
+        Spotify.unfollowPlaylist(playlist.id, function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -638,19 +650,25 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
                                   function() {
-                Spotify.unfollowPlaylist(playlist.id, function(error, data) {
-                    callback(error, data)
-                })
+                _unfollowPlaylist(playlist, callback)
             })
         else
-            Spotify.unfollowPlaylist(playlist.id, function(error, data) {
-                callback(error, data)
-            })
+            _unfollowPlaylist(playlist, callback)
     }
 
     function followArtist(artist, callback) {
         Spotify.followArtists([artist.id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unfollowArtist(artist, callback) {
+        Spotify.unfollowArtists([artist.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -658,14 +676,10 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow artist:<br><br><b>" + artist.name + "</b>"),
                                   function() {
-                Spotify.unfollowArtists([artist.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unfollowArtist(artist, callback)
             })
         else
-            Spotify.unfollowArtists([artist.id], function(error, data) {
-                callback(error, data)
-            })
+            _unfollowArtist(artist, callback)
     }
 
     function saveAlbum(album, callback) {
@@ -676,26 +690,42 @@ ApplicationWindow {
             id = Util.parseSpotifyUri(album.uri).id
         Spotify.addToMySavedAlbums([id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, true)
+            favoriteEvent(event)
         })
     }
 
-    function unSaveAlbum(album, callback) {        
+    function _unSaveAlbum(album, callback) {
+        Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, false)
+            favoriteEvent(event)
+        })
+    }
+
+    function unSaveAlbum(album, callback) {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unSaveAlbum(album, callback)
             })
         else
-            Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
-                callback(error, data)
-            })
+            _unSaveAlbum(album, callback)
     }
 
     function saveTrack(track, callback) {
         Spotify.addToMySavedTracks([track.id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unSaveTrack(track, callback) {
+        Spotify.removeFromMySavedTracks([track.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -703,14 +733,10 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save track:<br><br><b>" + track.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedTracks([track.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unSaveTrack(track, callback)
             })
         else
-            Spotify.removeFromMySavedTracks([track.id], function(error, data) {
-                callback(error, data)
-            })
+            _unSaveTrack(track, callback)
     }
 
     function toggleSavedTrack(model) {
