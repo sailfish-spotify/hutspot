@@ -191,6 +191,8 @@ Page {
         var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
         var options = {seed_genres: gs.join(',')}
         options.limit = app.searchLimit.value
+        if(app.query_for_market.value)
+            options.market = "from_token"
         Spotify.getRecommendations(options, function(error, data) {
             if(data) {
                 try {
