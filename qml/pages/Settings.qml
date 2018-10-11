@@ -16,16 +16,6 @@ Page {
 
     allowedOrientations: Orientation.All
 
-
-    onStatusChanged: {
-        if (status === PageStatus.Activating) {
-            searchLimit.text = app.searchLimit.value
-            searchHistoryLimit.text = app.search_history_max_size.value
-            navigation_menu_type.currentIndex = app.navigation_menu_type.value
-            hutspotQueueName.text = app.hutspot_queue_playlist_name.value
-        }
-    }
-
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
@@ -90,7 +80,7 @@ Page {
                 }
                 description: {
                     if(!librespot.serviceEnabled)
-                        return qsTr("Libresot is not available")
+                        return qsTr("Librespot is not available")
                     else
                         return librespot.serviceRunning
                                 ? qsTr("Running")
@@ -145,7 +135,9 @@ Page {
 
                 menu: ContextMenu {
                     MenuItem { text: qsTr("Page with List of Menu Items") }
-                    MenuItem { text: qsTr("Docked Panel with Icons") }
+                    MenuItem { text: qsTr("Menu Page attached to Playing Page") }
+                    MenuItem { text: qsTr("Docked Panel with all Icons") }
+                    MenuItem { text: qsTr("Docked Panel with Player Controls and Hamburger button") }
                 }
 
                 onCurrentIndexChanged: {
@@ -183,6 +175,23 @@ Page {
 
     Librespot {
         id: librespot
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.setHidden()
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.resetHidden()
+
+        if (status === PageStatus.Activating) {
+            searchLimit.text = app.searchLimit.value
+            searchHistoryLimit.text = app.search_history_max_size.value
+            navigation_menu_type.currentIndex = app.navigation_menu_type.value
+            hutspotQueueName.text = app.hutspot_queue_playlist_name.value
+        }
     }
 }
 

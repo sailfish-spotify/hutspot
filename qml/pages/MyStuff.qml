@@ -34,8 +34,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -138,21 +138,8 @@ Page {
         }
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     // when the page is on the stack but not on top a refresh can wait
     property bool _needsRefresh: false
-
-    onStatusChanged: {
-        if (status === PageStatus.Activating) {
-            if(_needsRefresh) {
-                _needsRefresh = false
-                refresh()
-            }
-        }
-    }
 
     Connections {
         target: app
@@ -375,4 +362,17 @@ Page {
             refresh()
     }
 
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating) {
+            app.dockedPanel.registerListView(listView)
+            if(_needsRefresh) {
+                _needsRefresh = false
+                refresh()
+            }
+        } else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
+    }
 }

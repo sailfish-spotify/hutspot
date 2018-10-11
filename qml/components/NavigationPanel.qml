@@ -1,16 +1,20 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-DockedPanel {
+Item {
     id: navPanel
 
     property alias secondRow: secondRow
 
-    width: parent.width
-    height: Theme.itemSizeLarge + (secondRow.enabled ? secondRow.height : 0)
-    dock: Dock.Bottom
-    open: false
-    modal: false
+    width: parent ? parent.width : 0
+    height: parent ? parent.height : implicitHeight
+    implicitHeight: firstRow.height
+                    + (secondRow.enabled ? secondRow.height : 0)
+                    + (thirdRow.enabled ? thirdRow.height : 0)
+
+    //dock: Dock.Bottom
+    //open: false
+    //modal: false
 
     Column {
         id: bar
@@ -22,6 +26,7 @@ DockedPanel {
         Row {
             id: firstRow
             width: parent.width
+            height: Theme.itemSizeLarge
 
             IconButton {
                 width: bar.itemWidth
@@ -79,6 +84,7 @@ DockedPanel {
 
         Row {
             id: secondRow
+            height: Theme.itemSizeLarge
 
             IconButton {
                 width: bar.itemWidth
@@ -117,6 +123,7 @@ DockedPanel {
 
         Row {
             id: thirdRow
+            height: Theme.itemSizeLarge
 
             IconButton {
                 width: bar.itemWidth
@@ -138,11 +145,11 @@ DockedPanel {
         }
     }
 
-    onOpenChanged: {
+    /*onOpenChanged: {
         if(!open) {
             modal = false
         }
-    }
+    }*/
 
 }
 

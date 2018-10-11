@@ -37,8 +37,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -141,10 +141,6 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
 
-    }
-
-    NavigationPanel {
-        id: navPanel
     }
 
     onCurrentArtistChanged: refresh()
@@ -266,4 +262,15 @@ Page {
             }
         }
     }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
+    }
+
 }

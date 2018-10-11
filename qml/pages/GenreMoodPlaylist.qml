@@ -35,8 +35,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -90,10 +90,6 @@ Page {
         }
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     function refresh() {
         var i;
         //showBusy = true
@@ -142,4 +138,15 @@ Page {
         if(app.hasValidToken)
             refresh()
     }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
+    }
+
 }

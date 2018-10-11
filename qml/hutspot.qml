@@ -926,8 +926,9 @@ ApplicationWindow {
     }
 
     // 0 for NavigationMenuDialog
-    // 1 for NavigationMenu as attacted page
-    // 2 for NavigationPanel
+    // 1 for NavigationMenu as attached page
+    // 2 for NavigationPanel {
+    // 3 for panel with controls and hamburger
     ConfigurationValue {
             id: navigation_menu_type
             key: "/hutspot/navigation_menu_type"
@@ -1065,9 +1066,15 @@ ApplicationWindow {
         height: cp.height
         dock: Dock.Bottom
 
+        // allow to force the panel to stay hidden, for example for the menu page
+        property bool _hidden: false
+        property bool _savedOpen: false
+        function setHidden() { _hidden = true; _savedOpen = open; open = false }
+        function resetHidden() { _hidden = false; open = _savedOpen }
+
         // we want to 'share' the dockedPanel so every page must
         // register/unregister it's listview when it becomes active
-        property SilicaListView listView
+        property SilicaListView listView: null
 
         function registerListView(lv) {
             lv.onContentYChanged.connect(notifyVScrolling)
@@ -1077,15 +1084,38 @@ ApplicationWindow {
 
         function unregisterListView(lv) {
             if(listView === lv)
-                listView = undefined
+                listView = null
             lv.onContentYChanged.disconnect(notifyVScrolling)
             lv.onIsAtBoundaryChanged.disconnect(notifyIsAtYEndChanged)
         }
 
-        ControlPanel {
+        /*ControlPanel {
             id: cp
             width: parent.width
             height: implicitHeight
+        }*/
+        Item {
+            id: cp
+            property real itemHeight: 0
+            width: parent.width
+            height: itemHeight
+            y: 0
+            Loader {
+                id: loader
+                width: parent.width
+                height: parent.height
+
+                source: {
+                    switch(app.navigation_menu_type.value) {
+                    case 2: return "components/NavigationPanel {.qml"
+                    case 3: return "components/ControlPanel.qml"
+                    default: return ""
+                    }
+                }
+                onLoaded: {
+                    cp.itemHeight = item.implicitHeight
+                }
+            }
         }
 
         //property real vSize: parent.height - dockedPanel.y + dockedPanel.contentY
@@ -1108,6 +1138,9 @@ ApplicationWindow {
 
         // hide the panel when scrolling
         function notifyVScrolling() {
+            // when nothing should be done
+            if(_hidden)
+                return
             // do not hide when last element is just above panel
             if(_atEnd)
                 return
@@ -1126,6 +1159,9 @@ ApplicationWindow {
             interval: 300
             repeat: false
             onTriggered: {
+                // when nothing should be done
+                if(dockedPanel._hidden)
+                    return
                 dockedPanel._fixAtEnd = dockedPanel._atEnd
                 dockedPanel.open = true
             }

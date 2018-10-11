@@ -34,12 +34,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        //anchors.fill: parent
-        //anchors.bottomMargin: app.dockedPanel.margin
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
-        //anchors.bottom: navPanel.top
-        //clip: navPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -104,10 +100,6 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
     }
-
-    /*NavigationPanel {
-        id: navPanel
-    }*/
 
     property var topTracks
     property var topArtists
@@ -213,14 +205,14 @@ Page {
             refresh()
     }
 
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
     onStatusChanged: {
-        if(status === PageStatus.Activating) {
-            //app.dockedPanel.listView = listView
+        if(status === PageStatus.Activating)
             app.dockedPanel.registerListView(listView)
-        } else if(status === PageStatus.Deactivating) {
-            //app.dockedPanel.listView = undefined
+        else if(status === PageStatus.Deactivating)
             app.dockedPanel.unregisterListView(listView)
-        }
     }
 
 }

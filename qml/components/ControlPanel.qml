@@ -7,7 +7,6 @@ Item {
 
     width: parent ? parent.width : 0
     height: parent ? parent.height : implicitHeight
-
     implicitHeight: Theme.itemSizeLarge
 
     Column {

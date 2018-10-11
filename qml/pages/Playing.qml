@@ -47,8 +47,8 @@ Page {
         id: upper
         anchors.left: parent.left
         anchors.top: parent.top
-        height: parent.height - controlPanel.height
-        width: parent.width
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         SilicaListView {
             id: listView
@@ -283,7 +283,7 @@ Page {
         anchors.right: parent.right
         width: parent.width
         height: col.height
-        opacity: navPanel.open ? 0.0 : 1.0
+        opacity: app.dockedPanel.open ? 0.0 : 1.0
 
         Column {
             id: col
@@ -426,11 +426,6 @@ Page {
             }
         }
     } // Control Panel
-
-    NavigationPanel {
-        id: navPanel
-        height: controlPanel.height
-    }
 
     function getFirstLabelText() {
         var s = ""
@@ -903,8 +898,17 @@ Page {
         }
     }
 
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
     onStatusChanged: {
-        if(status === PageStatus.Active)
+        if(status === PageStatus.Active && app.playing_as_attached_page.value)
             pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
+
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
+
 }
