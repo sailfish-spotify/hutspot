@@ -34,8 +34,12 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        //anchors.fill: parent
+        //anchors.bottomMargin: app.dockedPanel.margin
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
+        //anchors.bottom: navPanel.top
+        //clip: navPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -92,7 +96,7 @@ Page {
             }
         }
 
-        VerticalScrollDecorator {}
+        VerticalScrollDecorator { id: vsd }
 
         ViewPlaceholder {
             enabled: listView.count === 0
@@ -101,9 +105,9 @@ Page {
         }
     }
 
-    NavigationPanel {
+    /*NavigationPanel {
         id: navPanel
-    }
+    }*/
 
     property var topTracks
     property var topArtists
@@ -207,6 +211,16 @@ Page {
     Component.onCompleted: {
         if(app.hasValidToken)
             refresh()
+    }
+
+    onStatusChanged: {
+        if(status === PageStatus.Activating) {
+            //app.dockedPanel.listView = listView
+            app.dockedPanel.registerListView(listView)
+        } else if(status === PageStatus.Deactivating) {
+            //app.dockedPanel.listView = undefined
+            app.dockedPanel.unregisterListView(listView)
+        }
     }
 
 }

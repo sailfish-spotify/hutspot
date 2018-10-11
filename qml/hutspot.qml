@@ -1055,5 +1055,82 @@ ApplicationWindow {
             callback = undefined
         }
     }
+
+    property alias dockedPanel: dockedPanel
+    DockedPanel {
+        id: dockedPanel
+        open: true
+
+        width: parent.width
+        height: cp.height
+        dock: Dock.Bottom
+
+        // we want to 'share' the dockedPanel so every page must
+        // register/unregister it's listview when it becomes active
+        property SilicaListView listView
+
+        function registerListView(lv) {
+            lv.onContentYChanged.connect(notifyVScrolling)
+            lv.onIsAtBoundaryChanged.connect(notifyIsAtYEndChanged)
+            listView = lv
+        }
+
+        function unregisterListView(lv) {
+            if(listView === lv)
+                listView = undefined
+            lv.onContentYChanged.disconnect(notifyVScrolling)
+            lv.onIsAtBoundaryChanged.disconnect(notifyIsAtYEndChanged)
+        }
+
+        ControlPanel {
+            id: cp
+            width: parent.width
+            height: implicitHeight
+        }
+
+        //property real vSize: parent.height - dockedPanel.y + dockedPanel.contentY
+
+        property bool _fixAtEnd: false
+        property bool _atEnd: false
+
+        function notifyIsAtYEndChanged() {
+            dockedPanel._atEnd = listView.atYEnd
+            console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
+        }
+
+        onMovingChanged: {
+            console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
+            if(!moving) {
+                if(_fixAtEnd && listView)
+                    listView.positionViewAtEnd()
+            }
+        }
+
+        // hide the panel when scrolling
+        function notifyVScrolling() {
+            // do not hide when last element is just above panel
+            if(_atEnd)
+                return
+            // do not hide when pull/push is active (copied from VerticalScrollDecorator)
+            var inBounds = (!listView.pullDownMenu || !listView.pullDownMenu.active)
+                           && (!listView.pushUpMenu || !listView.pushUpMenu.active)
+            if(!inBounds)
+                return
+            dockedPanel._fixAtEnd = false
+            dockedPanel.open = false
+            noScrollDetect.restart()
+        }
+
+        Timer {
+            id: noScrollDetect
+            interval: 300
+            repeat: false
+            onTriggered: {
+                dockedPanel._fixAtEnd = dockedPanel._atEnd
+                dockedPanel.open = true
+            }
+        }
+
+    }
 }
 
