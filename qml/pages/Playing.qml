@@ -47,8 +47,8 @@ Page {
         id: upper
         anchors.left: parent.left
         anchors.top: parent.top
-        height: parent.height - app.dockedPanel.visibleSize
-        clip: app.dockedPanel.expanded
+        height: parent.height - controlPanel.height
+        width: parent.width
 
         SilicaListView {
             id: listView
@@ -902,13 +902,13 @@ Page {
     // and some ListView events
     propagateComposedEvents: true
     onStatusChanged: {
-        if(status === PageStatus.Active && app.playing_as_attached_page.value)
-            pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
+        //if(status === PageStatus.Active && app.playing_as_attached_page.value)
+        //    pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
 
         if(status === PageStatus.Activating)
-            app.dockedPanel.registerListView(listView)
+            app.dockedPanel.setHidden()
         else if(status === PageStatus.Deactivating)
-            app.dockedPanel.unregisterListView(listView)
+            app.dockedPanel.resetHidden()
     }
 
 }
