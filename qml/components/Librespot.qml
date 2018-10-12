@@ -11,7 +11,7 @@ import org.nemomobile.dbus 2.0
 Item {
 
     property alias serviceEnabled: manager.librespotServiceEnabled
-    property alias serviceRunning: librespotService.serviceRunning
+    property alias serviceRunning: librespotUnit.serviceRunning
 
     /*onLibrespotServiceEnabled: {
         console.log("onLibrespotServiceEnabled: " + librespotServiceEnabled)
@@ -21,7 +21,7 @@ Item {
     }*/
 
     DBusInterface {
-        id: librespotService
+        id: librespotUnit
 
         property bool serviceRunning: false
 
@@ -32,9 +32,9 @@ Item {
         signalsEnabled: true
 
         function updateState() {
-            console.log("librespotService.updateState: path=" + path)
+            console.log("librespotUnit.updateState: path=" + path)
             if (path !== "") {
-                var activeState = librespotService.getProperty("ActiveState")
+                var activeState = librespotUnit.getProperty("ActiveState")
                 if (activeState === "active") {
                     serviceRunning = true
                 } else if(activeState === "inactive") {
@@ -49,6 +49,46 @@ Item {
         onPathChanged: {
             if(path !== "")
                 updateState()
+        }
+    }
+
+    function getName() {
+        return getEnvironmentVariable("DEVICE_NAME")
+    }
+
+    function getEnvironmentVariable(name) {
+        var i
+        if(!librespotService.environment)
+            return ""
+        for(i=0;i<librespotService.environment.length;i++) {
+            var s = librespotService.environment[i].split("=")
+            if(s[0] === name)
+                return s[1]
+        }
+        return ""
+    }
+
+    DBusInterface {
+        id: librespotService
+
+        property var environment: null
+
+        bus: DBus.SessionBus
+        service: "org.freedesktop.systemd1"
+        iface: "org.freedesktop.systemd1.Service"
+
+        function readServiceProperty(property) {
+            if (path !== "") {
+                environment = librespotService.getProperty(property)
+                console.log(JSON.stringify(environment))
+            }
+        }
+
+        onPathChanged: {
+            if(path !== "") {
+                //readServiceProperty("ExecStart")
+                readServiceProperty("Environment")
+            }
         }
     }
 
@@ -116,7 +156,7 @@ Item {
         }
 
         function updateEnabled() {
-            typedCall("GetUnitFileState", [{"type": "s", "value": librespotService.serviceName}],
+            typedCall("GetUnitFileState", [{"type": "s", "value": librespotUnit.serviceName}],
                       function(state) {
                           // seems to be 'static'
                           if (state !== "disabled" && state !== "invalid") {
@@ -131,11 +171,13 @@ Item {
         }
 
         function updatePath() {
-            typedCall("GetUnit", [{ "type": "s", "value": librespotService.serviceName}],
+            typedCall("GetUnit", [{ "type": "s", "value": librespotUnit.serviceName}],
                       function(unit) {
+                          librespotUnit.path = unit
                           librespotService.path = unit
                       },
                       function() {
+                          librespotUnit.path = ""
                           librespotService.path = ""
                       })
         }
@@ -158,7 +200,7 @@ Item {
         signal jobRemoved(int id, string path, string unit, string result)
         onJobRemoved: {
             if(systemdJob === path)
-                librespotService.updateState()
+                librespotUnit.updateState()
             console.log("onJobRemoved id:" + id  + ", path:" + path + ", unit:" + unit + ", result:" + result)
         }
     }
@@ -166,10 +208,10 @@ Item {
     function start() {
         // when already running we still restart so Librespot will reregister at the Spotify servers
         // so it hopefully appears in the list of available devices
-        manager.restartUnit(librespotService.serviceName)
+        manager.restartUnit(librespotUnit.serviceName)
     }
 
     function stop() {
-        manager.stopUnit(librespotService.serviceName)
+        manager.stopUnit(librespotUnit.serviceName)
     }
 }

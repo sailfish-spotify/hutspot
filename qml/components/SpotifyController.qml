@@ -59,14 +59,14 @@ Item {
         }
     }
 
-    Connections {
+    /*Connections {
         target: app
         onStateChanged: {
             if (app.state === Qt.ApplicationActive) {
                 app.controller.reloadDevices();
             }
         }
-    }
+    }*/
 
     Connections {
         target: spotify
@@ -100,6 +100,8 @@ Item {
         })
     }
 
+    signal devicesReloaded()
+
     function reloadDevices() {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
@@ -107,10 +109,12 @@ Item {
                     console.log("reloadDevices() #devices: " + data.devices.length)
                     devicesModel.clear();
                     for (var i=0; i < data.devices.length; i++) {
+                        //console.log(JSON.stringify(data.devices[i]))
                         devicesModel.append(data.devices[i]);
                         if (data.devices[i].is_active)
                             playbackState.device = data.devices[i]
                     }
+                    devicesReloaded()
                 } catch (err) {
                     console.log("reloadDevices() error: " + err)
                 }

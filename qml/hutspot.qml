@@ -45,6 +45,7 @@ ApplicationWindow {
 
     property alias queue: queue
     property alias playingPage: playingPage
+    property alias librespot: librespot
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -812,6 +813,35 @@ ApplicationWindow {
 
     Librespot {
         id: librespot
+    }
+
+    // check if the Librespot service is known to Spotify
+    function isLibrespotInDevicesList() {
+        var i
+        // we cannot determine the name if it is not running
+        if(!librespot.serviceRunning)
+            return false
+        var devName = librespot.getName()
+        if(devName.length === 0) // failed to determine the name
+            return false
+        for(i=0;i<spotifyController.devices.count;i++) {
+            var device = spotifyController.devices.get(i)
+            if(device.name === devName)
+                return true
+        }
+        return false
+    }
+
+    Connections {
+        target: spotifyController
+        onDevicesReloaded: {
+            // check if Librespot is known to Spotify and if not restart it
+            if(app.start_stop_librespot.value
+               && !isLibrespotInDevicesList()) {
+                console.log("Librespot is not in the devices list so restart it")
+                librespot.start()
+            }
+        }
     }
 
     function getAppIconSource() {
