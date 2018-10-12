@@ -39,8 +39,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         header: Column {
             id: lvColumn
@@ -143,10 +143,6 @@ Page {
 
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     onAlbumChanged: refresh()
 
     property alias cursorHelper: cursorHelper
@@ -208,6 +204,34 @@ Page {
         })
 
         app.notifyHistoryUri(album.uri)
+    }
+
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+                if(album.id === event.id) {
+                    isAlbumSaved = event.isFavorite
+                }
+                break
+            case Util.SpotifyItemType.Track:
+                // no way to check if this track is for this album
+                // so just try to update
+                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 
 }

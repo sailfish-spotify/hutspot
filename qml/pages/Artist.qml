@@ -37,8 +37,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -143,10 +143,6 @@ Page {
 
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     onCurrentArtistChanged: refresh()
 
     property var artistAlbums
@@ -165,7 +161,7 @@ Page {
     function loadData() {
         var i;
 
-        if(artistAlbums)
+        if(artistAlbums) {
             for(i=0;i<artistAlbums.items.length;i++) {
                 searchModel.append({type: 0,
                                     name: artistAlbums.items[i].name,
@@ -173,6 +169,12 @@ Page {
                                     following: false,
                                     artist: {}})
             }
+            // request additional Info
+            Spotify.isFollowingArtists([currentArtist.id], function(error, data) {
+                if(data)
+                    isFollowed = data[0]
+            })
+        }
 
         if(relatedArtists) {
             var artistIds = [currentArtist.id]
@@ -190,7 +192,7 @@ Page {
                     // first one is the currentArtist
                     isFollowed = data[0]
                     data.shift()
-                    Util.setFollowedInfo(1, artistIds, data, searchModel)
+                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
                 }
             })
         }
@@ -246,6 +248,29 @@ Page {
             break
         }
         app.notifyHistoryUri(currentArtist.uri)
+    }
+
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Artist:
+                if(currentArtist.id === event.id) {
+                    isFollowed = event.isFavorite
+                }
+                break
+            }
+        }
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 
 }

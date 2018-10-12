@@ -70,8 +70,13 @@ Page {
     }
 
     SilicaListView {
-         anchors.fill: parent
+        id: listView
          model: menuModel
+
+         width: parent.width
+         anchors.top: parent.top
+         height: parent.height - app.dockedPanel.visibleSize
+         clip: app.dockedPanel.expanded
 
          header: PageHeader {
              title: qsTr("Menu")
@@ -119,13 +124,22 @@ Page {
         app.doSelectedMenuItem(selectedMenuItem)
     }
 
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
     onStatusChanged: {
+
         // if no action restore attached page
         if(status === PageStatus.Inactive
            && selectedMenuItem === -1
            && _started
            && popOnExit)
             app.setPlayingAsAttachedPage()
-        _started = true
+            _started = true
+
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 }

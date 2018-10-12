@@ -132,4 +132,11 @@ leszek: DevicePixelRatioHack"
 
         VerticalScrollDecorator { }
     }
+
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.setHidden()
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.resetHidden()
+    }
 }

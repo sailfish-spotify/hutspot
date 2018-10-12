@@ -34,8 +34,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         LoadPullMenus {}
         LoadPushMenus {}
@@ -92,17 +92,13 @@ Page {
             }
         }
 
-        VerticalScrollDecorator {}
+        VerticalScrollDecorator { id: vsd }
 
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
             hintText: qsTr("Pull down to reload")
         }
-    }
-
-    NavigationPanel {
-        id: navPanel
     }
 
     property var topTracks
@@ -133,14 +129,22 @@ Page {
                                     following: false,
                                     track: topTracks.items[i],
                                     artist: {}})
-        if(topArtists)
+        if(topArtists) {
+            var artistIds = []
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
                                     name: topArtists.items[i].name,
-                                    following: true,
+                                    following: false,
                                     track: {},
                                     artist: topArtists.items[i]})
+                artistIds.push(topArtists.items[i].id)
             }
+            // request additional Info
+            Spotify.isFollowingArtists(artistIds, function(error, data) {
+                if(data)
+                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
+            })
+        }
     }
 
     function refresh() {
@@ -199,6 +203,16 @@ Page {
     Component.onCompleted: {
         if(app.hasValidToken)
             refresh()
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 
 }

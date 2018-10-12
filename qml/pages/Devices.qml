@@ -15,13 +15,11 @@ Page {
     id: devicesPage
 
     allowedOrientations: Orientation.All
-    //anchors.bottom: navPanel.top
-    //clip: navPanel.expanded
 
     SilicaListView {
         id: listView
-        model: app.controller.devices
-        anchors.fill: parent
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         PullDownMenu {
             MenuItem {
@@ -109,10 +107,6 @@ Page {
         VerticalScrollDecorator {}
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     // signal foundDevicesChanged()
     // onFoundDevicesChanged: refreshDevices()
 
@@ -122,5 +116,16 @@ Page {
     }
 
     Component.onCompleted: app.controller.reloadDevices()
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
+    }
+
 }
 

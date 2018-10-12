@@ -33,8 +33,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         PullDownMenu {
             MenuItem {
@@ -176,10 +176,6 @@ Page {
 
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     function refresh() {
         var i;
         //showBusy = true
@@ -191,6 +187,8 @@ Page {
         var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
         var options = {seed_genres: gs.join(',')}
         options.limit = app.searchLimit.value
+        if(app.query_for_market.value)
+            options.market = "from_token"
         Spotify.getRecommendations(options, function(error, data) {
             if(data) {
                 try {
@@ -231,5 +229,15 @@ Page {
     Component.onCompleted: {
         if(app.hasValidToken)
             refresh()
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 }

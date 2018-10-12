@@ -120,4 +120,11 @@ Dialog {
         // the caller acts. pop() will make sure the 'done' signal is raised.
         pageStack.pop(undefined, PageStackAction.Immediate)
     }
+
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.setHidden()
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.resetHidden()
+    }
 }

@@ -42,8 +42,8 @@ Page {
 
         width: parent.width
         anchors.top: parent.top
-        anchors.bottom: navPanel.top
-        clip: navPanel.expanded
+        height: parent.height - app.dockedPanel.visibleSize
+        clip: app.dockedPanel.expanded
 
         header: Column {
             id: lvColumn
@@ -252,10 +252,6 @@ Page {
         }
     }
 
-    NavigationPanel {
-        id: navPanel
-    }
-
     property alias cursorHelper: cursorHelper
 
     CursorHelper {
@@ -341,7 +337,7 @@ Page {
                         // request additional Info
                         Spotify.isFollowingArtists(artistIds, function(error, data) {
                             if(data) {
-                                Util.setFollowedInfo(1, artistIds, data, searchModel)
+                                Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
                             }
                         })
                     }
@@ -387,6 +383,16 @@ Page {
                 app.showErrorMessage(error, qsTr("Search Failed"))
             showBusy = false
         })
+    }
+
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
+    onStatusChanged: {
+        if(status === PageStatus.Activating)
+            app.dockedPanel.registerListView(listView)
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.unregisterListView(listView)
     }
 
 }

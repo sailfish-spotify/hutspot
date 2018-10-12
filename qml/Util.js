@@ -463,3 +463,9 @@ function PlayListEvent(type, playlistId, snapshotId) {
     this.playlistId = playlistId
     this.snapshotId = snapshotId
 }
+
+function FavoriteEvent(type, id, isFavorite) {
+    this.type = type
+    this.id = id
+    this.isFavorite = isFavorite
+}

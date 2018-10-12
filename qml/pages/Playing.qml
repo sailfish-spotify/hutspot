@@ -283,7 +283,7 @@ Page {
         anchors.right: parent.right
         width: parent.width
         height: col.height
-        opacity: navPanel.open ? 0.0 : 1.0
+        opacity: app.dockedPanel.open ? 0.0 : 1.0
 
         Column {
             id: col
@@ -426,11 +426,6 @@ Page {
             }
         }
     } // Control Panel
-
-    NavigationPanel {
-        id: navPanel
-        height: controlPanel.height
-    }
 
     function getFirstLabelText() {
         var s = ""
@@ -609,8 +604,16 @@ Page {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
                     loadAlbumTracks(currentId)
-                    break;
+                    break
+                case 'artist':
+                    searchModel.clear()
+                    Spotify.isFollowingArtists([currentId], function(error, data) {
+                        if(data)
+                            isContextFavorite = data[0]
+                    })
+                    break
                 case 'playlist':
+                    cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
                     loadPlaylistTrackInfo()
                     break
@@ -710,12 +713,21 @@ Page {
                 console.log("No Data for getPlaylistTracks")
             }
         })
+        app.isFollowingPlaylist(pid, function(error, data) {
+            if(data)
+                isContextFavorite = data[0]
+        })
     }
 
     function loadAlbumTracks(id) {
         searchModel.clear()
+        cursorHelper.offset = 0
         cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
         _loadAlbumTracks(id)
+        Spotify.containsMySavedAlbums([id], {}, function(error, data) {
+            if(data)
+                isContextFavorite = data[0]
+        })
     }
 
     function _loadAlbumTracks(id) {
@@ -759,21 +771,22 @@ Page {
     }
 
     function toggleSavedFollowed() {
-        if(!app.controller.playbackState.context)
+        if(!app.controller.playbackState.context
+           || !app.controller.playbackState.contextDetails)
             return
         switch(app.controller.playbackState.context.type) {
         case 'album':
-            app.toggleSavedAlbum(app.controller.playbackState.context, isContextFavorite, function(saved) {
+            app.toggleSavedAlbum(app.controller.playbackState.contextDetails, isContextFavorite, function(saved) {
                 isContextFavorite = saved
             })
             break
         case 'artist':
-            app.toggleFollowArtist(app.controller.playbackState.context, isContextFavorite, function(followed) {
+            app.toggleFollowArtist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
                 isContextFavorite = followed
             })
             break
         case 'playlist':
-            app.toggleFollowPlaylist(app.controller.playbackState.context, isContextFavorite, function(followed) {
+            app.toggleFollowPlaylist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
                 isContextFavorite = followed
             })
             break
@@ -847,6 +860,7 @@ Page {
             case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
+                // ToDo what about cursorHelper.offset?
                 loadPlaylistTracks(app.id, currentId)
                 if(app.controller.playbackState.is_playing) {
                     waitForEndOfSnapshot = true
@@ -867,15 +881,34 @@ Page {
                         currentId = "" // trigger reload)
                         playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
-                else
+                else {
+                    cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
+                }
                 break
+            }
+        }
+        onFavoriteEvent: {
+            if(currentId === event.id) {
+                isContextFavorite = event.isFavorite
+            } else if(event.type === Util.SpotifyItemType.Track) {
+                // no easy way to check if the track is in the model so just update
+                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
             }
         }
     }
 
+    // The shared DockedPanel needs mouse events
+    // and some ListView events
+    propagateComposedEvents: true
     onStatusChanged: {
-        if(status === PageStatus.Active)
-            pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
+        //if(status === PageStatus.Active && app.playing_as_attached_page.value)
+        //    pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
+
+        if(status === PageStatus.Activating)
+            app.dockedPanel.setHidden()
+        else if(status === PageStatus.Deactivating)
+            app.dockedPanel.resetHidden()
     }
+
 }

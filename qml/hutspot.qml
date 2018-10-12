@@ -622,8 +622,10 @@ ApplicationWindow {
         })
     }
 
-    function isFollowingPlaylist(playlist, callback) {
-        Spotify.areFollowingPlaylist(playlist.id, [id], function(error, data) {
+    signal favoriteEvent(var event)
+
+    function isFollowingPlaylist(pid, callback) {
+        Spotify.areFollowingPlaylist(pid, [id], function(error, data) {
             callback(error, data)
         })
     }
@@ -631,6 +633,16 @@ ApplicationWindow {
     function followPlaylist(playlist, callback) {
         Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unfollowPlaylist(playlist, callback) {
+        Spotify.unfollowPlaylist(playlist.id, function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -638,19 +650,25 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow playlist:<br><br><b>" + playlist.name + "</b>"),
                                   function() {
-                Spotify.unfollowPlaylist(playlist.id, function(error, data) {
-                    callback(error, data)
-                })
+                _unfollowPlaylist(playlist, callback)
             })
         else
-            Spotify.unfollowPlaylist(playlist.id, function(error, data) {
-                callback(error, data)
-            })
+            _unfollowPlaylist(playlist, callback)
     }
 
     function followArtist(artist, callback) {
         Spotify.followArtists([artist.id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unfollowArtist(artist, callback) {
+        Spotify.unfollowArtists([artist.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -658,19 +676,30 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to unfollow artist:<br><br><b>" + artist.name + "</b>"),
                                   function() {
-                Spotify.unfollowArtists([artist.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unfollowArtist(artist, callback)
             })
         else
-            Spotify.unfollowArtists([artist.id], function(error, data) {
-                callback(error, data)
-            })
+            _unfollowArtist(artist, callback)
     }
 
     function saveAlbum(album, callback) {
-        Spotify.addToMySavedAlbums([album.id], function(error, data) {
+        var id
+        if(album.hasOwnProperty("id"))
+            id = album.id
+        else
+            id = Util.parseSpotifyUri(album.uri).id
+        Spotify.addToMySavedAlbums([id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unSaveAlbum(album, callback) {
+        Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -678,19 +707,25 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save album:<br><br><b>" + album.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unSaveAlbum(album, callback)
             })
         else
-            Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
-                callback(error, data)
-            })
+            _unSaveAlbum(album, callback)
     }
 
     function saveTrack(track, callback) {
         Spotify.addToMySavedTracks([track.id], function(error, data) {
             callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, true)
+            favoriteEvent(event)
+        })
+    }
+
+    function _unSaveTrack(track, callback) {
+        Spotify.removeFromMySavedTracks([track.id], function(error, data) {
+            callback(error, data)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, false)
+            favoriteEvent(event)
         })
     }
 
@@ -698,14 +733,10 @@ ApplicationWindow {
         if(confirm_un_follow_save.value)
             app.showConfirmDialog(qsTr("Please confirm to un-save track:<br><br><b>" + track.name + "</b>"),
                                   function() {
-                Spotify.removeFromMySavedTracks([track.id], function(error, data) {
-                    callback(error, data)
-                })
+                _unSaveTrack(track, callback)
             })
         else
-            Spotify.removeFromMySavedTracks([track.id], function(error, data) {
-                callback(error, data)
-            })
+            _unSaveTrack(track, callback)
     }
 
     function toggleSavedTrack(model) {
@@ -750,12 +781,12 @@ ApplicationWindow {
     function toggleFollowPlaylist(playlist, isFollowed, callback) {
         if(isFollowed)
              unfollowPlaylist(playlist, function(error, data) {
-                 if(data)
+                 if(!error)
                      callback(false)
              })
          else
              followPlaylist(playlist, function(error, data) {
-                 if(data)
+                 if(!error)
                      callback(true)
              })
     }
@@ -895,12 +926,13 @@ ApplicationWindow {
     }
 
     // 0 for NavigationMenuDialog
-    // 1 for NavigationMenu as attacted page
-    // 2 for NavigationPanel
+    // 1 for NavigationMenu as attached page
+    // 2 for NavigationPanel {
+    // 3 for panel with controls and hamburger button
     ConfigurationValue {
             id: navigation_menu_type
             key: "/hutspot/navigation_menu_type"
-            defaultValue: 0
+            defaultValue: 3
     }
 
     ConfigurationValue {
@@ -1023,6 +1055,118 @@ ApplicationWindow {
                 callback(null, JSON.parse(output))
             callback = undefined
         }
+    }
+
+    property alias dockedPanel: dockedPanel
+    DockedPanel {
+        id: dockedPanel
+        open: true
+
+        width: parent.width
+        height: cp.height
+        dock: Dock.Bottom
+
+        // allow to force the panel to stay hidden, for example for the menu page
+        property bool _hidden: false
+        property bool _savedOpen: false
+        function setHidden() { _hidden = true; _savedOpen = open; open = false }
+        function resetHidden() { _hidden = false; open = _savedOpen }
+
+        // we want to 'share' the dockedPanel so every page must
+        // register/unregister it's listview when it becomes active
+        property SilicaListView listView: null
+
+        function registerListView(lv) {
+            lv.onContentYChanged.connect(notifyVScrolling)
+            lv.onIsAtBoundaryChanged.connect(notifyIsAtYEndChanged)
+            listView = lv
+        }
+
+        function unregisterListView(lv) {
+            if(listView === lv)
+                listView = null
+            lv.onContentYChanged.disconnect(notifyVScrolling)
+            lv.onIsAtBoundaryChanged.disconnect(notifyIsAtYEndChanged)
+        }
+
+        /*ControlPanel {
+            id: cp
+            width: parent.width
+            height: implicitHeight
+        }*/
+        Item {
+            id: cp
+            property real itemHeight: 0
+            width: parent.width
+            height: itemHeight
+            y: 0
+            Loader {
+                id: loader
+                width: parent.width
+                height: parent.height
+
+                source: {
+                    switch(app.navigation_menu_type.value) {
+                    case 2: return "components/NavigationPanel {.qml"
+                    case 3: return "components/ControlPanel.qml"
+                    default: return ""
+                    }
+                }
+                onLoaded: {
+                    cp.itemHeight = item.implicitHeight
+                }
+            }
+        }
+
+        //property real vSize: parent.height - dockedPanel.y + dockedPanel.contentY
+
+        property bool _fixAtEnd: false
+        property bool _atEnd: false
+
+        function notifyIsAtYEndChanged() {
+            dockedPanel._atEnd = listView.atYEnd
+            console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
+        }
+
+        onMovingChanged: {
+            console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
+            if(!moving) {
+                if(_fixAtEnd && listView)
+                    listView.positionViewAtEnd()
+            }
+        }
+
+        // hide the panel when scrolling
+        function notifyVScrolling() {
+            // when nothing should be done
+            if(_hidden)
+                return
+            // do not hide when last element is just above panel
+            if(_atEnd)
+                return
+            // do not hide when pull/push is active (copied from VerticalScrollDecorator)
+            var inBounds = (!listView.pullDownMenu || !listView.pullDownMenu.active)
+                           && (!listView.pushUpMenu || !listView.pushUpMenu.active)
+            if(!inBounds)
+                return
+            dockedPanel._fixAtEnd = false
+            dockedPanel.open = false
+            noScrollDetect.restart()
+        }
+
+        Timer {
+            id: noScrollDetect
+            interval: 300
+            repeat: false
+            onTriggered: {
+                // when nothing should be done
+                if(dockedPanel._hidden)
+                    return
+                dockedPanel._fixAtEnd = dockedPanel._atEnd
+                dockedPanel.open = true
+            }
+        }
+
     }
 }
 
