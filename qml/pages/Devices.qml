@@ -18,8 +18,13 @@ Page {
 
     SilicaListView {
         id: listView
+
+        width: parent.width
+        anchors.top: parent.top
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
+
+        model: app.controller.devices
 
         PullDownMenu {
             MenuItem {
