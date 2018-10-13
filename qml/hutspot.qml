@@ -321,12 +321,39 @@ ApplicationWindow {
             }
         }
     }*/
+
     onHasValidTokenChanged: {
         if(start_stop_librespot.value) {
             if(librespot.serviceEnabled) {
-                if(hasValidToken)
-                    librespot.start()
+                if(hasValidToken) {
+                    librespotAtStart.notifyHappend(librespotAtStart.validTokenMask)
+                }
                 // ToDo: stop Librespot if the token becomes invalid?
+            }
+        }
+    }
+
+    Item {
+        id: librespotAtStart
+
+        readonly property int validTokenMask: 0x01
+        readonly property int deviceListReadyMask: 0x01
+
+        readonly property int triggerMask: 0x03
+        property int happendMask: 0
+
+        function notifyHappend(event) {
+            happendMask = happendMask | (0x01 << event)
+            if(happendMask & triggerMask) {
+                if(!app.start_stop_librespot.value)
+                    return
+                if(!librespot.serviceRunning) {
+                    console.log("Librespot is not running so restart it")
+                    librespot.start()
+                } else if(!isLibrespotInDevicesList()) {
+                    console.log("Librespot is not in the devices list so restart it")
+                    librespot.start()
+                }
             }
         }
     }
@@ -836,12 +863,7 @@ ApplicationWindow {
     Connections {
         target: spotifyController
         onDevicesReloaded: {
-            // check if Librespot is known to Spotify and if not restart it
-            if(app.start_stop_librespot.value
-               && !isLibrespotInDevicesList()) {
-                console.log("Librespot is not in the devices list so restart it")
-                librespot.start()
-            }
+            librespotAtStart.notifyHappend(librespotAtStart.deviceListReadyMask)
         }
     }
 
