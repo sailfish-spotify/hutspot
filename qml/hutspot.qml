@@ -9,6 +9,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import org.nemomobile.configuration 1.0
+import org.nemomobile.dbus 2.0
 import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
@@ -1197,6 +1198,23 @@ ApplicationWindow {
             }
         }
 
+    }
+
+    DBusInterface {
+        id: routeManager
+        bus: DBus.SystemBus
+        service: "org.nemomobile.Route.Manager"
+        path: "/org/nemomobile/Route/Manager"
+        iface: "org.nemomobile.Route.Manager"
+        signalsEnabled: true
+
+        // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=headphone, uint32=9
+        // remove: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=speaker, uint32=5
+
+        signal audioRouteChanged(string s, int i)
+        onAudioRouteChanged: {
+            console.log("DBus org.nemomobile.Route.Manager string=" + s + ", uint32=" + i)
+        }
     }
 }
 
