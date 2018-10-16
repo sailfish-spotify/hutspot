@@ -1280,6 +1280,7 @@ ApplicationWindow {
         signalsEnabled: true
 
         // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=headphone, uint32=9
+        // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=bluetootha2dp, uint32=17
         // remove: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=speaker, uint32=5
 
         signal audioRouteChanged(string s, int i)
