@@ -7,6 +7,7 @@
 
 
 import QtQuick 2.2
+import QtGraphicalEffects 1.0
 import Sailfish.Silica 1.0
 
 import "../components"
@@ -77,17 +78,32 @@ Page {
                     MenuButton {}
                 }
 
-                Image {
-                    id: imageItem
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
-                    width: parent.width * 0.75
-                    height: width
-                    fillMode: Image.PreserveAspectFit
-                    onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: showTrackInfo = !showTrackInfo
+                Item {
+                    width: parent.width
+                    height: imageItem.height
+
+                    Image {
+                        id: imageItem
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width * 0.75
+                        height: sourceSize.height*(width/sourceSize.width)
+                        source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
+                        fillMode: Image.PreserveAspectFit
+                        onPaintedHeightChanged: parent.height = Math.min(parent.parent.width, paintedHeight)
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                showTrackInfo = !showTrackInfo
+                                app.glassyBackground.showTrackInfo = showTrackInfo
+                            }
+                        }
+                    }
+                    DropShadow {
+                        anchors.fill: imageItem
+                        radius: 3.0
+                        samples: 10
+                        color: "#000"
+                        source: imageItem
                     }
                 }
 
@@ -332,58 +348,11 @@ Page {
                 }
             }
 
-            // This works but Spotify has no 'mute' so maybe we should not do it as well
-            /*Item {
+            Rectangle {
                 width: parent.width
-                height: Math.max(muteIcon.height, volumeSlider.height)
-
-                Image {
-                    id: muteIcon
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: muted ? "image://theme/icon-m-speaker" : "image://theme/icon-m-speaker-mute"
-                    MouseArea {
-                         anchors.fill: parent
-                         onClicked: {
-                             if(muted) {
-                                 Spotify.setVolume(mutedVolume, function(error, data) {
-                                     if(!error) {
-                                         volumeSlider.value = mutedVolume
-                                         app.controller.refreshPlaybackState()
-                                     }
-                                 })
-                             } else {
-                                 mutedVolume = volumeSlider.value
-                                 Spotify.setVolume(0, function(error, data) {
-                                     if(!error) {
-                                         volumeSlider.value = 0
-                                         app.controller.refreshPlaybackState()
-                                     }
-                                 })
-                             }
-                             muted = !muted
-                         }
-                    }
-                }*/
-
-                Slider {
-                    id: volumeSlider
-                    width: parent.width
-                    /*anchors.left: muteIcon.right
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter*/
-                    minimumValue: 0
-                    maximumValue: 100
-                    handleVisible: false
-                    value: app.controller.playbackState.device.volume_percent
-                    onReleased: {
-                        Spotify.setVolume(Math.round(value), function(error, data) {
-                            if(!error)
-                                app.controller.refreshPlaybackState();
-                        })
-                    }
-                }
-            /*}*/
+                height: Theme.paddingLarge
+                color: "transparent"
+            }
 
             Row {
                 id: buttonRow
@@ -392,36 +361,91 @@ Page {
 
                 IconButton {
                     width: buttonRow.itemWidth
-                    // enabled: app.mprisPlayer.canGoPrevious
+                    icon.source: app.controller.playbackState.shuffle_state
+                                 ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
+                                 : "image://theme/icon-m-shuffle"
+                    onClicked: app.controller.setShuffle(!app.controller.playbackState.shuffle_state)
+                }
+
+                IconButton {
+                    width: buttonRow.itemWidth
+                    //enabled: app.mprisPlayer.canGoPrevious
                     icon.source: "image://theme/icon-m-previous"
                     onClicked: app.controller.previous()
                 }
                 IconButton {
                     width: buttonRow.itemWidth
                     icon.source: app.controller.playbackState.is_playing
-                                 ? "image://theme/icon-cover-pause"
-                                 : "image://theme/icon-cover-play"
+                                 ? "image://theme/icon-l-pause"
+                                 : "image://theme/icon-l-play"
                     onClicked: app.controller.playPause()
                 }
                 IconButton {
                     width: buttonRow.itemWidth
-                    // enabled: app.mprisPlayer.canGoNext
+                    //enabled: app.mprisPlayer.canGoNext
                     icon.source: "image://theme/icon-m-next"
                     onClicked: app.controller.next()
                 }
                 IconButton {
+                    Rectangle {
+                        visible: app.controller.playbackState.repeat_state === "track"
+                        color: Theme.highlightColor
+                        anchors {
+                            rightMargin: (buttonRow.itemWidth - Theme.iconSizeMedium)/2
+                            right: parent.right
+                            top: parent.top
+                        }
+                        width: Theme.iconSizeSmall
+                        height: width
+                        radius: width/2
+
+                        Label {
+                            text: "1"
+                            anchors.centerIn: parent
+                            color: "#000"
+                            font.pixelSize: Theme.fontSizeSmall
+                            font.bold: true
+                        }
+                    }
+
                     width: buttonRow.itemWidth
-                    icon.source: (app.controller.playbackState && app.controller.playbackState.repeat_state)
+                    icon.source: app.controller.playbackState.repeat_state !== "off"
                                  ? "image://theme/icon-m-repeat?" + Theme.highlightColor
                                  : "image://theme/icon-m-repeat"
-                    onClicked: app.controller.setRepeat(checked)
+                    onClicked: app.controller.setRepeat(app.controller.playbackState.nextRepeatState())
                 }
-                IconButton {
-                    width: buttonRow.itemWidth
-                    icon.source: (app.controller.playbackState && app.controller.playbackState.shuffle_state)
-                                 ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
-                                 : "image://theme/icon-m-shuffle"
-                    onClicked: app.controller.setShuffle(checked)
+            }
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingLarge
+                color: "transparent"
+            }
+
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: spotifyConnectRow.childrenRect.height + Theme.paddingLarge*2
+                MouseArea {
+                    anchors.fill: spotifyConnectRow
+                    onClicked: pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
+                }
+
+                Row {
+                    id: spotifyConnectRow
+                    y: Theme.paddingLarge
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: Theme.paddingMedium
+                    Image {
+                        anchors.verticalCenter: spotifyConnectLabel.verticalCenter
+                        source: "image://theme/icon-cover-play"
+                    }
+
+                    Label {
+                        id: spotifyConnectLabel
+                        text: app.controller.playbackState.device !== undefined ? "Listening on <b>" + app.controller.playbackState.device.name + "</b>" : ""
+                    }
+                    visible: app.controller.playbackState.device !== undefined
                 }
             }
         }
@@ -902,13 +926,17 @@ Page {
     // and some ListView events
     propagateComposedEvents: true
     onStatusChanged: {
-        //if(status === PageStatus.Active && app.playing_as_attached_page.value)
-        //    pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
-
-        if(status === PageStatus.Activating)
+        switch (status) {
+        case PageStatus.Activating:
+            app.glassyBackground.state = "Visible"
             app.dockedPanel.setHidden()
-        else if(status === PageStatus.Deactivating)
+            break;
+        case PageStatus.Deactivating:
             app.dockedPanel.resetHidden()
+            break;
+        case PageStatus.Inactive:
+            app.glassyBackground.state = "Hidden"
+            break;
+        }
     }
-
 }
