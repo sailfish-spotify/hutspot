@@ -16,318 +16,202 @@ import "../Util.js" as Util
 
 Page {
     id: playingPage
-    objectName: "PlayingPage"
+    objectName: "PlaybackDetailsPage"
 
     property string defaultImageSource : "image://theme/icon-l-music"
     property bool showBusy: false
-    property string pageHeaderText: qsTr("Playing")
-    property string pageHeaderDescription: ""
-
-    property bool isContextFavorite: false
-
-    property string currentId: ""
-    property string currentSnapshotId: ""
-    property string currentTrackId: ""
-    property string currentTrackUri: ""
-
     property string viewMenuText: ""
-    property bool showTrackInfo: true
 
-    property alias searchModel: searchModel
+    property int currentIndex: -1
 
     allowedOrientations: Orientation.All
 
-    ListModel {
-        id: searchModel
-    }
-
-    Column {
+    SilicaListView {
+        id: listView
+        model: app.playingPage.searchModel
         anchors.fill: parent
-        spacing: Theme.paddingLarge
+        clip: true
 
-        PageHeader {
-            title: pageHeaderText
-            description: pageHeaderDescription
-            MenuButton {}
-        }
-
-        Item {
+        header: Column {
+            anchors.bottomMargin: Theme.paddingLarge
             width: parent.width
-            height: imageItem.height
 
-            Image {
-                id: imageItem
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width * 0.75
-                height: sourceSize.height*(width/sourceSize.width)
-                source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
-                fillMode: Image.PreserveAspectFit
-                onPaintedHeightChanged: parent.height = Math.min(parent.parent.width, paintedHeight)
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        showTrackInfo = !showTrackInfo
-                        app.glassyBackground.showTrackInfo = showTrackInfo
-                    }
-                }
+            LoadPullMenus {}
+            LoadPushMenus {}
+
+            PageHeader {
+                width: parent.width
+                title: getFirstLabelText()
+                description: getSecondLabelText()
+                MenuButton {}
             }
-            DropShadow {
-                anchors.fill: imageItem
-                radius: 3.0
-                samples: 10
-                color: "#000"
-                source: imageItem
-            }
-        }
 
-        Item {
-            id: infoContainer
+            Item {
+                id: infoContainer
 
-            // put MetaInfoPanel in Item to be able to make room for context menu
-            width: parent.width
-            height: info.height + (cmenu ? cmenu.height : 0)
-
-            MetaInfoPanel {
-                id: info
+                // put MetaInfoPanel in Item to be able to make room for context menu
+                width: parent.width - 2*Theme.horizontalPageMargin
                 x: Theme.horizontalPageMargin
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                anchors.top: parent.top
-                firstLabelText: getFirstLabelText()
-                secondLabelText: getSecondLabelText()
-                thirdLabelText: getThirdLabelText()
+                height: info.height + (cmenu ? cmenu.height : 0)
 
-                isFavorite: isContextFavorite
-                onToggleFavorite: toggleSavedFollowed()
-                onFirstLabelClicked: openMenu()
-                onSecondLabelClicked: openMenu()
-                onThirdLabelClicked: openMenu()
+                MetaInfoPanel {
+                    id: info
+                    anchors.top: parent.top
+                    firstLabelText: getFirstLabelText()
+                    secondLabelText: getSecondLabelText()
+                    thirdLabelText: getThirdLabelText()
 
-                function openMenu() {
-                    cmenu.update()
-                    cmenu.open(infoContainer)
-                }
-            }
-        }
+                    isFavorite: app.playingPage.isContextFavorite
+                    onToggleFavorite: toggleSavedFollowed()
+                    onFirstLabelClicked: openMenu()
+                    onSecondLabelClicked: openMenu()
+                    onThirdLabelClicked: openMenu()
 
-        ContextMenu {
-            id: cmenu
-
-            function update() {
-                viewAlbum.enabled = false
-                viewArtist.enabled = false
-                viewPlaylist.enabled = false
-                switch(getContextType()) {
-                case Spotify.ItemType.Album:
-                    viewAlbum.enabled = true
-                    viewArtist.enabled = true
-                    break
-                case Spotify.ItemType.Artist:
-                    viewArtist.enabled = true
-                    break
-                case Spotify.ItemType.Playlist:
-                    viewPlaylist.enabled = true
-                    break
-                case Spotify.ItemType.Track:
-                    viewAlbum.enabled = true
-                    viewArtist.enabled = false
-                    break
-                }
-            }
-
-            MenuItem {
-                id: viewAlbum
-                text: qsTr("View Album")
-                visible: enabled
-                onClicked: {
-                    switch(getContextType()) {
-                    case Spotify.ItemType.Album:
-                        app.pushPage(Util.HutspotPage.Album, {album: app.controller.playbackState.context}, true)
-                        break
-                    case Spotify.ItemType.Track:
-                        app.pushPage(Util.HutspotPage.Album, {album: app.controller.playbackState.item.album}, true)
-                        break
+                    function openMenu() {
+                        cmenu.update()
+                        cmenu.open(infoContainer)
                     }
                 }
             }
-            MenuItem {
-                id: viewArtist
-                visible: enabled
-                text: qsTr("View Artist")
-                onClicked: {
+
+            ContextMenu {
+                id: cmenu
+
+                function update() {
+                    viewAlbum.enabled = false
+                    viewArtist.enabled = false
+                    viewPlaylist.enabled = false
                     switch(getContextType()) {
                     case Spotify.ItemType.Album:
-                        app.loadArtist(app.controller.playbackState.contextDetails.artists, true)
+                        viewAlbum.enabled = true
+                        viewArtist.enabled = true
                         break
                     case Spotify.ItemType.Artist:
-                        app.pushPage(Util.HutspotPage.Artist, {currentArtist: app.controller.playbackState.context}, true)
+                        viewArtist.enabled = true
+                        break
+                    case Spotify.ItemType.Playlist:
+                        viewPlaylist.enabled = true
                         break
                     case Spotify.ItemType.Track:
-                        app.loadArtist(app.controller.playbackState.item.artists, true)
+                        viewAlbum.enabled = true
+                        viewArtist.enabled = false
                         break
                     }
                 }
-            }
-            MenuItem {
-                id: viewPlaylist
-                visible: enabled
-                text: qsTr("View Playlist")
-                onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: app.controller.playbackState.context}, true)
-            }
-        }
 
-        Row {
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            height: progressSlider.height
-            Label {
-                id: progressLabel
-                font.pixelSize: Theme.fontSizeSmall
-                anchors.verticalCenter: parent.verticalCenter
-                text: Util.getDurationString(app.controller.playbackState.progress_ms)
-            }
-            Slider {
-                id: progressSlider
-                property bool isPressed: false
-                width: parent.width - durationLabel.width - progressLabel.width
-                minimumValue: 0
-                maximumValue: app.controller.playbackState.item.duration_ms
-                handleVisible: false
-                onPressed: isPressed = true
-                onReleased: {
-                    Spotify.seek(Math.round(value), function(error, data) {
-                        app.controller.playbackState.progress_ms = Math.round(value)
-                     })
-                    isPressed = false
-                }
-                Connections {
-                    target: app.controller.playbackState
-                    // cannot use 'value: playbackProgress' since press/drag
-                    // breaks the link between them
-                    onProgress_msChanged: {
-                        if(!progressSlider.isPressed)
-                            progressSlider.value = app.controller.playbackState.progress_ms
+                MenuItem {
+                    id: viewAlbum
+                    text: qsTr("View Album")
+                    visible: enabled
+                    onClicked: {
+                        switch(getContextType()) {
+                        case Spotify.ItemType.Album:
+                            app.pushPage(Util.HutspotPage.Album, {album: app.controller.playbackState.context}, true)
+                            break
+                        case Spotify.ItemType.Track:
+                            app.pushPage(Util.HutspotPage.Album, {album: app.controller.playbackState.item.album}, true)
+                            break
+                        }
                     }
                 }
-            }
-            Label {
-                id: durationLabel
-                font.pixelSize: Theme.fontSizeSmall
-                anchors.verticalCenter: parent.verticalCenter
-                text: Util.getDurationString(app.controller.playbackState.item.duration_ms)
-            }
-        }
-
-        Rectangle {
-            width: 1
-            height: Theme.paddingLarge
-            color: "transparent"
-        }
-
-        Row {
-            id: buttonRow
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            property real itemWidth : width / 5
-
-            IconButton {
-                width: buttonRow.itemWidth
-                icon.source: app.controller.playbackState.shuffle_state
-                             ? "image://theme/icon-m-shuffle?" + Theme.highlightColor
-                             : "image://theme/icon-m-shuffle"
-                onClicked: app.controller.setShuffle(!app.controller.playbackState.shuffle_state)
-            }
-
-            IconButton {
-                width: buttonRow.itemWidth
-                icon.source: "image://theme/icon-m-previous"
-                onClicked: app.controller.previous()
-            }
-            IconButton {
-                width: buttonRow.itemWidth
-                icon.source: app.controller.playbackState.is_playing
-                             ? "image://theme/icon-l-pause"
-                             : "image://theme/icon-l-play"
-                onClicked: app.controller.playPause()
-            }
-            IconButton {
-                width: buttonRow.itemWidth
-                icon.source: "image://theme/icon-m-next"
-                onClicked: app.controller.next()
-            }
-            IconButton {
-                Rectangle {
-                    visible: app.controller.playbackState.repeat_state === "track"
-                    color: Theme.highlightColor
-                    anchors {
-                        rightMargin: (buttonRow.itemWidth - Theme.iconSizeMedium)/2
-                        right: parent.right
-                        top: parent.top
-                    }
-                    width: Theme.iconSizeSmall
-                    height: width
-                    radius: width/2
-
-                    Label {
-                        text: "1"
-                        anchors.centerIn: parent
-                        color: "#000"
-                        font.pixelSize: Theme.fontSizeSmall
-                        font.bold: true
+                MenuItem {
+                    id: viewArtist
+                    visible: enabled
+                    text: qsTr("View Artist")
+                    onClicked: {
+                        switch(getContextType()) {
+                        case Spotify.ItemType.Album:
+                            app.loadArtist(app.controller.playbackState.contextDetails.artists, true)
+                            break
+                        case Spotify.ItemType.Artist:
+                            app.pushPage(Util.HutspotPage.Artist, {currentArtist: app.controller.playbackState.context}, true)
+                            break
+                        case Spotify.ItemType.Track:
+                            app.loadArtist(app.controller.playbackState.item.artists, true)
+                            break
+                        }
                     }
                 }
-
-                width: buttonRow.itemWidth
-                icon.source: app.controller.playbackState.repeat_state !== "off"
-                             ? "image://theme/icon-m-repeat?" + Theme.highlightColor
-                             : "image://theme/icon-m-repeat"
-                onClicked: app.controller.setRepeat(app.controller.playbackState.nextRepeatState())
-            }
-        }
-
-        Rectangle {
-            width: 1
-            height: Theme.paddingLarge
-            color: "transparent"
-        }
-
-        Item {
-            x: Theme.horizontalPageMargin
-            width: parent.width - 2 * Theme.horizontalPageMargin
-            height: spotifyConnectRow.childrenRect.height + Theme.paddingLarge*2
-            MouseArea {
-                anchors.fill: spotifyConnectRow
-                onClicked: pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
-            }
-
-            Row {
-                id: spotifyConnectRow
-                y: Theme.paddingLarge
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Theme.paddingMedium
-                Image {
-                    anchors.verticalCenter: spotifyConnectLabel.verticalCenter
-                    source: "image://theme/icon-cover-play"
+                MenuItem {
+                    id: viewPlaylist
+                    visible: enabled
+                    text: qsTr("View Playlist")
+                    onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: app.controller.playbackState.context}, true)
                 }
+            }
 
-                Label {
-                    id: spotifyConnectLabel
-                    text: app.controller.playbackState.device !== undefined ? "Listening on <b>" + app.controller.playbackState.device.name + "</b>" : ""
-                }
-                visible: app.controller.playbackState.device !== undefined
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
+            }
+
+            Separator {
+                width: parent.width
+                color: Theme.primaryColor
+            }
+
+            Rectangle {
+                width: parent.width
+                height: Theme.paddingMedium
+                opacity: 0
             }
         }
-    }
 
-    Connections {
-        target: playingPage
-        onCurrentTrackIdChanged: updateForCurrentTrack()
+        delegate: ListItem {
+            id: listItem
+            width: parent.width - 2*Theme.paddingMedium
+            x: Theme.paddingMedium
+            contentHeight: stype == 0
+                           ? Theme.itemSizeExtraSmall
+                           : Theme.itemSizeLarge
+
+            Loader {
+                id: loader
+
+                width: parent.width
+
+                source: stype > 0
+                        ? "../components/SearchResultListItem.qml"
+                        : "../components/AlbumTrackListItem.qml"
+
+                Binding {
+                  target: loader.item
+                  property: "dataModel"
+                  value: model
+                  when: loader.status == Loader.Ready
+                }
+                Binding {
+                    target: loader.item
+                    property: "isFavorite"
+                    value: saved
+                    when: stype === 0
+                }
+            }
+
+            menu: AlbumTrackContextMenu {}
+
+            Connections {
+                target: loader.item
+                onToggleFavorite: app.toggleSavedTrack(model)
+            }
+
+            onClicked: app.controller.playTrackInContext(track, app.controller.playbackState.context)
+        }
+
+        VerticalScrollDecorator {}
+
+        Connections {
+            target: app.playingPage
+            onCurrentTrackIdChanged: updateForCurrentTrack()
+        }
     }
 
     function getFirstLabelText() {
         var s = ""
         if(app.controller.playbackState === undefined)
              return s
-        if(!app.controller.playbackState.context || showTrackInfo)
+        if(!app.controller.playbackState.context)
             return app.controller.playbackState.item ? app.controller.playbackState.item.name : ""
         if(app.controller.playbackState.context === null)
             return s
@@ -338,7 +222,7 @@ Page {
         var s = ""
         if(app.controller.playbackState === undefined)
              return s
-        if(!app.controller.playbackState.context || showTrackInfo) {
+        if(!app.controller.playbackState.context) {
             // no context (a single track?)
             if(app.controller.playbackState.item && app.controller.playbackState.item.album) {
                 s += app.controller.playbackState.item.album.name
@@ -367,7 +251,7 @@ Page {
         var s = ""
         if(app.controller.playbackState === undefined)
              return s
-        if(!app.controller.playbackState.context || showTrackInfo) {
+        if(!app.controller.playbackState.context) {
             // no context (a single track?)
             if(app.controller.playbackState.item && app.controller.playbackState.item.artists)
                 s += Util.createItemsString(app.controller.playbackState.item.artists, qsTr("no artist known"))
@@ -422,8 +306,11 @@ Page {
 
     function updateForCurrentAlbumTrack() {
         // keep current track visible
-        for(var i=0;i<searchModel.count;i++)
-            if(searchModel.get(i).track.id === currentTrackId) {
+        currentIndex = -1
+        for(var i=0;i<app.playingPage.searchModel.count;i++)
+            if(app.playingPage.searchModel.get(i).track.id === app.playingPage.currentTrackId) {
+                listView.positionViewAtIndex(i, ListView.Visible)
+                currentIndex = i
                 break
             }
     }
@@ -449,15 +336,19 @@ Page {
     property var tracksInfo: []
 
     function updateForCurrentPlaylistTrack() {
+        currentIndex = -1
         for(var i=0;i<tracksInfo.length;i++) {
-            if(tracksInfo[i].id === currentTrackId) {
+            if(tracksInfo[i].id === app.playingPage.currentTrackId) {
                 // in currently loaded set?
                 if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
+                    listView.positionViewAtIndex(i, ListView.Visible)
+                    currentIndex = i
                     break
                 } else {
                     // load set
                     cursorHelper.offset = i
-                    loadPlaylistTracks(app.id, currentId)
+                    loadPlaylistTracks(app.id, app.playingPage.currentId)
+                    currentIndex = 0
                 }
             }
         }
@@ -470,7 +361,7 @@ Page {
     }
 
     function _loadPlaylistTrackInfo(offset) {
-        app.getPlaylistTracks(currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
+        app.getPlaylistTracks(app.playingPage.currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
             function(error, data) {
                 if(data) {
                     for(var i=0;i<data.items.length;i++)
@@ -482,25 +373,33 @@ Page {
             })
     }
 
-    onCurrentIdChanged: {
-        console.log("onCurrentIdChanged: " + currentId)
-        if (app.controller.playbackState.context) {
-            switch (app.controller.playbackState.context.type) {
-                case 'album':
-                    loadAlbumTracks(currentId)
-                    break
-                case 'artist':
-                    searchModel.clear()
-                    Spotify.isFollowingArtists([currentId], function(error, data) {
-                        if(data)
-                            isContextFavorite = data[0]
-                    })
-                    break
-                case 'playlist':
-                    cursorHelper.offset = 0
-                    loadPlaylistTracks(app.id, currentId)
-                    loadPlaylistTrackInfo()
-                    break
+    // called by menus
+    function refresh() {
+        reloadTracks()
+    }
+
+    Connections {
+        target: app.playingPage
+        onCurrentIdChanged: {
+            console.log("onCurrentIdChanged: " + app.playingPage.currentId)
+            if (app.controller.playbackState.context) {
+                switch (app.controller.playbackState.context.type) {
+                    case 'album':
+                        loadAlbumTracks(app.playingPage.currentId)
+                        break
+                    case 'artist':
+                        app.playingPage.searchModel.clear()
+                        Spotify.isFollowingArtists([app.playingPage.currentId], function(error, data) {
+                            if(data)
+                                app.playingPage.isContextFavorite = data[0]
+                        })
+                        break
+                    case 'playlist':
+                        cursorHelper.offset = 0
+                        loadPlaylistTracks(app.id, app.playingPage.currentId)
+                        loadPlaylistTrackInfo()
+                        break
+                }
             }
         }
     }
@@ -511,7 +410,7 @@ Page {
         target: app.controller.playbackState
 
         onContextDetailsChanged: {
-            currentId = app.controller.playbackState.contextDetails.id
+            app.playingPage.currentId = app.controller.playbackState.contextDetails.id
             /*switch (app.controller.playbackState.context.type) {
                 case 'album':
                     break
@@ -524,31 +423,18 @@ Page {
 
         onItemChanged: {
             if (app.controller.playbackState.context) {
-                switch (app.controller.playbackState.context.type) {
-                    case 'album':
-                        pageHeaderDescription = app.controller.playbackState.item.album.name
-                        break
-                    case 'artist':
-                        pageHeaderDescription = app.controller.playbackState.artistsString
-                        break
-                    case 'playlist':
-                        pageHeaderDescription = app.controller.playbackState.contextDetails.name
-                        break
-                    default:
-                        pageHeaderDescription = ""
-                        break
-                }
             } else {
                 // no context (a single track?)
-                currentId = app.controller.playbackState.item.id
-                console.log("  no context: " + currentId)
-                pageHeaderDescription = ""
+                app.playingPage.currentId = app.controller.playbackState.item.id
+                console.log("  no context: " + app.playingPage.currentId)
             }
-            currentTrackId = app.controller.playbackState.item.id
-            // still needed? currentTrackUri = app.controller.playbackState.item.uri
+            app.playingPage.currentTrackId = app.controller.playbackState.item.id
+            // still needed? app.playingPage.currentTrackuri = app.controller.playbackState.item.uri
         }
         onIs_playingChanged: {
             if(!_isPlaying && app.controller.playbackState.is_playing) {
+                if(currentIndex === -1)
+                    updateForCurrentTrack()
                 console.log("Started Playing")
             } else if(_isPlaying && !app.controller.playbackState.is_playing) {
                 console.log("Stopped Playing")
@@ -562,10 +448,10 @@ Page {
     function reloadTracks() {
         switch(app.controller.playbackState.context.type) {
         case 'album':
-            loadAlbumTracks(currentId)
+            loadAlbumTracks(app.playingPage.currentId)
             break
         case 'playlist':
-            loadPlaylistTracks(app.id, currentId)
+            loadPlaylistTracks(app.id, app.playingPage.currentId)
             break
         default:
             break
@@ -573,7 +459,7 @@ Page {
     }
 
     function loadPlaylistTracks(id, pid) {
-        searchModel.clear()
+        app.playingPage.searchModel.clear()
         app.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
@@ -581,7 +467,7 @@ Page {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
                     for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: Spotify.ItemType.Track,
+                        app.playingPage.searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
                                             name: data.items[i].track.name,
                                             saved: false,
@@ -597,18 +483,18 @@ Page {
         })
         app.isFollowingPlaylist(pid, function(error, data) {
             if(data)
-                isContextFavorite = data[0]
+                app.playingPage.isContextFavorite = data[0]
         })
     }
 
     function loadAlbumTracks(id) {
-        searchModel.clear()
+        app.playingPage.searchModel.clear()
         cursorHelper.offset = 0
         cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
         _loadAlbumTracks(id)
         Spotify.containsMySavedAlbums([id], {}, function(error, data) {
             if(data)
-                isContextFavorite = data[0]
+                app.playingPage.isContextFavorite = data[0]
         })
     }
 
@@ -625,7 +511,7 @@ Page {
                     cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: Spotify.ItemType.Track,
+                        app.playingPage.searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Album,
                                             name: data.items[i].name,
                                             saved: false,
@@ -635,7 +521,7 @@ Page {
                     // get info about saved tracks
                     Spotify.containsMySavedTracks(trackIds, function(error, data) {
                         if(data)
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, app.playingPage.searchModel)
                     })
                     // if the album has more tracks get more
                     if(cursorHelper.total > (cursorHelper.offset+cursorHelper.limit)) {
@@ -658,31 +544,31 @@ Page {
             return
         switch(app.controller.playbackState.context.type) {
         case 'album':
-            app.toggleSavedAlbum(app.controller.playbackState.contextDetails, isContextFavorite, function(saved) {
-                isContextFavorite = saved
+            app.toggleSavedAlbum(app.controller.playbackState.contextDetails, app.playingPage.isContextFavorite, function(saved) {
+                app.playingPage.isContextFavorite = saved
             })
             break
         case 'artist':
-            app.toggleFollowArtist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
-                isContextFavorite = followed
+            app.toggleFollowArtist(app.controller.playbackState.contextDetails, app.playingPage.isContextFavorite, function(followed) {
+                app.playingPage.isContextFavorite = followed
             })
             break
         case 'playlist':
-            app.toggleFollowPlaylist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
-                isContextFavorite = followed
+            app.toggleFollowPlaylist(app.controller.playbackState.contextDetails, app.playingPage.isContextFavorite, function(followed) {
+                app.playingPage.isContextFavorite = followed
             })
             break
         default: // track?
             if (app.controller.playbackState.item) { // Note uses globals
-                if(isContextFavorite)
+                if(app.playingPage.isContextFavorite)
                     app.unSaveTrack(app.controller.playbackState.item, function(error,data) {
                         if(!error)
-                            isContextFavorite = false
+                            app.playingPage.isContextFavorite = false
                     })
                 else
                     app.saveTrack(app.controller.playbackState.item, function(error,data) {
                         if(!error)
-                            isContextFavorite = true
+                            app.playingPage.isContextFavorite = true
                     })
             }
             break
@@ -712,8 +598,8 @@ Page {
     function pluOnStopped() {
         if(waitForEndOfSnapshot) {
             waitForEndOfSnapshot = false
-            if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
-                currentId = "" // trigger reload
+            if(waitForEndSnapshotData.snapshotId !== app.playingPage.currentSnapshotId) { // only if still needed
+                app.playingPage.currentId = "" // trigger reload
                 playContext({uri: waitForEndSnapshotData.uri},
                             {offset: {uri: waitForEndSnapshotData.trackUri}})
             }
@@ -743,7 +629,7 @@ Page {
                 // in theory it has been added at the end of the list
                 // so we could load the info and add it to the model but ...
                 // ToDo what about cursorHelper.offset?
-                loadPlaylistTracks(app.id, currentId)
+                loadPlaylistTracks(app.id, app.playingPage.currentId)
                 if(app.controller.playbackState.is_playing) {
                     waitForEndOfSnapshot = true
                     waitForEndSnapshotData.uri = event.uri
@@ -751,31 +637,31 @@ Page {
                     waitForEndSnapshotData.index = app.controller.playbackState.contextDetails.tracks.total // not used
                     waitForEndSnapshotData.trackUri = event.trackUri
                 } else
-                    currentSnapshotId = event.snapshotId
+                    app.playingPage.currentSnapshotId = event.snapshotId
                 break
             case Util.PlaylistEventType.RemovedTrack:
-                //Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
-                //currentSnapshotId = event.snapshotId
+                //Util.removeFromListModel(app.playingPage.searchModel, Spotify.ItemType.Track, event.trackId)
+                //app.playingPage.currentSnapshotId = event.snapshotId
                 break
             case Util.PlaylistEventType.ReplacedAllTracks:
                 if(app.controller.playbackState.is_playing)
                     app.controller.pause(function(error, data) {
-                        currentId = "" // trigger reload)
+                        app.playingPage.currentId = "" // trigger reload)
                         playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
                 else {
                     cursorHelper.offset = 0
-                    loadPlaylistTracks(app.id, currentId)
+                    loadPlaylistTracks(app.id, app.playingPage.currentId)
                 }
                 break
             }
         }
         onFavoriteEvent: {
-            if(currentId === event.id) {
-                isContextFavorite = event.isFavorite
+            if(app.playingPage.currentId === event.id) {
+                app.playingPage.isContextFavorite = event.isFavorite
             } else if(event.type === Util.SpotifyItemType.Track) {
                 // no easy way to check if the track is in the model so just update
-                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
+                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], app.playingPage.searchModel)
             }
         }
     }
@@ -786,21 +672,19 @@ Page {
     onStatusChanged: {
         switch (status) {
         case PageStatus.Active:
-            pageStack.pushAttached(
-                        Qt.resolvedUrl("PlaybackDetailsPage.qml"), {
-                            popOnExit: false
-                        })
+            // reset transition on glassyBackground
+            app.glassyBackground.state = ""
+            app.glassyBackground.state = "Visible"
+            app.glassyBackground.showTrackInfo = false
             break;
         case PageStatus.Activating:
+            app.glassyBackground.state = ""
             app.glassyBackground.state = "Visible"
-            app.glassyBackground.showTrackInfo = showTrackInfo
             app.dockedPanel.setHidden()
+            app.dockedPanel.registerListView(listView)
             break;
         case PageStatus.Deactivating:
-            app.dockedPanel.resetHidden()
-            break;
-        case PageStatus.Inactive:
-            app.glassyBackground.state = "Hidden"
+            app.dockedPanel.unregisterListView(listView)
             break;
         }
     }

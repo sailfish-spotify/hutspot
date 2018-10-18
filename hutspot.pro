@@ -55,6 +55,7 @@ DISTFILES += \
     qml/components/CursorHelper.qml \
     qml/pages/History.qml \
     qml/pages/Recommended.qml \
+    qml/pages/PlaybackDetailsPage.qml \
     qml/components/SearchFieldWithMenu.qml \
     qml/components/MySearchField.qml \
     qml/components/SectionDelegate.qml \
