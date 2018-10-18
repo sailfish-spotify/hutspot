@@ -53,7 +53,7 @@ CoverBackground {
     Rectangle {
         id: titleBackground
         y: playbackInfoColumn.y - Theme.paddingLarge*2
-        height: playbackInfoColumn.height + Theme.paddingLarge*2 + Theme.iconSizeLauncher
+        height: parent.height - y
         width: parent.width
         color: "#000"
         visible: playbackInfoColumn.visible
@@ -76,14 +76,13 @@ CoverBackground {
            right: parent.right
            leftMargin: Theme.paddingLarge
            rightMargin: Theme.paddingLarge
-           bottomMargin: Theme.iconSizeLauncher
+           bottomMargin: coverActionArea.height + Theme.paddingLarge
        }
        Label {
            anchors.left: parent.left
            anchors.right: parent.right
            font.pixelSize: Theme.fontSizeExtraLarge
            wrapMode: Text.WordWrap
-           //wrapMode: Text.WrapAtWordBoundaryOrAnywhere
            maximumLineCount: 3
            elide: Text.ElideRight
            text: app.controller.playbackState.item.name
@@ -92,7 +91,6 @@ CoverBackground {
            anchors.left: parent.left
            anchors.right: parent.right
            font.pixelSize: Theme.fontSizeLarge
-           //wrapMode: Text.WrapAtWordBoundaryOrAnywhere
            maximumLineCount: 2
            elide: Text.ElideRight
            text: Util.createItemsString(app.controller.playbackState.item.artists, "")
@@ -149,79 +147,5 @@ CoverBackground {
         }
 
     }
-
-    /*Image {
-        id: image
-        width: source === defaultImageSource ? sourceSize.width : parent.width
-        height: width
-        fillMode: Image.PreserveAspectFit
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        source: app.controller.getCoverArt(defaultImageSource, app.controller.playbackState)  // TODO: this hack is just bad
-    }*/
-
-    /*
-    Column {
-        width: parent.width
-
-        Rectangle {
-            width: parent.width
-            height: Theme.paddingMedium
-            opacity: 0
-        }
-
-        Item {
-            width: parent.width - (Theme.paddingMedium * 2)
-            height: width
-            x: Theme.paddingMedium
-
-            Image {
-                id: image
-                width: source === defaultImageSource ? sourceSize.width : parent.width
-                height: width
-                fillMode: Image.PreserveAspectFit
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                source: app.controller.getCoverArt(defaultImageSource, app.controller.playbackState)  // TODO: this hack is just bad
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: Theme.paddingLarge
-            opacity: 0
-        }
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: Theme.paddingMedium
-            Label {
-                id: spotifyLabel
-                text: qsTr("Hutspot")
-            }
-        }
-
-        CoverActionList {
-            id: coverAction
-
-            CoverAction {
-                iconSource: "image://theme/icon-cover-previous"
-                onTriggered: app.controller.previous(function(error, data){})
-            }
-
-            CoverAction {
-                iconSource: app.controller.playbackState.is_playing
-                            ? "image://theme/icon-cover-pause"
-                            : "image://theme/icon-cover-play"
-                onTriggered: app.controller.playPause(function(error, data){})
-            }
-
-            CoverAction {
-                iconSource: "image://theme/icon-cover-next"
-                onTriggered: app.controller.next(function(error, data){})
-            }
-
-        }
-    }*/
 }
 
