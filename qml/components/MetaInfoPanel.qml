@@ -9,12 +9,13 @@ import Sailfish.Silica 1.0
 
 Item {
     width: parent.width
-    height: labelsColumn.height
+    height: labelsColumn.height + Theme.paddingSmall
 
     property string firstLabelText: ""
     property string secondLabelText: ""
     property string thirdLabelText: ""
     property bool isFavorite: false
+    property bool isCentered: false
 
     property alias firstLabel: firstLabel
     property alias secondLabel: secondLabel
@@ -28,8 +29,12 @@ Item {
 
     Column {
         id: labelsColumn
-        anchors.left: parent.left
-        anchors.right: savedImage.left
+        anchors {
+            left: parent.left;
+            right: savedImage.left
+            leftMargin: isCentered ? savedImage.width + Theme.paddingSmall : 0
+            rightMargin: Theme.paddingSmall
+        }
         spacing: Theme.paddingSmall
 
         Label {
@@ -40,10 +45,8 @@ Item {
             width: parent.width
             wrapMode: Text.Wrap
             text: firstLabelText
-            MouseArea {
-                anchors.fill: parent
-                onClicked: firstLabelClicked()
-            }
+            horizontalAlignment: isCentered ? Text.AlignHCenter : Text.AlignLeft
+
         }
         Label {
             id: secondLabel
@@ -54,6 +57,7 @@ Item {
             wrapMode: Text.Wrap
             visible: text.length > 0
             text:  secondLabelText
+            horizontalAlignment: isCentered ? Text.AlignHCenter : Text.AlignLeft
             MouseArea {
                 anchors.fill: parent
                 onClicked: secondLabelClicked()
@@ -66,6 +70,7 @@ Item {
             wrapMode: Text.Wrap
             visible: text.length > 0
             text: thirdLabelText
+            horizontalAlignment: isCentered ? Text.AlignHCenter : Text.AlignLeft
             MouseArea {
                 anchors.fill: parent
                 onClicked: thirdLabelClicked()

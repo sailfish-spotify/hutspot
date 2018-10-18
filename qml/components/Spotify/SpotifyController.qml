@@ -1,5 +1,5 @@
 /**
- * Hutspot. 
+ * Hutspot.
  * Copyright (C) 2018 Maciej Janiszewski
  *
  * License: MIT
@@ -7,14 +7,14 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "../Spotify.js" as Spotify
-import "../Util.js" as Util
+import "../../Spotify.js" as Spotify
+import "../../Util.js" as Util
 
 
 Item {
-    PlaybackState {
-        id: playbackState
-    }
+    MprisController { id: mprisController }
+    PlaybackState { id: playbackState }
+    PlaylistController { id: playlistController }
 
     function getCoverArt(defaultValue, ignoreContext) {
         if (ignoreContext) {
@@ -31,6 +31,7 @@ Item {
 
     property alias playbackState: playbackState
     property alias devices: devicesModel
+    property alias playlist: playlistController
 
     ListModel {
         id: devicesModel

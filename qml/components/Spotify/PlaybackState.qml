@@ -6,46 +6,43 @@
  */
 
 import QtQuick 2.0
-
-import org.nemomobile.mpris 1.0
-import "../Util.js" as Util
+import "../../Util.js" as Util
+import "../../Spotify.js" as Spotify
 
 Item {   
-    MprisPlayer {
-        id: mprisPlayer
-        serviceName: "hutspot"
-        playbackStatus: is_playing ? Mpris.Playing : Mpris.Paused
 
-        identity: qsTr("Simple Spotify Controller")
-
-        canControl: true
-
-        canPause: true
-        canPlay: true
-        canGoNext: true
-        canGoPrevious: true
-
-        canSeek: false
-
-        onPauseRequested: app.controller.playPause()
-        onPlayRequested: app.controller.play()
-        onPlayPauseRequested: app.controller.playPause()
-        onNextRequested: app.controller.next()
-        onPreviousRequested: app.controller.previous()
-    }
     onItemChanged: {
         artistsString = Util.createItemsString(item.artists, qsTr("no artist known"))
         if (item.album.images.length > 0)
             coverArtUrl = item.album.images[0].url;
         else coverArtUrl = "";
-
-        var metadata = {}
-        metadata[Mpris.metadataToString(Mpris.Title)] = item.name
-        metadata[Mpris.metadataToString(Mpris.Artist)] = artistsString
-        mprisPlayer.metadata = metadata
     }
+
+    function getCurrentId() {
+        if (contextDetails)
+            return contextDetails.id
+        return item.id
+    }
+
+    function getContextType() {
+        if(!item)
+            return -1
+
+        if (context)
+            switch(context.type) {
+            case 'album':
+                return Spotify.ItemType.Album
+            case 'artist':
+                return Spotify.ItemType.Artist
+            case 'playlist':
+                return Spotify.ItemType.Playlist
+            }
+        return Spotify.ItemType.Track
+    }
+
     property string artistsString: ""
     property string coverArtUrl: ""
+    property string currentSnapshotId: ""
 
     property var device: {
         "id": "-1",
@@ -83,10 +80,16 @@ Item {
         device = state.device;
         repeat_state = state.repeat_state;
         shuffle_state = state.shuffle_state;
-        context = state.context;
         timestamp = state.timestamp;
         progress_ms = state.progress_ms;
         is_playing = state.is_playing;
-        item = state.item;
+
+        // don't overwrite context if ID didn't change
+        if (!context || !state.context || context.id !== state.context.id)
+            context = state.context
+
+        // don't overwrite item if ID didn't change
+        if (!item || !state.item || item.id !== state.item.id)
+            item = state.item;
     }
 }

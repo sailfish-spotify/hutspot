@@ -61,10 +61,13 @@ DISTFILES += \
     qml/components/SectionDelegate.qml \
     qml/components/SortedListModel.qml \
     qml/components/QueueController.qml \
-    qml/components/SpotifyController.qml \
     qml/components/PlaybackState.qml \
     qml/components/ControlPanel.qml \
-    qml/components/GlassyBackground.qml
+    qml/components/GlassyBackground.qml \
+    qml/components/Spotify/SpotifyController.qml \
+    qml/components/Spotify/PlaybackState.qml \
+    qml/components/Spotify/MprisController.qml \
+    qml/components/Spotify/PlaylistController.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

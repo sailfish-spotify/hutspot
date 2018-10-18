@@ -15,6 +15,7 @@ Row {
     id: row
 
     property var dataModel
+    property bool isCurrent: false
 
     // not used, same as in AlbumTrackListItem so Loader can be used
     property var isFavorite
@@ -50,7 +51,7 @@ Row {
 
         Label {
             id: nameLabel
-            color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
+            color: isCurrent ? Theme.highlightColor : Theme.primaryColor
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             width: parent.width
@@ -60,7 +61,7 @@ Row {
         Label {
             id: meta1Label
             width: parent.width
-            color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
+            color: isCurrent ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             truncationMode: TruncationMode.Fade
             text: getMeta1String()
@@ -71,7 +72,7 @@ Row {
         Label {
             id: meta2Label
             width: parent.width
-            color: currentIndex === dataModel.index ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            color: isCurrent ? Theme.secondaryHighlightColor : Theme.secondaryColor
             font.pixelSize: Theme.fontSizeExtraSmall
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade

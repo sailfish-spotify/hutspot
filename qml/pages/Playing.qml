@@ -22,24 +22,9 @@ Page {
     property bool showBusy: false
     property string pageHeaderText: qsTr("Playing")
     property string pageHeaderDescription: ""
-
-    property bool isContextFavorite: false
-
-    property string currentId: ""
-    property string currentSnapshotId: ""
-    property string currentTrackId: ""
-    property string currentTrackUri: ""
-
-    property string viewMenuText: ""
     property bool showTrackInfo: true
 
-    property alias searchModel: searchModel
-
     allowedOrientations: Orientation.All
-
-    ListModel {
-        id: searchModel
-    }
 
     Column {
         anchors.fill: parent
@@ -62,6 +47,7 @@ Page {
                 height: sourceSize.height*(width/sourceSize.width)
                 source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
                 fillMode: Image.PreserveAspectFit
+                asynchronous: true
                 onPaintedHeightChanged: parent.height = Math.min(parent.parent.width, paintedHeight)
                 MouseArea {
                     anchors.fill: parent
@@ -73,8 +59,8 @@ Page {
             }
             DropShadow {
                 anchors.fill: imageItem
-                radius: 3.0
-                samples: 10
+                radius: 5.0
+                samples: 5
                 color: "#000"
                 source: imageItem
             }
@@ -96,11 +82,12 @@ Page {
                 secondLabelText: getSecondLabelText()
                 thirdLabelText: getThirdLabelText()
 
-                isFavorite: isContextFavorite
-                onToggleFavorite: toggleSavedFollowed()
+                isFavorite: app.controller.playlist.isFavorite
+                onToggleFavorite: app.controller.playlist.toggleSavedFollowed()
                 onFirstLabelClicked: openMenu()
                 onSecondLabelClicked: openMenu()
                 onThirdLabelClicked: openMenu()
+                isCentered: true
 
                 function openMenu() {
                     cmenu.update()
@@ -116,7 +103,7 @@ Page {
                 viewAlbum.enabled = false
                 viewArtist.enabled = false
                 viewPlaylist.enabled = false
-                switch(getContextType()) {
+                switch(app.controller.playbackState.getContextType()) {
                 case Spotify.ItemType.Album:
                     viewAlbum.enabled = true
                     viewArtist.enabled = true
@@ -139,7 +126,7 @@ Page {
                 text: qsTr("View Album")
                 visible: enabled
                 onClicked: {
-                    switch(getContextType()) {
+                    switch(app.controller.playbackState.getContextType()) {
                     case Spotify.ItemType.Album:
                         app.pushPage(Util.HutspotPage.Album, {album: app.controller.playbackState.context}, true)
                         break
@@ -154,7 +141,7 @@ Page {
                 visible: enabled
                 text: qsTr("View Artist")
                 onClicked: {
-                    switch(getContextType()) {
+                    switch(app.controller.playbackState.getContextType()) {
                     case Spotify.ItemType.Album:
                         app.loadArtist(app.controller.playbackState.contextDetails.artists, true)
                         break
@@ -219,7 +206,7 @@ Page {
 
         Rectangle {
             width: 1
-            height: Theme.paddingLarge
+            height: Theme.paddingMedium
             color: "transparent"
         }
 
@@ -286,7 +273,7 @@ Page {
 
         Rectangle {
             width: 1
-            height: Theme.paddingLarge
+            height: Theme.paddingMedium
             color: "transparent"
         }
 
@@ -316,11 +303,6 @@ Page {
                 visible: app.controller.playbackState.device !== undefined
             }
         }
-    }
-
-    Connections {
-        target: playingPage
-        onCurrentTrackIdChanged: updateForCurrentTrack()
     }
 
     function getFirstLabelText() {
@@ -404,123 +386,10 @@ Page {
         return s
     }
 
-    function getContextType() {
-        if(!app.controller.playbackState || !app.controller.playbackState.item)
-            return -1
-
-        if (app.controller.playbackState.context)
-            switch(app.controller.playbackState.context.type) {
-            case 'album':
-                return Spotify.ItemType.Album
-            case 'artist':
-                return Spotify.ItemType.Artist
-            case 'playlist':
-                return Spotify.ItemType.Playlist
-            }
-        return Spotify.ItemType.Track
-    }
-
-    function updateForCurrentAlbumTrack() {
-        // keep current track visible
-        for(var i=0;i<searchModel.count;i++)
-            if(searchModel.get(i).track.id === currentTrackId) {
-                break
-            }
-    }
-
-    function updateForCurrentTrack() {
-        if (app.controller.playbackState.context) {
-            switch(app.controller.playbackState.context.type) {
-            case 'album':
-                updateForCurrentAlbumTrack()
-                break
-            case 'playlist':
-                updateForCurrentPlaylistTrack()
-                break
-            default:
-                break
-            }
-        }
-    }
-
-    // to be able to find the current track and load the correct set of tracks
-    // we keep a list of all playlist tracks (Id,Uri)
-    // (for albums we just load the first 100 and hope this is enough)
-    property var tracksInfo: []
-
-    function updateForCurrentPlaylistTrack() {
-        for(var i=0;i<tracksInfo.length;i++) {
-            if(tracksInfo[i].id === currentTrackId) {
-                // in currently loaded set?
-                if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
-                    break
-                } else {
-                    // load set
-                    cursorHelper.offset = i
-                    loadPlaylistTracks(app.id, currentId)
-                }
-            }
-        }
-    }
-
-    function loadPlaylistTrackInfo() {
-        if(tracksInfo.length > 0)
-            tracksInfo = []
-        _loadPlaylistTrackInfo(0)
-    }
-
-    function _loadPlaylistTrackInfo(offset) {
-        app.getPlaylistTracks(currentId, {fields: "items(track(id,uri)),offset,total", offset: offset, limit: 100},
-            function(error, data) {
-                if(data) {
-                    for(var i=0;i<data.items.length;i++)
-                        tracksInfo[i+offset] = {id: data.items[i].track.id, uri: data.items[i].track.uri}
-                    var nextOffset = data.offset+data.items.length
-                    if(nextOffset < data.total)
-                        _loadPlaylistTrackInfo(nextOffset)
-                }
-            })
-    }
-
-    onCurrentIdChanged: {
-        console.log("onCurrentIdChanged: " + currentId)
-        if (app.controller.playbackState.context) {
-            switch (app.controller.playbackState.context.type) {
-                case 'album':
-                    loadAlbumTracks(currentId)
-                    break
-                case 'artist':
-                    searchModel.clear()
-                    Spotify.isFollowingArtists([currentId], function(error, data) {
-                        if(data)
-                            isContextFavorite = data[0]
-                    })
-                    break
-                case 'playlist':
-                    cursorHelper.offset = 0
-                    loadPlaylistTracks(app.id, currentId)
-                    loadPlaylistTrackInfo()
-                    break
-            }
-        }
-    }
 
     // try to detect end of playlist play
-    property bool _isPlaying: false
     Connections {
         target: app.controller.playbackState
-
-        onContextDetailsChanged: {
-            currentId = app.controller.playbackState.contextDetails.id
-            /*switch (app.controller.playbackState.context.type) {
-                case 'album':
-                    break
-                case 'artist':
-                    break
-                case 'playlist':
-                    break
-            }*/
-        }
 
         onItemChanged: {
             if (app.controller.playbackState.context) {
@@ -539,243 +408,7 @@ Page {
                         break
                 }
             } else {
-                // no context (a single track?)
-                currentId = app.controller.playbackState.item.id
-                console.log("  no context: " + currentId)
                 pageHeaderDescription = ""
-            }
-            currentTrackId = app.controller.playbackState.item.id
-            // still needed? currentTrackUri = app.controller.playbackState.item.uri
-        }
-        onIs_playingChanged: {
-            if(!_isPlaying && app.controller.playbackState.is_playing) {
-                console.log("Started Playing")
-            } else if(_isPlaying && !app.controller.playbackState.is_playing) {
-                console.log("Stopped Playing")
-                pluOnStopped()
-            }
-
-            _isPlaying = app.controller.playbackState.is_playing
-        }
-    }
-
-    function reloadTracks() {
-        switch(app.controller.playbackState.context.type) {
-        case 'album':
-            loadAlbumTracks(currentId)
-            break
-        case 'playlist':
-            loadPlaylistTracks(app.id, currentId)
-            break
-        default:
-            break
-        }
-    }
-
-    function loadPlaylistTracks(id, pid) {
-        searchModel.clear()
-        app.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-            if(data) {
-                try {
-                    console.log("number of PlaylistTracks: " + data.items.length)
-                    cursorHelper.offset = data.offset
-                    cursorHelper.total = data.total
-                    for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: Spotify.ItemType.Track,
-                                            stype: Spotify.ItemType.Playlist,
-                                            name: data.items[i].track.name,
-                                            saved: false,
-                                            track: data.items[i].track})
-                    }
-                    updateForCurrentTrack()
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getPlaylistTracks")
-            }
-        })
-        app.isFollowingPlaylist(pid, function(error, data) {
-            if(data)
-                isContextFavorite = data[0]
-        })
-    }
-
-    function loadAlbumTracks(id) {
-        searchModel.clear()
-        cursorHelper.offset = 0
-        cursorHelper.limit = 50 // for now load as much as possible and hope it is enough
-        _loadAlbumTracks(id)
-        Spotify.containsMySavedAlbums([id], {}, function(error, data) {
-            if(data)
-                isContextFavorite = data[0]
-        })
-    }
-
-    function _loadAlbumTracks(id) {
-        // 'market' enables 'track linking'
-        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
-        if(app.query_for_market.value)
-            options.market = "from_token"
-        Spotify.getAlbumTracks(id, options, function(error, data) {
-            if(data) {
-                try {
-                    console.log("number of AlbumTracks: " + data.items.length)
-                    cursorHelper.offset = data.offset
-                    cursorHelper.total = data.total
-                    var trackIds = []
-                    for(var i=0;i<data.items.length;i++) {
-                        searchModel.append({type: Spotify.ItemType.Track,
-                                            stype: Spotify.ItemType.Album,
-                                            name: data.items[i].name,
-                                            saved: false,
-                                            track: data.items[i]})
-                        trackIds.push(data.items[i].id)
-                    }
-                    // get info about saved tracks
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data)
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                    })
-                    // if the album has more tracks get more
-                    if(cursorHelper.total > (cursorHelper.offset+cursorHelper.limit)) {
-                        cursorHelper.offset += cursorHelper.limit
-                        _loadAlbumTracks(id)
-                    }
-                    updateForCurrentTrack()
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log("No Data for getAlbumTracks")
-            }
-        })
-    }
-
-    function toggleSavedFollowed() {
-        if(!app.controller.playbackState.context
-           || !app.controller.playbackState.contextDetails)
-            return
-        switch(app.controller.playbackState.context.type) {
-        case 'album':
-            app.toggleSavedAlbum(app.controller.playbackState.contextDetails, isContextFavorite, function(saved) {
-                isContextFavorite = saved
-            })
-            break
-        case 'artist':
-            app.toggleFollowArtist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
-                isContextFavorite = followed
-            })
-            break
-        case 'playlist':
-            app.toggleFollowPlaylist(app.controller.playbackState.contextDetails, isContextFavorite, function(followed) {
-                isContextFavorite = followed
-            })
-            break
-        default: // track?
-            if (app.controller.playbackState.item) { // Note uses globals
-                if(isContextFavorite)
-                    app.unSaveTrack(app.controller.playbackState.item, function(error,data) {
-                        if(!error)
-                            isContextFavorite = false
-                    })
-                else
-                    app.saveTrack(app.controller.playbackState.item, function(error,data) {
-                        if(!error)
-                            isContextFavorite = true
-                    })
-            }
-            break
-        }
-    }
-
-    property alias cursorHelper: cursorHelper
-
-    CursorHelper {
-        id: cursorHelper
-
-        onLoadNext: reloadTracks()
-        onLoadPrevious: reloadTracks()
-    }
-
-    /*property bool canLoad: {
-        var ct = getContextType()
-        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
-    }*/
-
-    //
-    // Playlist Utilities
-    //
-
-    property var waitForEndSnapshotData: ({})
-    property bool waitForEndOfSnapshot : false
-    function pluOnStopped() {
-        if(waitForEndOfSnapshot) {
-            waitForEndOfSnapshot = false
-            if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
-                currentId = "" // trigger reload
-                playContext({uri: waitForEndSnapshotData.uri},
-                            {offset: {uri: waitForEndSnapshotData.trackUri}})
-            }
-        }
-    }
-
-    Connections {
-        target: app
-
-        onPlaylistEvent: {
-            if(getContextType() !== Spotify.ItemType.Playlist
-               || app.controller.playbackState.contextDetails.id !== event.playlistId)
-                return
-
-            // When a plylist is modified while being played the modifications
-            // are ignored, it keeps on playing the snapshot that was started.
-            // To try to fix this we:
-            //   AddedTrack:
-            //      wait for playing to end (last track of original snapshot) and then restart playing
-            //   RemovedTrack:
-            //      for now nothing
-            //   ReplacedAllTracks:
-            //      restart playing
-
-            switch(event.type) {
-            case Util.PlaylistEventType.AddedTrack:
-                // in theory it has been added at the end of the list
-                // so we could load the info and add it to the model but ...
-                // ToDo what about cursorHelper.offset?
-                loadPlaylistTracks(app.id, currentId)
-                if(app.controller.playbackState.is_playing) {
-                    waitForEndOfSnapshot = true
-                    waitForEndSnapshotData.uri = event.uri
-                    waitForEndSnapshotData.snapshotId = event.snapshotId
-                    waitForEndSnapshotData.index = app.controller.playbackState.contextDetails.tracks.total // not used
-                    waitForEndSnapshotData.trackUri = event.trackUri
-                } else
-                    currentSnapshotId = event.snapshotId
-                break
-            case Util.PlaylistEventType.RemovedTrack:
-                //Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
-                //currentSnapshotId = event.snapshotId
-                break
-            case Util.PlaylistEventType.ReplacedAllTracks:
-                if(app.controller.playbackState.is_playing)
-                    app.controller.pause(function(error, data) {
-                        currentId = "" // trigger reload)
-                        playContext({uri: app.controller.playbackState.contextDetails.uri})
-                    })
-                else {
-                    cursorHelper.offset = 0
-                    loadPlaylistTracks(app.id, currentId)
-                }
-                break
-            }
-        }
-        onFavoriteEvent: {
-            if(currentId === event.id) {
-                isContextFavorite = event.isFavorite
-            } else if(event.type === Util.SpotifyItemType.Track) {
-                // no easy way to check if the track is in the model so just update
-                Util.setSavedInfo(Spotify.ItemType.Track, [event.id], [event.isFavorite], searchModel)
             }
         }
     }

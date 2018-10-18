@@ -95,15 +95,15 @@ Item {
                 return
 
             // If not yet playing the Queue Playlist then do that
-            if(app.playingPage.currentId !== queuePlaylistId) {
+            if(app.controller.playbackState.getCurrentId() !== queuePlaylistId) {
                 app.controller.playContext({uri: queuePlaylistUri})
                 return
             }
 
             // Queue Playlist is loaded but is not being played
             // ToDo dont use _IsPlaying
-            if(!app.playingPage._isPlaying) {
-                if(app.playingPage.currentSnapshotId === queuePlaylistSnapshotId)
+            if(!app.controller.playlist._isPlaying) {
+                if(app.controller.playlist.currentSnapshotId === queuePlaylistSnapshotId)
                     app.controller.playPause()
                 else
                     app.controller.playContext({uri: queuePlaylistUri})

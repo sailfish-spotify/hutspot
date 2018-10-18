@@ -10,7 +10,7 @@ import Sailfish.Silica 1.0
 import "../Util.js" as Util
 
 Item {
-
+    property bool isCurrent: false
     property var isFavorite
     property var dataModel
     signal toggleFavorite()
@@ -28,11 +28,11 @@ Item {
         fillMode: Image.PreserveAspectFit
         source: {
             if(isFavorite)
-                return app.playingPage.currentTrackId === dataModel.track.id
+                return isCurrent
                         ? "image://theme/icon-m-favorite-selected?" + Theme.highlightColor
                         : "image://theme/icon-m-favorite-selected"
             else
-                return app.playingPage.currentTrackId === dataModel.track.id
+                return isCurrent
                           ? "image://theme/icon-m-favorite?" + Theme.highlightColor
                           : "image://theme/icon-m-favorite"
         }
@@ -56,7 +56,7 @@ Item {
             anchors.right: duration.left
             anchors.rightMargin: Theme.paddingLarge
             anchors.verticalCenter: parent.verticalCenter
-            color: app.playingPage.currentTrackId === dataModel.track.id ? Theme.highlightColor : Theme.primaryColor
+            color: isCurrent ? Theme.highlightColor : Theme.primaryColor
             textFormat: Text.StyledText
             truncationMode: TruncationMode.Fade
             text: dataModel.name ? dataModel.name : qsTr("No Name")
@@ -66,7 +66,7 @@ Item {
             id: duration
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
-            color: app.playingPage.currentTrackId === dataModel.track.id ? Theme.highlightColor : Theme.primaryColor
+            color: isCurrent ? Theme.highlightColor : Theme.primaryColor
             font.pixelSize: Theme.fontSizeSmall
             text: Util.getDurationString(dataModel.track.duration_ms)
             enabled: text.length > 0

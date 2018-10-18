@@ -22,11 +22,6 @@ Page {
     property var album
     property var albumArtists
     property bool isAlbumSaved: false
-
-    property int currentIndex: -1
-
-    property string currentTrackId: ""
-
     allowedOrientations: Orientation.All
 
     ListModel {

@@ -17,6 +17,7 @@ import "Util.js" as Util
 import "cover"
 import "pages"
 import "components"
+import "components/Spotify"
 
 ApplicationWindow {
     id: app
