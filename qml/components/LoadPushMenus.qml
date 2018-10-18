@@ -2,6 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 PushUpMenu {
+    enabled: cursorHelper.canLoadPrevious && cursorHelper.canLoadNext
     MenuItem {
         text: qsTr("Load Next Set")
         enabled: cursorHelper.canLoadNext
