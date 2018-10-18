@@ -26,6 +26,55 @@ ApplicationWindow {
         id: spotifyController
     }
 
+    GlassyBackground {
+        z: -1
+        id: glassyBackground
+        property bool showTrackInfo: true
+        anchors.fill: parent
+        sourceSize.height: parent.height
+        source: app.controller.getCoverArt("", showTrackInfo)
+        visible: source !== ""
+        // TODO: make some cool transitions
+        state: "Hidden"
+        opacity: 0
+        states: [
+            State {
+                name: "Hidden"
+                PropertyChanges { target: glassyBackground; opacity: 0}
+            },
+            State {
+                name: "Visible"
+                PropertyChanges { target: glassyBackground; opacity: 1}
+            }
+        ]
+
+        transitions: [
+            Transition {
+                from: "Hidden"
+                to: "Visible"
+                NumberAnimation {
+                    target: glassyBackground
+                    duration: 500
+                    from: 0
+                    to: 1
+                    properties: "opacity"
+                }
+            },
+            Transition {
+                from: "Visible"
+                to: "Hidden"
+                NumberAnimation {
+                    target: glassyBackground
+                    duration: 500
+                    from: 1
+                    to: 0
+                    properties: "opacity"
+                }
+            }
+        ]
+    }
+    property alias glassyBackground: glassyBackground
+
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
 
