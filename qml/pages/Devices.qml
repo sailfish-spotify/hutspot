@@ -20,8 +20,11 @@ Page {
         id: listView
 
         width: parent.width
-        anchors.top: parent.top
-        height: parent.height - app.dockedPanel.visibleSize
+        anchors {
+            top: parent.top
+            bottom: controlPanel.top
+        }
+
         clip: app.dockedPanel.expanded
 
         model: app.controller.devices
@@ -112,8 +115,43 @@ Page {
         VerticalScrollDecorator {}
     }
 
-    // signal foundDevicesChanged()
-    // onFoundDevicesChanged: refreshDevices()
+    PanelBackground {
+        id: controlPanel
+        x: 0
+        y: parent.height - height - app.dockedPanel.visibleSize
+        width: parent.width
+        height: volumeSlider.height
+
+        Image {
+            id: speakerIcon
+            x: Theme.horizontalPageMargin
+            source: volumeSlider.value <= 0 ? "image://theme/icon-m-speaker-mute" : "image://theme/icon-m-speaker"
+            anchors.verticalCenter: parent.verticalCenter
+            sourceSize {
+                width: Theme.iconSizeSmall
+                height: Theme.iconSizeSmall
+            }
+            height: Theme.iconSizeSmall
+        }
+
+        Slider {
+            id: volumeSlider
+            anchors {
+                left: speakerIcon.right
+                right: parent.right
+            }
+            minimumValue: 0
+            maximumValue: 100
+            handleVisible: false
+            value: app.controller.playbackState.device.volume_percent
+            onReleased: {
+                Spotify.setVolume(Math.round(value), function(error, data) {
+                    if(!error)
+                        app.controller.refreshPlaybackState();
+                })
+            }
+        }
+    }
 
     Connections {
         target: app
