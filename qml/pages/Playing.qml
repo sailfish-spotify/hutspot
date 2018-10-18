@@ -7,6 +7,7 @@
 
 
 import QtQuick 2.2
+import QtGraphicalEffects 1.0
 import Sailfish.Silica 1.0
 
 import "../components"
@@ -77,17 +78,32 @@ Page {
                     MenuButton {}
                 }
 
-                Image {
-                    id: imageItem
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
-                    width: parent.width * 0.75
-                    height: width
-                    fillMode: Image.PreserveAspectFit
-                    onPaintedHeightChanged: height = Math.min(parent.width, paintedHeight)
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: showTrackInfo = !showTrackInfo
+                Item {
+                    width: parent.width
+                    height: imageItem.height
+
+                    Image {
+                        id: imageItem
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width * 0.75
+                        height: sourceSize.height*(width/sourceSize.width)
+                        source:  app.controller.getCoverArt(defaultImageSource, showTrackInfo)
+                        fillMode: Image.PreserveAspectFit
+                        onPaintedHeightChanged: parent.height = Math.min(parent.parent.width, paintedHeight)
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                showTrackInfo = !showTrackInfo
+                                app.glassyBackground.showTrackInfo = showTrackInfo
+                            }
+                        }
+                    }
+                    DropShadow {
+                        anchors.fill: imageItem
+                        radius: 3.0
+                        samples: 10
+                        color: "#000"
+                        source: imageItem
                     }
                 }
 
@@ -902,13 +918,17 @@ Page {
     // and some ListView events
     propagateComposedEvents: true
     onStatusChanged: {
-        //if(status === PageStatus.Active && app.playing_as_attached_page.value)
-        //    pageStack.pushAttached(Qt.resolvedUrl("NavigationMenu.qml"), {popOnExit: false})
-
-        if(status === PageStatus.Activating)
+        switch (status) {
+        case PageStatus.Activating:
+            app.glassyBackground.state = "Visible"
             app.dockedPanel.setHidden()
-        else if(status === PageStatus.Deactivating)
+            break;
+        case PageStatus.Deactivating:
             app.dockedPanel.resetHidden()
+            break;
+        case PageStatus.Inactive:
+            app.glassyBackground.state = "Hidden"
+            break;
+        }
     }
-
 }
