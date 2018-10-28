@@ -24,8 +24,26 @@ SOURCES += \
     src/o2/o2simplecrypt.cpp \
     src/spotify.cpp \
     src/hutspot.cpp \
-    src/qdeclarativeprocess.cpp
-
+    src/qdeclarativeprocess.cpp \
+    src/qmdnsengine/abstractserver.cpp \
+    src/qmdnsengine/bitmap.cpp \
+    src/qmdnsengine/browser.cpp \
+    src/qmdnsengine/cache.cpp \
+    src/qmdnsengine/dns.cpp \
+    src/qmdnsengine/hostname.cpp \
+    src/qmdnsengine/mdns.cpp \
+    src/qmdnsengine/message.cpp \
+    src/qmdnsengine/prober.cpp \
+    src/qmdnsengine/provider.cpp \
+    src/qmdnsengine/query.cpp \
+    src/qmdnsengine/record.cpp \
+    src/qmdnsengine/resolver.cpp \
+    src/qmdnsengine/server.cpp \
+    src/qmdnsengine/service.cpp \
+    src/spmdns.cpp \
+    src/connect/spconnect.cpp \
+    src/connect/connectmdnsservice.cpp
+    
 DISTFILES += \
     qml/cover/CoverPage.qml \
     translations/*.ts \
@@ -87,6 +105,42 @@ HEADERS += \
     src/o2/o2spotify.h \
     src/spotify.h \
     src/IconProvider.h \
-    src/qdeclarativeprocess.h
+    src/qdeclarativeprocess.h \
+    src/qmdnsengine/bitmap_p.h \
+    src/qmdnsengine/browser_p.h \
+    src/qmdnsengine/cache_p.h \
+    src/qmdnsengine/hostname_p.h \
+    src/qmdnsengine/message_p.h \
+    src/qmdnsengine/prober_p.h \
+    src/qmdnsengine/provider_p.h \
+    src/qmdnsengine/query_p.h \
+    src/qmdnsengine/record_p.h \
+    src/qmdnsengine/resolver_p.h \
+    src/qmdnsengine/server_p.h \
+    src/qmdnsengine/service_p.h \
+    src/qmdnsengine/qmdnsengine/abstractserver.h \
+    src/qmdnsengine/qmdnsengine/bitmap.h \
+    src/qmdnsengine/qmdnsengine/browser.h \
+    src/qmdnsengine/qmdnsengine/cache.h \
+    src/qmdnsengine/qmdnsengine/dns.h \
+    src/qmdnsengine/qmdnsengine/hostname.h \
+    src/qmdnsengine/qmdnsengine/mdns.h \
+    src/qmdnsengine/qmdnsengine/message.h \
+    src/qmdnsengine/qmdnsengine/prober.h \
+    src/qmdnsengine/qmdnsengine/provider.h \
+    src/qmdnsengine/qmdnsengine/query.h \
+    src/qmdnsengine/qmdnsengine/record.h \
+    src/qmdnsengine/qmdnsengine/resolver.h \
+    src/qmdnsengine/qmdnsengine/server.h \
+    src/qmdnsengine/qmdnsengine/service.h \
+    src/qmdnsengine/qmdnsengine_export.h \
+    src/spmdns.h \
+    src/connect/spconnect.h \
+    src/connect/connectmdnsservice.h
 
+INCLUDEPATH += src/qmdnsengine
+
+QMAKE_LFLAGS += -lssl -lcrypto
 #QMAKE_LFLAGS += -lavahi-client -lavahi-common
+
+CONFIG += console

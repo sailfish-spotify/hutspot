@@ -28,6 +28,7 @@ PkgConfigBR:
   - Qt5Core
   - Qt5Qml
   - Qt5Quick
+  - openssl
 
 # Build dependencies without a pkgconfig setup can be listed here
 #PkgBR:

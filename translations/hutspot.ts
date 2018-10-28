@@ -140,6 +140,13 @@
     </message>
 </context>
 <context>
+    <name>ConnectMDNSService</name>
+    <message>
+        <source>[%1] %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CoverPage</name>
     <message>
         <source>Nothing is playing</source>
@@ -221,6 +228,10 @@
     </message>
     <message>
         <source>Pull down to reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect using Blob</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -936,10 +947,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Transfer Failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -961,6 +968,10 @@
     </message>
     <message>
         <source>Failed to Refresh Authorization Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed tp transfer to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
