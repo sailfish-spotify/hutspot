@@ -96,6 +96,7 @@ ApplicationWindow {
     property alias queue: queue
     property alias playingPage: playingPage
     property alias librespot: librespot
+    property string playerName: "Hutspot"
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -313,7 +314,7 @@ ApplicationWindow {
             if(!error) {
                 controller.refreshPlaybackState()
             } else
-                showErrorMessage(error, qsTr("Transfer Failed"))
+                showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
         })
     }
 
@@ -357,6 +358,8 @@ ApplicationWindow {
 
         history = history_store.value
         //serviceBrowser.browse("_spotify-connect._tcp")
+        // testing
+        spConnect.startMDNSService()
     }
 
     // Librespot must be started after we are logged in (have a valid token)
@@ -498,53 +501,71 @@ ApplicationWindow {
         firstPage.foundDevicesChanged()
     }*/
 
-    /* Service Browser has been disabled since it is unknown how to
-       register the discovered device at spotify.
+    // why foundDevices and connectDevices?
+    signal devicesChanged()
+    onDevicesChanged: {
+    }
+    property var foundDevices: []
+    property var connectDevices: ({})
+
     Connections {
-        target: serviceBrowser
-
-        onServiceEntryAdded: {
-            var serviceJSON = serviceBrowser.getJSON(service)
-            console.log("onServiceEntryAdded: " + serviceJSON)
-            try {
-              var data = JSON.parse(serviceJSON)
-              if(data.protocol === "IPv4") {
-                  Util.deviceInfoRequest(data, function(error, data) {
-                      if(data) {
-                          //console.log(JSON.stringify(data,null,2))
-                          // replace or add
-                          var replaced = 0
-                          for(var i=0;i<foundDevices.length;i++) {
-                            if(foundDevices[i].remoteName === data.remoteName) {
-                              foundDevices[i] = data
-                                replaced = 1
+        target: spMdns
+        onServiceAdded: {
+            console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
+            var mdns = JSON.parse(serviceJSON)
+            connectDevices[mdns.name] = mdns
+        }
+        onServiceUpdated: {
+            console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                var mdns = JSON.parse(serviceJSON)
+                if(device.name === mdns.name) {
+                    connectDevices[mdns.name] = mdns
+                    devicesChanged()
+                    break
+                }
+            }
+        }
+        onServiceRemoved: {
+            console.log("onServiceRemoved: " + name)
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                if(device.name === name) {
+                    delete connectDevices[deviceName]
+                    devicesChanged()
+                    break
+                }
+            }
+        }
+        onServiceResolved: {
+            console.log("onServiceResolved: " + name + " -> " + address)
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                if(device.host === name) {
+                    device.ip = address
+                    Util.deviceInfoRequestMDNS(device, function(error, data) {
+                        if(data) {
+                            console.log(JSON.stringify(data,null,2))
+                            data.deviceInfo = device
+                            var replaced = 0
+                            for(var i=0;i<foundDevices.length;i++) {
+                              if(foundDevices[i].remoteName === data.remoteName) {
+                                  foundDevices[i] = data
+                                  replaced = 1
+                              }
                             }
-                          }
-                          if(!replaced)
-                              foundDevices.push(data)
-                          devicesChanged()
-                      }
-                  })
-              }
-            } catch (e) {
-              console.error(e)
+                            if(!replaced)
+                                foundDevices.push(data)
+                            devicesChanged()                        }
+                    })
+                    break
+                }
             }
         }
+    }
 
-        onServiceEntryRemoved: {
-            console.log("onServiceEntryRemoved: " + service)
-            // todo remove from foundDevices
-            for(var i=0;i<foundDevices.length;i++) {
-              if(foundDevices[i].remoteName === data.remoteName) {
-                  foundDevices.splice(i, 1)
-                  devicesChanged()
-                  break
-              }
-            }
-        }
-    }*/
-
-    property string id: ""
+    property string id: "" // spotify user id
     property string uri: ""
     property string display_name: ""
     property string product: ""

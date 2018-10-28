@@ -53,7 +53,84 @@ function getPlayedAtText(playedAt) {
     return playedAt.split('T')[0]
 }
 
-function deviceInfoRequest(avahi, callback) {
+function deviceAddUserRequest(device, userData, callback) {
+    var req = new XMLHttpRequest();
+    var url = "http://" + device.ip + ":" + device.port;
+    if(device.CPath.length > 0)
+        url += device.CPath;
+    else
+        url += "/";
+    url += "?action=addUser"
+    req.open('POST', url);
+    req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    req.onreadystatechange = function() {
+      if (req.readyState === 4) {
+        var data = null;
+        try {
+          data = req.responseText ? JSON.parse(req.responseText) : '';
+        } catch (e) {
+          console.error(e);
+        }
+
+        if (req.status >= 200 && req.status < 300) {
+          callback(null, data);
+        } else {
+          callback(data);
+        }
+      }
+    }
+    var content = ""
+    var firstDone = false
+    for(var key in userData) {
+        if(userData.hasOwnProperty(key)) {
+            var value = userData[key];
+            if(firstDone)
+                content += "&";
+            content += encodeURIComponent(key) + '=' + encodeURIComponent(value);
+            firstDone = true
+        }
+    }
+    req.send(content);
+}
+
+function deviceInfoRequestMDNS(mdns, callback) {
+    var req = new XMLHttpRequest();
+    var tmp;
+
+    // address
+    var url = "http://" + mdns.ip + ":" + mdns.port;
+
+    // path ( text also contains \s"VERSION=([^"]*)")
+    if(mdns.CPath.length > 0)
+        url += mdns.CPath
+    else
+        url += "/"
+    // request
+    url += "?action=getInfo"
+
+    req.open('GET', url);
+
+    req.onreadystatechange = function() {
+      if (req.readyState === 4) {
+        var data = null;
+        try {
+          data = req.responseText ? JSON.parse(req.responseText) : '';
+        } catch (e) {
+          console.error(e);
+        }
+
+        if (req.status >= 200 && req.status < 300) {
+          callback(null, data);
+        } else {
+          callback(data);
+        }
+      }
+    }
+
+    req.send(null);
+}
+
+function deviceInfoRequestAVAHI(avahi, callback) {
   var req = new XMLHttpRequest();
     var tmp;
 
