@@ -305,7 +305,7 @@ ApplicationWindow {
         msgBox.showMessage(msg, 3000)
     }
 
-    function setDevice(id, name) {
+    function setDevice(id, name, callback) {
 
         deviceId.value = id
         deviceName.value = name
@@ -313,6 +313,7 @@ ApplicationWindow {
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
                 controller.refreshPlaybackState()
+                callback(null, data)
             } else
                 showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
         })
@@ -397,14 +398,26 @@ ApplicationWindow {
         function notifyHappend(event) {
             happendMask = happendMask | (0x01 << event)
             if(happendMask & triggerMask) {
-                if(!app.start_stop_librespot.value)
+                // only do something when wished for
+                if(!start_stop_librespot.value)
                     return
                 if(!librespot.serviceRunning) {
-                    console.log("Librespot is not running so restart it")
+                    console.log("Librespot is not running so start it")
                     librespot.start()
-                } else if(!isLibrespotInDevicesList()) {
-                    console.log("Librespot is not in the devices list so restart it")
-                    librespot.start()
+                } else {
+                    if(!isLibrespotInDevicesList()) {
+                        console.log("Librespot is not in the devices list so try to re-register it")
+                        if(librespot.hasLibrespotCredentials()) {
+                            var ls = isLibrespotInDiscoveredList()
+                            if(ls !== null)
+                                librespot.addUser(ls)
+                            else
+                                console.log("Librespot not present in discovered list")
+                        } else {
+                            console.log("no credentials available so restart and hope for the best...")
+                            librespot.start()
+                        }
+                    }
                 }
             }
         }
@@ -495,18 +508,22 @@ ApplicationWindow {
         }
     }
 
-    /*property var foundDevices: []
     signal devicesChanged()
     onDevicesChanged: {
-        firstPage.foundDevicesChanged()
-    }*/
-
-    // why foundDevices and connectDevices?
-    signal devicesChanged()
-    onDevicesChanged: {
+        var ls = isLibrespotInDiscoveredList()
+        console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
+        if(ls !== null) {
+            if(!isLibrespotInDevicesList()) {
+                console.log("Librespot is not in the devices list so try to re-register it")
+                if(librespot.hasLibrespotCredentials()) {
+                    librespot.addUser(ls)
+                }
+            } else
+                console.log("Librespot is already in the devices list")
+        }
     }
-    property var foundDevices: []
-    property var connectDevices: ({})
+    property var foundDevices: []     // the device info queried by getInfo
+    property var connectDevices: ({}) // the device info discovered by mdns
 
     Connections {
         target: spMdns
@@ -533,6 +550,7 @@ ApplicationWindow {
                 var device = connectDevices[deviceName]
                 if(device.name === name) {
                     delete connectDevices[deviceName]
+                    // ToDo also delete from foundDevices
                     devicesChanged()
                     break
                 }
@@ -557,7 +575,8 @@ ApplicationWindow {
                             }
                             if(!replaced)
                                 foundDevices.push(data)
-                            devicesChanged()                        }
+                            devicesChanged()
+                        }
                     })
                     break
                 }
@@ -921,13 +940,30 @@ ApplicationWindow {
             return false
         var devName = librespot.getName()
         if(devName.length === 0) // failed to determine the name
-            return false
+            return null
         for(i=0;i<spotifyController.devices.count;i++) {
             var device = spotifyController.devices.get(i)
             if(device.name === devName)
-                return true
+                return device
         }
-        return false
+        return null
+    }
+
+    // check if the Librespot service is discovered on the network
+    function isLibrespotInDiscoveredList() {
+        var i
+        // we cannot determine the name if it is not running
+        if(!librespot.serviceRunning)
+            return false
+        var devName = librespot.getName()
+        if(devName.length === 0) // failed to determine the name
+            return null
+        for(i=0;i<foundDevices.length;i++) {
+            var device = foundDevices[i]
+            if(device.name === devName)
+                return device
+        }
+        return null
     }
 
     Connections {
