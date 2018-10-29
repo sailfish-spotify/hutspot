@@ -83,7 +83,10 @@ Page {
                         text: qsTr("Set as Current")
                         onClicked: {
                             if(spotify)
-                                app.setDevice(model.deviceId, model.name)
+                                app.setDevice(model.deviceId, model.name, function(error, data){
+                                    if(!error)
+                                        refreshDevices()
+                                })
                         }
                     }
                     MenuItem {
