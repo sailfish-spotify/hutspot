@@ -2,6 +2,7 @@
 #define MDNS_H
 
 #include <QObject>
+#include <QMap>
 
 #include "qmdnsengine/server.h"
 #include "qmdnsengine/service.h"
@@ -37,7 +38,7 @@ protected:
     QMdnsEngine::Server * server;
     QMdnsEngine::Cache * cache;
     QMdnsEngine::Browser * browser;
-    QMdnsEngine::Resolver * resolver;
+    QMap <QString, QMdnsEngine::Resolver *> resolvers;
 };
 
 #endif // MDNS_H
