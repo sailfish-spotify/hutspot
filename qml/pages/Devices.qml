@@ -16,6 +16,7 @@ Page {
     id: devicesPage
 
     allowedOrientations: Orientation.All
+    property bool isBusy: waitForInSpotifyList.running
 
     SilicaListView {
         id: listView
@@ -42,6 +43,11 @@ Page {
             id: pHeader
             width: parent.width
             title: qsTr("Devices")
+            BusyIndicator {
+                parent: pHeader.extraContent
+                running: isBusy
+                visible: running
+            }
         }
 
         delegate: ListItem {
@@ -93,7 +99,16 @@ Page {
                         enabled: sp === 0 && app.librespot.hasLibreSpotCredentials()
                         text: qsTr("Connect using Blob")
                         onClicked: {
-                            app.librespot.addUser(app.foundDevices[deviceIndex])
+                            isBusy = true
+                            var name = app.foundDevices[deviceIndex].remoteName
+                            _toBeAddedName = name
+                            app.librespot.addUser(app.foundDevices[deviceIndex], function(error, data) {
+                                if(data) {
+                                    waitForInSpotifyList.count = 5
+                                } else {
+                                    app.showErrorMessage(error, qsTr("Failed to connect to " + name))
+                                }
+                            })
                         }
                     }
                 }
@@ -108,6 +123,32 @@ Page {
         }
 
         VerticalScrollDecorator {}
+    }
+
+    function isDeviceInList(deviceName) {
+        var i
+        for(i=0;i<app.controller.devices.count;i++) {
+            var device = app.controller.devices.get(i)
+            if(device.name === deviceName)
+                return true
+        }
+        return false
+    }
+
+    property string _toBeAddedName: ""
+    Timer {
+        id: waitForInSpotifyList
+        interval: 2000
+        running: count > 0
+        repeat: true
+        property int count: -1
+        onTriggered: {
+            if(isDeviceInList(_toBeAddedName)) {
+                count = 0
+            } else
+                app.controller.reloadDevices()
+            count--
+        }
     }
 
     function getNameLabelText(sp, deviceIndex, name) {
