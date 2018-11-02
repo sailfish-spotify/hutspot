@@ -247,7 +247,7 @@ Item {
         xhr.send()
     }
 
-    function addUser(device) {
+    function addUser(device, callback) {
         var addUserData = {}
 
         addUserData.action = "addUser"
@@ -264,13 +264,12 @@ Item {
         addUserData.loginId = app.id
 
         Util.deviceAddUserRequest(device.deviceInfo, addUserData, function(error, data) {
-            var name = device.name
+            if(callback)
+                callback(error, data)
             if(data)
                 console.log("deviceAddUserRequest: " + JSON.stringify(data))
-            else {
+            else
                 console.log("deviceAddUserRequest error: " + error)
-                app.showErrorMessage(error, qsTr("Failed to connect to " + name))
-            }
         })
     }
 
