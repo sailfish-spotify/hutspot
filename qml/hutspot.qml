@@ -511,8 +511,8 @@ ApplicationWindow {
     signal devicesChanged()
     onDevicesChanged: {
         var ls = isLibrespotInDiscoveredList()
-        console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
         if(ls !== null) {
+            console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
                 console.log("Librespot is not in the devices list so try to re-register it")
                 if(librespot.hasLibrespotCredentials()) {
@@ -960,7 +960,7 @@ ApplicationWindow {
             return null
         for(i=0;i<foundDevices.length;i++) {
             var device = foundDevices[i]
-            if(device.name === devName)
+            if(device.remoteName === devName)
                 return device
         }
         return null
