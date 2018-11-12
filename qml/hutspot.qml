@@ -96,6 +96,7 @@ ApplicationWindow {
     property alias queue: queue
     property alias playingPage: playingPage
     property alias librespot: librespot
+    property string playerName: "Hutspot"
 
     allowedOrientations: defaultAllowedOrientations
 
@@ -304,7 +305,7 @@ ApplicationWindow {
         msgBox.showMessage(msg, 3000)
     }
 
-    function setDevice(id, name) {
+    function setDevice(id, name, callback) {
 
         deviceId.value = id
         deviceName.value = name
@@ -312,8 +313,9 @@ ApplicationWindow {
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
                 controller.refreshPlaybackState()
+                callback(null, data)
             } else
-                showErrorMessage(error, qsTr("Transfer Failed"))
+                showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
         })
     }
 
@@ -357,6 +359,8 @@ ApplicationWindow {
 
         history = history_store.value
         //serviceBrowser.browse("_spotify-connect._tcp")
+        // testing
+        spConnect.startMDNSService()
     }
 
     // Librespot must be started after we are logged in (have a valid token)
@@ -370,12 +374,51 @@ ApplicationWindow {
             }
         }
     }*/
+
     onHasValidTokenChanged: {
         if(start_stop_librespot.value) {
             if(librespot.serviceEnabled) {
-                if(hasValidToken)
-                    librespot.start()
+                if(hasValidToken) {
+                    librespotAtStart.notifyHappend(librespotAtStart.validTokenMask)
+                }
                 // ToDo: stop Librespot if the token becomes invalid?
+            }
+        }
+    }
+
+    Item {
+        id: librespotAtStart
+
+        readonly property int validTokenMask: 0x01
+        readonly property int deviceListReadyMask: 0x01
+
+        readonly property int triggerMask: 0x03
+        property int happendMask: 0
+
+        function notifyHappend(event) {
+            happendMask = happendMask | (0x01 << event)
+            if(happendMask & triggerMask) {
+                // only do something when wished for
+                if(!start_stop_librespot.value)
+                    return
+                if(!librespot.serviceRunning) {
+                    console.log("Librespot is not running so start it")
+                    librespot.start()
+                } else {
+                    if(!isLibrespotInDevicesList()) {
+                        console.log("Librespot is not in the devices list so try to re-register it")
+                        if(librespot.hasLibrespotCredentials()) {
+                            var ls = isLibrespotInDiscoveredList()
+                            if(ls !== null)
+                                librespot.addUser(ls)
+                            else
+                                console.log("Librespot not present in discovered list")
+                        } else {
+                            console.log("no credentials available so restart and hope for the best...")
+                            librespot.start()
+                        }
+                    }
+                }
             }
         }
     }
@@ -465,59 +508,97 @@ ApplicationWindow {
         }
     }
 
-    /*property var foundDevices: []
     signal devicesChanged()
-    onDevicesChanged: {
-        firstPage.foundDevicesChanged()
-    }*/
 
-    /* Service Browser has been disabled since it is unknown how to
-       register the discovered device at spotify.
+    property bool _addUserBusy: false
+
+    Timer { // we don't want to call addUser too often
+        id: _addUserBusyTimer
+        repeat: false
+        interval: 2000
+    }
+
+    onDevicesChanged: {        
+        var ls = isLibrespotInDiscoveredList()
+        if(ls !== null) {
+            console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
+            if(!isLibrespotInDevicesList()) {
+                console.log("Librespot is not in the devices list so try to re-register it")
+                if(librespot.hasLibrespotCredentials()
+                   && !_addUserBusy && !_addUserBusyTimer.running) {
+                    _addUserBusy = true
+                    _addUserBusyTimer.running = true
+                    librespot.addUser(ls, function(error, data) {
+                        _addUserBusy = false
+                    })
+                }
+            } else
+                console.log("Librespot is already in the devices list")
+        }
+    }
+    property var foundDevices: []     // the device info queried by getInfo
+    property var connectDevices: ({}) // the device info discovered by mdns
+
     Connections {
-        target: serviceBrowser
-
-        onServiceEntryAdded: {
-            var serviceJSON = serviceBrowser.getJSON(service)
-            console.log("onServiceEntryAdded: " + serviceJSON)
-            try {
-              var data = JSON.parse(serviceJSON)
-              if(data.protocol === "IPv4") {
-                  Util.deviceInfoRequest(data, function(error, data) {
-                      if(data) {
-                          //console.log(JSON.stringify(data,null,2))
-                          // replace or add
-                          var replaced = 0
-                          for(var i=0;i<foundDevices.length;i++) {
-                            if(foundDevices[i].remoteName === data.remoteName) {
-                              foundDevices[i] = data
-                                replaced = 1
+        target: spMdns
+        onServiceAdded: {
+            console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
+            var mdns = JSON.parse(serviceJSON)
+            connectDevices[mdns.name] = mdns
+        }
+        onServiceUpdated: {
+            console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                var mdns = JSON.parse(serviceJSON)
+                if(device.name === mdns.name) {
+                    connectDevices[mdns.name] = mdns
+                    devicesChanged()
+                    break
+                }
+            }
+        }
+        onServiceRemoved: {
+            console.log("onServiceRemoved: " + name)
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                if(device.name === name) {
+                    delete connectDevices[deviceName]
+                    // ToDo also delete from foundDevices
+                    devicesChanged()
+                    break
+                }
+            }
+        }
+        onServiceResolved: {
+            console.log("onServiceResolved: " + name + " -> " + address)
+            for(var deviceName in connectDevices) {
+                var device = connectDevices[deviceName]
+                if(device.host === name) {
+                    device.ip = address
+                    Util.deviceInfoRequestMDNS(device, function(error, data) {
+                        if(data) {
+                            console.log(JSON.stringify(data,null,2))
+                            data.deviceInfo = device
+                            var replaced = 0
+                            for(var i=0;i<foundDevices.length;i++) {
+                              if(foundDevices[i].remoteName === data.remoteName) {
+                                  foundDevices[i] = data
+                                  replaced = 1
+                              }
                             }
-                          }
-                          if(!replaced)
-                              foundDevices.push(data)
-                          devicesChanged()
-                      }
-                  })
-              }
-            } catch (e) {
-              console.error(e)
+                            if(!replaced)
+                                foundDevices.push(data)
+                            devicesChanged()
+                        }
+                    })
+                    break
+                }
             }
         }
+    }
 
-        onServiceEntryRemoved: {
-            console.log("onServiceEntryRemoved: " + service)
-            // todo remove from foundDevices
-            for(var i=0;i<foundDevices.length;i++) {
-              if(foundDevices[i].remoteName === data.remoteName) {
-                  foundDevices.splice(i, 1)
-                  devicesChanged()
-                  break
-              }
-            }
-        }
-    }*/
-
-    property string id: ""
+    property string id: "" // spotify user id
     property string uri: ""
     property string display_name: ""
     property string product: ""
@@ -873,24 +954,36 @@ ApplicationWindow {
             return false
         var devName = librespot.getName()
         if(devName.length === 0) // failed to determine the name
-            return false
+            return null
         for(i=0;i<spotifyController.devices.count;i++) {
             var device = spotifyController.devices.get(i)
             if(device.name === devName)
-                return true
+                return device
         }
-        return false
+        return null
+    }
+
+    // check if the Librespot service is discovered on the network
+    function isLibrespotInDiscoveredList() {
+        var i
+        // we cannot determine the name if it is not running
+        if(!librespot.serviceRunning)
+            return false
+        var devName = librespot.getName()
+        if(devName.length === 0) // failed to determine the name
+            return null
+        for(i=0;i<foundDevices.length;i++) {
+            var device = foundDevices[i]
+            if(device.remoteName === devName)
+                return device
+        }
+        return null
     }
 
     Connections {
         target: spotifyController
         onDevicesReloaded: {
-            // check if Librespot is known to Spotify and if not restart it
-            if(app.start_stop_librespot.value
-               && !isLibrespotInDevicesList()) {
-                console.log("Librespot is not in the devices list so restart it")
-                librespot.start()
-            }
+            librespotAtStart.notifyHappend(librespotAtStart.deviceListReadyMask)
         }
     }
 
@@ -1258,6 +1351,7 @@ ApplicationWindow {
         signalsEnabled: true
 
         // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=headphone, uint32=9
+        // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=bluetootha2dp, uint32=17
         // remove: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=speaker, uint32=5
 
         signal audioRouteChanged(string s, int i)

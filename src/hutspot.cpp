@@ -18,7 +18,8 @@
 
 #include "IconProvider.h"
 #include "spotify.h"
-//#include "servicebrowser.h"
+#include "spmdns.h"
+#include "connect/spconnect.h"
 #include "qdeclarativeprocess.h"
 
 int main(int argc, char *argv[])
@@ -46,8 +47,11 @@ int main(int argc, char *argv[])
     QQmlEngine *engine = view->engine();
     engine->addImageProvider(QLatin1String("hutspot-icons"), new IconProvider);
 
-//    ServiceBrowser serviceBrowser;
-//    view->rootContext()->setContextProperty("serviceBrowser", &serviceBrowser);
+    SPMDNS spMdns;
+    view->rootContext()->setContextProperty("spMdns", &spMdns);
+
+    SPConnect spConnect;
+    view->rootContext()->setContextProperty("spConnect", &spConnect);
 
     view->setSource(SailfishApp::pathTo("qml/hutspot.qml"));
     view->show();
