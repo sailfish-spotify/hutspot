@@ -98,8 +98,7 @@ Page {
                     MenuItem {
                         enabled: sp === 0 && app.librespot.hasLibreSpotCredentials()
                         text: qsTr("Connect using Blob")
-                        onClicked: {
-                            isBusy = true
+                        onClicked: {                            
                             var name = app.foundDevices[deviceIndex].remoteName
                             _toBeAddedName = name
                             app.librespot.addUser(app.foundDevices[deviceIndex], function(error, data) {
@@ -143,9 +142,9 @@ Page {
         repeat: true
         property int count: -1
         onTriggered: {
-            if(isDeviceInList(_toBeAddedName)) {
+            if(isDeviceInList(_toBeAddedName))
                 count = 0
-            } else
+            else
                 app.controller.reloadDevices()
             count--
         }
