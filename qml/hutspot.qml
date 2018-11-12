@@ -509,14 +509,28 @@ ApplicationWindow {
     }
 
     signal devicesChanged()
-    onDevicesChanged: {
+
+    property bool _addUserBusy: false
+
+    Timer { // we don't want to call addUser too often
+        id: _addUserBusyTimer
+        repeat: false
+        interval: 2000
+    }
+
+    onDevicesChanged: {        
         var ls = isLibrespotInDiscoveredList()
         if(ls !== null) {
             console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
                 console.log("Librespot is not in the devices list so try to re-register it")
-                if(librespot.hasLibrespotCredentials()) {
-                    librespot.addUser(ls)
+                if(librespot.hasLibrespotCredentials()
+                   && !_addUserBusy && !_addUserBusyTimer.running) {
+                    _addUserBusy = true
+                    _addUserBusyTimer.running = true
+                    librespot.addUser(ls, function(error, data) {
+                        _addUserBusy = false
+                    })
                 }
             } else
                 console.log("Librespot is already in the devices list")
