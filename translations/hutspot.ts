@@ -890,6 +890,14 @@
         <source>Librespot is not available</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Enable Device Discovery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discover Spotify Connect Devices on your network.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>

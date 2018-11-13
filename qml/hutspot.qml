@@ -90,6 +90,8 @@ ApplicationWindow {
     property alias search_history_max_size: search_history_max_size
     property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
+    property alias enable_connect_discovery: enable_connect_discovery
+
     property alias deviceId: deviceId
     property alias deviceName: deviceName
 
@@ -358,9 +360,10 @@ ApplicationWindow {
         }
 
         history = history_store.value
-        //serviceBrowser.browse("_spotify-connect._tcp")
-        // testing
-        spConnect.startMDNSService()
+
+        // start discovery
+        if(enable_connect_discovery.value)
+            spConnect.startMDNSService()
     }
 
     // Librespot must be started after we are logged in (have a valid token)
@@ -1090,6 +1093,12 @@ ApplicationWindow {
             id: start_stop_librespot
             key: "/hutspot/start_stop_librespot"
             defaultValue: true
+    }
+
+    ConfigurationValue {
+            id: enable_connect_discovery
+            key: "/hutspot/enable_connect_discovery"
+            defaultValue: false
     }
 
     ConfigurationValue {
