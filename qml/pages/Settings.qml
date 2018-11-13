@@ -58,6 +58,21 @@ Page {
             }
 
             TextSwitch {
+                id: enable_connect_discovery
+                text: qsTr("Enable Device Discovery")
+                description: qsTr("Discover Spotify Connect Devices on your network.")
+                checked: app.enable_connect_discovery.value
+                onCheckedChanged: {
+                    app.enable_connect_discovery.value = checked
+                    app.enable_connect_discovery.sync()
+                    if(checked)
+                        spConnect.startMDNSService()
+                    else
+                        spConnect.stopMDNSService()
+                }
+            }
+
+            TextSwitch {
                 id: start_stop_librespot
                 text: qsTr("Control Librespot")
                 description: qsTr("Start Librespot when launched and stop it on exit")
