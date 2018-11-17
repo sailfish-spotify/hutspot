@@ -196,6 +196,14 @@ Page {
         id: itemsModel
     }
 
+    Timer { // reload devices list so we see new ones
+        id: reloadDevicesTimer
+        running: !waitForInSpotifyList.running
+        repeat: true
+        interval: 3000
+        onTriggered: app.controller.checkForNewDevices()
+    }
+
     function refreshDevices() {
         var i
         var j
@@ -271,12 +279,6 @@ Page {
         }
     }
 
-    /*Connections {
-        target: app
-        onHasValidTokenChanged: app.controller.reloadDevices()
-    }
-
-    Component.onCompleted: app.controller.reloadDevices()*/
     Component.onCompleted: refreshDevices()
 
     // The shared DockedPanel needs mouse events

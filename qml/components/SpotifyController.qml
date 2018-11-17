@@ -100,6 +100,65 @@ Item {
         })
     }
 
+    ListModel {
+        id: tmpDevicesModel
+    }
+
+    function checkForNewDevices() {
+        Spotify.getMyDevices(function(error, data) {
+            if (data) {
+                try {
+                    var i, j, added, removed, found, device
+
+                    // a new one has been added?
+                    added = false
+                    for(i=0; i < data.devices.length; i++) {
+                        found = false
+                        for(j=0; i < devicesModel.count; j++) {
+                            device = devicesModel.get(j)
+                            if(data.devices[i].id === device.id) {
+                                found = true
+                                break
+                            }
+                        }
+                        if(!found) {
+                            added = true
+                            break
+                        }
+                    }
+                    // an old one has been removed?
+                    removed = false
+                    for(i=0; i < devicesModel.count; i++) {
+                        found = false
+                        device = devicesModel.get(i)
+                        for(j=0; i < data.devices.length; j++) {
+                            if(data.devices[i].id === device.id) {
+                                found = true
+                                break
+                            }
+                        }
+                        if(!found) {
+                            removed = true
+                            break
+                        }
+                    }
+                    if(added || removed) {
+                        devicesModel.clear();
+                        for(i=0; i < data.devices.length; i++) {
+                            devicesModel.append(data.devices[i])
+                            if (data.devices[i].is_active)
+                                playbackState.device = data.devices[i]
+                        }
+                        console.log("checkForNewDevices(): reloaded")
+                        devicesReloaded()
+                    }
+                } catch (err) {
+                    console.log("checkForNewDevices() error: " + err)
+                }
+            }
+        })
+    }
+
     signal devicesReloaded()
 
     function reloadDevices() {
@@ -109,7 +168,6 @@ Item {
                     console.log("reloadDevices() #devices: " + data.devices.length)
                     devicesModel.clear();
                     for (var i=0; i < data.devices.length; i++) {
-                        //console.log(JSON.stringify(data.devices[i]))
                         devicesModel.append(data.devices[i]);
                         if (data.devices[i].is_active)
                             playbackState.device = data.devices[i]
