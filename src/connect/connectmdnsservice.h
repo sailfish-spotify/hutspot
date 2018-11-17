@@ -16,6 +16,7 @@ class ConnectMDNSService : public QObject
     Q_OBJECT
 public:
     explicit ConnectMDNSService(QObject *parent = nullptr);
+    virtual ~ConnectMDNSService();
 
 signals:
 
