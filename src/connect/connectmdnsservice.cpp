@@ -19,6 +19,13 @@ ConnectMDNSService::ConnectMDNSService(QObject *parent) : QObject(parent),
     mProvider->update(service);
 }
 
+ConnectMDNSService::~ConnectMDNSService() {
+    if(mProvider) {
+        delete mProvider;
+        mProvider = nullptr;
+    }
+}
+
 void ConnectMDNSService::onMessageReceived(const QMdnsEngine::Message &message) {
     foreach (QMdnsEngine::Query query, message.queries()) {
         qDebug() <<
