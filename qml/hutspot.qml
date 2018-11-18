@@ -526,7 +526,8 @@ ApplicationWindow {
         if(ls !== null) {
             console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
-                console.log("Librespot is not in the devices list so try to re-register it")
+                console.log("Librespot is not in the devices list")
+                /*console.log("Librespot is not in the devices list so try to re-register it")
                 if(librespot.hasLibrespotCredentials()
                    && !_addUserBusy && !_addUserBusyTimer.running) {
                     _addUserBusy = true
@@ -534,7 +535,7 @@ ApplicationWindow {
                     librespot.addUser(ls, function(error, data) {
                         _addUserBusy = false
                     })
-                }
+                }*/
             } else
                 console.log("Librespot is already in the devices list")
         }
