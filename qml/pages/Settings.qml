@@ -20,6 +20,13 @@ Page {
         anchors.fill: parent
         contentHeight: column.height
 
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Register Librespot Credentials")
+                onClicked: librespot.registerCredentials()
+            }
+        }
+
         PushUpMenu {
             MenuItem {
                 text: qsTr("Login")

@@ -281,6 +281,37 @@
     </message>
 </context>
 <context>
+    <name>Librespot</name>
+    <message>
+        <source>Librespot seems not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to register credentials for Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Registered credentials for Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter Spotify credentials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LoadPullMenus</name>
     <message>
         <source>Reload</source>
@@ -896,6 +927,10 @@
     </message>
     <message>
         <source>Discover Spotify Connect Devices on your network.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Register Librespot Credentials</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

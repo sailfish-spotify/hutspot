@@ -5,8 +5,10 @@
  */
 
 import QtQuick 2.0
+import Sailfish.Silica 1.0
 
 import org.nemomobile.dbus 2.0
+import org.hildon.components 1.0
 
 import "../Util.js" as Util
 
@@ -224,8 +226,6 @@ Item {
     property var _libreSpotCredentials: null
 
     function hasLibrespotCredentials() {
-        //if(_libreSpotCredentials == null)
-        //    loadLibrespotCredentials()
         return _libreSpotCredentials != null
     }
 
@@ -271,6 +271,157 @@ Item {
             else
                 console.log("deviceAddUserRequest error: " + error)
         })
+    }
+
+    //
+    // Register credentials with librespot.
+    //
+
+    function delayedExec(callback, delay) {
+        delayTimer.callback = callback
+        delayTimer.interval = delay
+        delayTimer.running = true
+    }
+
+    Timer {
+        id: delayTimer
+        running: false
+        repeat: false
+        property var callback
+        onTriggered: callback()
+    }
+
+    // ToDo: paths and name are hardcoded
+    function addCredentials(username, password, callback) {
+        var command = "/usr/bin/librespot"
+        var args = []
+        args.push("--cache")
+        args.push("/home/nemo/.cache/librespot")
+        args.push("--name")
+        args.push("librespot")
+        args.push("--username")
+        args.push(username)
+        process.callback = callback
+        process.start(command, args)
+        process.write(password + "\n")
+        process.closeWriteChannel()
+        delayedExec(function() {
+            // ToDo: don't know if this delay is needed, not if it is enough
+            process.kill()
+        }, 1000)
+    }
+
+    function registerCredentials() {
+        var wasRunning = false
+        if(!serviceEnabled) {
+            app.showErrorMessage(error, qsTr("Librespot seems not available"))
+            return
+        }
+        if(serviceRunning) {
+            wasRunning = true
+            stop()
+        }
+
+        var dialog = pageStack.push(credentialsDialog)
+        dialog.accepted.connect(function() {
+            if(dialog.usernameField.text.length > 0
+               && dialog.passwordField.text.length > 0) {
+                addCredentials(dialog.usernameField.text, dialog.passwordField.text, function(error,data){
+                    // Note: this is weird unfortunately. When there is an error Librespot quits
+                    // and process has no error. When registering succeeds we have to kill the process
+                    // ourselves and it will report an error (probably 1).
+                    // So we check for data instead of error.
+                    if(data) {
+                        app.showErrorMessage(error, qsTr("Failed to register credentials for Librespot"))
+                    } else {
+                        app.showErrorMessage(null, qsTr("Registered credentials for Librespot"))
+                    }
+                    if(wasRunning) {
+                        start()
+                    }
+                })
+            }
+            dialog.rejected.connect(function() {
+                if(wasRunning) {
+                    start()
+                }
+            })
+        })
+    }
+
+
+    Dialog {
+        id: credentialsDialog
+
+        property alias usernameField: usernameField
+        property alias passwordField: passwordField
+
+        Column {
+            width: parent.width
+
+            DialogHeader {
+                title: qsTr("Enter Spotify credentials")
+                acceptText: qsTr("OK")
+                cancelText: qsTr("Cancel")
+            }
+
+            TextField {
+                id: usernameField
+                width: parent.width
+                label: qsTr("Username")
+                placeholderText: label
+
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: passwordField.focus = true
+            }
+
+            PasswordField {
+                id: passwordField
+                width: parent.width
+                EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+                EnterKey.onClicked: credentialsDialog.accept()
+            }
+        }
+    }
+
+    Process {
+        id: process
+
+        property var callback: undefined
+
+        // ToDo: fix hardcoded path
+        workingDirectory: "/home/nemo"
+
+        onExitCodeChanged: {
+            console.log("onExitCodeChanged: " + process.error)
+        }
+
+        onStateChanged: {
+            console.log("onStateChanged: " + process.error)
+        }
+
+        onProcessFinished: {
+            console.log("onProcessFinished: " + process.error)
+        }
+
+        onError: {
+            if(callback !== undefined)
+                callback(process.error, undefined)
+            console.log("Librespot Process.Error: " + process.error)
+            callback = undefined
+        }
+
+        onFinished: {
+            var stdout = process.readAllStandardOutput()
+            var stderr = process.readAllStandardError()
+            console.log("Librespot Process.Finished: " + process.exitStatus + ", code: " + process.exitCode)
+            console.log("[stdout]:" + stdout)
+            console.log("[stderr]:" + stderr)
+
+            if(callback !== undefined)
+                callback(null, stdout)
+            callback = undefined
+        }
     }
 
 }
