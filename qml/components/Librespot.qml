@@ -9,6 +9,7 @@ import Sailfish.Silica 1.0
 
 import org.nemomobile.dbus 2.0
 import org.hildon.components 1.0
+import SystemUtils 1.0
 
 import "../Util.js" as Util
 
@@ -233,7 +234,7 @@ Item {
 
     function loadLibrespotCredentials() {
         var xhr = new XMLHttpRequest;
-        xhr.open("GET", "/home/nemo/.cache/librespot/credentials.json");
+        xhr.open("GET", StandardPaths.home + "/.cache/librespot/credentials.json");
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 var response = xhr.responseText;
@@ -296,7 +297,7 @@ Item {
         var command = "/usr/bin/librespot"
         var args = []
         args.push("--cache")
-        args.push("/home/nemo/.cache/librespot")
+        args.push(StandardPaths.home + "/.cache/librespot")
         args.push("--name")
         args.push("librespot")
         args.push("--username")
@@ -307,8 +308,22 @@ Item {
         process.closeWriteChannel()
         delayedExec(function() {
             // ToDo: don't know if this delay is needed, not if it is enough
-            process.kill()
-        }, 1000)
+            //process.terminate() // SIGTERM
+            //process.kill() // SIGKILL
+            if(process.state === Processes.Running)
+                sysUtil.pkill(process.pid, SystemUtils.SIGINT)
+        }, 2000)
+    }
+
+    // example output of Librespot on successfull login
+    //  INFO:librespot: librespot UNKNOWN (UNKNOWN). Built on 2019-01-03. Build ID: YKCM15nl
+    //  Password for xxxxxx: INFO:librespot_core::session: Connecting to AP "gew1-accesspoint-b-437f.ap.spotify.com:4070"
+    //  INFO:librespot_core::session: Authenticated as "xxxxxxxxxxxxxx" !
+    //  INFO:librespot_core::session: Country: "NL"
+    function isSuccess(data) {
+        if(!data)
+            return false
+        return data.indexOf("Authenticated as") > -1
     }
 
     function registerCredentials() {
@@ -326,12 +341,9 @@ Item {
         dialog.accepted.connect(function() {
             if(dialog.usernameField.text.length > 0
                && dialog.passwordField.text.length > 0) {
-                addCredentials(dialog.usernameField.text, dialog.passwordField.text, function(error,data){
-                    // Note: this is weird unfortunately. When there is an error Librespot quits
-                    // and process has no error. When registering succeeds we have to kill the process
-                    // ourselves and it will report an error (probably 1).
-                    // So we check for data instead of error.
-                    if(data) {
+                addCredentials(dialog.usernameField.text, dialog.passwordField.text, function(error, exitCode, data){
+                    console.log("callback error: " + error + ", exitCode: " + exitCode +", data: " + data)
+                    if(exitCode !== 0 || !isSuccess(data)) {
                         app.showErrorMessage(error, qsTr("Failed to register credentials for Librespot"))
                     } else {
                         app.showErrorMessage(null, qsTr("Registered credentials for Librespot"))
@@ -389,15 +401,14 @@ Item {
 
         property var callback: undefined
 
-        // ToDo: fix hardcoded path
-        workingDirectory: "/home/nemo"
+        workingDirectory: StandardPaths.home
 
         onExitCodeChanged: {
-            console.log("onExitCodeChanged: " + process.error)
+            console.log("onExitCodeChanged: " + process.exitCode)
         }
 
         onStateChanged: {
-            console.log("onStateChanged: " + process.error)
+            console.log("onStateChanged: " + process.state)
         }
 
         onProcessFinished: {
@@ -406,7 +417,7 @@ Item {
 
         onError: {
             if(callback !== undefined)
-                callback(process.error, undefined)
+                callback(process.error, process.exitCode, undefined)
             console.log("Librespot Process.Error: " + process.error)
             callback = undefined
         }
@@ -419,7 +430,7 @@ Item {
             console.log("[stderr]:" + stderr)
 
             if(callback !== undefined)
-                callback(null, stdout)
+                callback(null, process.exitCode, stderr)
             callback = undefined
         }
     }
