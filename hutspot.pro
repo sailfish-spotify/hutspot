@@ -42,7 +42,8 @@ SOURCES += \
     src/qmdnsengine/service.cpp \
     src/spmdns.cpp \
     src/connect/spconnect.cpp \
-    src/connect/connectmdnsservice.cpp
+    src/connect/connectmdnsservice.cpp \
+    src/systemutil.cpp
     
 DISTFILES += \
     qml/cover/CoverPage.qml \
@@ -136,7 +137,8 @@ HEADERS += \
     src/qmdnsengine/qmdnsengine_export.h \
     src/spmdns.h \
     src/connect/spconnect.h \
-    src/connect/connectmdnsservice.h
+    src/connect/connectmdnsservice.h \
+    src/systemutil.h
 
 INCLUDEPATH += src/qmdnsengine
 
