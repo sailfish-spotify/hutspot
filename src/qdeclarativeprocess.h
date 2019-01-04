@@ -63,7 +63,7 @@ class QDeclarativeProcess : public QProcess
                READ workingDirectory
                WRITE setWorkingDirectory
                NOTIFY workingDirectoryChanged)
-    Q_PROPERTY(Q_PID pid
+    Q_PROPERTY(uint pid
                READ pid
                NOTIFY pidChanged)
     Q_PROPERTY(QDeclarativeProcessEnums::ProcessError error
