@@ -21,6 +21,7 @@
 #include "spmdns.h"
 #include "connect/spconnect.h"
 #include "qdeclarativeprocess.h"
+#include "systemutil.h"
 
 int main(int argc, char *argv[])
 {
@@ -52,6 +53,10 @@ int main(int argc, char *argv[])
 
     SPConnect spConnect;
     view->rootContext()->setContextProperty("spConnect", &spConnect);
+
+    qmlRegisterUncreatableType<SystemUtilEnums>("SystemUtils", 1, 0, "SystemUtils", "");
+    SystemUtil systemUtil;
+    view->rootContext()->setContextProperty("sysUtil", &systemUtil);
 
     view->setSource(SailfishApp::pathTo("qml/hutspot.qml"));
     view->show();
