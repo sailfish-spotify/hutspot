@@ -21,10 +21,8 @@ CoverBackground {
             fillMode: Image.PreserveAspectCrop
             anchors.fill: parent
             source: "background.svg"
-            sourceSize: {
-                width: parent.width
-                height: parent.height
-            }
+            sourceSize.width: parent.width
+            sourceSize.height: parent.height
             smooth: true
         }
         OpacityRampEffect {
