@@ -1402,6 +1402,9 @@ ApplicationWindow {
 
     }
 
+    // 0: speaker, 1: headphone, 2: bluetooth
+    property int audioOutputRoute: 0
+
     DBusInterface {
         id: routeManager
         bus: DBus.SystemBus
@@ -1414,10 +1417,82 @@ ApplicationWindow {
         // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=bluetootha2dp, uint32=17
         // remove: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=speaker, uint32=5
 
+        // insert: [D] onAudioRouteChanged:1422 - DBus org.nemomobile.Route.Manager string=headset, uint32=10
+        // remove: [D] onAudioRouteChanged:1422 - DBus org.nemomobile.Route.Manager string=microphone, uint32=6
+
         signal audioRouteChanged(string s, int i)
         onAudioRouteChanged: {
             console.log("DBus org.nemomobile.Route.Manager string=" + s + ", uint32=" + i)
+            switch(i) {
+            case 5: // speaker
+                // if switched to speaker assume headset is disconnected and stop playing
+                if(audioOutputRoute !== 0)
+                    controller.pause()
+                audioOutputRoute = 0
+                break
+            case 9: // headphone
+                audioOutputRoute = 1
+                break
+            case 17: // bluetooth
+                audioOutputRoute = 2
+                break
+            }
         }
+
+        //
+        function updateInfo() {
+            var output_device = ""
+            var output_device_mask = 0
+            var input_device = ""
+            var input_device_mask = 0
+            var features = 0
+
+            /* can't get correct type for 'features'
+            typedCall("GetAll", [{"type":"s", "value": output_device},
+                                 {"type":"u", "value": output_device_mask},
+                                 {"type":"s", "value": input_device},
+                                 {"type":"u", "value": input_device_mask},
+                                 {"type":"a(suu)", "value": features}],
+                      function(output_device, output_device_mask, input_device, input_device_mask, features) {
+                          console.log("routeManager: GetAll() succeeded info = " + info)
+                          console.log("  output_device: " + output_device)
+                          console.log("  output_device_mask: " + output_device_mask)
+                          console.log("  input_device: " + input_device)
+                          console.log("  input_device_mask: " + input_device_mask)
+                          console.log("  features: " + features)
+                      },
+                      function() {
+                          console.log("routeManager: GetAll() failed")
+                      })*/
+
+            typedCall("ActiveRoutes", [{"type":"s", "value": output_device},
+                                       {"type":"u", "value": output_device_mask},
+                                       {"type":"s", "value": input_device},
+                                       {"type":"u", "value": input_device_mask}],
+                      function(output_device, output_device_mask, input_device, input_device_mask) {
+                          console.log("RouteManager.ActiveRoutes() results:")
+                          console.log("  output_device: " + output_device)
+                          console.log("  output_device_mask: " + output_device_mask)
+                          console.log("  input_device: " + input_device)
+                          console.log("  input_device_mask: " + input_device_mask)
+                          switch(output_device_mask) {
+                          case 5: // speaker
+                              audioOutputRoute = 0
+                              break
+                          case 9: // headphone
+                              audioOutputRoute = 1
+                              break
+                          case 17: // bluetooth
+                              audioOutputRoute = 2
+                              break
+                          }
+                      },
+                      function() {
+                          console.log("RouteManager.ActiveRoutes() failed")
+                      })
+        }
+
+        Component.onCompleted: updateInfo()
     }
 }
 
