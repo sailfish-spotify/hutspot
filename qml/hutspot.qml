@@ -10,6 +10,7 @@ import Sailfish.Silica 1.0
 
 import org.nemomobile.configuration 1.0
 import org.nemomobile.dbus 2.0
+import Sailfish.Media 1.0
 import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
@@ -1053,6 +1054,55 @@ ApplicationWindow {
         history_store.value = history
         historyModified(-1, -1)
     }
+
+    //
+    // MediaKeys
+    //
+
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaTogglePlayPause
+        onReleased: {
+            console.log("MediaKey: TogglePlayPause")
+            controller.playPause()
+        }
+    }
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaPlay
+        onReleased: {
+            console.log("MediaKey: MediaPlay")
+            controller.play()
+        }
+    }
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaPause
+        onReleased: {
+            console.log("MediaKey: MediaPause")
+            controller.pause()
+        }
+    }
+    MediaKey {
+        enabled: true
+        key: Qt.Key_ToggleCallHangup
+        onReleased: {
+            console.log("MediaKey: ToggleCallHangup")
+            controller.playPause()
+        }
+    }
+    MediaKey {
+        enabled: true
+        key: Qt.Key_MediaStop
+        onReleased: {
+            console.log("MediaKey: MediaStop")
+            controller.pause()
+        }
+    }
+
+    //
+    // Configuration
+    //
 
     ConfigurationValue {
             id: deviceId
