@@ -1221,7 +1221,7 @@ ApplicationWindow {
 
         property var callback: undefined
 
-        workingDirectory: "/home/nemo"
+        workingDirectory: StandardPaths.home
 
         onError: {
             if(callback !== undefined)
