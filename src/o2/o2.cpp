@@ -460,7 +460,10 @@ void O2::onRefreshError(QNetworkReply::NetworkError error) {
     qWarning() << "O2::onRefreshError: " << error;
     unlink();
     timedReplies_.remove(refreshReply);
-    Q_EMIT refreshFinished(error, refreshReply->errorString());
+    QString errorString = QString("errorCode: %1").arg(error);
+    if(error == QNetworkReply::AuthenticationRequiredError)
+        errorString = "Authentication Required Error";
+    Q_EMIT refreshFinished(error, errorString);
 }
 
 void O2::serverHasClosed(bool paramsfound)
