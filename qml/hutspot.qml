@@ -309,13 +309,13 @@ ApplicationWindow {
     }
 
     function setDevice(id, name, callback) {
-
-        deviceId.value = id
-        deviceName.value = name
-
+        var newId = id
+        var newName = name
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
                 controller.refreshPlaybackState()
+                deviceId.value = newId
+                deviceName.value = newName
                 callback(null, data)
             } else
                 showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
@@ -366,18 +366,6 @@ ApplicationWindow {
         if(enable_connect_discovery.value)
             spConnect.startMDNSService()
     }
-
-    // Librespot must be started after we are logged in (have a valid token)
-    // otherwise it is not shown in the devices list
-    /*Connections {
-        target: librespot
-        onServiceEnabledChanged: {
-            if(start_stop_librespot.value) {
-                if(librespot.serviceEnabled)
-                    librespot.start()
-            }
-        }
-    }*/
 
     onHasValidTokenChanged: {
         if(start_stop_librespot.value) {
@@ -514,33 +502,49 @@ ApplicationWindow {
 
     signal devicesChanged()
 
-    property bool _addUserBusy: false
-
-    Timer { // we don't want to call addUser too often
-        id: _addUserBusyTimer
-        repeat: false
-        interval: 2000
-    }
-
     onDevicesChanged: {        
+        // for logging Librespot discovery
         var ls = isLibrespotInDiscoveredList()
         if(ls !== null) {
             console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
                 console.log("Librespot is not in the devices list")
-                /*console.log("Librespot is not in the devices list so try to re-register it")
-                if(librespot.hasLibrespotCredentials()
-                   && !_addUserBusy && !_addUserBusyTimer.running) {
-                    _addUserBusy = true
-                    _addUserBusyTimer.running = true
-                    librespot.addUser(ls, function(error, data) {
-                        _addUserBusy = false
-                    })
-                }*/
-            } else
+                // maybe the list needs to be updated
+                spotifyController.checkForNewDevices()
+            } else {
                 console.log("Librespot is already in the devices list")
+            }
+        }
+        // check if our current device is in the list and if it is active
+        var i
+        for(i=0;i<spotifyController.devices.count;i++) {
+            var device = spotifyController.devices.get(i)
+            if(device.name === deviceName.value) {
+                console.log("onDevicesChanged found current: " + JSON.stringify(device))
+                // Now we want to make sure it is our 'current' Spotify device.
+                // How do we know what Spotify thinks our current device is?
+                // According to the documention it should be device.is_active
+                // but it does not work, after transfering to this device
+                // when not playing is_active remains false.
+                // For now we check if the device id of the playback state matches.
+                // If it does not it means we have to transfer.
+                //if(!device.is_active) {
+                if(device.id !== spotifyController.playbackState.device.id) {
+                    // device still needs to be selected
+                    setDevice(device.id, device.name, function(error, data){
+                        // no refresh since it might keep on recursing
+                        if(error)
+                            console.log("Failed to set device [" + deviceName.value + "] as current: " + error)
+                        else
+                            console.log("Set device [" + deviceName.value + "] as current")
+                    })
+                }
+
+                break
+            }
         }
     }
+
     property var foundDevices: []     // the device info queried by getInfo
     property var connectDevices: ({}) // the device info discovered by mdns
 

@@ -990,11 +990,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Failed tp transfer to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to Refresh Authorization Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1007,14 +1015,6 @@
     </message>
     <message>
         <source>View an Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to Refresh Authorization Token</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed tp transfer to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

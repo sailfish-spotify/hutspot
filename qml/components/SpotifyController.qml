@@ -216,7 +216,10 @@ Item {
                 if(_waitForPlaybackState)
                     _ignorePlaybackState = true
             }
-            if (callback) callback(error, data)
+            if (callback)
+                callback(error, data)
+            else if(error)
+                app.showErrorMessage(error, data)
         })
     }
 
@@ -227,7 +230,10 @@ Item {
                 if(_waitForPlaybackState)
                     _ignorePlaybackState = true
             }
-            if (callback) callback(error, data)
+            if (callback)
+                callback(error, data)
+            else if(error)
+                app.showErrorMessage(error, data)
         })
     }
 
@@ -315,7 +321,7 @@ Item {
                 playbackState.item = track
                 refreshPlaybackState();
             } else
-                showErrorMessage(error, qsTr("Play Failed"))
+                app.showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 
@@ -328,7 +334,7 @@ Item {
             if (!error) {
               refreshPlaybackState();
             } else
-                showErrorMessage(error, qsTr("Play Failed"))
+                app.showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 
