@@ -210,7 +210,7 @@ Item {
     }
 
     function play(callback) {
-        Spotify.play({}, function(error, data) {
+        Spotify.play({'device_id': getDeviceId()}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = true;
                 if(_waitForPlaybackState)
@@ -224,7 +224,7 @@ Item {
     }
 
     function pause(callback) {
-        Spotify.pause({}, function(error, data) {
+        Spotify.pause({'device_id': getDeviceId()}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = false;
                 if(_waitForPlaybackState)

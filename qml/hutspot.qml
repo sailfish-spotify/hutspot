@@ -523,13 +523,14 @@ ApplicationWindow {
                 console.log("onDevicesChanged found current: " + JSON.stringify(device))
                 // Now we want to make sure it is our 'current' Spotify device.
                 // How do we know what Spotify thinks our current device is?
-                // According to the documention it should be device.is_active
-                // but it does not work, after transfering to this device
-                // when not playing is_active remains false.
-                // For now we check if the device id of the playback state matches.
+                // According to the documentation it should be device.is_active
+                // For now we check if the device name of the playback state matches
+                // and if it is 'active'.
                 // If it does not it means we have to transfer.
-                //if(!device.is_active) {
-                if(device.id !== spotifyController.playbackState.device.id) {
+                // (first I used 'id' instead of 'name' but that can change due to Spotify)
+                if(device.name !== spotifyController.playbackState.device.name
+                   || !device.is_active) {
+                    console.log("Will try to set device to [" + device.name + "] is_active=" + device.is_active + ", pbs.device.name=" + spotifyController.playbackState.device.name)
                     // device still needs to be selected
                     setDevice(device.id, device.name, function(error, data){
                         // no refresh since it might keep on recursing
@@ -538,8 +539,10 @@ ApplicationWindow {
                         else
                             console.log("Set device [" + deviceName.value + "] as current")
                     })
+                } else {
+                    console.log("Device [" + deviceName.value + "] already in playbackState.")
+                    console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
                 }
-
                 break
             }
         }
