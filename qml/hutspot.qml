@@ -409,7 +409,9 @@ ApplicationWindow {
                             console.log("no credentials available so restart and hope for the best...")
                             librespot.start()
                         }
-                    }
+                    } else
+                        // it is in the devices list now check if it is the current one
+                        handleCurrentDevice()
                 }
             }
         }
@@ -515,6 +517,10 @@ ApplicationWindow {
                 console.log("Librespot is already in the devices list")
             }
         }
+        //handleCurrentDevice()
+    }
+
+    function handleCurrentDevice() {
         // check if our current device is in the list and if it is active
         var i
         for(i=0;i<spotifyController.devices.count;i++) {
