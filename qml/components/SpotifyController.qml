@@ -59,15 +59,6 @@ Item {
         }
     }
 
-    /*Connections {
-        target: app
-        onStateChanged: {
-            if (app.state === Qt.ApplicationActive) {
-                app.controller.reloadDevices();
-            }
-        }
-    }*/
-
     Connections {
         target: spotify
         onLinkingSucceeded: {
