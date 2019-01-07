@@ -92,7 +92,7 @@ ApplicationWindow {
     property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     property alias enable_connect_discovery: enable_connect_discovery
-
+    property alias show_devices_page_at_startup: show_devices_page_at_startup
     property alias deviceId: deviceId
     property alias deviceName: deviceName
 
@@ -205,9 +205,14 @@ ApplicationWindow {
             break;
         }
         if(pageUrl !== undefined ) {
+            // load first page
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
+            // attach playing page if needed
             if(playing_as_attached_page.value)
                 pageStack.pushAttached(playingPage)
+            // show the Devices page if needed
+            if(show_devices_page_at_startup.value)
+                doSelectedMenuItem(Util.HutspotMenuItem.ShowDevicesPage)
         }
     }
 
@@ -1223,6 +1228,11 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue {
+            id: show_devices_page_at_startup
+            key: "/hutspot/show_devices_page_at_startup"
+            defaultValue: true
+    }
 
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)

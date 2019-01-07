@@ -933,6 +933,14 @@
         <source>Register Librespot Credentials</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Devices page at startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>So you can watch the devices become known and ready</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>
