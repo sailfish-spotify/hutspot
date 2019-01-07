@@ -99,7 +99,7 @@ Item {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
                 try {
-                    var i, j, added, removed, found, device
+                    var i, j, added, removed, changed, found, device
 
                     // a new one has been added?
                     added = false
@@ -133,12 +133,26 @@ Item {
                             break
                         }
                     }
-                    if(added || removed) {
+                    // changed
+                    changed = false
+                    for(i=0; i < data.devices.length; i++) {
+                        for(j=0; i < devicesModel.count; j++) {
+                            device = devicesModel.get(j)
+                            if(data.devices[i].id === device.id) {
+                                if(!Util.isEqual(data.devices[i], device))
+                                    changed = true
+                                break
+                            }
+                        }
+                        if(changed)
+                            break
+                    }
+                    if(added || removed || changed) {
                         devicesModel.clear();
                         for(i=0; i < data.devices.length; i++) {
                             devicesModel.append(data.devices[i])
-                            if (data.devices[i].is_active)
-                                playbackState.device = data.devices[i]
+                            //if (data.devices[i].is_active)
+                            //    playbackState.device = data.devices[i]
                         }
                         console.log("checkForNewDevices(): reloaded")
                         devicesReloaded()
