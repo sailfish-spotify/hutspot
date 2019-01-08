@@ -1231,7 +1231,7 @@ ApplicationWindow {
     ConfigurationValue {
             id: show_devices_page_at_startup
             key: "/hutspot/show_devices_page_at_startup"
-            defaultValue: true
+            defaultValue: false
     }
 
     /*function updateConfigurationData() {
