@@ -32,7 +32,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-health"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('NewReleasePage')
                 }
             }
@@ -40,7 +40,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-person" // -events
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('MyStuffPage')
                 }
             }
@@ -48,7 +48,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-like"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('TopStuffPage')
                 }
             }
@@ -56,7 +56,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-search"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('SearchPage')
                 }
             }
@@ -64,7 +64,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-ambience"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('GenreMoodPage')
                 }
             }
@@ -91,7 +91,7 @@ Item {
                 icon.source: "image://theme/icon-m-music"
                 visible: !app.playing_as_attached_page.value
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('PlayingPage')
                 }
             }
@@ -99,7 +99,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-backup"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('HistoryPage')
                 }
             }
@@ -107,7 +107,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-acknowledge"
                 onClicked: {
-                    open = false
+                    //open = false
                     app.showPage('RecommendedPage')
                 }
             }
@@ -115,7 +115,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-accessory-speaker"
                 onClicked: {
-                    open = false
+                    //open = false
                     pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
                 }
             }
@@ -129,7 +129,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-developer-mode"
                 onClicked: {
-                    open = false
+                    //open = false
                     pageStack.push(Qt.resolvedUrl("../pages/Settings.qml"))
                 }
             }
@@ -138,7 +138,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-about"
                 onClicked: {
-                    open = false
+                    //open = false
                     pageStack.push(Qt.resolvedUrl("../pages/About.qml"))
                 }
             }

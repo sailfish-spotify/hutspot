@@ -938,7 +938,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>So you can watch the devices become known and ready</source>
+        <source>So you can watch the devices become available</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

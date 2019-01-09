@@ -1363,7 +1363,7 @@ ApplicationWindow {
 
                 source: {
                     switch(app.navigation_menu_type.value) {
-                    case 2: return "components/NavigationPanel {.qml"
+                    case 2: return "components/NavigationPanel.qml"
                     case 3: return "components/ControlPanel.qml"
                     default: return ""
                     }
