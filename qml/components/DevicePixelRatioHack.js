@@ -1,3 +1,5 @@
+// See https://github.com/llelectronics/webcat/blob/master/qml/pages/helper/
+
 if (!window.location.origin)
    window.location.origin = window.location.protocol+"//"+window.location.host;
 

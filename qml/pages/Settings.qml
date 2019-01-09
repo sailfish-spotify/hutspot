@@ -119,6 +119,18 @@ Page {
                 }
             }
 
+            TextSwitch {
+                id: show_devices_page_at_startup
+                text: qsTr("Show Devices page at startup")
+                description: qsTr("So you can watch the devices become available")
+                checked: app.show_devices_page_at_startup.value
+                onCheckedChanged: {
+                    app.show_devices_page_at_startup.value = checked
+                    app.show_devices_page_at_startup.sync()
+                }
+            }
+
+
             TextField {
                 id: hutspotQueueName
                 label: qsTr("Hutspot Queue Playlist name")

@@ -58,7 +58,6 @@ DISTFILES += \
     rpm/hutspot.yaml \
     rpm/hutspot.spec \
     rpm/hutspot.changes.in \
-    rpm/hutspot.changes.run.in \
     hutspot.desktop \
     qml/hutspot.qml \
     qml/components/ArtistPicker.qml \

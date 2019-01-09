@@ -92,7 +92,7 @@ ApplicationWindow {
     property alias query_for_market: query_for_market
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     property alias enable_connect_discovery: enable_connect_discovery
-
+    property alias show_devices_page_at_startup: show_devices_page_at_startup
     property alias deviceId: deviceId
     property alias deviceName: deviceName
 
@@ -205,9 +205,14 @@ ApplicationWindow {
             break;
         }
         if(pageUrl !== undefined ) {
+            // load first page
             pageStack.replace(Qt.resolvedUrl(pageUrl), {}, PageStackAction.Immediate)
+            // attach playing page if needed
             if(playing_as_attached_page.value)
                 pageStack.pushAttached(playingPage)
+            // show the Devices page if needed
+            if(show_devices_page_at_startup.value)
+                doSelectedMenuItem(Util.HutspotMenuItem.ShowDevicesPage)
         }
     }
 
@@ -309,13 +314,13 @@ ApplicationWindow {
     }
 
     function setDevice(id, name, callback) {
-
-        deviceId.value = id
-        deviceName.value = name
-
+        var newId = id
+        var newName = name
         Spotify.transferMyPlayback([id],{}, function(error, data) {
             if(!error) {
                 controller.refreshPlaybackState()
+                deviceId.value = newId
+                deviceName.value = newName
                 callback(null, data)
             } else
                 showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
@@ -367,18 +372,6 @@ ApplicationWindow {
             spConnect.startMDNSService()
     }
 
-    // Librespot must be started after we are logged in (have a valid token)
-    // otherwise it is not shown in the devices list
-    /*Connections {
-        target: librespot
-        onServiceEnabledChanged: {
-            if(start_stop_librespot.value) {
-                if(librespot.serviceEnabled)
-                    librespot.start()
-            }
-        }
-    }*/
-
     onHasValidTokenChanged: {
         if(start_stop_librespot.value) {
             if(librespot.serviceEnabled) {
@@ -421,7 +414,9 @@ ApplicationWindow {
                             console.log("no credentials available so restart and hope for the best...")
                             librespot.start()
                         }
-                    }
+                    } else
+                        // it is in the devices list now check if it is the current one
+                        handleCurrentDevice()
                 }
             }
         }
@@ -514,33 +509,56 @@ ApplicationWindow {
 
     signal devicesChanged()
 
-    property bool _addUserBusy: false
-
-    Timer { // we don't want to call addUser too often
-        id: _addUserBusyTimer
-        repeat: false
-        interval: 2000
-    }
-
     onDevicesChanged: {        
+        // for logging Librespot discovery
         var ls = isLibrespotInDiscoveredList()
         if(ls !== null) {
             console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
                 console.log("Librespot is not in the devices list")
-                /*console.log("Librespot is not in the devices list so try to re-register it")
-                if(librespot.hasLibrespotCredentials()
-                   && !_addUserBusy && !_addUserBusyTimer.running) {
-                    _addUserBusy = true
-                    _addUserBusyTimer.running = true
-                    librespot.addUser(ls, function(error, data) {
-                        _addUserBusy = false
-                    })
-                }*/
-            } else
+                // maybe the list needs to be updated
+                spotifyController.checkForNewDevices()
+            } else {
                 console.log("Librespot is already in the devices list")
+            }
+        }
+        //handleCurrentDevice()
+    }
+
+    function handleCurrentDevice() {
+        // check if our current device is in the list and if it is active
+        var i
+        for(i=0;i<spotifyController.devices.count;i++) {
+            var device = spotifyController.devices.get(i)
+            if(device.name === deviceName.value) {
+                console.log("onDevicesChanged found current: " + JSON.stringify(device))
+                // Now we want to make sure it is our 'current' Spotify device.
+                // How do we know what Spotify thinks our current device is?
+                // According to the documentation it should be device.is_active
+                // For now we check if the device name of the playback state matches
+                // and if it is 'active'.
+                // If it does not it means we have to transfer.
+                // (first I used 'id' instead of 'name' but that can change due to Spotify)
+                if(device.name !== spotifyController.playbackState.device.name
+                   || !device.is_active) {
+                    console.log("Will try to set device to [" + device.name + "] is_active=" + device.is_active + ", pbs.device.name=" + spotifyController.playbackState.device.name)
+                    // device still needs to be selected
+                    setDevice(device.id, device.name, function(error, data){
+                        // no refresh since it might keep on recursing
+                        if(error)
+                            console.log("Failed to set device [" + deviceName.value + "] as current: " + error)
+                        else
+                            console.log("Set device [" + deviceName.value + "] as current")
+                    })
+                } else {
+                    console.log("Device [" + deviceName.value + "] already in playbackState.")
+                    console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
+                }
+                break
+            }
         }
     }
+
     property var foundDevices: []     // the device info queried by getInfo
     property var connectDevices: ({}) // the device info discovered by mdns
 
@@ -1160,7 +1178,7 @@ ApplicationWindow {
 
     // 0 for NavigationMenuDialog
     // 1 for NavigationMenu as attached page
-    // 2 for NavigationPanel {
+    // 2 for NavigationPanel
     // 3 for panel with controls and hamburger button
     ConfigurationValue {
             id: navigation_menu_type
@@ -1210,6 +1228,11 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue {
+            id: show_devices_page_at_startup
+            key: "/hutspot/show_devices_page_at_startup"
+            defaultValue: false
+    }
 
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)
@@ -1340,13 +1363,16 @@ ApplicationWindow {
 
                 source: {
                     switch(app.navigation_menu_type.value) {
-                    case 2: return "components/NavigationPanel {.qml"
+                    case 1:
+                    case 2: return "components/NavigationPanel.qml"
                     case 3: return "components/ControlPanel.qml"
                     default: return ""
                     }
                 }
                 onLoaded: {
                     cp.itemHeight = item.implicitHeight
+                    if(app.navigation_menu_type.value === 1)
+                        dockedPanel.open = false
                 }
             }
         }
@@ -1356,12 +1382,20 @@ ApplicationWindow {
         property bool _fixAtEnd: false
         property bool _atEnd: false
 
+        function doAutoStuff() {
+            return app.navigation_menu_type.value >= 2
+        }
+
         function notifyIsAtYEndChanged() {
+            if(!doAutoStuff())
+                return
             dockedPanel._atEnd = listView.atYEnd
             console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
         }
 
         onMovingChanged: {
+            if(!doAutoStuff())
+                return
             console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
             if(!moving) {
                 if(_fixAtEnd && listView)
@@ -1372,6 +1406,8 @@ ApplicationWindow {
         // hide the panel when scrolling
         function notifyVScrolling() {
             // when nothing should be done
+            if(!doAutoStuff())
+                return
             if(_hidden)
                 return
             // do not hide when last element is just above panel
@@ -1402,6 +1438,9 @@ ApplicationWindow {
 
     }
 
+    // 0: speaker, 1: headphone, 2: bluetooth
+    property int audioOutputRoute: 0
+
     DBusInterface {
         id: routeManager
         bus: DBus.SystemBus
@@ -1414,10 +1453,82 @@ ApplicationWindow {
         // insert: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=bluetootha2dp, uint32=17
         // remove: [D] onAudioRouteChanged:1213 - DBus org.nemomobile.Route.Manager string=speaker, uint32=5
 
+        // insert: [D] onAudioRouteChanged:1422 - DBus org.nemomobile.Route.Manager string=headset, uint32=10
+        // remove: [D] onAudioRouteChanged:1422 - DBus org.nemomobile.Route.Manager string=microphone, uint32=6
+
         signal audioRouteChanged(string s, int i)
         onAudioRouteChanged: {
             console.log("DBus org.nemomobile.Route.Manager string=" + s + ", uint32=" + i)
+            switch(i) {
+            case 5: // speaker
+                // if switched to speaker assume headset is disconnected and stop playing
+                if(audioOutputRoute !== 0)
+                    controller.pause()
+                audioOutputRoute = 0
+                break
+            case 9: // headphone
+                audioOutputRoute = 1
+                break
+            case 17: // bluetooth
+                audioOutputRoute = 2
+                break
+            }
         }
+
+        //
+        function updateInfo() {
+            var output_device = ""
+            var output_device_mask = 0
+            var input_device = ""
+            var input_device_mask = 0
+            var features = 0
+
+            /* can't get correct type for 'features'
+            typedCall("GetAll", [{"type":"s", "value": output_device},
+                                 {"type":"u", "value": output_device_mask},
+                                 {"type":"s", "value": input_device},
+                                 {"type":"u", "value": input_device_mask},
+                                 {"type":"a(suu)", "value": features}],
+                      function(output_device, output_device_mask, input_device, input_device_mask, features) {
+                          console.log("routeManager: GetAll() succeeded info = " + info)
+                          console.log("  output_device: " + output_device)
+                          console.log("  output_device_mask: " + output_device_mask)
+                          console.log("  input_device: " + input_device)
+                          console.log("  input_device_mask: " + input_device_mask)
+                          console.log("  features: " + features)
+                      },
+                      function() {
+                          console.log("routeManager: GetAll() failed")
+                      })*/
+
+            typedCall("ActiveRoutes", [{"type":"s", "value": output_device},
+                                       {"type":"u", "value": output_device_mask},
+                                       {"type":"s", "value": input_device},
+                                       {"type":"u", "value": input_device_mask}],
+                      function(output_device, output_device_mask, input_device, input_device_mask) {
+                          console.log("RouteManager.ActiveRoutes() results:")
+                          console.log("  output_device: " + output_device)
+                          console.log("  output_device_mask: " + output_device_mask)
+                          console.log("  input_device: " + input_device)
+                          console.log("  input_device_mask: " + input_device_mask)
+                          switch(output_device_mask) {
+                          case 5: // speaker
+                              audioOutputRoute = 0
+                              break
+                          case 9: // headphone
+                              audioOutputRoute = 1
+                              break
+                          case 17: // bluetooth
+                              audioOutputRoute = 2
+                              break
+                          }
+                      },
+                      function() {
+                          console.log("RouteManager.ActiveRoutes() failed")
+                      })
+        }
+
+        Component.onCompleted: updateInfo()
     }
 }
 

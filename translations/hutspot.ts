@@ -933,6 +933,14 @@
         <source>Register Librespot Credentials</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Devices page at startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>So you can watch the devices become available</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>
@@ -990,11 +998,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Failed tp transfer to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to Refresh Authorization Token</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1007,14 +1023,6 @@
     </message>
     <message>
         <source>View an Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed to Refresh Authorization Token</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed tp transfer to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

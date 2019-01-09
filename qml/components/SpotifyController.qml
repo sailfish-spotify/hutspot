@@ -59,15 +59,6 @@ Item {
         }
     }
 
-    /*Connections {
-        target: app
-        onStateChanged: {
-            if (app.state === Qt.ApplicationActive) {
-                app.controller.reloadDevices();
-            }
-        }
-    }*/
-
     Connections {
         target: spotify
         onLinkingSucceeded: {
@@ -108,7 +99,7 @@ Item {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
                 try {
-                    var i, j, added, removed, found, device
+                    var i, j, added, removed, changed, found, device
 
                     // a new one has been added?
                     added = false
@@ -142,12 +133,26 @@ Item {
                             break
                         }
                     }
-                    if(added || removed) {
+                    // changed
+                    changed = false
+                    for(i=0; i < data.devices.length; i++) {
+                        for(j=0; i < devicesModel.count; j++) {
+                            device = devicesModel.get(j)
+                            if(data.devices[i].id === device.id) {
+                                if(!Util.isEqual(data.devices[i], device))
+                                    changed = true
+                                break
+                            }
+                        }
+                        if(changed)
+                            break
+                    }
+                    if(added || removed || changed) {
                         devicesModel.clear();
                         for(i=0; i < data.devices.length; i++) {
                             devicesModel.append(data.devices[i])
-                            if (data.devices[i].is_active)
-                                playbackState.device = data.devices[i]
+                            //if (data.devices[i].is_active)
+                            //    playbackState.device = data.devices[i]
                         }
                         console.log("checkForNewDevices(): reloaded")
                         devicesReloaded()
@@ -210,24 +215,30 @@ Item {
     }
 
     function play(callback) {
-        Spotify.play({}, function(error, data) {
+        Spotify.play({'device_id': getDeviceId()}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = true;
                 if(_waitForPlaybackState)
                     _ignorePlaybackState = true
             }
-            if (callback) callback(error, data)
+            if (callback)
+                callback(error, data)
+            else if(error)
+                app.showErrorMessage(error, data)
         })
     }
 
     function pause(callback) {
-        Spotify.pause({}, function(error, data) {
+        Spotify.pause({'device_id': getDeviceId()}, function(error, data) {
             if(!error) {
                 playbackState.is_playing = false;
                 if(_waitForPlaybackState)
                     _ignorePlaybackState = true
             }
-            if (callback) callback(error, data)
+            if (callback)
+                callback(error, data)
+            else if(error)
+                app.showErrorMessage(error, data)
         })
     }
 
@@ -315,7 +326,7 @@ Item {
                 playbackState.item = track
                 refreshPlaybackState();
             } else
-                showErrorMessage(error, qsTr("Play Failed"))
+                app.showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 
@@ -328,7 +339,7 @@ Item {
             if (!error) {
               refreshPlaybackState();
             } else
-                showErrorMessage(error, qsTr("Play Failed"))
+                app.showErrorMessage(error, qsTr("Play Failed"))
         })
     }
 

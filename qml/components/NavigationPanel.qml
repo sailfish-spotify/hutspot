@@ -16,6 +16,12 @@ Item {
     //open: false
     //modal: false
 
+    function whenIconClicked() {
+        if(app.navigation_menu_type.value === 1) {
+            app.dockedPanel.open = false
+        }
+    }
+
     Column {
         id: bar
         width: parent.width
@@ -32,7 +38,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-health"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('NewReleasePage')
                 }
             }
@@ -40,7 +46,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-person" // -events
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('MyStuffPage')
                 }
             }
@@ -48,7 +54,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-like"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('TopStuffPage')
                 }
             }
@@ -56,7 +62,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-search"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('SearchPage')
                 }
             }
@@ -64,7 +70,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-ambience"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('GenreMoodPage')
                 }
             }
@@ -91,7 +97,7 @@ Item {
                 icon.source: "image://theme/icon-m-music"
                 visible: !app.playing_as_attached_page.value
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('PlayingPage')
                 }
             }
@@ -99,7 +105,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-backup"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('HistoryPage')
                 }
             }
@@ -107,7 +113,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-acknowledge"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     app.showPage('RecommendedPage')
                 }
             }
@@ -115,7 +121,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-accessory-speaker"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
                 }
             }
@@ -129,7 +135,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-developer-mode"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     pageStack.push(Qt.resolvedUrl("../pages/Settings.qml"))
                 }
             }
@@ -138,7 +144,7 @@ Item {
                 width: bar.itemWidth
                 icon.source: "image://theme/icon-m-about"
                 onClicked: {
-                    open = false
+                    whenIconClicked()
                     pageStack.push(Qt.resolvedUrl("../pages/About.qml"))
                 }
             }
