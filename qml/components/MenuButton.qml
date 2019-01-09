@@ -13,8 +13,7 @@ IconButton {
                  : "image://hutspot-icons/icon-m-toolbar"
 
     // show button only when not having a panel or menu is not an attached page
-    enabled: !app.playing_as_attached_page.value
-             && app.navigation_menu_type.value <= 1
+    enabled: app.navigation_menu_type.value <= 1
 
     visible: enabled
 

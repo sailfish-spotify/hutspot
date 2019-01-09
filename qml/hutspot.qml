@@ -1178,7 +1178,7 @@ ApplicationWindow {
 
     // 0 for NavigationMenuDialog
     // 1 for NavigationMenu as attached page
-    // 2 for NavigationPanel {
+    // 2 for NavigationPanel
     // 3 for panel with controls and hamburger button
     ConfigurationValue {
             id: navigation_menu_type
