@@ -1363,6 +1363,7 @@ ApplicationWindow {
 
                 source: {
                     switch(app.navigation_menu_type.value) {
+                    case 1:
                     case 2: return "components/NavigationPanel.qml"
                     case 3: return "components/ControlPanel.qml"
                     default: return ""
@@ -1370,6 +1371,8 @@ ApplicationWindow {
                 }
                 onLoaded: {
                     cp.itemHeight = item.implicitHeight
+                    if(app.navigation_menu_type.value === 1)
+                        dockedPanel.open = false
                 }
             }
         }
@@ -1379,12 +1382,20 @@ ApplicationWindow {
         property bool _fixAtEnd: false
         property bool _atEnd: false
 
+        function doAutoStuff() {
+            return app.navigation_menu_type.value >= 2
+        }
+
         function notifyIsAtYEndChanged() {
+            if(!doAutoStuff())
+                return
             dockedPanel._atEnd = listView.atYEnd
             console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
         }
 
         onMovingChanged: {
+            if(!doAutoStuff())
+                return
             console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
             if(!moving) {
                 if(_fixAtEnd && listView)
@@ -1395,6 +1406,8 @@ ApplicationWindow {
         // hide the panel when scrolling
         function notifyVScrolling() {
             // when nothing should be done
+            if(!doAutoStuff())
+                return
             if(_hidden)
                 return
             // do not hide when last element is just above panel
