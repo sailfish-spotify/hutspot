@@ -1438,6 +1438,10 @@ ApplicationWindow {
 
     }
 
+    //
+    // Detect headphone connect/disconnect using DBus
+    //
+
     // 0: speaker, 1: headphone, 2: bluetooth
     property int audioOutputRoute: 0
 
@@ -1529,6 +1533,76 @@ ApplicationWindow {
         }
 
         Component.onCompleted: updateInfo()
+    }
+
+    //
+    // Detect network connect/disconnect using DBus
+    //
+    property int connmanConnected: Util.NetworkState.Unknown
+    onConnmanConnectedChanged: {
+        switch(connmanConnected) {
+        case Util.NetworkState.Unknown:
+            break
+        case Util.NetworkState.Connected:
+            // do we have to restart the whole login procedure?
+            // restart Librespot? reregister it as well?
+            break
+        case Util.NetworkState.Disconnected:
+            // stop controller from querying Spotify servers
+            // stop Librespot?
+            // or just quit?
+            break
+        }
+    }
+
+    DBusInterface {
+        id: connman
+
+        bus:DBus.SystemBus
+        service: 'net.connman'
+        iface: 'net.connman.Technology'
+        path: '/net/connman/technology/wifi'
+        signalsEnabled: true
+        function propertyChanged (name,value) {
+            console.log("WiFi changed name=%1, value=%2".arg(name).arg(value))
+            if(name === "Connected")
+                connmanConnected = value ? UPnP.NetworkState.Connected : UPnP.NetworkState.Disconnected
+        }
+        Component.onCompleted: {
+            // result. Connected|Name|Powered|Tethering|TetheringIdentifier|Type
+            //         true      "WiFi" true  false     "One"               "wifi"
+            connman.typedCall('GetProperties', [], function (result) {
+                console.log('Got properties: ' + JSON.stringify(result))
+                connmanConnected = result.Connected
+                        ? Util.NetworkState.Connected
+                        : Util.NetworkState.Disconnected
+            });
+        }
+    }
+
+    DBusInterface {
+        id: connmanCellular
+
+        bus:DBus.SystemBus
+        service: 'net.connman'
+        iface: 'net.connman.Technology'
+        path: '/net/connman/technology/cellular'
+        signalsEnabled: true
+        function propertyChanged (name,value) {
+            console.log("Cellular changed name=%1, value=%2".arg(name).arg(value))
+            if(name === "Connected")
+                connmanConnected = value
+                        ? Util.NetworkState.Connected
+                        : Util.NetworkState.Disconnected
+        }
+        Component.onCompleted: {
+            // result. Connected|Name|Powered|Tethering|TetheringIdentifier|Type
+            // ToDo. Someone with data should check this
+            connman.typedCall('GetProperties', [], function (result) {
+                console.log('Got properties: ' + JSON.stringify(result))
+                connmanConnected = result.Connected ? UPnP.NetworkState.Connected : UPnP.NetworkState.Disconnected
+            });
+        }
     }
 }
 
