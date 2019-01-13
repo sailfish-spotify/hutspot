@@ -234,6 +234,14 @@
         <source>Connect using Blob</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please accept</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -998,10 +1006,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Failed tp transfer to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1023,6 +1027,14 @@
     </message>
     <message>
         <source>View an Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lost Network Connection. Quit?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to transfer to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

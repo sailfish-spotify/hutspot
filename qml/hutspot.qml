@@ -323,7 +323,7 @@ ApplicationWindow {
                 deviceName.value = newName
                 callback(null, data)
             } else
-                showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
+                showErrorMessage(error, qsTr("Failed to transfer to") + " " + deviceName.value)
         })
     }
 
@@ -335,7 +335,7 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: {
+    function startSpotify() {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
@@ -1027,15 +1027,15 @@ ApplicationWindow {
     }
 
     /**
-     * can have a 4th param: rejectCallback
+     * can have a 3rd param: rejectCallback
      */
     function showConfirmDialog(text, acceptCallback) {
-        var dialog = pageStack.push (Qt.resolvedUrl("components/ConfirmDialog.qml"),
+        var dialog = pageStack.push(Qt.resolvedUrl("components/ConfirmDialog.qml"),
                                                    {confirmMessageText: text})
         if(acceptCallback !== null)
             dialog.accepted.connect(acceptCallback)
-        if(arguments.length >= 4 && arguments[3] !== null)
-            dialog.rejected.connect(arguments[3])
+        if(arguments.length >= 3 && arguments[2] !== null)
+            dialog.rejected.connect(arguments[2])
     }
 
     /**
@@ -1538,55 +1538,85 @@ ApplicationWindow {
     //
     // Detect network connect/disconnect using DBus
     //
+    property bool initialNetworkStateKnown: false
     property int connmanConnected: Util.NetworkState.Unknown
     onConnmanConnectedChanged: {
+        console.log("onConnmanConnectedChanged: " + connmanConnected +" - " + initialNetworkStateKnown)
         switch(connmanConnected) {
         case Util.NetworkState.Unknown:
             break
         case Util.NetworkState.Connected:
             // do we have to restart the whole login procedure?
             // restart Librespot? reregister it as well?
+            /*if(initialNetworkStateKnown) {
+                if(start_stop_librespot.value)
+                    librespot.stop()
+            }*/
+            initialNetworkStateKnown = true
+            startSpotify()
             break
         case Util.NetworkState.Disconnected:
             // stop controller from querying Spotify servers
             // stop Librespot?
             // or just quit?
+            if(initialNetworkStateKnown) {
+                showConfirmDialog(qsTr("Lost Network Connection. Quit?"),
+                                  function() { Qt.quit() })
+                if(start_stop_librespot.value)
+                    librespot.stop()
+            }
             break
         }
     }
 
+    //
+    // ToDo Don't know where to call this so it shows up at startup.
+    //if(connmanConnected !== Util.NetworkState.Connected)
+    //    showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
+    //                      function() { Qt.quit() })
+
     DBusInterface {
-        id: connman
+        id: connmanWifi
 
         bus:DBus.SystemBus
         service: 'net.connman'
         iface: 'net.connman.Technology'
         path: '/net/connman/technology/wifi'
         signalsEnabled: true
-        function propertyChanged (name,value) {
+        function propertyChanged (name, value) {
             console.log("WiFi changed name=%1, value=%2".arg(name).arg(value))
             if(name === "Connected")
-                connmanConnected = value ? UPnP.NetworkState.Connected : UPnP.NetworkState.Disconnected
+                connmanConnected = value
+                        ? Util.NetworkState.Connected
+                        : Util.NetworkState.Disconnected
         }
+        onPropertiesChanged: console.log('/net/connman/technology/wifi onPropertiesChanged')
         Component.onCompleted: {
             // result. Connected|Name|Powered|Tethering|TetheringIdentifier|Type
             //         true      "WiFi" true  false     "One"               "wifi"
-            connman.typedCall('GetProperties', [], function (result) {
-                console.log('Got properties: ' + JSON.stringify(result))
-                connmanConnected = result.Connected
-                        ? Util.NetworkState.Connected
-                        : Util.NetworkState.Disconnected
-            });
+            connmanWifi.typedCall('GetProperties', [],
+                function (result) {
+                    console.log('Getproperties: ' + JSON.stringify(result))
+                    connmanConnected = result.Connected
+                            ? Util.NetworkState.Connected
+                            : Util.NetworkState.Disconnected
+                },
+                function () {
+                    console.log('GetProperties: ERROR')
+                });
         }
     }
 
-    DBusInterface {
+    // ToDo weird but we have to create a whole DBusInterface for the path
+    // /net/connman/technology/cellular but it gets the same properties.
+    // so maybe the wifi one above is enough. Someone with data will ned to verify.
+    /*DBusInterface {
         id: connmanCellular
 
         bus:DBus.SystemBus
         service: 'net.connman'
         iface: 'net.connman.Technology'
-        path: '/net/connman/technology/cellular'
+        path: '/net/connman/technology/'
         signalsEnabled: true
         function propertyChanged (name,value) {
             console.log("Cellular changed name=%1, value=%2".arg(name).arg(value))
@@ -1598,11 +1628,16 @@ ApplicationWindow {
         Component.onCompleted: {
             // result. Connected|Name|Powered|Tethering|TetheringIdentifier|Type
             // ToDo. Someone with data should check this
-            connman.typedCall('GetProperties', [], function (result) {
-                console.log('Got properties: ' + JSON.stringify(result))
-                connmanConnected = result.Connected ? UPnP.NetworkState.Connected : UPnP.NetworkState.Disconnected
-            });
+            connmanCellular.typedCall('GetProperties', [],
+                function (result) {
+                    console.log('GetProperties: ' + JSON.stringify(result))
+                    connmanConnected = result.Connected ? UPnP.NetworkState.Connected : UPnP.NetworkState.Disconnected
+                },
+                function () {
+                    console.log('GetProperties: ERROR')
+                }
+            )
         }
-    }
+    }*/
 }
 
