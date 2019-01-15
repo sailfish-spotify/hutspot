@@ -17,14 +17,14 @@ Page {
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
-    PullDownMenu {
+    /*PullDownMenu {
         MenuItem {
             text: qsTr("Close")
             // sometimes onCloseBrowser is not fired so we need another
             // way to continue
             onClicked: app.loadFirstPage()
         }
-    }
+    }*/
 
     SilicaWebView {
         id: webView

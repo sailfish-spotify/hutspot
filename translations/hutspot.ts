@@ -994,10 +994,6 @@
         <source>Authorization</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>hutspot</name>
@@ -1035,6 +1031,10 @@
     </message>
     <message>
         <source>Failed to transfer to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There seems to be no network connection. Quit?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
