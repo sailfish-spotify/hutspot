@@ -1535,13 +1535,25 @@ ApplicationWindow {
 
     Component.onCompleted: loadFirstPage()
 
-    // ToDo where to put this?
-    // in loadFirstPage() the connection state is not yet known
+    // In loadFirstPage() the connection state is not yet known
     // and when started from onNetworkConnectedChanged you get
     //   doPush:137 - Warning: cannot push while transition is in progress
-    // if(networkConnection.networkConnected !== Util.NetworkState.Connected)
-    //     showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
-    //                       function() { Qt.quit() })
+    // so put it in a timer. If you know of a better way please tell us.
+    Timer {
+        id: scheduleConfirmDialog
+        repeat: true
+        running: false
+        interval: 500
+        onTriggered: {
+            try {
+                showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
+                                  function() { Qt.quit() })
+                running = false
+            } catch(err) {
+              console.log("scheduleMessageBox: " + err)
+            }
+        }
+    }
 
     NetworkConnection {
         id: networkConnection
@@ -1570,7 +1582,8 @@ ApplicationWindow {
                                       function() { Qt.quit() })
                     if(start_stop_librespot.value)
                         librespot.stop()
-                }
+                } else
+                    scheduleConfirmDialog.running = true
                 break
             }
         }

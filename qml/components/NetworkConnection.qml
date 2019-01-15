@@ -9,21 +9,23 @@ Item {
     // Detect network connect/disconnect using DBus
     //
     property int networkConnected: Util.NetworkState.Unknown
-    property var connmanConnections: []
+    property var connmanConnections: {"wifi": Util.NetworkState.Unknown, "cellular": Util.NetworkState.Unknown}
 
     function updateConnection(technology, connected) {
         console.log("updateConnection " + technology + " = " + connected)
-        connmanConnections[technology] = connected
-        var isConnected = false
+        connmanConnections[technology] = connected ? Util.NetworkState.Connected : Util.NetworkState.Disconnected
+        var hasConnection = false
+        var hasUnknown = false
         for(var tech in connmanConnections) {
-            if(connmanConnections[tech]) {
-                isConnected = true
-                break
-            }
+            if(connmanConnections[tech] === Util.NetworkState.Connected)
+                hasConnection = true
+            if(connmanConnections[tech] === Util.NetworkState.Unknown)
+                hasUnknown = true
         }
-        networkConnected = isConnected
-                ? Util.NetworkState.Connected
-                : Util.NetworkState.Disconnected
+        if(hasConnection)
+            networkConnected = Util.NetworkState.Connected
+        else if(!hasUnknown)
+            networkConnected = Util.NetworkState.Disconnected
     }
 
     DBusInterface {
