@@ -93,6 +93,8 @@ ApplicationWindow {
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     property alias enable_connect_discovery: enable_connect_discovery
     property alias show_devices_page_at_startup: show_devices_page_at_startup
+    property alias handle_network_connection: handle_network_connection
+
     property alias deviceId: deviceId
     property alias deviceName: deviceName
 
@@ -323,7 +325,7 @@ ApplicationWindow {
                 deviceName.value = newName
                 callback(null, data)
             } else
-                showErrorMessage(error, qsTr("Failed tp transfer to") + " " + deviceName.value)
+                showErrorMessage(error, qsTr("Failed to transfer to") + " " + deviceName.value)
         })
     }
 
@@ -335,7 +337,7 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: {
+    function startSpotify() {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
@@ -361,8 +363,6 @@ ApplicationWindow {
             // with Spotify's stupid short living tokens, we can totally assume
             // it's already expired
             spotify.refreshToken();
-
-            loadFirstPage()
         }
 
         history = history_store.value
@@ -503,7 +503,7 @@ ApplicationWindow {
         }
 
         onCloseBrowser: {
-            loadFirstPage()
+            //loadFirstPage()
         }
     }
 
@@ -1027,15 +1027,15 @@ ApplicationWindow {
     }
 
     /**
-     * can have a 4th param: rejectCallback
+     * can have a 3rd param: rejectCallback
      */
     function showConfirmDialog(text, acceptCallback) {
-        var dialog = pageStack.push (Qt.resolvedUrl("components/ConfirmDialog.qml"),
+        var dialog = pageStack.push(Qt.resolvedUrl("components/ConfirmDialog.qml"),
                                                    {confirmMessageText: text})
         if(acceptCallback !== null)
             dialog.accepted.connect(acceptCallback)
-        if(arguments.length >= 4 && arguments[3] !== null)
-            dialog.rejected.connect(arguments[3])
+        if(arguments.length >= 3 && arguments[2] !== null)
+            dialog.rejected.connect(arguments[2])
     }
 
     /**
@@ -1232,6 +1232,12 @@ ApplicationWindow {
             id: show_devices_page_at_startup
             key: "/hutspot/show_devices_page_at_startup"
             defaultValue: false
+    }
+
+    ConfigurationValue {
+            id: handle_network_connection
+            key: "/hutspot/handle_network_connection"
+            defaultValue: true
     }
 
     /*function updateConfigurationData() {
@@ -1438,6 +1444,10 @@ ApplicationWindow {
 
     }
 
+    //
+    // Detect headphone connect/disconnect using DBus
+    //
+
     // 0: speaker, 1: headphone, 2: bluetooth
     property int audioOutputRoute: 0
 
@@ -1530,5 +1540,65 @@ ApplicationWindow {
 
         Component.onCompleted: updateInfo()
     }
+
+    Component.onCompleted: loadFirstPage()
+
+    // In loadFirstPage() the connection state is not yet known
+    // and when started from onNetworkConnectedChanged you get
+    //   doPush:137 - Warning: cannot push while transition is in progress
+    // so put it in a timer. If you know of a better way please tell us.
+    Timer {
+        id: scheduleConfirmDialog
+        repeat: true
+        running: false
+        interval: 500
+        onTriggered: {
+            try {
+                // check pageStack.busy?
+                showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
+                                  function() { Qt.quit() })
+                running = false
+            } catch(err) {
+              console.log("scheduleMessageBox: " + err)
+            }
+        }
+    }
+
+    NetworkConnection {
+        id: networkConnection
+        property bool initialNetworkStateKnown: false
+        onNetworkConnectedChanged: {
+            console.log("onConnmanConnectedChanged: " + networkConnected +" - " + initialNetworkStateKnown)
+            if(!handle_network_connection.value)
+                return
+            switch(networkConnected) {
+            case Util.NetworkState.Unknown:
+                break
+            case Util.NetworkState.Connected:
+                // do we have to restart the whole login procedure?
+                // restart Librespot? reregister it as well?
+                /*if(initialNetworkStateKnown) {
+                    if(start_stop_librespot.value)
+                        librespot.stop()
+                }*/
+                initialNetworkStateKnown = true
+                startSpotify()
+                break
+            case Util.NetworkState.Disconnected:
+                // stop controller from querying Spotify servers
+                // stop Librespot? does systemd take care of that?
+                // or just quit?
+                if(initialNetworkStateKnown) {
+                    showConfirmDialog(qsTr("Lost Network Connection. Quit?"),
+                                      function() { Qt.quit() })
+                    if(start_stop_librespot.value)
+                        librespot.stop()
+                } else
+                    scheduleConfirmDialog.running = true
+                break
+            }
+        }
+    }
+
 }
 

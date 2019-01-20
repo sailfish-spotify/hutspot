@@ -941,6 +941,14 @@
         <source>So you can watch the devices become available</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Handle Network Connection State</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detect network connect/disconnect and act on it.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>
@@ -986,19 +994,11 @@
         <source>Authorization</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>hutspot</name>
     <message>
         <source>connecting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Failed tp transfer to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1023,6 +1023,18 @@
     </message>
     <message>
         <source>View an Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lost Network Connection. Quit?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to transfer to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There seems to be no network connection. Quit?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

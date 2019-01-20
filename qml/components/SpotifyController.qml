@@ -139,7 +139,7 @@ Item {
                         for(j=0; i < devicesModel.count; j++) {
                             device = devicesModel.get(j)
                             if(data.devices[i].id === device.id) {
-                                if(!Util.isEqual(data.devices[i], device))
+                                if(Util.hasDeviceChanged(data.devices[i], device))
                                     changed = true
                                 break
                             }
@@ -154,11 +154,11 @@ Item {
                             //if (data.devices[i].is_active)
                             //    playbackState.device = data.devices[i]
                         }
-                        console.log("checkForNewDevices(): reloaded")
+                        console.log("controller.checkForNewDevices: list differs")
                         devicesReloaded()
                     }
                 } catch (err) {
-                    console.log("checkForNewDevices() error: " + err)
+                    console.log("controller.checkForNewDevices: error: " + err)
                 }
             }
         })
@@ -170,7 +170,7 @@ Item {
         Spotify.getMyDevices(function(error, data) {
             if (data) {
                 try {
-                    console.log("reloadDevices() #devices: " + data.devices.length)
+                    console.log("controller.reloadDevices: #devices: " + data.devices.length)
                     devicesModel.clear();
                     for (var i=0; i < data.devices.length; i++) {
                         devicesModel.append(data.devices[i]);
@@ -179,10 +179,10 @@ Item {
                     }
                     devicesReloaded()
                 } catch (err) {
-                    console.log("reloadDevices() error: " + err)
+                    console.log("controller.reloadDevices: error: " + err)
                 }
             } else {
-                console.log("No Data for getMyDevices")
+                console.log("controller.reloadDevices: No Data for getMyDevices")
             }
         })
     }
