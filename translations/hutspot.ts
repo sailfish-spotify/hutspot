@@ -705,14 +705,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search For</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -942,11 +934,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Handle Network Connection State</source>
+        <source>Detect network connect/disconnect and act on it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detect network connect/disconnect and act on it.</source>
+        <source>Handle Network Connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
