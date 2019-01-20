@@ -234,14 +234,6 @@
         <source>Connect using Blob</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please accept</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -947,6 +939,14 @@
     </message>
     <message>
         <source>So you can watch the devices become available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Handle Network Connection State</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detect network connect/disconnect and act on it.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

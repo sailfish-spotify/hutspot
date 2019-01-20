@@ -93,6 +93,8 @@ ApplicationWindow {
     property alias hutspot_queue_playlist_name: hutspot_queue_playlist_name
     property alias enable_connect_discovery: enable_connect_discovery
     property alias show_devices_page_at_startup: show_devices_page_at_startup
+    property alias handle_network_connection: handle_network_connection
+
     property alias deviceId: deviceId
     property alias deviceName: deviceName
 
@@ -1232,6 +1234,12 @@ ApplicationWindow {
             defaultValue: false
     }
 
+    ConfigurationValue {
+            id: handle_network_connection
+            key: "/hutspot/handle_network_connection"
+            defaultValue: true
+    }
+
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)
             return
@@ -1546,6 +1554,7 @@ ApplicationWindow {
         interval: 500
         onTriggered: {
             try {
+                // check pageStack.busy?
                 showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
                                   function() { Qt.quit() })
                 running = false
@@ -1560,6 +1569,8 @@ ApplicationWindow {
         property bool initialNetworkStateKnown: false
         onNetworkConnectedChanged: {
             console.log("onConnmanConnectedChanged: " + networkConnected +" - " + initialNetworkStateKnown)
+            if(!handle_network_connection.value)
+                return
             switch(networkConnected) {
             case Util.NetworkState.Unknown:
                 break

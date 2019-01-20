@@ -192,6 +192,17 @@ Page {
             }
 
             TextSwitch {
+                id: handle_network_connection
+                text: qsTr("Handle Network Connection")
+                description: qsTr("Detect network connect/disconnect and act on it.")
+                checked: app.handle_network_connection.value
+                onCheckedChanged: {
+                    app.handle_network_connection.value = checked
+                    app.handle_network_connection.sync()
+                }
+            }
+
+            TextSwitch {
                 id: auth_using_browser
                 text: qsTr("Authorize using Browser")
                 description: qsTr("Use external Browser to login at Spotify")
