@@ -98,23 +98,21 @@ Page {
 
                 menu: ContextMenu {
                     onActiveChanged: {
-                        if(!active) {
-                            // somehow the menu is opened by scrolling up. very annoying.
-                            // and also causing the button to become too close to the 'next page' bulb
-                            // so if the menu closes scroll back to the top
-                            listView.positionViewAtBeginning()
-                        }
+                        // somehow the menu is opened by scrolling up. very annoying.
+                        // and also causing the button to become too close to the 'next page' bulb
+                        // so if the menu opens or closes scroll back to the top
+                        listView.positionViewAtBeginning()
                     }
 
                     MenuItem {
-                        text: qsTr("Clear")
+                        text: qsTr("Clear Current Text")
                         onClicked: {
                             searchField.text = ""
                             searchField.forceActiveFocus()
                         }
                     }
                     MenuItem {
-                        text: qsTr("Select Recently used")
+                        text: qsTr("Select Recently Used Item")
                         onClicked: {
                             searchHistoryModel.clear()
                             var sh = app.search_history.value
@@ -135,7 +133,7 @@ Page {
                         }
                     }
                     MenuItem {
-                        text: qsTr("Clear Recently used")
+                        text: qsTr("Clear Recently Used Items")
                         onClicked: {
                             app.showConfirmDialog(qsTr("Please confirm Clearing the Search History"), function() {
                                 app.search_history.value = []
