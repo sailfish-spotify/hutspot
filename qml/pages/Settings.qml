@@ -130,7 +130,6 @@ Page {
                 }
             }
 
-
             TextField {
                 id: hutspotQueueName
                 label: qsTr("Hutspot Queue Playlist name")
@@ -150,6 +149,16 @@ Page {
                     app.query_for_market.value = checked
                     app.query_for_market.sync()
                 }
+            }
+
+            Slider {
+                id: delayPanelSlider
+                width: parent.width
+                minimumValue: 0
+                maximumValue: 2000
+                label: qsTr("ControlPanel Show Delay")
+                valueText: parseFloat(value/1000).toFixed(1) + "s"
+                onReleased: app.controlpanel_show_delay.value = value
             }
 
             TextSwitch {
@@ -236,6 +245,7 @@ Page {
             searchHistoryLimit.text = app.search_history_max_size.value
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
             hutspotQueueName.text = app.hutspot_queue_playlist_name.value
+            delayPanelSlider.value = app.controlpanel_show_delay.value
         }
     }
 }

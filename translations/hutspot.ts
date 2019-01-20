@@ -941,6 +941,10 @@
         <source>Handle Network Connection</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>ControlPanel Show Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>

@@ -94,6 +94,7 @@ ApplicationWindow {
     property alias enable_connect_discovery: enable_connect_discovery
     property alias show_devices_page_at_startup: show_devices_page_at_startup
     property alias handle_network_connection: handle_network_connection
+    property alias controlpanel_show_delay: controlpanel_show_delay
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -1242,6 +1243,12 @@ ApplicationWindow {
             defaultValue: true
     }
 
+    ConfigurationValue { // in ms
+        id: controlpanel_show_delay
+        key: "/hutspot/controlpanel_show_delay"
+        defaultValue: 700
+    }
+
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)
             return
@@ -1433,7 +1440,7 @@ ApplicationWindow {
 
         Timer {
             id: noScrollDetect
-            interval: 300
+            interval: controlpanel_show_delay.value
             repeat: false
             onTriggered: {
                 // when nothing should be done
