@@ -494,12 +494,14 @@ ApplicationWindow {
             }
         }
 
-        onOpenBrowser: {
+        onOpenBrowser: {            
             if(auth_using_browser.value)
                 Qt.openUrlExternally(url)
             else
-                pageStack.push(Qt.resolvedUrl("components/WebAuth.qml"),
-                               {url: url, scale: Screen.widthRatio})
+                scheduleDelayedAction(function() {
+                    pageStack.push(Qt.resolvedUrl("components/WebAuth.qml"),
+                                   {url: url, scale: Screen.widthRatio})
+                })
         }
 
         onCloseBrowser: {
@@ -1396,7 +1398,7 @@ ApplicationWindow {
             if(!doAutoStuff())
                 return
             dockedPanel._atEnd = listView.atYEnd
-            console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
+            //console.log("notifyIsAtYEndChanged: " + dockedPanel._atEnd)
         }
 
         onMovingChanged: {
@@ -1543,23 +1545,33 @@ ApplicationWindow {
 
     Component.onCompleted: loadFirstPage()
 
-    // In loadFirstPage() the connection state is not yet known
-    // and when started from onNetworkConnectedChanged you get
+    property var scheduledActions: []
+    function scheduleDelayedAction(action) {
+        scheduledActions.push(action)
+        scheduleTimer.running = true
+    }
+
+    // When trying to show a page or dialog, especially at startup
+    // we have problems due to those horrible animating stuff. For example
     //   doPush:137 - Warning: cannot push while transition is in progress
-    // so put it in a timer. If you know of a better way please tell us.
+    // so we put it in a timer. If you know of a better way please tell us.
     Timer {
-        id: scheduleConfirmDialog
+        id: scheduleTimer
         repeat: true
         running: false
         interval: 500
         onTriggered: {
+            if(scheduledActions.length == 0)
+                return
+            if(pageStack.busy)
+                return
             try {
-                // check pageStack.busy?
-                showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
-                                  function() { Qt.quit() })
-                running = false
+                var action = scheduledActions.shift()
+                action()
             } catch(err) {
-              console.log("scheduleMessageBox: " + err)
+                console.log("scheduleTimer: " + err)
+            } finally {
+                running = scheduledActions.length > 0
             }
         }
     }
@@ -1593,8 +1605,12 @@ ApplicationWindow {
                                       function() { Qt.quit() })
                     if(start_stop_librespot.value)
                         librespot.stop()
-                } else
-                    scheduleConfirmDialog.running = true
+                } else {
+                    scheduleDelayedAction(function() {
+                        showConfirmDialog(qsTr("There seems to be no network connection. Quit?"),
+                                      function() { Qt.quit() })
+                    })
+                }
                 break
             }
         }
