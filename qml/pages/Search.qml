@@ -23,7 +23,6 @@ Page {
     property int currentIndex: -1
 
     property var searchTargets: [qsTr("Albums"), qsTr("Artists"), qsTr("Playlists"), qsTr("Tracks")]
-    property int selectedSearchTargetsMask: app.selected_search_targets.value
     property var scMap: []
 
     allowedOrientations: Orientation.All
@@ -78,63 +77,6 @@ Page {
             LoadPullMenus {}
             LoadPushMenus {}
 
-            /* What to search for */
-            ValueButton {
-                id: searchTypes
-                property var indexes: []
-                width: parent.width
-
-                label: qsTr("Search For")
-
-                ListModel {
-                    id: items
-                }
-
-                Component.onCompleted: {
-                    var c = 0;
-                    value = qsTr("None")
-                    indexes = []
-
-                    // load possible choices
-                    for(var u=0;u<searchTargets.length;u++) {
-                        items.append( {id: c, name: searchTargets[u]});
-                        scMap[c] = u;
-                        c++;
-                    }
-
-                    // read the selected
-                    value = "";
-                    for(var i=0;i<scMap.length;i++) {
-                        if(selectedSearchTargetsMask & (0x01 << scMap[i])) {
-                            var first = value.length == 0;
-                            value = value + (first ? "" : ", ") + items.get(i).name;
-                            indexes.push(i);
-                        }
-                    }
-                }
-
-                onClicked: {
-                    var ms = pageStack.push(Qt.resolvedUrl("../components/MultiItemPicker.qml"),
-                                            { items: items, label: label, indexes: indexes } );
-                    ms.accepted.connect(function() {
-                        indexes = ms.indexes.sort(function (a, b) { return a - b });
-                        selectedSearchTargetsMask = 0;
-                        if (indexes.length == 0) {
-                            value = qsTr("None");
-                        } else {
-                            value = "";
-                            for(var i=0;i<indexes.length;i++) {
-                                value += ((i>0) ? ", " : "") + items.get(indexes[i]).name;
-                                selectedSearchTargetsMask |= (0x01 << scMap[indexes[i]]);
-                            }
-                        }
-                        app.selected_search_targets.value = selectedSearchTargetsMask;
-                        app.selected_search_targets.sync();
-                    })
-                }
-
-            }
-
             SearchFieldWithMenu {
                 id: searchField
                 width: parent.width
@@ -156,23 +98,21 @@ Page {
 
                 menu: ContextMenu {
                     onActiveChanged: {
-                        if(!active) {
-                            // somehow the menu is opened by scrolling up. very annoying.
-                            // and also causing the button to become too close to the 'next page' bulb
-                            // so if the menu closes scroll back to the top
-                            listView.positionViewAtBeginning()
-                        }
+                        // somehow the menu is opened by scrolling up. very annoying.
+                        // and also causing the button to become too close to the 'next page' bulb
+                        // so if the menu opens or closes scroll back to the top
+                        listView.positionViewAtBeginning()
                     }
 
                     MenuItem {
-                        text: qsTr("Clear")
+                        text: qsTr("Clear Current Text")
                         onClicked: {
                             searchField.text = ""
                             searchField.forceActiveFocus()
                         }
                     }
                     MenuItem {
-                        text: qsTr("Select Recently used")
+                        text: qsTr("Select Recently Used Item")
                         onClicked: {
                             searchHistoryModel.clear()
                             var sh = app.search_history.value
@@ -193,7 +133,7 @@ Page {
                         }
                     }
                     MenuItem {
-                        text: qsTr("Clear Recently used")
+                        text: qsTr("Clear Recently Used Items")
                         onClicked: {
                             app.showConfirmDialog(qsTr("Please confirm Clearing the Search History"), function() {
                                 app.search_history.value = []
@@ -261,27 +201,20 @@ Page {
         onLoadPrevious: refresh()
     }
 
-    property int _itemClass: -1
+    // 0: Albums, 1: Artists, 2: Playlists, 3: Tracks
+    property int _itemClass: 0
 
     function nextItemClass() {
-        if(selectedSearchTargetsMask === 0) {
-            _itemClass = -1
-            return
-        }
-        var i = _itemClass // use i to not trigger stuff while iterating
-        do {
-            i++
-            if(i > 3)
-                i = 0
-        } while((selectedSearchTargetsMask & (0x01 << i)) === 0)
+        var i = _itemClass
+        i++
+        if(i > 3)
+            i = 0
         _itemClass = i
     }
 
     function refresh() {
         var i;
         if(searchString === "")
-            return
-        if(selectedSearchTargetsMask === 0)
             return
         if(_itemClass === -1)
             nextItemClass()

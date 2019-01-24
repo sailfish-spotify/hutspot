@@ -705,14 +705,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Search For</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -725,19 +717,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Select Recently used</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Search History</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear Recently used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -750,6 +730,18 @@
     </message>
     <message>
         <source>Search </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Current Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Recently Used Item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Recently Used Items</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -942,11 +934,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Handle Network Connection State</source>
+        <source>Detect network connect/disconnect and act on it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detect network connect/disconnect and act on it.</source>
+        <source>Handle Network Connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ControlPanel Show Delay</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
