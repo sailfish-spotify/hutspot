@@ -1170,7 +1170,7 @@ ApplicationWindow {
     ConfigurationValue {
             id: enable_connect_discovery
             key: "/hutspot/enable_connect_discovery"
-            defaultValue: false
+            defaultValue: true
     }
 
     ConfigurationValue {
