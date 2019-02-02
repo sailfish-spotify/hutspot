@@ -582,11 +582,12 @@ Page {
     function updateForCurrentPlaylistTrack() {
         currentIndex = -1
         for(var i=0;i<tracksInfo.length;i++) {
-            if(tracksInfo[i].id === currentTrackId) {
+            if(tracksInfo[i].id === currentTrackId
+               || tracksInfo[i].linked_from === currentTrackId) {
                 // in currently loaded set?
                 if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
-                    listView.positionViewAtIndex(i, ListView.Visible)
-                    currentIndex = i
+                    currentIndex = i - cursorHelper.offset
+                    listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     break
                 } else {
                     // load set
@@ -609,7 +610,10 @@ Page {
             function(error, data) {
                 if(data) {
                     for(var i=0;i<data.items.length;i++)
-                        tracksInfo[i+offset] = {id: data.items[i].track.id, uri: data.items[i].track.uri}
+                        tracksInfo[i+offset] =
+                            {id: data.items[i].track.id,
+                             linked_from: data.items[i].track.linked_from,
+                             uri: data.items[i].track.uri}
                     var nextOffset = data.offset+data.items.length
                     if(nextOffset < data.total)
                         _loadPlaylistTrackInfo(nextOffset)
