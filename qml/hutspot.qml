@@ -87,6 +87,7 @@ ApplicationWindow {
     property alias playing_as_attached_page: playing_as_attached_page
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
+    property alias recommended_attributes: recommended_attributes
     property alias search_history: search_history
     property alias search_history_max_size: search_history_max_size
     property alias query_for_market: query_for_market
@@ -1205,6 +1206,20 @@ ApplicationWindow {
             id: genre_seeds
             key: "/hutspot/genre_seeds"
             defaultValue: []
+    }
+
+    ConfigurationGroup {
+        id: recommended_attributes
+        path: "/hutspot/recommended_attributes"
+
+        property real energy: 0.5
+        property real danceability: 0.5
+        property real instrumentalness: 0.5
+        property real speechiness: 0.5
+        property real acousticness: 0.5
+        property real liveness: 0.5
+        property real valence: 0.5
+        property int popularity: 50
     }
 
     ConfigurationValue {
