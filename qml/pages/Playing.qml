@@ -860,7 +860,7 @@ Page {
             waitForEndOfSnapshot = false
             if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
                 currentId = "" // trigger reload
-                playContext({uri: waitForEndSnapshotData.uri},
+                app.controller.playContext({uri: waitForEndSnapshotData.uri},
                             {offset: {uri: waitForEndSnapshotData.trackUri}})
             }
         }
@@ -907,7 +907,7 @@ Page {
                 if(app.controller.playbackState.is_playing)
                     app.controller.pause(function(error, data) {
                         currentId = "" // trigger reload)
-                        playContext({uri: app.controller.playbackState.contextDetails.uri})
+                        app.controller.playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
                 else {
                     cursorHelper.offset = 0
