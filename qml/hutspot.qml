@@ -605,7 +605,7 @@ ApplicationWindow {
                     device.ip = address
                     Util.deviceInfoRequestMDNS(device, function(error, data) {
                         if(data) {
-                            console.log(JSON.stringify(data,null,2))
+                            //console.log(JSON.stringify(data,null,2))
                             data.deviceInfo = device
                             var replaced = 0
                             for(var i=0;i<foundDevices.length;i++) {
@@ -1426,7 +1426,7 @@ ApplicationWindow {
         onMovingChanged: {
             if(!doAutoStuff())
                 return
-            console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
+            //console.log("onMovingChanged: moving" + moving + ", _fixAtEnd: " + _fixAtEnd)
             if(!moving) {
                 if(_fixAtEnd && listView)
                     listView.positionViewAtEnd()
