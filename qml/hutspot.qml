@@ -96,6 +96,7 @@ ApplicationWindow {
     property alias show_devices_page_at_startup: show_devices_page_at_startup
     property alias handle_network_connection: handle_network_connection
     property alias controlpanel_show_delay: controlpanel_show_delay
+    property alias logging_flags: logging_flags
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -517,13 +518,13 @@ ApplicationWindow {
         // for logging Librespot discovery
         var ls = isLibrespotInDiscoveredList()
         if(ls !== null) {
-            console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
+            if(logging_flags.discovery)console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
-                console.log("Librespot is not in the devices list")
+                if(logging_flags.discovery)console.log("Librespot is not in the devices list")
                 // maybe the list needs to be updated
                 spotifyController.checkForNewDevices()
             } else {
-                console.log("Librespot is already in the devices list")
+                if(logging_flags.discovery)console.log("Librespot is already in the devices list")
             }
         }
         //handleCurrentDevice()
@@ -535,7 +536,7 @@ ApplicationWindow {
         for(i=0;i<spotifyController.devices.count;i++) {
             var device = spotifyController.devices.get(i)
             if(device.name === deviceName.value) {
-                console.log("onDevicesChanged found current: " + JSON.stringify(device))
+                if(logging_flags.discovery)console.log("onDevicesChanged found current: " + JSON.stringify(device))
                 // Now we want to make sure it is our 'current' Spotify device.
                 // How do we know what Spotify thinks our current device is?
                 // According to the documentation it should be device.is_active
@@ -555,8 +556,10 @@ ApplicationWindow {
                             console.log("Set device [" + deviceName.value + "] as current")
                     })
                 } else {
-                    console.log("Device [" + deviceName.value + "] already in playbackState.")
-                    console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
+                    if(logging_flags.discovery) {
+                        console.log("Device [" + deviceName.value + "] already in playbackState.")
+                        console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
+                    }
                 }
                 break
             }
@@ -569,12 +572,12 @@ ApplicationWindow {
     Connections {
         target: spMdns
         onServiceAdded: {
-            console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
+            if(logging_flags.discovery)console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
             var mdns = JSON.parse(serviceJSON)
             connectDevices[mdns.name] = mdns
         }
         onServiceUpdated: {
-            console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
+            if(logging_flags.discovery)console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 var mdns = JSON.parse(serviceJSON)
@@ -586,7 +589,7 @@ ApplicationWindow {
             }
         }
         onServiceRemoved: {
-            console.log("onServiceRemoved: " + name)
+            if(logging_flags.discovery)console.log("onServiceRemoved: " + name)
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 if(device.name === name) {
@@ -598,7 +601,7 @@ ApplicationWindow {
             }
         }
         onServiceResolved: {
-            console.log("onServiceResolved: " + name + " -> " + address)
+            if(logging_flags.discovery)console.log("onServiceResolved: " + name + " -> " + address)
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 if(device.host === name) {
@@ -1262,6 +1265,13 @@ ApplicationWindow {
         id: controlpanel_show_delay
         key: "/hutspot/controlpanel_show_delay"
         defaultValue: 700
+    }
+
+    ConfigurationGroup {
+        id: logging_flags
+        path: "/hutspot/logging_flags"
+
+        property bool discovery: false
     }
 
     /*function updateConfigurationData() {
