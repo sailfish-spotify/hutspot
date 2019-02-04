@@ -28,7 +28,6 @@ Page {
     property string currentId: ""
     property string currentSnapshotId: ""
     property string currentTrackId: ""
-    property string currentTrackUri: ""
 
     property string viewMenuText: ""
     property bool showTrackInfo: true
@@ -627,7 +626,7 @@ Page {
     }
 
     onCurrentIdChanged: {
-        console.log("onCurrentIdChanged: " + currentId)
+        console.log("Playing.onCurrentIdChanged: " + currentId)
         if (app.controller.playbackState.context) {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
@@ -656,6 +655,7 @@ Page {
 
         onContextDetailsChanged: {
             currentId = app.controller.playbackState.contextDetails.id
+            //console.log("Playing.onContextDetailsChanged: " + currentId)
             /*switch (app.controller.playbackState.context.type) {
                 case 'album':
                     break
@@ -667,6 +667,7 @@ Page {
         }
 
         onItemChanged: {
+            //console.log("Playing.onItemChanged")
             if (app.controller.playbackState.context) {
                 switch (app.controller.playbackState.context.type) {
                     case 'album':
@@ -676,7 +677,8 @@ Page {
                         pageHeaderDescription = app.controller.playbackState.artistsString
                         break
                     case 'playlist':
-                        pageHeaderDescription = app.controller.playbackState.contextDetails.name
+                        if(app.controller.playbackState.contextDetails)
+                            pageHeaderDescription = app.controller.playbackState.contextDetails.name
                         break
                     default:
                         pageHeaderDescription = ""
@@ -689,9 +691,12 @@ Page {
                 pageHeaderDescription = ""
             }
             currentTrackId = app.controller.playbackState.item.id
-            // still needed? currentTrackUri = app.controller.playbackState.item.uri
+            //console.log("  currentTrackId: " + currentTrackId)
+            if(currentIndex === -1)
+                updateForCurrentTrack()
         }
         onIs_playingChanged: {
+            //console.log("Playing.onIs_playingChanged ")
             if(!_isPlaying && app.controller.playbackState.is_playing) {
                 if(currentIndex === -1)
                     updateForCurrentTrack()
