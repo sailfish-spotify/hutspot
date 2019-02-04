@@ -94,7 +94,7 @@ Item {
             if(!success)
                 return
 
-            // If not yet playing the Queue Playlist then do that
+            // If not yet playing the Queue Playlist then start playing it
             if(app.playingPage.currentId !== queuePlaylistId) {
                 app.controller.playContext({uri: queuePlaylistUri})
                 return

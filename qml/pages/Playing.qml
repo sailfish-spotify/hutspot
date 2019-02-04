@@ -28,7 +28,6 @@ Page {
     property string currentId: ""
     property string currentSnapshotId: ""
     property string currentTrackId: ""
-    property string currentTrackUri: ""
 
     property string viewMenuText: ""
     property bool showTrackInfo: true
@@ -582,11 +581,12 @@ Page {
     function updateForCurrentPlaylistTrack() {
         currentIndex = -1
         for(var i=0;i<tracksInfo.length;i++) {
-            if(tracksInfo[i].id === currentTrackId) {
+            if(tracksInfo[i].id === currentTrackId
+               || tracksInfo[i].linked_from === currentTrackId) {
                 // in currently loaded set?
                 if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
-                    listView.positionViewAtIndex(i, ListView.Visible)
-                    currentIndex = i
+                    currentIndex = i - cursorHelper.offset
+                    listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     break
                 } else {
                     // load set
@@ -609,7 +609,10 @@ Page {
             function(error, data) {
                 if(data) {
                     for(var i=0;i<data.items.length;i++)
-                        tracksInfo[i+offset] = {id: data.items[i].track.id, uri: data.items[i].track.uri}
+                        tracksInfo[i+offset] =
+                            {id: data.items[i].track.id,
+                             linked_from: data.items[i].track.linked_from,
+                             uri: data.items[i].track.uri}
                     var nextOffset = data.offset+data.items.length
                     if(nextOffset < data.total)
                         _loadPlaylistTrackInfo(nextOffset)
@@ -623,7 +626,7 @@ Page {
     }
 
     onCurrentIdChanged: {
-        console.log("onCurrentIdChanged: " + currentId)
+        console.log("Playing.onCurrentIdChanged: " + currentId)
         if (app.controller.playbackState.context) {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
@@ -652,6 +655,7 @@ Page {
 
         onContextDetailsChanged: {
             currentId = app.controller.playbackState.contextDetails.id
+            //console.log("Playing.onContextDetailsChanged: " + currentId)
             /*switch (app.controller.playbackState.context.type) {
                 case 'album':
                     break
@@ -663,6 +667,7 @@ Page {
         }
 
         onItemChanged: {
+            //console.log("Playing.onItemChanged")
             if (app.controller.playbackState.context) {
                 switch (app.controller.playbackState.context.type) {
                     case 'album':
@@ -672,7 +677,8 @@ Page {
                         pageHeaderDescription = app.controller.playbackState.artistsString
                         break
                     case 'playlist':
-                        pageHeaderDescription = app.controller.playbackState.contextDetails.name
+                        if(app.controller.playbackState.contextDetails)
+                            pageHeaderDescription = app.controller.playbackState.contextDetails.name
                         break
                     default:
                         pageHeaderDescription = ""
@@ -685,9 +691,12 @@ Page {
                 pageHeaderDescription = ""
             }
             currentTrackId = app.controller.playbackState.item.id
-            // still needed? currentTrackUri = app.controller.playbackState.item.uri
+            //console.log("  currentTrackId: " + currentTrackId)
+            if(currentIndex === -1)
+                updateForCurrentTrack()
         }
         onIs_playingChanged: {
+            //console.log("Playing.onIs_playingChanged ")
             if(!_isPlaying && app.controller.playbackState.is_playing) {
                 if(currentIndex === -1)
                     updateForCurrentTrack()
@@ -856,7 +865,7 @@ Page {
             waitForEndOfSnapshot = false
             if(waitForEndSnapshotData.snapshotId !== currentSnapshotId) { // only if still needed
                 currentId = "" // trigger reload
-                playContext({uri: waitForEndSnapshotData.uri},
+                app.controller.playContext({uri: waitForEndSnapshotData.uri},
                             {offset: {uri: waitForEndSnapshotData.trackUri}})
             }
         }
@@ -903,7 +912,7 @@ Page {
                 if(app.controller.playbackState.is_playing)
                     app.controller.pause(function(error, data) {
                         currentId = "" // trigger reload)
-                        playContext({uri: app.controller.playbackState.contextDetails.uri})
+                        app.controller.playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
                 else {
                     cursorHelper.offset = 0

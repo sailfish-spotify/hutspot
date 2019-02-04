@@ -662,10 +662,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Recommendation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Genres</source>
         <translation type="unfinished"></translation>
     </message>
@@ -682,7 +678,51 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enter Seeds and Reload</source>
+        <source>Seeds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Energy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Danceability</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Instrumentalness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speechiness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acousticness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Positiveness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter Seeds/Attributes and Reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Seeds+Attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recommended </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Liveness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Popularity</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -21,6 +21,9 @@ Page {
     property int currentIndex: -1
     property var genreSeeds: []
 
+    // 0 for seeds, 1 for attributes
+    property int recommendationMode: 0
+
     allowedOrientations: Orientation.All
 
     ListModel {
@@ -58,8 +61,22 @@ Page {
             PageHeader {
                 id: pHeader
                 width: parent.width
-                title: qsTr("Recommendation")
-                MenuButton {}
+                title: {
+                    switch(recommendationMode) {
+                    default:
+                    case 0: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Seeds"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Seeds+Attributes"), Theme)
+                    }
+                }
+                MenuButton { z: 1} // set z so you can still click the button
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: {
+                        nextRecommendationMode()
+                        refresh()
+                    }
+                }
             }
 
             // Genre Seeds
@@ -67,7 +84,6 @@ Page {
                 id: genresButton
                 property var indexes: []
                 width: parent.width
-
                 label: qsTr("Genres")
 
                 ListModel {
@@ -141,10 +157,118 @@ Page {
                             app.showErrorMessage(undefined, qsTr("Spotify allows max. 5 seeds"))
                         refresh()
                         app.genre_seeds.value = genreSeeds
-                        app.genre_seeds.sync();
                     })
                 }
 
+            }
+
+            // Attributes
+            Column {
+                id: attributesColumn
+                width: parent.width
+                visible: recommendationMode == 1
+
+                Slider {
+                    id: energySlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Energy")
+                    onReleased: {
+                        app.recommended_attributes.energy = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: danceabilitySlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Danceability")
+                    onReleased: {
+                        app.recommended_attributes.danceability = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: instrumentalnessSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Instrumentalness")
+                    onReleased: {
+                        app.recommended_attributes.instrumentalness = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: speechinessSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Speechiness")
+                    onReleased: {
+                        app.recommended_attributes.speechiness = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: acousticnessSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Acousticness")
+                    onReleased: {
+                        app.recommended_attributes.acousticness = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: livenessSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Liveness")
+                    onReleased: {
+                        app.recommended_attributes.liveness = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: valenceSlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 1.0
+                    label: qsTr("Positiveness")
+                    onReleased: {
+                        app.recommended_attributes.valence = value
+                        refresh()
+                    }
+                }
+                Slider {
+                    id: popularitySlider
+                    width: parent.width
+                    minimumValue: 0
+                    maximumValue: 100
+                    label: qsTr("Popularity")
+                    onReleased: {
+                        app.recommended_attributes.popularity = value
+                        refresh()
+                    }
+                }
+                onVisibleChanged: {
+                    if(!visible)
+                        return
+                    energySlider.value = app.recommended_attributes.energy
+                    danceabilitySlider.value = app.recommended_attributes.danceability
+                    instrumentalnessSlider.value = app.recommended_attributes.instrumentalness
+                    speechinessSlider.value = app.recommended_attributes.speechiness
+                    acousticnessSlider.value = app.recommended_attributes.acousticness
+                    livenessSlider.value = app.recommended_attributes.liveness
+                    valenceSlider.value = app.recommended_attributes.valence
+                    popularitySlider.value = app.recommended_attributes.popularity
+                    refresh()
+                }
             }
         }
 
@@ -171,9 +295,21 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("No Recommendations found")
-            hintText: qsTr("Enter Seeds and Reload")
+            hintText: qsTr("Enter Seeds/Attributes and Reload")
         }
 
+    }
+
+    function nextRecommendationMode() {
+        switch(recommendationMode) {
+        case 0:
+            recommendationMode = 1
+            break;
+        default:
+        case 1:
+            recommendationMode = 0
+            break;
+        }
     }
 
     function refresh() {
@@ -186,6 +322,18 @@ Page {
 
         var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
         var options = {seed_genres: gs.join(',')}
+
+        if(recommendationMode > 0) {
+            options.target_energy = app.recommended_attributes.energy
+            options.target_danceability = app.recommended_attributes.danceability
+            options.target_instrumentalness = app.recommended_attributes.instrumentalness
+            options.target_speechiness = app.recommended_attributes.speechiness
+            options.target_acousticness = app.recommended_attributes.acousticness
+            options.target_liveness = app.recommended_attributes.liveness
+            options.target_valence = app.recommended_attributes.valence
+            options.target_popularity = app.recommended_attributes.popularity
+        }
+
         options.limit = app.searchLimit.value
         if(app.query_for_market.value)
             options.market = "from_token"
