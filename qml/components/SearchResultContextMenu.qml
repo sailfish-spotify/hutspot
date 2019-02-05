@@ -66,4 +66,10 @@ ContextMenu {
         text: qsTr("Add to Playlist")
         onClicked: app.addToPlaylist(track)
     }
+    MenuItem {
+        enabled: type === 2
+        visible: enabled
+        text: qsTr("Use as Seeds for Recommendations")
+        onClicked: app.useAsSeeds(playlist)
+    }
 }

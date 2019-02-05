@@ -108,6 +108,34 @@ ApplicationWindow {
 
     allowedOrientations: defaultAllowedOrientations
 
+    // seeds for recommendations
+    property alias seedsModel: seedsModel
+    ListModel {
+        id: seedsModel
+    }
+
+    function useAsSeeds(playlist) {
+        getPlaylistTracks(playlist.id, {offset: 0, limit: 5}, function(error, data) {
+            if(data) {
+                seedsModel.clear()
+                try {
+                    console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
+                    for(var i=0;i<data.items.length;i++) {
+                        seedsModel.append({type: Spotify.ItemType.Track,
+                                           stype: Spotify.ItemType.Playlist,
+                                           name: data.items[i].track.name,
+                                           saved: false,
+                                           track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log("useAsSeeds: "+ err)
+                }
+            } else {
+                console.log("useAsSeeds: No Data for getPlaylistTracks")
+            }
+        })
+    }
+
     cover: CoverPage {
         id: cover
     }
