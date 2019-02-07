@@ -154,7 +154,7 @@ Item {
                             //if (data.devices[i].is_active)
                             //    playbackState.device = data.devices[i]
                         }
-                        console.log("controller.checkForNewDevices: list differs")
+                        //console.log("controller.checkForNewDevices: list differs")
                         devicesReloaded()
                     }
                 } catch (err) {

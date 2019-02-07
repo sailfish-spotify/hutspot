@@ -21,8 +21,11 @@ Page {
     property int currentIndex: -1
     property var genreSeeds: []
 
-    // 0 for seeds, 1 for attributes
-    property int recommendationMode: 0
+    // 0 for genre seeds
+    // 1 genre seeds + attributes
+    // 2 for track seeds
+    // 3 for track seeds + attributes
+    property int recommendationMode: app.current_item_classes.recommended
 
     allowedOrientations: Orientation.All
 
@@ -64,8 +67,10 @@ Page {
                 title: {
                     switch(recommendationMode) {
                     default:
-                    case 0: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Seeds"), Theme)
-                    case 1: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Seeds+Attributes"), Theme)
+                    case 0: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Genres"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Genres+Attributes"), Theme)
+                    case 2: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Tracks"), Theme)
+                    case 3: return Util.createPageHeaderLabel(qsTr("Recommended "), qsTr("Tracks+Attributes"), Theme)
                     }
                 }
                 MenuButton { z: 1} // set z so you can still click the button
@@ -85,6 +90,7 @@ Page {
                 property var indexes: []
                 width: parent.width
                 label: qsTr("Genres")
+                visible: recommendationMode <= 1
 
                 ListModel {
                     id: items
@@ -162,11 +168,33 @@ Page {
 
             }
 
+            // track seeds
+            SilicaListView {
+                id: seedsListView
+                model: app.seedsModel
+                width: parent.width
+                height: contentHeight
+                visible: recommendationMode == 2 || recommendationMode == 3
+                header: SectionHeader {
+                    text: qsTr("Seed Tracks")
+                }
+                delegate: ListItem {
+                    id: seedListItem
+                    width: parent.width //- 2*Theme.paddingMedium
+                    //x: Theme.paddingMedium
+                    contentHeight: Theme.itemSizeLarge
+                    SearchResultListItem {
+                        id: seedResultListItem
+                        dataModel: model
+                    }
+                }
+            }
+
             // Attributes
             Column {
                 id: attributesColumn
                 width: parent.width
-                visible: recommendationMode == 1
+                visible: recommendationMode == 1 || recommendationMode == 3
 
                 Slider {
                     id: energySlider
@@ -270,6 +298,9 @@ Page {
                     refresh()
                 }
             }
+            SectionHeader {
+                text: qsTr("Recommended Tracks")
+            }
         }
 
         delegate: ListItem {
@@ -301,15 +332,12 @@ Page {
     }
 
     function nextRecommendationMode() {
-        switch(recommendationMode) {
-        case 0:
-            recommendationMode = 1
-            break;
-        default:
-        case 1:
-            recommendationMode = 0
-            break;
-        }
+        var i = recommendationMode
+        i++
+        if(i > 3)
+            i = 0
+        recommendationMode = i
+        app.current_item_classes.recommended = i
     }
 
     function refresh() {
@@ -317,13 +345,25 @@ Page {
         //showBusy = true
         searchModel.clear()
 
-        if(genreSeeds.length === 0)
+        if(recommendationMode <= 1 && genreSeeds.length === 0)
+            return
+        if(recommendationMode >= 2 && app.seedsModel.count === 0)
             return
 
-        var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
-        var options = {seed_genres: gs.join(',')}
+        var options
+        if(recommendationMode <= 1) {
+            var gs = genreSeeds.slice(0,5) // Spotify allows max 5 seed entries
+            options = {seed_genres: gs.join(',')}
+        } else {
+            var ids = ""
+            for(i = 0; i < app.seedsModel.count && i < 5; i++) {
+                if(ids.length > 0) ids += ","
+                ids += app.seedsModel.get(i).track.id
+            }
+            options = {seed_tracks: ids}
+        }
 
-        if(recommendationMode > 0) {
+        if(recommendationMode === 1 || recommendationMode === 3) {
             options.target_energy = app.recommended_attributes.energy
             options.target_danceability = app.recommended_attributes.danceability
             options.target_instrumentalness = app.recommended_attributes.instrumentalness

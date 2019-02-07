@@ -202,7 +202,7 @@ Page {
     }
 
     // 0: Albums, 1: Artists, 2: Playlists, 3: Tracks
-    property int _itemClass: 0
+    property int _itemClass: app.current_item_classes.search
 
     function nextItemClass() {
         var i = _itemClass
@@ -210,6 +210,7 @@ Page {
         if(i > 3)
             i = 0
         _itemClass = i
+        app.current_item_classes.search = i
     }
 
     function refresh() {

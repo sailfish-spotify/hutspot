@@ -104,7 +104,7 @@ void ResolverPrivate::onTimeout()
     foreach (Record record, existing()) {
         emit q->resolved(record.name(), record.address());
     }
-    qDebug() << "ResolverPrivate::onTimeout on " << name;
+    //qDebug() << "ResolverPrivate::onTimeout on " << name;
 }
 
 Resolver::Resolver(AbstractServer *server, const QByteArray &name, Cache *cache, QObject *parent)

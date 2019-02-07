@@ -88,6 +88,7 @@ ApplicationWindow {
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
     property alias recommended_attributes: recommended_attributes
+    property alias current_item_classes: current_item_classes
     property alias search_history: search_history
     property alias search_history_max_size: search_history_max_size
     property alias query_for_market: query_for_market
@@ -96,6 +97,7 @@ ApplicationWindow {
     property alias show_devices_page_at_startup: show_devices_page_at_startup
     property alias handle_network_connection: handle_network_connection
     property alias controlpanel_show_delay: controlpanel_show_delay
+    property alias logging_flags: logging_flags
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -106,6 +108,34 @@ ApplicationWindow {
     property string playerName: "Hutspot"
 
     allowedOrientations: defaultAllowedOrientations
+
+    // seeds for recommendations
+    property alias seedsModel: seedsModel
+    ListModel {
+        id: seedsModel
+    }
+
+    function useAsSeeds(playlist) {
+        getPlaylistTracks(playlist.id, {offset: 0, limit: 5}, function(error, data) {
+            if(data) {
+                seedsModel.clear()
+                try {
+                    console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
+                    for(var i=0;i<data.items.length;i++) {
+                        seedsModel.append({type: Spotify.ItemType.Track,
+                                           stype: Spotify.ItemType.Playlist,
+                                           name: data.items[i].track.name,
+                                           saved: false,
+                                           track: data.items[i].track})
+                    }
+                } catch (err) {
+                    console.log("useAsSeeds: "+ err)
+                }
+            } else {
+                console.log("useAsSeeds: No Data for getPlaylistTracks")
+            }
+        })
+    }
 
     cover: CoverPage {
         id: cover
@@ -517,13 +547,13 @@ ApplicationWindow {
         // for logging Librespot discovery
         var ls = isLibrespotInDiscoveredList()
         if(ls !== null) {
-            console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
+            if(logging_flags.discovery)console.log("onDevicesChanged: " + (ls!==null)?"Librespot is discovered":"not yet")
             if(!isLibrespotInDevicesList()) {
-                console.log("Librespot is not in the devices list")
+                if(logging_flags.discovery)console.log("Librespot is not in the devices list")
                 // maybe the list needs to be updated
                 spotifyController.checkForNewDevices()
             } else {
-                console.log("Librespot is already in the devices list")
+                if(logging_flags.discovery)console.log("Librespot is already in the devices list")
             }
         }
         //handleCurrentDevice()
@@ -535,7 +565,7 @@ ApplicationWindow {
         for(i=0;i<spotifyController.devices.count;i++) {
             var device = spotifyController.devices.get(i)
             if(device.name === deviceName.value) {
-                console.log("onDevicesChanged found current: " + JSON.stringify(device))
+                if(logging_flags.discovery)console.log("onDevicesChanged found current: " + JSON.stringify(device))
                 // Now we want to make sure it is our 'current' Spotify device.
                 // How do we know what Spotify thinks our current device is?
                 // According to the documentation it should be device.is_active
@@ -555,8 +585,10 @@ ApplicationWindow {
                             console.log("Set device [" + deviceName.value + "] as current")
                     })
                 } else {
-                    console.log("Device [" + deviceName.value + "] already in playbackState.")
-                    console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
+                    if(logging_flags.discovery) {
+                        console.log("Device [" + deviceName.value + "] already in playbackState.")
+                        console.log("  id: " + deviceId.value + ", pbs id: " + spotifyController.playbackState.device.id)
+                    }
                 }
                 break
             }
@@ -569,12 +601,12 @@ ApplicationWindow {
     Connections {
         target: spMdns
         onServiceAdded: {
-            console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
+            if(logging_flags.discovery)console.log("onServiceAdded: " + JSON.stringify(serviceJSON,null,2))
             var mdns = JSON.parse(serviceJSON)
             connectDevices[mdns.name] = mdns
         }
         onServiceUpdated: {
-            console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
+            if(logging_flags.discovery)console.log("onServiceUpdated: " + JSON.stringify(serviceJSON,null,2))
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 var mdns = JSON.parse(serviceJSON)
@@ -586,7 +618,7 @@ ApplicationWindow {
             }
         }
         onServiceRemoved: {
-            console.log("onServiceRemoved: " + name)
+            if(logging_flags.discovery)console.log("onServiceRemoved: " + name)
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 if(device.name === name) {
@@ -598,7 +630,7 @@ ApplicationWindow {
             }
         }
         onServiceResolved: {
-            console.log("onServiceResolved: " + name + " -> " + address)
+            if(logging_flags.discovery)console.log("onServiceResolved: " + name + " -> " + address)
             for(var deviceName in connectDevices) {
                 var device = connectDevices[deviceName]
                 if(device.host === name) {
@@ -1222,6 +1254,17 @@ ApplicationWindow {
         property int popularity: 50
     }
 
+    ConfigurationGroup {
+        id: current_item_classes
+        path: "/hutspot/current_item_classes"
+
+        property int topStuff: 0
+        property int search: 0
+        property int recommended: 0
+        property int myStuff: 0
+        property int artist: 0
+    }
+
     ConfigurationValue {
             id: hutspot_queue_playlist_name
             key: "/hutspot/hutspot_queue_playlist_name"
@@ -1262,6 +1305,13 @@ ApplicationWindow {
         id: controlpanel_show_delay
         key: "/hutspot/controlpanel_show_delay"
         defaultValue: 700
+    }
+
+    ConfigurationGroup {
+        id: logging_flags
+        path: "/hutspot/logging_flags"
+
+        property bool discovery: false
     }
 
     /*function updateConfigurationData() {

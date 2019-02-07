@@ -65,8 +65,8 @@ void SPConnect::setCredentials(QString userName, int authType, QString authData)
     cred_auth_type = authType;
     cred_auth_data =  QByteArray::fromBase64(authData.toUtf8());
     qDebug() << "user name: " << userName;
-    qDebug() << "auth_type: " << authType;
-    qDebug() << "auth_data: " << authData;
+    //qDebug() << "auth_type: " << authType;
+    //qDebug() << "auth_data: " << authData;
 }
 
 QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
@@ -130,7 +130,7 @@ QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
 
     // base64 encode it
     encrypted_blob64 = eblob.toBase64();
-    qDebug() << "encrypted_blob: " << encrypted_blob64;
+    //qDebug() << "encrypted_blob: " << encrypted_blob64;
 
     // create shared_key
     BIGNUM * clientKeyBN;
@@ -160,7 +160,7 @@ QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
     unsigned char iv[16];
     RAND_bytes(iv, 0x10);
     QByteArray ivArray((const char*)iv, 16);
-    qDebug() << "  iv: " << ivArray.toBase64();
+    //qDebug() << "  iv: " << ivArray.toBase64();
     QByteArray blob_to_send = QByteArray((const char *)iv, sizeof(iv));
 
     if(AES_set_encrypt_key((const unsigned char *)encryption_key.data(), 128, &aes_key) < 0)
@@ -186,7 +186,7 @@ QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
     // add encrypted part and checksum to the blob
     blob_to_send.append(encrypted_blob_part);
     blob_to_send.append(checksum);
-    qDebug() << "blob_to_send: " << blob_to_send.toBase64();
+    //qDebug() << "blob_to_send: " << blob_to_send.toBase64();
 
     // base64 encode it
     return blob_to_send.toBase64();

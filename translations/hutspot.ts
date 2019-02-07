@@ -678,10 +678,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Seeds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Energy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -710,10 +706,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Seeds+Attributes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Recommended </source>
         <translation type="unfinished"></translation>
     </message>
@@ -723,6 +715,26 @@
     </message>
     <message>
         <source>Popularity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Genres+Attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tracks+Attributes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Seed Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recommended Tracks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -801,6 +813,10 @@
     </message>
     <message>
         <source>Add to Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use as Seeds for Recommendations</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
