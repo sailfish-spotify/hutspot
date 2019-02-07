@@ -177,7 +177,7 @@ Page {
     property var savedTracks
     property var followedArtists
     // 0: Saved Albums, 1: User Playlists, 2: Recently Played Tracks, 3: Saved Tracks, 4: Followed Artists
-    property int _itemClass: 0
+    property int _itemClass: app.current_item_classes.myStuff
 
     function nextItemClass() {
         var i = _itemClass
@@ -185,6 +185,7 @@ Page {
         if(i > 4)
             i = 0
         _itemClass = i
+        app.current_item_classes.myStuff = i
         refreshDirection = 0
         refresh()
     }

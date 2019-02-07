@@ -147,7 +147,7 @@ Page {
 
     property var artistAlbums
     property var relatedArtists
-    property int _itemClass: 0
+    property int _itemClass: app.current_item_classes.artist
 
     function nextItemClass() {
         var i = _itemClass
@@ -155,6 +155,7 @@ Page {
         if(i > 1)
             i = 0
         _itemClass = i
+        app.current_item_classes.artist = i
         refresh()
     }
 

@@ -25,7 +25,7 @@ Page {
     // 1 genre seeds + attributes
     // 2 for track seeds
     // 3 for track seeds + attributes
-    property int recommendationMode: 0
+    property int recommendationMode: app.current_item_classes.recommended
 
     allowedOrientations: Orientation.All
 
@@ -332,9 +332,12 @@ Page {
     }
 
     function nextRecommendationMode() {
-        recommendationMode++
-        if(recommendationMode > 3)
-            recommendationMode = 0
+        var i = recommendationMode
+        i++
+        if(i > 3)
+            i = 0
+        recommendationMode = i
+        app.current_item_classes.recommended = i
     }
 
     function refresh() {

@@ -88,6 +88,7 @@ ApplicationWindow {
     property alias history_store: history_store
     property alias genre_seeds: genre_seeds
     property alias recommended_attributes: recommended_attributes
+    property alias current_item_classes: current_item_classes
     property alias search_history: search_history
     property alias search_history_max_size: search_history_max_size
     property alias query_for_market: query_for_market
@@ -1251,6 +1252,17 @@ ApplicationWindow {
         property real liveness: 0.5
         property real valence: 0.5
         property int popularity: 50
+    }
+
+    ConfigurationGroup {
+        id: current_item_classes
+        path: "/hutspot/current_item_classes"
+
+        property int topStuff: 0
+        property int search: 0
+        property int recommended: 0
+        property int myStuff: 0
+        property int artist: 0
     }
 
     ConfigurationValue {

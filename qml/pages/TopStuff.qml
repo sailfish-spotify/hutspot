@@ -103,7 +103,7 @@ Page {
 
     property var topTracks
     property var topArtists
-    property int _itemClass: 0
+    property int _itemClass: app.current_item_classes.topStuff
 
     function nextItemClass() {
         var i = _itemClass
@@ -111,6 +111,7 @@ Page {
         if(i > 1)
             i = 0
         _itemClass = i
+        app.current_item_classes.topStuff = i
         refresh()
     }
 
