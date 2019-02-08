@@ -123,8 +123,7 @@ rgrnetalk"
 librespot-org: Librespot
 JMPerez: spotify-web-api-js
 pipacs: O2
-fooxl & DrYak: avahi, nss-mdns, libdaemon on sailfish
-laserpants: qtzeroconf
+Nathan Osman: qmdnsengine
 kimmoli: IconProvider & MultiItemPicker
 leszek: DevicePixelRatioHack"
             }
