@@ -284,7 +284,7 @@ Page {
                 if(listView.atYEnd) {
                     // album is already completely loaded
                     if(app.controller.playbackState.context.type === 'playlist')
-                        appendPlaylistTracks(app.id, currentId)
+                        appendPlaylistTracks(app.id, currentId, false)
                 }
             }
         }
@@ -564,7 +564,7 @@ Page {
                 updateForCurrentAlbumTrack()
                 break
             case 'playlist':
-                updateForCurrentPlaylistTrack()
+                updateForCurrentPlaylistTrack(true)
                 break
             default:
                 break
@@ -579,7 +579,7 @@ Page {
     property int firstItemOffset: 0
     property int lastItemOffset: 0
 
-    function updateForCurrentPlaylistTrack() {
+    function updateForCurrentPlaylistTrack(onInit) {
         currentIndex = -1
         for(var i=0;i<tracksInfo.length;i++) {
             if(tracksInfo[i].id === currentTrackId
@@ -587,12 +587,13 @@ Page {
                 // in currently loaded set?
                 if(i >= firstItemOffset && i <= lastItemOffset) {
                     currentIndex = i - firstItemOffset
-                    listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                    if(onInit)
+                        listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     break
                 } else {
                     // load set
                     //cursorHelper.offset = i
-                    appendPlaylistTracks(app.id, currentId)
+                    appendPlaylistTracks(app.id, currentId, onInit)
                     currentIndex = 0
                 }
             }
@@ -726,12 +727,14 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        appendPlaylistTracks(id, pid)
+        firstItemOffset = 0
+        lastItemOffset = 0
+        appendPlaylistTracks(id, pid, true)
     }
 
     property bool _loading: false
 
-    function appendPlaylistTracks(id, pid) {
+    function appendPlaylistTracks(id, pid, onInit) {
         // if already at the end -> bail out
         if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
             return
@@ -755,7 +758,7 @@ Page {
                                             track: data.items[i].track})
                     }
                     lastItemOffset = firstItemOffset + searchModel.count - 1
-                    updateForCurrentTrack()
+                    updateForCurrentPlaylistTrack(onInit)
                 } catch (err) {
                     console.log(err)
                 }
