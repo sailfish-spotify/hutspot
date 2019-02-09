@@ -65,8 +65,8 @@ Page {
                 x: Theme.paddingMedium
                 anchors.bottomMargin: Theme.paddingLarge
 
-                LoadPullMenus {}
-                LoadPushMenus {}
+                //LoadPullMenus {}
+                //LoadPushMenus {}
 
                 PageHeader {
                     id: pHeader
@@ -279,15 +279,14 @@ Page {
                 target: playingPage
                 onCurrentTrackIdChanged: updateForCurrentTrack()
             }
-            /* atYEnd is never true. caused by the docked panel?
-            onContentYChanged: {
-                 if(atYEnd && canLoadNext) {
-                     app.showConfirmDialog(qsTr("Reached end of list.<br>Try to the load next set?"),
-                         function() {
-                            loadNext()
-                         })
-                 }
-            }*/
+
+            onAtYEndChanged: {
+                if(listView.atYEnd) {
+                    // album is already completely loaded
+                    if(app.controller.playbackState.context.type === 'playlist')
+                        appendPlaylistTracks(app.id, currentId)
+                }
+            }
         }
     } // Item
 
@@ -575,8 +574,10 @@ Page {
 
     // to be able to find the current track and load the correct set of tracks
     // we keep a list of all playlist tracks (Id,Uri)
-    // (for albums we just load the first 100 and hope this is enough)
+    // (for albums we just load them all)
     property var tracksInfo: []
+    property int firstItemOffset: 0
+    property int lastItemOffset: 0
 
     function updateForCurrentPlaylistTrack() {
         currentIndex = -1
@@ -584,14 +585,14 @@ Page {
             if(tracksInfo[i].id === currentTrackId
                || tracksInfo[i].linked_from === currentTrackId) {
                 // in currently loaded set?
-                if(i >= cursorHelper.offset && i <= (cursorHelper.offset + cursorHelper.limit)) {
-                    currentIndex = i - cursorHelper.offset
+                if(i >= firstItemOffset && i <= lastItemOffset) {
+                    currentIndex = i - firstItemOffset
                     listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     break
                 } else {
                     // load set
-                    cursorHelper.offset = i
-                    loadPlaylistTracks(app.id, currentId)
+                    //cursorHelper.offset = i
+                    appendPlaylistTracks(app.id, currentId)
                     currentIndex = 0
                 }
             }
@@ -640,7 +641,7 @@ Page {
                     })
                     break
                 case 'playlist':
-                    cursorHelper.offset = 0
+                    //cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
                     loadPlaylistTrackInfo()
                     break
@@ -725,7 +726,22 @@ Page {
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
-        app.getPlaylistTracks(pid, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+        appendPlaylistTracks(id, pid)
+    }
+
+    property bool _loading: false
+
+    function appendPlaylistTracks(id, pid) {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        app.getPlaylistTracks(pid, {offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
                     console.log("number of PlaylistTracks: " + data.items.length)
@@ -738,6 +754,7 @@ Page {
                                             saved: false,
                                             track: data.items[i].track})
                     }
+                    lastItemOffset = firstItemOffset + searchModel.count - 1
                     updateForCurrentTrack()
                 } catch (err) {
                     console.log(err)
@@ -745,6 +762,7 @@ Page {
             } else {
                 console.log("No Data for getPlaylistTracks")
             }
+            _loading = false
         })
         app.isFollowingPlaylist(pid, function(error, data) {
             if(data)
@@ -789,8 +807,8 @@ Page {
                             Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
                     })
                     // if the album has more tracks get more
-                    if(cursorHelper.total > (cursorHelper.offset+cursorHelper.limit)) {
-                        cursorHelper.offset += cursorHelper.limit
+                    if(cursorHelper.total > searchModel.count) {
+                        cursorHelper.offset = searchModel.count
                         _loadAlbumTracks(id)
                     }
                     updateForCurrentTrack()
@@ -879,7 +897,7 @@ Page {
                || app.controller.playbackState.contextDetails.id !== event.playlistId)
                 return
 
-            // When a plylist is modified while being played the modifications
+            // When a playlist is modified while being played the modifications
             // are ignored, it keeps on playing the snapshot that was started.
             // To try to fix this we:
             //   AddedTrack:
@@ -892,17 +910,17 @@ Page {
             switch(event.type) {
             case Util.PlaylistEventType.AddedTrack:
                 // in theory it has been added at the end of the list
-                // so we could load the info and add it to the model but ...
-                // ToDo what about cursorHelper.offset?
-                loadPlaylistTracks(app.id, currentId)
+                // so we could load the info and add it to the model but ...                
                 if(app.controller.playbackState.is_playing) {
                     waitForEndOfSnapshot = true
                     waitForEndSnapshotData.uri = event.uri
                     waitForEndSnapshotData.snapshotId = event.snapshotId
                     waitForEndSnapshotData.index = app.controller.playbackState.contextDetails.tracks.total // not used
                     waitForEndSnapshotData.trackUri = event.trackUri
-                } else
+                } else {
                     currentSnapshotId = event.snapshotId
+                    loadPlaylistTracks(app.id, currentId)
+                }
                 break
             case Util.PlaylistEventType.RemovedTrack:
                 //Util.removeFromListModel(searchModel, Spotify.ItemType.Track, event.trackId)
@@ -915,7 +933,6 @@ Page {
                         app.controller.playContext({uri: app.controller.playbackState.contextDetails.uri})
                     })
                 else {
-                    cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
                 }
                 break
