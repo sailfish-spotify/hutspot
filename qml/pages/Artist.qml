@@ -225,14 +225,14 @@ Page {
     property bool _loading: false
 
     function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
         // guard
         if(_loading)
             return
         _loading = true
-
-        // if already at the end -> bail out
-        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
-            return
 
         var i;
         switch(_itemClass) {
@@ -248,8 +248,8 @@ Page {
                 } else {
                     console.log("No Data for getArtistAlbums")
                 }
-                _loading = false
                 loadData()
+                _loading = false
             })
             break
         case 1:
@@ -264,8 +264,8 @@ Page {
                 } else {
                     console.log("No Data for getArtistRelatedArtists")
                 }
-                _loading = false
                 loadData()
+                _loading = false
             })
             break
         }

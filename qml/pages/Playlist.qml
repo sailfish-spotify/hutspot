@@ -246,14 +246,14 @@ Page {
     property bool _loading: false
 
     function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
         // guard
         if(_loading)
             return
         _loading = true
-
-        // if already at the end -> bail out
-        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
-            return
 
         var i;
         app.getPlaylistTracks(playlist.id,

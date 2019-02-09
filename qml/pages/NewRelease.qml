@@ -50,8 +50,8 @@ Page {
                 MenuButton {}
             }
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+            //LoadPullMenus {}
+            //LoadPushMenus {}
 
         }
 
@@ -80,14 +80,32 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
 
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     function refresh() {
-        var i;
         showBusy = true
         searchModel.clear()
+        append()
+    }
 
-        Spotify.getNewReleases({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i;
+        Spotify.getNewReleases({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 cursorHelper.offset = data.albums.offset
                 cursorHelper.total = data.albums.total
@@ -105,13 +123,14 @@ Page {
                 console.log("getNewReleases returned no results.")
             }
             showBusy = false
+            _loading = false
         })
 
-        for(var i=0;i<app.history.length;i++) {
+        /*for(var i=0;i<app.history.length;i++) {
             var parsed = Util.parseSpotifyUri(app.history[i])
             if(parsed.type !== undefined)
                 console.log("history: type=" + parsed.type +", id=" + parsed.id)
-        }
+        }*/
     }
 
     property alias cursorHelper: cursorHelper

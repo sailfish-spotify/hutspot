@@ -38,8 +38,8 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+        //LoadPullMenus {}
+        //LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -88,14 +88,35 @@ Page {
             text: qsTr("No Playlists found")
             hintText: qsTr("Pull down to reload")
         }
+
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     function refresh() {
-        var i;
         //showBusy = true
         searchModel.clear()
+        append()
+    }
 
-        Spotify.getCategoryPlaylists(category.id, {offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i;
+        Spotify.getCategoryPlaylists(category.id,
+                                     {offset: searchModel.count, limit: cursorHelper.limit},
+                                     function(error, data) {
             if(data) {
                 try {
                     console.log("number of Playlists: " + data.playlists.items.length)
@@ -112,6 +133,7 @@ Page {
             } else {
                 console.log("No Data for getCategoryPlaylists")
             }
+            _loading = false
         })
 
     }
