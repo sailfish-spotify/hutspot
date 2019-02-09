@@ -40,8 +40,8 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+        //LoadPullMenus {}
+        //LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -141,6 +141,10 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
 
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     onCurrentArtistChanged: refresh()
@@ -210,16 +214,31 @@ Page {
     }
 
     function refresh() {
-        var i;
         //showBusy = true
         searchModel.clear()        
         artistAlbums = undefined
         relatedArtists = undefined
+        append()
+        app.notifyHistoryUri(currentArtist.uri)
+    }
 
+    property bool _loading: false
+
+    function append() {
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        var i;
         switch(_itemClass) {
         case 0:
             Spotify.getArtistAlbums(currentArtist.id,
-                                    {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                                    {offset: searchModel.count, limit: cursorHelper.limit},
                                     function(error, data) {
                 if(data) {
                     console.log("number of ArtistAlbums: " + data.items.length)
@@ -229,12 +248,13 @@ Page {
                 } else {
                     console.log("No Data for getArtistAlbums")
                 }
+                _loading = false
                 loadData()
             })
             break
         case 1:
             Spotify.getArtistRelatedArtists(currentArtist.id,
-                                            {offset: cursorHelper.offset, limit: cursorHelper.limit},
+                                            {offset: searchModel.count, limit: cursorHelper.limit},
                                             function(error, data) {
                 if(data) {
                     console.log("number of ArtistRelatedArtists: " + data.artists.length)
@@ -244,11 +264,11 @@ Page {
                 } else {
                     console.log("No Data for getArtistRelatedArtists")
                 }
+                _loading = false
                 loadData()
             })
             break
         }
-        app.notifyHistoryUri(currentArtist.uri)
     }
 
     Connections {

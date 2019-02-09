@@ -57,8 +57,8 @@ Page {
                 MenuButton {}
             }
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+            //LoadPullMenus {}
+            //LoadPushMenus {}
 
             Image {
                 id: imageItem
@@ -141,6 +141,10 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
 
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     onAlbumChanged: refresh()
@@ -156,9 +160,39 @@ Page {
 
     function refresh() {
         //showBusy = true
-        searchModel.clear()        
+        searchModel.clear()
 
-        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        append()
+
+        var artists = []
+        for(var i=0;i<album.artists.length;i++)
+            artists.push(album.artists[i].id)
+        Spotify.getArtists(artists, {}, function(error, data) {
+            if(data)
+                albumArtists = data.artists
+        })
+
+        Spotify.containsMySavedAlbums([album.id], {}, function(error, data) {
+            if(data)
+                isAlbumSaved = data[0]
+        })
+
+        app.notifyHistoryUri(album.uri)
+    }
+
+    property bool _loading: false
+
+    function append() {
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        var options = {offset: searchModel.count, limit: cursorHelper.limit}
         if(app.query_for_market.value)
             options.market = "from_token"
         Spotify.getAlbumTracks(album.id, options, function(error, data) {
@@ -188,22 +222,8 @@ Page {
             } else {
                 console.log("No Data for getAlbumTracks")
             }
+            _loading = false
         })
-
-        var artists = []
-        for(var i=0;i<album.artists.length;i++)
-            artists.push(album.artists[i].id)
-        Spotify.getArtists(artists, {}, function(error, data) {
-            if(data)
-                albumArtists = data.artists
-        })
-
-        Spotify.containsMySavedAlbums([album.id], {}, function(error, data) {
-            if(data)
-                isAlbumSaved = data[0]
-        })
-
-        app.notifyHistoryUri(album.uri)
     }
 
     Connections {
