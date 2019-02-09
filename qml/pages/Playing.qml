@@ -65,6 +65,21 @@ Page {
                 x: Theme.paddingMedium
                 anchors.bottomMargin: Theme.paddingLarge
 
+                PullDownMenu {
+                    MenuItem {
+                        text: qsTr("Scroll to Current")
+                        visible: currentIndex != -1
+                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                    }
+                }
+                PushUpMenu {
+                    MenuItem {
+                        text: qsTr("Scroll to Current")
+                        visible: currentIndex != -1
+                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                    }
+                }
+
                 //LoadPullMenus {}
                 //LoadPushMenus {}
 
@@ -265,6 +280,7 @@ Page {
                     onToggleFavorite: app.toggleSavedTrack(model)
                 }
 
+                // play track
                 onClicked: app.controller.playTrackInContext(track, app.controller.playbackState.context)
             }
 
@@ -747,7 +763,6 @@ Page {
         app.getPlaylistTracks(pid, {offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
             if(data) {
                 try {
-                    console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
                     for(var i=0;i<data.items.length;i++) {
@@ -758,6 +773,7 @@ Page {
                                             track: data.items[i].track})
                     }
                     lastItemOffset = firstItemOffset + searchModel.count - 1
+                    console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
                 } catch (err) {
                     console.log(err)
@@ -792,7 +808,6 @@ Page {
         Spotify.getAlbumTracks(id, options, function(error, data) {
             if(data) {
                 try {
-                    console.log("number of AlbumTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
                     var trackIds = []
@@ -804,6 +819,7 @@ Page {
                                             track: data.items[i]})
                         trackIds.push(data.items[i].id)
                     }
+                    console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
                     // get info about saved tracks
                     Spotify.containsMySavedTracks(trackIds, function(error, data) {
                         if(data)
