@@ -63,6 +63,10 @@ Page {
                           name: qsTr("Settings"),
                           icon: "image://theme/icon-m-developer-mode"
                          })
+        menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowHelp,
+                          name: qsTr("Help"),
+                          icon: "image://theme/icon-m-question"
+                         })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowAboutPage,
                           name: qsTr("About"),
                           icon: "image://theme/icon-m-about"

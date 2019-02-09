@@ -286,6 +286,9 @@ ApplicationWindow {
         case Util.HutspotMenuItem.ShowAboutPage:
             pageStack.push(Qt.resolvedUrl("pages/About.qml"))
             break;
+        case Util.HutspotMenuItem.ShowHelp:
+            Qt.openUrlExternally("http://sailfish-spotify.github.io/hutspot/")
+            break;
         }
     }
 

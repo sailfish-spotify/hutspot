@@ -445,6 +445,10 @@
         <source>Menu</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NavigationMenuDialog</name>
@@ -494,6 +498,10 @@
     </message>
     <message>
         <source>Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -571,6 +579,10 @@
     </message>
     <message>
         <source>collaborative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scroll to Current</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
