@@ -708,7 +708,10 @@ Page {
                 console.log("  no context: " + currentId)
                 pageHeaderDescription = ""
             }
-            currentTrackId = app.controller.playbackState.item.id
+            if(currentTrackId !== app.controller.playbackState.item.id) {
+                currentTrackId = app.controller.playbackState.item.id
+                updateForCurrentTrack()
+            }
             //console.log("  currentTrackId: " + currentTrackId)
             if(currentIndex === -1)
                 updateForCurrentTrack()
