@@ -234,6 +234,18 @@
         <source>Connect using Blob</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Register Librespot Credentials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
