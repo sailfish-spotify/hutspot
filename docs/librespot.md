@@ -6,15 +6,16 @@ layout: default
 You can turn your sailfish device into a Spotify Connect Player using Librespot. (For as long as Spotify supports the api it uses.)
 
 ### Built on OBS
-On [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl) you can find a package to install it on Sailfish. For example:
-```
-curl http://repo.merproject.org/obs/home:/wdehoog:/librespot/sailfishos_armv7hl/armv7hl/librespot-master_20180518-1.16.2.armv7hl.rpm -o librespot-master_20180518-1.16.2.armv7hl.rpm
+On [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl) you can find a package to install it on Sailfish. For example (*use correct version*):
 
-devel-su pkcon install-local librespot-master_20180518-1.16.2.armv7hl.rpm
+```
+curl http://repo.merproject.org/obs/home:/wdehoog:/librespot/sailfishos_armv7hl/armv7hl/librespot-sailfish_hutspot_20190110-1.11.1.jolla.armv7hl.rpm -o librespot-sailfish_hutspot_20190110-1.11.1.jolla.armv7hl.rpm
+
+devel-su pkcon install-local librespot-sailfish_hutspot_20190110-1.11.1.jolla.armv7hl.rpm
 
 systemctl --user restart pulseaudio
 ```
-**Note that after installation ```pulseaudio``` really needs to be restarted due to permission to stream audio, see below.**
+*Note that after installation ```pulseaudio``` really needs to be restarted due to permission to stream audio, see below.*
 
 The package also installs a systemd service file but the ```librespot``` service is not started automatically. To launch it use ```systemctl --user start librespot``` (as user nemo). You can edit ```/etc/default/librespot``` to suit your needs. 
 Unfortunately I do not know how to get Librespot service started at boot. See [Issue #11](https://github.com/sailfish-spotify/hutspot/issues/37)
@@ -23,7 +24,7 @@ Cargo, the rust builder, cannot download packages on demand on OBS so I needed t
 
 Since the kernel on my phone (Oneplus One) is old (3.4.67) I needed to patch librespot see [Librespot for kernel < 3.9](https://github.com/librespot-org/librespot/wiki/Compile-librespot-for-kernel-prior-3.9).
 
-Due to the version of Rust available on OBS the latest version of Librespot cannot be build anymore. I forked it to revert a commit related to protobuf see the [repository](https://github.com/wdehoog/librespot). The revert is done in the ```sailfish-hutspot``` branch
+Due to the version of Rust available on OBS the latest version of Librespot cannot be build anymore. We forked it to revert a commit related to protobuf see the [repository](https://github.com/sailfish-spotify/librespot). The revert is done in the ```sailfish-hutspot``` branch
 
 ### Building locally
 Getting cross-compiling working with pulseaudio enabled proved too hard for me so I have also built i on a BananaPi. Should probably work on a RaspberryPi as well. For pulseaudio you also need to install ```libpulse-dev```. 
