@@ -37,8 +37,8 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+        //LoadPullMenus {}
+        //LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -99,6 +99,11 @@ Page {
             text: qsTr("Nothing found")
             hintText: qsTr("Pull down to reload")
         }
+
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     property var topTracks
@@ -149,35 +154,60 @@ Page {
     }
 
     function refresh() {
-        var i;
-
         searchModel.clear()
         topTracks = undefined
         topArtists = undefined
+        append()
+    }
 
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i;
         switch(_itemClass) {
         case 0:
-            Spotify.getMyTopTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-                if(data) {
-                    console.log("number of TopTracks: " + data.items.length)
-                    topTracks = data
-                    cursorHelper.offset = data.offset
-                    cursorHelper.total = data.total
-                } else
-                    console.log("No Data for getMyTopTracks")
-                loadData()
+            Spotify.getMyTopTracks({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
+                try {
+                    if(data) {
+                        console.log("number of TopTracks: " + data.items.length)
+                        topTracks = data
+                        cursorHelper.offset = data.offset
+                        cursorHelper.total = data.total
+                    } else
+                        console.log("No Data for getMyTopTracks")
+                    loadData()
+                } catch(err) {
+                    console.log("getMyTopTracks exception: " + err)
+                } finally {
+                    _loading = false
+                }
             })
             break
         case 1:
-            Spotify.getMyTopArtists({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
-                if(data) {
-                    console.log("number of MyTopArtists: " + data.items.length)
-                    topArtists = data
-                    cursorHelper.offset = data.offset
-                    cursorHelper.total = data.total
-                } else
-                    console.log("No Data for getMyTopArtists")
-                loadData()
+            Spotify.getMyTopArtists({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
+                try {
+                    if(data) {
+                        console.log("number of MyTopArtists: " + data.items.length)
+                        topArtists = data
+                        cursorHelper.offset = data.offset
+                        cursorHelper.total = data.total
+                    } else
+                        console.log("No Data for getMyTopArtists")
+                    loadData()
+                } catch(err) {
+                    console.log("getMyTopArtists exception: " + err)
+                } finally {
+                    _loading = false
+                }
             })
             break
         }

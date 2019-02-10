@@ -286,6 +286,9 @@ ApplicationWindow {
         case Util.HutspotMenuItem.ShowAboutPage:
             pageStack.push(Qt.resolvedUrl("pages/About.qml"))
             break;
+        case Util.HutspotMenuItem.ShowHelp:
+            Qt.openUrlExternally("http://sailfish-spotify.github.io/hutspot/")
+            break;
         }
     }
 
@@ -1173,7 +1176,7 @@ ApplicationWindow {
     ConfigurationValue {
         id: searchLimit
         key: "/hutspot/search_limit"
-        defaultValue: 20
+        defaultValue: 50
     }
 
     ConfigurationValue {
@@ -1313,6 +1316,12 @@ ApplicationWindow {
 
         property bool discovery: false
     }
+
+    /*ConfigurationValue {
+            id: auto_load_lists
+            key: "/hutspot/auto_load_lists"
+            defaultValue: true
+    }*/
 
     /*function updateConfigurationData() {
         if(configuration_data_version.value === currentConfigurationDataVersion)

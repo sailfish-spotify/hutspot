@@ -46,8 +46,8 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+        //LoadPullMenus {}
+        //LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -154,6 +154,10 @@ Page {
             hintText: qsTr("Pull down to reload")
         }
 
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
+        }
     }
 
     // when the page is on the stack but not on top a refresh can wait
@@ -223,13 +227,38 @@ Page {
     }
 
     function refresh() {
-        var i;
         //showBusy = true
         searchModel.clear()        
+        append()
+        app.isFollowingPlaylist(playlist.id, function(error, data) {
+            if(data)
+                isFollowed = data[0]
+        })
 
+        app.notifyHistoryUri(playlist.uri)
+
+        // description is not send with getUserPlaylists so get it using getPlaylist
+        refreshDetails()
+
+        updatePlaylistTexts()
+    }
+
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i;
         app.getPlaylistTracks(playlist.id,
-                                  {offset: cursorHelper.offset, limit: cursorHelper.limit},
-                                  function(error, data) {
+                              {offset: searchModel.count, limit: cursorHelper.limit},
+                              function(error, data) {
             if(data) {
                 //console.log(JSON.stringify(data))
                 try {
@@ -247,19 +276,8 @@ Page {
             } else {
                 console.log("No Data for getPlaylistTracks")
             }
+            _loading = false
         })
-
-        app.isFollowingPlaylist(playlist.id, function(error, data) {
-            if(data)
-                isFollowed = data[0]
-        })
-
-        app.notifyHistoryUri(playlist.uri)
-
-        // description is not send with getUserPlaylists so get it using getPlaylist
-        refreshDetails()
-
-        updatePlaylistTexts()
     }
 
     function refreshDetails() {

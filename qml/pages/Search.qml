@@ -74,8 +74,8 @@ Page {
                 }
             }
 
-            LoadPullMenus {}
-            LoadPushMenus {}
+            //LoadPullMenus {}
+            //LoadPushMenus {}
 
             SearchFieldWithMenu {
                 id: searchField
@@ -190,6 +190,16 @@ Page {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
         }
+
+        onAtYEndChanged: {
+            if(listView.atYEnd) {
+                if(searchString === "")
+                    return
+                if(_itemClass === -1)
+                    nextItemClass()
+                append()
+            }
+        }
     }
 
     property alias cursorHelper: cursorHelper
@@ -214,13 +224,28 @@ Page {
     }
 
     function refresh() {
-        var i;
         if(searchString === "")
             return
         if(_itemClass === -1)
             nextItemClass()
         showBusy = true
         searchModel.clear()
+        append()
+    }
+
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i;
         var types = []
         if(_itemClass === 0)
             types.push('album')
@@ -231,7 +256,7 @@ Page {
         else if(_itemClass === 3)
             types.push('track')
 
-        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        var options = {offset: searchModel.count, limit: cursorHelper.limit}
         if(app.query_for_market.value)
             options.market = "from_token"
         Spotify.search(Util.processSearchString(searchString), types, options, function(error, data) {
@@ -316,6 +341,7 @@ Page {
             if(error)
                 app.showErrorMessage(error, qsTr("Search Failed"))
             showBusy = false
+            _loading = false
         })
     }
 

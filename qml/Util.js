@@ -517,7 +517,8 @@ var HutspotMenuItem = {
     ShowSettingsPage: 7,
     ShowTopStuffPage: 8,
     ShowHistoryPage: 9,
-    ShowRecommendedPage: 10
+    ShowRecommendedPage: 10,
+    ShowHelp: 11
 }
 
 var HutspotPage = {

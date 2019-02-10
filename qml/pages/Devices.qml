@@ -34,8 +34,23 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("Register Librespot Credentials")
+                onClicked: librespot.registerCredentials()
+            }
+            MenuItem {
                 text: qsTr("Reload Devices")
                 onClicked: app.controller.reloadDevices()
+            }
+        }
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Login")
+                onClicked: spotify.doO2Auth(Spotify._scope, app.auth_using_browser.value)
+            }
+            MenuItem {
+                text: qsTr("Refresh Token")
+                onClicked: spotify.refreshToken()
             }
         }
 

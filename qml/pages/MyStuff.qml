@@ -37,8 +37,8 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        LoadPullMenus {}
-        LoadPushMenus {}
+        //LoadPullMenus {}
+        //LoadPushMenus {}
 
         header: Column {
             id: lvColumn
@@ -135,6 +135,11 @@ Page {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
             hintText: qsTr("Pull down to reload")
+        }
+
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
         }
     }
 
@@ -247,18 +252,31 @@ Page {
 
 
     function refresh() {
-        var i, options;
-
         searchModel.clear()
         savedAlbums = undefined
         userPlaylists = undefined
         savedTracks = undefined
         recentlyPlayedTracks = undefined
         followedArtists = undefined
+        append()
+    }
 
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(searchModel.count > 0 && searchModel.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        var i, options;
         switch(_itemClass) {
         case 0:
-            Spotify.getMySavedAlbums({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+            Spotify.getMySavedAlbums({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
                 if(data) {
                     console.log("number of SavedAlbums: " + data.items.length)
                     savedAlbums = data
@@ -267,6 +285,7 @@ Page {
                 } else
                     console.log("No Data for getMySavedAlbums")
                 loadData()
+                _loading = false
             })
             break
         case 1:
@@ -279,6 +298,7 @@ Page {
                 } else
                     console.log("No Data for getUserPlaylists")
                 loadData()
+                _loading = false
             })
             break
         case 2:
@@ -300,6 +320,7 @@ Page {
                 } else
                     console.log("No Data for getMyRecentlyPlayedTracks")
                 loadData()
+                _loading = false
             })
             break
         case 3:
@@ -312,6 +333,7 @@ Page {
                 } else
                     console.log("No Data for getMySavedTracks")
                 loadData()
+                _loading = false
             })
             break
         case 4:
@@ -327,6 +349,7 @@ Page {
                 } else
                     console.log("No Data for getFollowedArtists")
                 loadData()
+                _loading = false
             })
             break
         }

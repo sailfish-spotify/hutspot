@@ -142,6 +142,15 @@ Item {
 
             IconButton {
                 width: bar.itemWidth
+                icon.source: "image://theme/icon-m-question"
+                onClicked: {
+                    whenIconClicked()
+                    app.doSelectedMenuItem(Util.HutspotMenuItem.ShowHelp)
+                }
+            }
+
+            IconButton {
+                width: bar.itemWidth
                 icon.source: "image://theme/icon-m-about"
                 onClicked: {
                     whenIconClicked()
