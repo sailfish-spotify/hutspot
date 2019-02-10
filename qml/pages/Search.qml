@@ -112,7 +112,7 @@ Page {
                         }
                     }
                     MenuItem {
-                        text: qsTr("Select Recently Used Item")
+                        text: qsTr("Select Recently Used Query")
                         onClicked: {
                             searchHistoryModel.clear()
                             var sh = app.search_history.value
@@ -133,7 +133,7 @@ Page {
                         }
                     }
                     MenuItem {
-                        text: qsTr("Clear Recently Used Items")
+                        text: qsTr("Clear Recently Used Queries")
                         onClicked: {
                             app.showConfirmDialog(qsTr("Please confirm Clearing the Search History"), function() {
                                 app.search_history.value = []

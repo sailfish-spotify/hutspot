@@ -67,14 +67,14 @@ Page {
 
                 PullDownMenu {
                     MenuItem {
-                        text: qsTr("Scroll to Current")
+                        text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
                         onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     }
                 }
                 PushUpMenu {
                     MenuItem {
-                        text: qsTr("Scroll to Current")
+                        text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
                         onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
                     }
