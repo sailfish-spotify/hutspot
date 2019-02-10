@@ -273,7 +273,9 @@ Page {
                     }
                 }
 
-                menu: AlbumTrackContextMenu {}
+                menu: AlbumTrackContextMenu {
+                    enableQueueItems: false
+                }
 
                 Connections {
                     target: loader.item
