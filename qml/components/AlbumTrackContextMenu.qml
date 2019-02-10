@@ -13,6 +13,8 @@ import "../Util.js" as Util
 
 ContextMenu {
     property var context;
+    property bool enableQueueItems: true
+
     enabled: Util.isTrackPlayable(track)
     visible: enabled
 
@@ -22,11 +24,13 @@ ContextMenu {
     }
 
     MenuItem {
+        visible: enableQueueItems
         text: qsTr("Add to Queue")
         onClicked: app.queue.addToQueue(track)
     }
 
     MenuItem {
+        visible: enableQueueItems
         text: qsTr("Replace Queue")
         onClicked: app.queue.replaceQueueWith([track.uri])
     }

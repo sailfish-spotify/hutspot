@@ -19,55 +19,56 @@ ContextMenu {
         text: qsTr("Play")
         onClicked: {
             switch(type) {
-            case 0:
+            case Util.SpotifyItemType.Album:
                 app.controller.playContext(album)
                 break;
-            case 1:
+            case Util.SpotifyItemType.Artist:
                 app.controller.playContext(artist)
                 break;
-            case 2:
+            case Util.SpotifyItemType.Playlist:
                 app.controller.playContext(playlist)
                 break;
-            case 3:
+            case Util.SpotifyItemType.Track:
                 app.controller.playTrack(track)
                 break;
             }
         }
-        enabled: type !== 3 || Util.isTrackPlayable(track)
+        enabled: type !== Util.SpotifyItemType.Track || Util.isTrackPlayable(track)
         visible: enabled
     }
     MenuItem {
         text: qsTr("View")
-        enabled: type === 0 || type === 1 || type === 2
+        enabled: type !== Util.SpotifyItemType.Track
         visible: enabled
         onClicked: {
             switch(type) {
-            case 0:
+            case Util.SpotifyItemType.Album:
                 app.pushPage(Util.HutspotPage.Album, {album: album})
                 break
-            case 1:
+            case Util.SpotifyItemType.Artist:
                 app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
                 break
-            case 2:
+            case Util.SpotifyItemType.Playlist:
                 app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
                 break
             }
         }
     }
     MenuItem {
-        enabled: type === 3
+        enabled: type === Util.SpotifyItemType.Track
         visible: enabled
         text: qsTr("View Album")
         onClicked: app.pushPage(Util.HutspotPage.Album, {album: track.album})
     }
     MenuItem {
-        enabled: (type === 3 && Util.isTrackPlayable(track)) && contextType !== 2
+        enabled: (type === Util.SpotifyItemType.Track && Util.isTrackPlayable(track))
+                 && contextType !== Util.SpotifyItemType.Playlist
         visible: enabled
         text: qsTr("Add to Playlist")
         onClicked: app.addToPlaylist(track)
     }
     MenuItem {
-        enabled: type === 2
+        enabled: type === Util.SpotifyItemType.Playlist
         visible: enabled
         text: qsTr("Use as Seeds for Recommendations")
         onClicked: app.useAsSeeds(playlist)

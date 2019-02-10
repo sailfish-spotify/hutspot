@@ -14,6 +14,8 @@ Hutspot has some options in it's Settings page to integrate the Librespot servic
 Sources of Hutspot can be found on [github](https://github.com/sailfish-spotify/hutspot).
 Development is done using the Sailfish OS IDE. Most sources are QML and Javascript. Some part is done in C++.
 
+Please report any problems or requests in the [Github Issue Tracker](https://github.com/sailfish-spotify/hutspot/issues)
+
 ### Thanks
  * Spotify for web api
  * JMPerez for [spotify-web-api-js](https://github.com/JMPerez/spotify-web-api-js)

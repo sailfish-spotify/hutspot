@@ -582,7 +582,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scroll to Current</source>
+        <source>Scroll to current Track</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -813,11 +813,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Select Recently Used Item</source>
+        <source>Select Recently Used Query</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear Recently Used Items</source>
+        <source>Clear Recently Used Queries</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
