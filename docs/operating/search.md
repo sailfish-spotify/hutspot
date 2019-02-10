@@ -1,7 +1,7 @@
 ---
 title: Searching
 parent: Operating
-nav_order: 2
+nav_order: 3
 layout: default
 ---
 ## Searching

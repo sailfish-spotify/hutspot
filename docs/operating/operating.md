@@ -10,7 +10,7 @@ permalink: operating
 ### Authorization 
 At startup authorization is done using a webview or external browser window. The tokens are saved so a next startup might not need a new login. Still this webview/browser window might appear. When authorization is successful you can then switch to the app.
 
-### Pages
+### App Navigation
 There are some 'main' pages
 
  * New Releases (albums)
