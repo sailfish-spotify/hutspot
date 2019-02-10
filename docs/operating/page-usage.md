@@ -7,7 +7,7 @@ layout: default
 ## Page Usage
 {: .no_toc}
 
- *
+ * TOC
 {:toc}
 
 #### Album Page
