@@ -37,6 +37,7 @@ There is an Issue about cross compiling with pulseaudio support: [Docker compile
 
 ### Permission to stream audio
 To allow LibreSpot to use pulseaudio (and have a non muted sink-input) create /etc/pulse/xpolicy.conf.d/librespot.conf: (as root)
+
 ```
 [stream]
 exe      = librespot
@@ -45,26 +46,30 @@ group    = player
 ```
 
 Restart pulseaudio (or reboot). (as nemo)
+
 ```
 systemctl --user restart pulseaudio
 ```
 
 Launching the player is done for example with: (as nemo)
+
 ```
 librespot -n Sailfish -b 320 -v --backend pulseaudio
 ```
 
 ### Device Discovery
-Discovery of the device is problematic. When used once from a real Spotify app the device shows up in lists. Using the commandline options ```--username``` and ```--password``` will make it show up for a while.
+Discovery of the Librespot player is problematic. When used once from a real Spotify app the device shows up in lists. 
 
-However now the password will be visible in the process list and service status.
-Only specifying the username will make librespot ask for the password.
+Using the commandline options ```--username``` and ```--password``` will make it show up in the list but only for a while. However now the password will be visible in the process list and service status. Only specifying the username will make librespot ask for the password.
+
+
 If the cache is enabled the credentials will be stored there.
 So if you start in once from the command line like:
+
 ```
 librespot --cache /home/nemo/.cache/librespot --username <USERNAME> -n test 
 ```
 the service can use the cached credentials without showing it in the process or
 service lists.
 
-**Note**: from 2019-01-05 on hutspot has a dialog to register your Spotify credentials with Librespot. See the PullDown menu in the Settings page. It can only work with librespot-master_20180518-1.20.1 or later (it needs to be able to read the password from stdin).
+**Note**: from 2019-01-05 on hutspot has a dialog to register your Spotify credentials with Librespot. See the PullDown menu in the Settings page and in the Devices page. It can only work with librespot-master_20180518-1.20.1 or later (since it needs to be able to read the password from stdin).

@@ -112,7 +112,7 @@ Page {
                     }
                     MenuItem {
                         enabled: sp === 0 && app.librespot.hasLibreSpotCredentials()
-                        text: qsTr("Connect using Blob")
+                        text: qsTr("Connect using Authorization Blob")
                         onClicked: {                            
                             var name = app.foundDevices[deviceIndex].remoteName
                             _toBeAddedName = name

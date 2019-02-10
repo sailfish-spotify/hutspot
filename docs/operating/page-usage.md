@@ -10,7 +10,7 @@ layout: default
  * TOC
 {:toc}
 
-#### Album Page
+### Album Page
  * Click on Album Image to play this album
  * Click on Artists names to open Artist Page
  * Click on Star to toggle Saved state
@@ -21,7 +21,7 @@ layout: default
    * Replace Queue
    * Add to Playlist
 
-#### Artist Page
+### Artist Page
  * Click on Artist Image to play this artists tracks
  * Click on the Page Header to switch between showing
    * Albums
@@ -36,17 +36,17 @@ layout: default
    * Play
    * View
 
-#### Genres & Mood Page
+### Genres & Mood Page
  * Click on an item to open the corresponding Playlists page
 
-#### Genres & Mood Playlists Page
+### Genres & Mood Playlists Page
  * Click on a Playlist to play it
  * Context Menu of a Playlist provides: 
    * Play
    * View
    * Use as Seeds for Recommendations
 
-#### History Page
+### History Page
  * Pulldown Menu provides
     * Clear History 
  * Click on an Album to view it
@@ -63,7 +63,7 @@ layout: default
    * View
    * Use as Seeds for Recommendations
 
-#### My Stuff Page
+### My Stuff Page
  * Click on the Page Header to switch between showing
    * Saved Albums
    * Playlists
@@ -92,13 +92,13 @@ layout: default
    * Replace Queue
    * Add to Playlist
 
-#### New Releases Page
+### New Releases Page
  * Click on an Album to view it
  * Context Menu of an Album provides: 
    * Play
    * View
 
-#### Playing Page
+### Playing Page
  * Pulldown- and Pushup Menu provides
     * Scroll to current Track
  * Click on Image to switch between
@@ -109,7 +109,7 @@ layout: default
    * Play
    * Add to Playlist
 
-#### Playlist Page
+### Playlist Page
  * Click on Playlist Image to play
  * Click on Playlist details to edit them
  * Click on Star to toggle Followed state
@@ -120,7 +120,7 @@ layout: default
    * Remove from Playist
    * Add to another Playlist
 
-#### Recommended Page
+### Recommended Page
  * Click on the Page Header to switch between showing
    * Genres
    * Genres + Attributes
@@ -138,7 +138,7 @@ layout: default
    * Replace Queue
    * Add to Playlist
 
-#### Search Page
+### Search Page
  * Click on the Page Header to switch between searching
    * Albums
    * Artists
@@ -171,7 +171,7 @@ layout: default
    * Replace Queue
    * Add to Playlist
 
-#### Top Stuff
+### Top Stuff
  * Click on the Page Header to switch between showing
    * Tracks
    * Artists
@@ -186,3 +186,22 @@ layout: default
    * Add to Queue
    * Replace Queue
    * Add to Playlist
+
+### Settings Page
+ * Pulldown menu provides
+   * Register Librespot Credentials
+ * Pushup menu provides
+   * Login
+   * Refresh Token
+
+### Devices Page
+ * Pulldown menu provides
+   * Register Librespot Credentials
+   * Reload Devices
+ * Pushup menu provides
+   * Login
+   * Refresh Token
+ * Context Menu on a Device provides:
+   * Set as Current
+   * Connect using Authorization Blob 
+
