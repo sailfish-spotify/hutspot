@@ -120,6 +120,11 @@ layout: default
    * Remove from Playist
    * Add to another Playlist
 
+### Choose Playlist Dialog
+ * Pulldown menu provides
+   * Create New Playlist
+ * Click on Playlist item to select it
+
 ### Recommended Page
  * Click on the Page Header to switch between showing
    * Genres

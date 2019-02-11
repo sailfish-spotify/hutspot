@@ -231,10 +231,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connect using Blob</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Register Librespot Credentials</source>
         <translation type="unfinished"></translation>
     </message>
@@ -244,6 +240,10 @@
     </message>
     <message>
         <source>Refresh Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect using Authorization Blob</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -640,15 +640,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Create Playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load Next Set</source>
+        <source>Create New Playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
