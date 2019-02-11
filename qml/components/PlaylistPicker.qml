@@ -21,12 +21,12 @@ Dialog {
     ListModel { id: items }
 
     SilicaListView {
-        id: view
+        id: listView
 
         anchors.fill: parent
         model: items
 
-        VerticalScrollDecorator { flickable: view }
+        VerticalScrollDecorator { flickable: listView }
 
         header: DialogHeader {
             acceptText: qsTr("OK")
@@ -72,25 +72,29 @@ Dialog {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Create Playlist")
+                text: qsTr("Create New Playlist")
                 onClicked: app.createPlaylist(function(error, data) {
                     if(data) {
                         refresh()
                     }
                 })
             }
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Load Previous Set")
                 enabled: cursorHelper.canLoadPrevious
                 onClicked: cursorHelper.previous()
-            }
+            }*/
         }
-        PushUpMenu {
+        /*PushUpMenu {
             MenuItem {
                 text: qsTr("Load Next Set")
                 enabled: cursorHelper.canLoadNext
                 onClicked: cursorHelper.next()
             }
+        }*/
+        onAtYEndChanged: {
+            if(listView.atYEnd)
+                append()
         }
     }
 
@@ -104,20 +108,41 @@ Dialog {
     onLabelChanged: refresh() // ToDo come up with a better trigger
 
     function refresh() {
-        Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
-            if(data) {
-                console.log("number of playlists: " + data.items.length)
-                items.clear()
-                cursorHelper.offset = data.offset
-                cursorHelper.total = data.total
-                for (var i=0;i<data.items.length;i++) {
-                    items.append({type: 2,
-                                  stype: 2,
-                                  name: data.items[i].name,
-                                  playlist: data.items[i]});
-                }
-            } else
-                console.log("No Data for getUserPlaylists")
+        items.clear()
+        append()
+    }
+
+    property bool _loading: false
+
+    function append() {
+        // if already at the end -> bail out
+        if(items.count > 0 && items.count >= cursorHelper.total)
+            return
+
+        // guard
+        if(_loading)
+            return
+        _loading = true
+
+        Spotify.getUserPlaylists({offset: items.count, limit: cursorHelper.limit},function(error, data) {
+            try {
+                if(data) {
+                    //console.log("number of playlists: " + data.items.length)
+                    cursorHelper.offset = data.offset
+                    cursorHelper.total = data.total
+                    for (var i=0;i<data.items.length;i++) {
+                        items.append({type: 2,
+                                      stype: 2,
+                                      name: data.items[i].name,
+                                      playlist: data.items[i]});
+                    }
+                } else
+                    console.log("No Data for getUserPlaylists")
+            } catch(err) {
+                console.log("PlaylistPicker.append exception" + err)
+            } finally {
+                _loading = false
+            }
         })
     }
 }
