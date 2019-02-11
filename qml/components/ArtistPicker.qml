@@ -67,7 +67,7 @@ Dialog {
             items.append({type: 1,
                           stype: 0,
                           name: artists[i].name,
-                          artist: artists[i]});
+                          item: artists[i]});
         }
     }
 

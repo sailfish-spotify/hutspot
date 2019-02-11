@@ -78,13 +78,13 @@ Page {
             onClicked: {
                 switch(type) {
                 case 0:
-                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item})
                     break;
                 case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
                     break;
                 case 2:
-                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
                     break;
                 }
             }
@@ -124,17 +124,17 @@ Page {
                     case 0:
                         searchModel.append({type: 0,
                                             name: retrieved[i].data.name,
-                                            album: retrieved[i].data})
+                                            item: retrieved[i].data})
                         break
                     case 1:
                         searchModel.append({type: 1,
                                             name: retrieved[i].data.name,
-                                            artist: retrieved[i].data})
+                                            item: retrieved[i].data})
                         break
                     case 2:
                         searchModel.append({type: 2,
                                             name: retrieved[i].data.name,
-                                            playlist: retrieved[i].data})
+                                            item: retrieved[i].data})
                         break
                     }
                     break

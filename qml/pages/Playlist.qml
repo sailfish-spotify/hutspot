@@ -130,7 +130,7 @@ Page {
                     onClicked: {
                         var idx = index
                         var model = searchModel
-                        app.removeFromPlaylist(playlist, track, index+cursorHelper.offset, function(error, data) {
+                        app.removeFromPlaylist(playlist, item, index+cursorHelper.offset, function(error, data) {
                             if(!error)
                                 model.remove(idx, 1)
                         })
@@ -139,11 +139,11 @@ Page {
 
                 MenuItem {
                     text: qsTr("Add to another Playlist")
-                    onClicked: app.addToPlaylist(track)
+                    onClicked: app.addToPlaylist(item)
                 }
             }
 
-            onClicked: app.pushPage(Util.HutspotPage.Album, {album: track.album})
+            onClicked: app.pushPage(Util.HutspotPage.Album, {album: item.album})
         }
 
         VerticalScrollDecorator {}
@@ -268,7 +268,7 @@ Page {
                     for(i=0;i<data.items.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.items[i].track.name,
-                                            track: data.items[i].track})
+                                            item: data.items[i].track})
                     }
                 } catch (err) {
                     console.log(err)

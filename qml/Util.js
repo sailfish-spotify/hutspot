@@ -184,7 +184,7 @@ function setSavedInfo(type, ids, data, model) {
                     var id
                     switch(type) {
                     case SpotifyItemType.Track:
-                        id = v.track.id
+                        id = v.item.id
                         break;
                     }
                     if(ids[i] === id)        // found it
@@ -212,10 +212,10 @@ function setFollowedInfo(type, ids, data, model) {
                     var id
                     switch(type) {
                     case SpotifyItemType.Artist:
-                        id = v.artist.id
+                        id = v.item.id
                         break;
                     case SpotifyItemType.Playlist:
-                        id = v.playlist.id
+                        id = v.item.id
                         break
                     }
                     if(ids[i] === id)        // found it
@@ -265,26 +265,7 @@ function doesListModelContain(model, type, id) {
         var obj = model.get(i);
         if(obj.type !== type)
             continue;
-        var found = false;
-        switch(obj.type) {
-        case SpotifyItemType.Album:
-            if(obj.album.id === id)
-                found = true;
-            break;
-        case SpotifyItemType.Artist:
-            if(obj.artist.id === id)
-                found = true;
-            break;
-        case SpotifyItemType.Playlist:
-            if(obj.playlist.id === id)
-                found = true;
-            break;
-        case SpotifyItemType.Track:
-            if(obj.track.id === id)
-                found = true;
-            break;
-        }
-        if(found)
+        if(obj.item.id === id)
             return i;
     }
     return -1;

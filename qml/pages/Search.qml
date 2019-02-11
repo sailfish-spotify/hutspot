@@ -169,16 +169,16 @@ Page {
             onClicked: {
                 switch(type) {
                 case 0:
-                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item})
                     break;
                 case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
                     break;
                 case 2:
-                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
                     break;
                 case 3:
-                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item.album})
                     break;
                 }
             }
@@ -268,11 +268,8 @@ Page {
                         for(i=0;i<data.albums.items.length;i++) {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
-                                                album: data.albums.items[i],
-                                                following: false,
-                                                artist: {},
-                                                playlist: {},
-                                                track: {}})
+                                                item: data.albums.items[i],
+                                                following: false})
                         }
                         cursorHelper.offset = data.albums.offset
                         cursorHelper.total = data.albums.total
@@ -283,11 +280,8 @@ Page {
                         for(i=0;i<data.artists.items.length;i++) {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
-                                                following: false,
-                                                album: {},
-                                                artist: data.artists.items[i],
-                                                playlist: {},
-                                                track: {}})
+                                                item: data.artists.items[i],
+                                                following: false})
                             artistIds.push(data.artists.items[i].id)
                         }
                         cursorHelper.offset = data.artists.offset
@@ -306,11 +300,8 @@ Page {
                         for(i=0;i<data.playlists.items.length;i++) {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
-                                                album: {},
-                                                following: false,
-                                                artist: {},
-                                                playlist: data.playlists.items[i],
-                                                track: {}})
+                                                item: data.playlists.items[i],
+                                                following: false})
                         }
                         cursorHelper.offset = data.playlists.offset
                         cursorHelper.total = data.playlists.total
@@ -321,11 +312,8 @@ Page {
                         for(i=0;i<data.tracks.items.length;i++) {
                             searchModel.append({type: 3,
                                                 name: data.tracks.items[i].name,
-                                                album: {},
-                                                following: false,
-                                                artist: {},
-                                                playlist: {},
-                                                track: data.tracks.items[i]})
+                                                item: data.tracks.items[i],
+                                                following: false})
                         }
                         cursorHelper.offset = data.tracks.offset
                         cursorHelper.total = data.tracks.total

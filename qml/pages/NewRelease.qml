@@ -69,7 +69,7 @@ Page {
 
             menu: SearchResultContextMenu {}
 
-            onClicked: app.pushPage(Util.HutspotPage.Album, {album: album})
+            onClicked: app.pushPage(Util.HutspotPage.Album, {album: item})
         }
 
         VerticalScrollDecorator {}
@@ -114,7 +114,7 @@ Page {
                     for(i=0;i<data.albums.items.length;i++) {
                         searchModel.append({type: 0,
                                             name: data.albums.items[i].name,
-                                            album: data.albums.items[i]})
+                                            item: data.albums.items[i]})
                     }
                 } catch (err) {
                     console.log(err)

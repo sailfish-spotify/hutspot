@@ -78,7 +78,7 @@ Page {
                 dataModel: model
             }
 
-            onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+            onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
         }
 
         VerticalScrollDecorator {}
@@ -125,7 +125,7 @@ Page {
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
-                                            playlist: data.playlists.items[i]})
+                                            item: data.playlists.items[i]})
                     }
                 } catch (err) {
                     console.log(err)

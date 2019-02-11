@@ -120,13 +120,13 @@ ApplicationWindow {
             if(data) {
                 seedsModel.clear()
                 try {
-                    console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
+                    //console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
                     for(var i=0;i<data.items.length;i++) {
                         seedsModel.append({type: Spotify.ItemType.Track,
                                            stype: Spotify.ItemType.Playlist,
                                            name: data.items[i].track.name,
                                            saved: false,
-                                           track: data.items[i].track})
+                                           item: data.items[i].track})
                     }
                 } catch (err) {
                     console.log("useAsSeeds: "+ err)
@@ -725,19 +725,19 @@ ApplicationWindow {
         var ms = pageStack.push(Qt.resolvedUrl("components/PlaylistPicker.qml"),
                                 { label: qsTr("Select a Playlist") } );
         ms.accepted.connect(function() {
-            if(ms.selectedItem && ms.selectedItem.playlist) {
-                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.id,
+            if(ms.selectedItem && ms.selectedItem.item) {
+                Spotify.addTracksToPlaylist(ms.selectedItem.item.id,
                                             [track.uri], {}, function(error, data) {
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
-                                                        ms.selectedItem.playlist.id, data.snapshot_id)
+                                                        ms.selectedItem.item.id, data.snapshot_id)
                         ev.trackId = track.id
                         ev.trackUri = track.uri
                         playlistEvent(ev)
                         console.log("addToPlaylist: added \"")
                     } else
                         console.log("addToPlaylist: failed to add \"")
-                    console.log(track.name + "\" to \"" + ms.selectedItem.playlist.name + "\"")
+                    console.log(track.name + "\" to \"" + ms.selectedItem.item.name + "\"")
                 })
             }
         })

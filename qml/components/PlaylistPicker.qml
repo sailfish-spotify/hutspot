@@ -134,7 +134,7 @@ Dialog {
                         items.append({type: 2,
                                       stype: 2,
                                       name: data.items[i].name,
-                                      playlist: data.items[i]});
+                                      item: data.items[i]});
                     }
                 } else
                     console.log("No Data for getUserPlaylists")

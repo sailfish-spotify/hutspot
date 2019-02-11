@@ -83,10 +83,10 @@ Page {
             onClicked: {
                 switch(type) {
                 case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
                     break;
                 case 3:
-                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item.album})
                     break;
                 }
             }
@@ -133,16 +133,14 @@ Page {
                 searchModel.append({type: 3,
                                     name: topTracks.items[i].name,
                                     following: false,
-                                    track: topTracks.items[i],
-                                    artist: {}})
+                                    item: topTracks.items[i]})
         if(topArtists) {
             var artistIds = []
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
                                     name: topArtists.items[i].name,
                                     following: false,
-                                    track: {},
-                                    artist: topArtists.items[i]})
+                                    item: topArtists.items[i]})
                 artistIds.push(topArtists.items[i].id)
             }
             // request additional Info
