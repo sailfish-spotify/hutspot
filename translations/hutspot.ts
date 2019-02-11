@@ -20,11 +20,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Copyright (C) 2018</source>
-        <extracomment>I doubt this needs to be translated</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>License: MIT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -34,6 +29,11 @@
     </message>
     <message>
         <source>Thanks to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2019</source>
+        <extracomment>I doubt this needs to be translated</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
