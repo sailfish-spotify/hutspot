@@ -10,7 +10,7 @@ Main features:
 
  * Browse Albums/Artists/Playlists
  * Search Albums/Artists/Playlists/Tracks
- * Support for Genres & Moods, New Releases and Recommendations
+ * Support for Genres & Moods, New Releases, Featured Playlists and Recommendations
  * Follow/Unfollow, Save/Unsave
  * Discover and control Connect Devices
  * Control Play/Pause/Next/Previous/Volume/Shuffle/Replay/Seek

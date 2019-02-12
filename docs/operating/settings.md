@@ -6,6 +6,7 @@ layout: default
 ---
 ## Settings
 The Settings page allows to configure:
+
   * The number of results per request. Spotify seems to have a maximum of 50.
   * Number of items to save in the History list.
   * Enable Device Discovery, looking for Spotify Players on the network
@@ -13,6 +14,7 @@ The Settings page allows to configure:
   * Start Librespot or stop it.
   * Show the Devices page at startup
   * The name of the Playlist Hutspot uses when it needs to queue Tracks
+  * Country code ([ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)) to be used for fetching Featured Playlists.
   * Should Spotify replace tracks in Playlists that cannot be played due to regional restrictions.
   * Delay for the Docked panel to show up again
   * Ask for confirmation of save/follow changes
