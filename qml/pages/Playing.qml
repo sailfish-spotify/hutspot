@@ -283,7 +283,7 @@ Page {
                 }
 
                 // play track
-                onClicked: app.controller.playTrackInContext(track, app.controller.playbackState.context)
+                onClicked: app.controller.playTrackInContext(item, app.controller.playbackState.context)
             }
 
             VerticalScrollDecorator {}
@@ -568,7 +568,7 @@ Page {
         // keep current track visible
         currentIndex = -1
         for(var i=0;i<searchModel.count;i++)
-            if(searchModel.get(i).track.id === currentTrackId) {
+            if(searchModel.get(i).item.id === currentTrackId) {
                 listView.positionViewAtIndex(i, ListView.Visible)
                 currentIndex = i
                 break
@@ -775,7 +775,7 @@ Page {
                                             stype: Spotify.ItemType.Playlist,
                                             name: data.items[i].track.name,
                                             saved: false,
-                                            track: data.items[i].track})
+                                            item: data.items[i].track})
                     }
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
@@ -821,7 +821,7 @@ Page {
                                             stype: Spotify.ItemType.Album,
                                             name: data.items[i].name,
                                             saved: false,
-                                            track: data.items[i]})
+                                            item: data.items[i]})
                         trackIds.push(data.items[i].id)
                     }
                     console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)

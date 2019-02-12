@@ -15,29 +15,29 @@ ContextMenu {
     property var context;
     property bool enableQueueItems: true
 
-    enabled: Util.isTrackPlayable(track)
+    enabled: Util.isTrackPlayable(item)
     visible: enabled
 
     MenuItem {
         text: qsTr("Play")
-        onClicked: app.controller.playTrackInContext(track, context)
+        onClicked: app.controller.playTrackInContext(item, context)
     }
 
     MenuItem {
         visible: enableQueueItems
         text: qsTr("Add to Queue")
-        onClicked: app.queue.addToQueue(track)
+        onClicked: app.queue.addToQueue(item)
     }
 
     MenuItem {
         visible: enableQueueItems
         text: qsTr("Replace Queue")
-        onClicked: app.queue.replaceQueueWith([track.uri])
+        onClicked: app.queue.replaceQueueWith([item.uri])
     }
 
     MenuItem {
         text: qsTr("Add to Playlist")
-        onClicked: app.addToPlaylist(track)
+        onClicked: app.addToPlaylist(item)
     }
 
 }
