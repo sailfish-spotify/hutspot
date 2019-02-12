@@ -935,12 +935,12 @@ ApplicationWindow {
 
     function toggleSavedTrack(model) {
         if(model.saved)
-            unSaveTrack(model.track, function(error,data) {
+            unSaveTrack(model.item, function(error,data) {
                 if(!error)
                     model.saved = false
             })
         else
-            saveTrack(model.track, function(error,data) {
+            saveTrack(model.item, function(error,data) {
                 if(!error)
                     model.saved = true
             })
