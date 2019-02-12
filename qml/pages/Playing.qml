@@ -301,7 +301,8 @@ Page {
             onAtYEndChanged: {
                 if(listView.atYEnd) {
                     // album is already completely loaded
-                    if(app.controller.playbackState.context.type === 'playlist')
+                    if(app.controller.playbackState.context
+                       && app.controller.playbackState.context.type === 'playlist')
                         appendPlaylistTracks(app.id, currentId, false)
                 }
             }

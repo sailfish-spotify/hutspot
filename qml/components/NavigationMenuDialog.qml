@@ -28,7 +28,7 @@ Dialog {
                               icon: "image://theme/icon-m-music"
                              })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowNewReleasePage,
-                          name: qsTr("New Releases"),
+                          name: qsTr("New & Featured"),
                           icon: "image://theme/icon-m-health"
                          })
         menuModel.append({hutspotMenuItem: Util.HutspotMenuItem.ShowMyStuffPage,

@@ -7,6 +7,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQml 2.2
 
 import org.nemomobile.configuration 1.0
 import org.nemomobile.dbus 2.0
@@ -98,6 +99,7 @@ ApplicationWindow {
     property alias handle_network_connection: handle_network_connection
     property alias controlpanel_show_delay: controlpanel_show_delay
     property alias logging_flags: logging_flags
+    property alias locale_config: locale_config
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -107,7 +109,7 @@ ApplicationWindow {
     property alias librespot: librespot
     property string playerName: "Hutspot"
 
-    allowedOrientations: defaultAllowedOrientations
+    allowedOrientations: Orientation.All
 
     // seeds for recommendations
     property alias seedsModel: seedsModel
@@ -171,7 +173,7 @@ ApplicationWindow {
             break;
         case 'NewReleasePage':
             pageStack.clear()
-            page = pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/NewAndFeatured.qml"))
             break;
         case 'MyStuffPage':
             pageStack.clear()
@@ -217,7 +219,7 @@ ApplicationWindow {
                 pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
             break;
         case "NewReleasePage":
-            pageUrl = Qt.resolvedUrl("pages/NewRelease.qml")
+            pageUrl = Qt.resolvedUrl("pages/NewAndFeatured.qml")
             break;
         case "MyStuffPage":
             pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
@@ -1266,6 +1268,7 @@ ApplicationWindow {
         property int recommended: 0
         property int myStuff: 0
         property int artist: 0
+        property int featuredStuff: 0
     }
 
     ConfigurationValue {
@@ -1315,6 +1318,13 @@ ApplicationWindow {
         path: "/hutspot/logging_flags"
 
         property bool discovery: false
+    }
+
+    ConfigurationGroup {
+        id: locale_config
+        path: "/hutspot/locale_config"
+
+        property string country: ""
     }
 
     /*ConfigurationValue {

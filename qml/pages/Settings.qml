@@ -140,6 +140,19 @@ Page {
                 }
             }
 
+            TextField {
+                id: country
+                placeholderText: label
+                label: qsTr("Country Code (2 characters)")
+                width: parent.width
+                maximumLength: 2
+                inputMethodHints: Qt.ImhUppercaseOnly
+                onTextChanged: {
+                    if(text.length > 0)
+                        app.locale_config.country = text
+                }
+            }
+
             TextSwitch {
                 id: queryForMarket
                 text: qsTr("Query for Market")
@@ -246,6 +259,7 @@ Page {
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
             hutspotQueueName.text = app.hutspot_queue_playlist_name.value
             delayPanelSlider.value = app.controlpanel_show_delay.value
+            country.text = app.locale_config.country
         }
     }
 }
