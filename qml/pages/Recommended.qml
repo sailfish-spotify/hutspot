@@ -317,7 +317,7 @@ Page {
             menu: SearchResultContextMenu {}
 
             onClicked: {
-                app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                app.pushPage(Util.HutspotPage.Album, {album: item.album})
             }
         }
 
@@ -358,7 +358,7 @@ Page {
             var ids = ""
             for(i = 0; i < app.seedsModel.count && i < 5; i++) {
                 if(ids.length > 0) ids += ","
-                ids += app.seedsModel.get(i).track.id
+                ids += app.seedsModel.get(i).item.id
             }
             options = {seed_tracks: ids}
         }
@@ -384,7 +384,7 @@ Page {
                     for(i=0;i<data.tracks.length;i++) {
                         searchModel.append({type: 3,
                                             name: data.tracks[i].name,
-                                            track: data.tracks[i]})
+                                            item: data.tracks[i]})
                     }
                 } catch (err) {
                     console.log(err)

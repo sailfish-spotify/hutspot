@@ -98,12 +98,12 @@ Page {
                         var idx = index
                         var model = searchModel
                         if(type === 1)
-                            app.unfollowArtist(artist, function(error,data) {
+                            app.unfollowArtist(item, function(error,data) {
                                if(!error)
                                    model.remove(idx, 1)
                             })
                         else
-                            app.unfollowPlaylist(playlist, function(error,data) {
+                            app.unfollowPlaylist(item, function(error,data) {
                                if(!error)
                                    model.remove(idx, 1)
                             })
@@ -114,16 +114,16 @@ Page {
             onClicked: {
                 switch(type) {
                 case 0:
-                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item})
                     break;
                 case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
                     break;
                 case 2:
-                    app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
                     break;
                 case 3:
-                    app.pushPage(Util.HutspotPage.Album, {album: track.album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item.album})
                     break;
                 }
             }
@@ -197,14 +197,14 @@ Page {
 
     function addData(obj) {
         obj.nameFirstChar = Util.getFirstCharForSection(obj.name)
-        if(!obj.hasOwnProperty('album'))
+        /*if(!obj.hasOwnProperty('album'))
             obj.album = {}
         if(!obj.hasOwnProperty('playlist'))
             obj.playlist = {}
         if(!obj.hasOwnProperty('track'))
             obj.track = {}
         if(!obj.hasOwnProperty('artist'))
-            obj.artist = {}
+            obj.artist = {}*/
         if(!obj.hasOwnProperty('played_at'))
             obj.played_at = ""
         if(!obj.hasOwnProperty('following'))
@@ -218,32 +218,32 @@ Page {
             for(i=0;i<savedAlbums.items.length;i++)
                 addData({type: 0, stype: 0,
                          name: savedAlbums.items[i].album.name,
-                         album: savedAlbums.items[i].album})
+                         item: savedAlbums.items[i].album})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
                 addData({type: 2, stype: 2,
                          name: userPlaylists.items[i].name,
-                         playlist: userPlaylists.items[i]})
+                         item: userPlaylists.items[i]})
             }
         if(recentlyPlayedTracks)
             // context, played_at, track
             for(i=0;i<recentlyPlayedTracks.items.length;i++) {
                 addData({type: 3, stype: 3,
                          name: recentlyPlayedTracks.items[i].track.name,
-                         track: recentlyPlayedTracks.items[i].track,
+                         item: recentlyPlayedTracks.items[i].track,
                          played_at: recentlyPlayedTracks.items[i].played_at})
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
                 addData({type: 3, stype: 4,
                          name: savedTracks.items[i].track.name,
-                         track: savedTracks.items[i].track})
+                         item: savedTracks.items[i].track})
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
                 addData({type: 1, stype: 1,
                          name: followedArtists.artists.items[i].name,
-                         artist: followedArtists.artists.items[i],
+                         item: followedArtists.artists.items[i],
                          following: true})
             }
     }

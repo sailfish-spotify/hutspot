@@ -47,7 +47,7 @@ Page {
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeLarge
-                        text: "hutspot 0.1"
+                        text: "hutspot 0.2"
                     }
 
                     Label {
@@ -62,7 +62,7 @@ Page {
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: Theme.fontSizeExtraSmall
                         //: I doubt this needs to be translated
-                        text: qsTr("Copyright (C) 2018")
+                        text: qsTr("Copyright (C) 2019")
                         truncationMode: TruncationMode.Fade
                         width: parent.width
                     }

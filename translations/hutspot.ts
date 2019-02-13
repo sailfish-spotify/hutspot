@@ -20,11 +20,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Copyright (C) 2018</source>
-        <extracomment>I doubt this needs to be translated</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>License: MIT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -34,6 +29,11 @@
     </message>
     <message>
         <source>Thanks to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2019</source>
+        <extracomment>I doubt this needs to be translated</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -402,10 +402,6 @@
 <context>
     <name>NavigationMenu</name>
     <message>
-        <source>New Releases</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
     </message>
@@ -447,6 +443,10 @@
     </message>
     <message>
         <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New &amp; Featured</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -457,10 +457,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New Releases</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>My Stuff</source>
         <translation type="unfinished"></translation>
     </message>
@@ -504,11 +500,23 @@
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>New &amp; Featured</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>NewRelease</name>
+    <name>NewAndFeatured</name>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
     <message>
         <source>New Releases</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Featured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -518,6 +526,13 @@
     <message>
         <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NewRelease</name>
+    <message>
+        <source></source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1015,6 +1030,10 @@
     </message>
     <message>
         <source>ControlPanel Show Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Country Code (2 characters)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

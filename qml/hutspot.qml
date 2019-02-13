@@ -7,6 +7,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQml 2.2
 
 import org.nemomobile.configuration 1.0
 import org.nemomobile.dbus 2.0
@@ -98,6 +99,7 @@ ApplicationWindow {
     property alias handle_network_connection: handle_network_connection
     property alias controlpanel_show_delay: controlpanel_show_delay
     property alias logging_flags: logging_flags
+    property alias locale_config: locale_config
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -107,7 +109,7 @@ ApplicationWindow {
     property alias librespot: librespot
     property string playerName: "Hutspot"
 
-    allowedOrientations: defaultAllowedOrientations
+    allowedOrientations: Orientation.All
 
     // seeds for recommendations
     property alias seedsModel: seedsModel
@@ -120,13 +122,13 @@ ApplicationWindow {
             if(data) {
                 seedsModel.clear()
                 try {
-                    console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
+                    //console.log("useAsSeeds: number of PlaylistTracks: " + data.items.length)
                     for(var i=0;i<data.items.length;i++) {
                         seedsModel.append({type: Spotify.ItemType.Track,
                                            stype: Spotify.ItemType.Playlist,
                                            name: data.items[i].track.name,
                                            saved: false,
-                                           track: data.items[i].track})
+                                           item: data.items[i].track})
                     }
                 } catch (err) {
                     console.log("useAsSeeds: "+ err)
@@ -171,7 +173,7 @@ ApplicationWindow {
             break;
         case 'NewReleasePage':
             pageStack.clear()
-            page = pageStack.push(Qt.resolvedUrl("pages/NewRelease.qml"))
+            page = pageStack.push(Qt.resolvedUrl("pages/NewAndFeatured.qml"))
             break;
         case 'MyStuffPage':
             pageStack.clear()
@@ -217,7 +219,7 @@ ApplicationWindow {
                 pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
             break;
         case "NewReleasePage":
-            pageUrl = Qt.resolvedUrl("pages/NewRelease.qml")
+            pageUrl = Qt.resolvedUrl("pages/NewAndFeatured.qml")
             break;
         case "MyStuffPage":
             pageUrl = Qt.resolvedUrl("pages/MyStuff.qml")
@@ -725,19 +727,19 @@ ApplicationWindow {
         var ms = pageStack.push(Qt.resolvedUrl("components/PlaylistPicker.qml"),
                                 { label: qsTr("Select a Playlist") } );
         ms.accepted.connect(function() {
-            if(ms.selectedItem && ms.selectedItem.playlist) {
-                Spotify.addTracksToPlaylist(ms.selectedItem.playlist.id,
+            if(ms.selectedItem && ms.selectedItem.item) {
+                Spotify.addTracksToPlaylist(ms.selectedItem.item.id,
                                             [track.uri], {}, function(error, data) {
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.AddedTrack,
-                                                        ms.selectedItem.playlist.id, data.snapshot_id)
+                                                        ms.selectedItem.item.id, data.snapshot_id)
                         ev.trackId = track.id
                         ev.trackUri = track.uri
                         playlistEvent(ev)
                         console.log("addToPlaylist: added \"")
                     } else
                         console.log("addToPlaylist: failed to add \"")
-                    console.log(track.name + "\" to \"" + ms.selectedItem.playlist.name + "\"")
+                    console.log(track.name + "\" to \"" + ms.selectedItem.item.name + "\"")
                 })
             }
         })
@@ -935,12 +937,12 @@ ApplicationWindow {
 
     function toggleSavedTrack(model) {
         if(model.saved)
-            unSaveTrack(model.track, function(error,data) {
+            unSaveTrack(model.item, function(error,data) {
                 if(!error)
                     model.saved = false
             })
         else
-            saveTrack(model.track, function(error,data) {
+            saveTrack(model.item, function(error,data) {
                 if(!error)
                     model.saved = true
             })
@@ -1266,6 +1268,7 @@ ApplicationWindow {
         property int recommended: 0
         property int myStuff: 0
         property int artist: 0
+        property int featuredStuff: 0
     }
 
     ConfigurationValue {
@@ -1315,6 +1318,13 @@ ApplicationWindow {
         path: "/hutspot/logging_flags"
 
         property bool discovery: false
+    }
+
+    ConfigurationGroup {
+        id: locale_config
+        path: "/hutspot/locale_config"
+
+        property string country: ""
     }
 
     /*ConfigurationValue {

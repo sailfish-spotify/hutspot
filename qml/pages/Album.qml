@@ -130,7 +130,7 @@ Page {
                 context: album
             }
 
-            onClicked: app.controller.playTrackInContext(track, album)
+            onClicked: app.controller.playTrackInContext(item, album)
         }
 
         VerticalScrollDecorator {}
@@ -206,7 +206,7 @@ Page {
                         searchModel.append({type: Spotify.ItemType.Track,
                                             name: data.items[i].name,
                                             saved: false,
-                                            track: data.items[i]})
+                                            item: data.items[i]})
                         trackIds.push(data.items[i].id)
                     }
                     // get info about saved tracks

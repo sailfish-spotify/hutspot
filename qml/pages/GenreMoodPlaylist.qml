@@ -78,7 +78,9 @@ Page {
                 dataModel: model
             }
 
-            onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: playlist})
+            menu: SearchResultContextMenu {}
+
+            onClicked: app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
         }
 
         VerticalScrollDecorator {}
@@ -119,13 +121,13 @@ Page {
                                      function(error, data) {
             if(data) {
                 try {
-                    console.log("number of Playlists: " + data.playlists.items.length)
+                    //console.log("number of Playlists: " + data.playlists.items.length)
                     cursorHelper.offset = data.playlists.offset
                     cursorHelper.total = data.playlists.total
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
-                                            playlist: data.playlists.items[i]})
+                                            item: data.playlists.items[i]})
                     }
                 } catch (err) {
                     console.log(err)

@@ -283,7 +283,7 @@ Page {
                 }
 
                 // play track
-                onClicked: app.controller.playTrackInContext(track, app.controller.playbackState.context)
+                onClicked: app.controller.playTrackInContext(item, app.controller.playbackState.context)
             }
 
             VerticalScrollDecorator {}
@@ -301,7 +301,8 @@ Page {
             onAtYEndChanged: {
                 if(listView.atYEnd) {
                     // album is already completely loaded
-                    if(app.controller.playbackState.context.type === 'playlist')
+                    if(app.controller.playbackState.context
+                       && app.controller.playbackState.context.type === 'playlist')
                         appendPlaylistTracks(app.id, currentId, false)
                 }
             }
@@ -337,7 +338,9 @@ Page {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
-                    maximumValue: app.controller.playbackState.item.duration_ms
+                    maximumValue: app.controller.playbackState.item
+                                  ? app.controller.playbackState.item.duration_ms
+                                  : ""
                     handleVisible: false
                     onPressed: isPressed = true
                     onReleased: {
@@ -360,7 +363,9 @@ Page {
                     id: durationLabel
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Util.getDurationString(app.controller.playbackState.item.duration_ms)
+                    text: app.controller.playbackState.item
+                          ? Util.getDurationString(app.controller.playbackState.item.duration_ms)
+                          : ""
                 }
             }
 
@@ -568,7 +573,7 @@ Page {
         // keep current track visible
         currentIndex = -1
         for(var i=0;i<searchModel.count;i++)
-            if(searchModel.get(i).track.id === currentTrackId) {
+            if(searchModel.get(i).item.id === currentTrackId) {
                 listView.positionViewAtIndex(i, ListView.Visible)
                 currentIndex = i
                 break
@@ -775,7 +780,7 @@ Page {
                                             stype: Spotify.ItemType.Playlist,
                                             name: data.items[i].track.name,
                                             saved: false,
-                                            track: data.items[i].track})
+                                            item: data.items[i].track})
                     }
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
@@ -821,7 +826,7 @@ Page {
                                             stype: Spotify.ItemType.Album,
                                             name: data.items[i].name,
                                             saved: false,
-                                            track: data.items[i]})
+                                            item: data.items[i]})
                         trackIds.push(data.items[i].id)
                     }
                     console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)

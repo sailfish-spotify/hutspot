@@ -124,10 +124,10 @@ Page {
             onClicked: {
                 switch(type) {
                 case 0:
-                    app.pushPage(Util.HutspotPage.Album, {album: album})
+                    app.pushPage(Util.HutspotPage.Album, {album: item})
                     break;
                 case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: artist})
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
                     break;
                 }
             }
@@ -170,9 +170,8 @@ Page {
             for(i=0;i<artistAlbums.items.length;i++) {
                 searchModel.append({type: 0,
                                     name: artistAlbums.items[i].name,
-                                    album: artistAlbums.items[i],
-                                    following: false,
-                                    artist: {}})
+                                    item: artistAlbums.items[i],
+                                    following: false})
             }
             // request additional Info
             Spotify.isFollowingArtists([currentArtist.id], function(error, data) {
@@ -186,9 +185,8 @@ Page {
             for(i=0;i<relatedArtists.artists.length;i++) {
                 searchModel.append({type: 1,
                                     name: relatedArtists.artists[i].name,
-                                    album: {},
-                                    following: false,
-                                    artist: relatedArtists.artists[i]})
+                                    item: relatedArtists.artists[i],
+                                    following: false})
                 artistIds.push(relatedArtists.artists[i].id)
             }
             // request additional Info

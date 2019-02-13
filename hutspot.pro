@@ -90,7 +90,9 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 # following CONFIG line
 CONFIG += sailfishapp_i18n
 
-TRANSLATIONS += translations/hutspot.ts
+TRANSLATIONS += translations/hutspot.ts \
+    translations/hutspot-it.ts \
+    translations/hutspot-sv.ts
 
 HEADERS += \
     src/o2/o0abstractstore.h \
@@ -143,6 +145,5 @@ HEADERS += \
 INCLUDEPATH += src/qmdnsengine
 
 QMAKE_LFLAGS += -lssl -lcrypto
-#QMAKE_LFLAGS += -lavahi-client -lavahi-common
 
 CONFIG += console

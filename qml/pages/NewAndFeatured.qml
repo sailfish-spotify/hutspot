@@ -13,14 +13,13 @@ import "../Spotify.js" as Spotify
 import "../Util.js" as Util
 
 Page {
-    id: topStuffPage
-    objectName: "TopStuffPage"
+    id: newRelease
+    objectName: "NewReleasePage"
 
-
-    property int searchInType: 0
     property bool showBusy: false
-    property int currentIndex: -1
 
+    property int currentIndex: -1
+    property string featuredPlaylistsMessage: ""
 
     allowedOrientations: Orientation.All
 
@@ -37,9 +36,6 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        //LoadPullMenus {}
-        //LoadPushMenus {}
-
         header: Column {
             id: lvColumn
 
@@ -53,8 +49,8 @@ Page {
                 width: parent.width
                 title: {
                     switch(_itemClass) {
-                    case 0: return Util.createPageHeaderLabel(qsTr("Top "), qsTr("Tracks"), Theme)
-                    case 1: return Util.createPageHeaderLabel(qsTr("Top "), qsTr("Artists"), Theme)
+                    case 0: return Util.createPageHeaderLabel(qsTr(""), qsTr("New Releases"), Theme)
+                    case 1: return Util.createPageHeaderLabel(qsTr(""), qsTr("Featured"), Theme)
                     }
                 }
                 MenuButton { z: 1} // set z so you can still click the button
@@ -65,12 +61,22 @@ Page {
                 }
             }
 
+            SectionHeader {
+                width: parent.width
+                text: featuredPlaylistsMessage
+                visible: _itemClass == 1
+            }
+
+            //LoadPullMenus {}
+            //LoadPushMenus {}
+
         }
 
         delegate: ListItem {
             id: listItem
             width: parent.width - 2*Theme.paddingMedium
             x: Theme.paddingMedium
+            //height: searchResultListItem.height
             contentHeight: Theme.itemSizeLarge
 
             SearchResultListItem {
@@ -82,17 +88,17 @@ Page {
 
             onClicked: {
                 switch(type) {
-                case 1:
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: item})
-                    break;
-                case 3:
-                    app.pushPage(Util.HutspotPage.Album, {album: item.album})
-                    break;
+                case Util.SpotifyItemType.Album:
+                    app.pushPage(Util.HutspotPage.Album, {album: item})
+                    break
+                case Util.SpotifyItemType.Playlist:
+                    app.pushPage(Util.HutspotPage.Playlist, {playlist: item})
+                    break
                 }
             }
         }
 
-        VerticalScrollDecorator { id: vsd }
+        VerticalScrollDecorator {}
 
         ViewPlaceholder {
             enabled: listView.count === 0
@@ -108,7 +114,7 @@ Page {
 
     property var topTracks
     property var topArtists
-    property int _itemClass: app.current_item_classes.topStuff
+    property int _itemClass: app.current_item_classes.featuredStuff
 
     function nextItemClass() {
         var i = _itemClass
@@ -116,45 +122,13 @@ Page {
         if(i > 1)
             i = 0
         _itemClass = i
-        app.current_item_classes.topStuff = i
+        app.current_item_classes.featuredStuff = i
         refresh()
     }
 
-    function loadData() {
-        var i
-
-        // I don't understand why I have to make the objects being appended
-        // have the same properties. Before I did that the artist property
-        // would be missing in the delegate of the ListView. That did never happen
-        // when both tracks as well as artists were added in this function.
-
-        if(topTracks)
-            for(i=0;i<topTracks.items.length;i++)
-                searchModel.append({type: 3,
-                                    name: topTracks.items[i].name,
-                                    following: false,
-                                    item: topTracks.items[i]})
-        if(topArtists) {
-            var artistIds = []
-            for(i=0;i<topArtists.items.length;i++) {
-                searchModel.append({type: 1,
-                                    name: topArtists.items[i].name,
-                                    following: false,
-                                    item: topArtists.items[i]})
-                artistIds.push(topArtists.items[i].id)
-            }
-            // request additional Info
-            Spotify.isFollowingArtists(artistIds, function(error, data) {
-                if(data)
-                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-            })
-        }
-    }
-
     function refresh() {
+        showBusy = true
         searchModel.clear()
-        topTracks = undefined
-        topArtists = undefined
         append()
     }
 
@@ -170,40 +144,63 @@ Page {
             return
         _loading = true
 
-        var i;
+        var i
+        var options
         switch(_itemClass) {
         case 0:
-            Spotify.getMyTopTracks({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
+            options = {offset: searchModel.count, limit: cursorHelper.limit}
+            Spotify.getNewReleases(options, function(error, data) {
                 try {
                     if(data) {
-                        console.log("number of TopTracks: " + data.items.length)
-                        topTracks = data
-                        cursorHelper.offset = data.offset
-                        cursorHelper.total = data.total
-                    } else
-                        console.log("No Data for getMyTopTracks")
-                    loadData()
+                        cursorHelper.offset = data.albums.offset
+                        cursorHelper.total = data.albums.total
+                        try {
+                            for(i=0;i<data.albums.items.length;i++) {
+                                searchModel.append({type: Util.SpotifyItemType.Album,
+                                                    name: data.albums.items[i].name,
+                                                    item: data.albums.items[i]})
+                            }
+                        } catch (err) {
+                            console.log(err)
+                        }
+                    } else {
+                        console.log("getNewReleases returned no results.")
+                    }
                 } catch(err) {
-                    console.log("getMyTopTracks exception: " + err)
+                    console.log("getNewReleases exception: " + err)
                 } finally {
+                    showBusy = false
                     _loading = false
                 }
             })
             break
         case 1:
-            Spotify.getMyTopArtists({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
+            options = {offset: searchModel.count, limit: cursorHelper.limit}
+            options.timestamp = new Date().toISOString()
+            if(app.locale_config.country.length === 2)
+                options.country = app.locale_config.country
+            Spotify.getFeaturedPlaylists(options, function(error, data) {
                 try {
                     if(data) {
-                        console.log("number of MyTopArtists: " + data.items.length)
-                        topArtists = data
-                        cursorHelper.offset = data.offset
-                        cursorHelper.total = data.total
-                    } else
-                        console.log("No Data for getMyTopArtists")
-                    loadData()
+                        cursorHelper.offset = data.playlists.offset
+                        cursorHelper.total = data.playlists.total
+                        featuredPlaylistsMessage = data.message
+                        try {
+                            for(i=0;i<data.playlists.items.length;i++) {
+                                searchModel.append({type: Util.SpotifyItemType.Playlist,
+                                                    name: data.playlists.items[i].name,
+                                                    item: data.playlists.items[i]})
+                            }
+                        } catch (err) {
+                            console.log(err)
+                        }
+                    } else {
+                        console.log("getFeaturedPlaylists returned no results.")
+                    }
                 } catch(err) {
-                    console.log("getMyTopArtists exception: " + err)
+                    console.log("getFeaturedPlaylists exception: " + err)
                 } finally {
+                    showBusy = false
                     _loading = false
                 }
             })

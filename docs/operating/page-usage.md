@@ -92,11 +92,19 @@ layout: default
    * Replace Queue
    * Add to Playlist
 
-### New Releases Page
+### New & Featured Page
+ * Click on the Page Header to switch between showing
+   * New Released Albums
+   * Featured Playlists
  * Click on an Album to view it
+ * Click on a Playlist to view it
  * Context Menu of an Album provides: 
    * Play
    * View
+ * Context Menu of a Playlist provides: 
+   * Play
+   * View
+   * Use as Seeds for Recommendations
 
 ### Playing Page
  * Pulldown- and Pushup Menu provides

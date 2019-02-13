@@ -5,6 +5,9 @@ layout: default
 ---
 You can turn your sailfish device into a Spotify Connect Player using Librespot. (For as long as Spotify supports the api it uses.)
 
+Librespot is available on [openrepos.net](https://openrepos.net/content/wdehoog/librespot) 
+
+
 ### Built on OBS
 On [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl) you can find a package to install it on Sailfish. For example (*use correct version*):
 
