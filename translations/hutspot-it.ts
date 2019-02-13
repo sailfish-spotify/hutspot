@@ -509,15 +509,11 @@
     <name>NewAndFeatured</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>New Releases</source>
         <translation type="unfinished">Nuove uscite</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Featured</source>
