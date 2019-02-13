@@ -31,7 +31,8 @@ PkgConfigBR:
   - openssl
 
 # Build dependencies without a pkgconfig setup can be listed here
-#PkgBR:
+PkgBR:
+  - qt5-qttools-linguist
 
 # Runtime dependencies which are not automatically detected
 Requires:
@@ -43,7 +44,6 @@ Files:
   - '%{_datadir}/%{name}'
   - '%{_datadir}/applications/%{name}.desktop'
   - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
-  - '%{_datadir}/%{name}/translations'
 
 # For more information about yaml and what's supported in Sailfish OS
 # build system, please see https://wiki.merproject.org/wiki/Spectacle
