@@ -25,7 +25,17 @@ ContextMenu {
                 app.controller.playContext(item)
                 break;
             case Util.SpotifyItemType.Track:
-                app.controller.playTrack(track)
+                switch(contextType) {
+                case Util.SpotifyItemType.Album:
+                    app.controller.playTrackInContext(item, album)
+                    break
+                case Util.SpotifyItemType.Playlist:
+                    app.controller.playTrackInContext(item, playlist)
+                    break
+                default:
+                    app.controller.playTrack(item)
+                    break
+                }
                 break;
             }
         }
