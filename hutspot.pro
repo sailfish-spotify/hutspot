@@ -92,7 +92,8 @@ CONFIG += sailfishapp_i18n
 
 TRANSLATIONS += translations/hutspot.ts \
     translations/hutspot-it.ts \
-    translations/hutspot-sv.ts
+    translations/hutspot-sv.ts \
+    translations/hutspot-zh.ts
 
 HEADERS += \
     src/o2/o0abstractstore.h \

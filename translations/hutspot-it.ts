@@ -36,6 +36,10 @@
         <extracomment>I doubt this needs to be translated</extracomment>
         <translation type="unfinished">Copyright (C) 2019</translation>
     </message>
+    <message>
+        <source>Translations</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Album</name>
@@ -509,15 +513,11 @@
     <name>NewAndFeatured</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>New Releases</source>
         <translation type="unfinished">Nuove uscite</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Featured</source>

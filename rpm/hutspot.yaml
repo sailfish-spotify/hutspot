@@ -31,14 +31,12 @@ PkgConfigBR:
   - openssl
 
 # Build dependencies without a pkgconfig setup can be listed here
-#PkgBR:
-#  - libavahi-devel
+PkgBR:
+  - qt5-qttools-linguist
 
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9 
-#  - avahi
-#  - libavahi-client3
 
 # All installed files
 Files:
