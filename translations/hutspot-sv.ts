@@ -34,7 +34,7 @@
     <message>
         <source>Copyright (C) 2019</source>
         <extracomment>I doubt this needs to be translated</extracomment>
-        <translation type="unfinished">Copyright (C) 2019</translation>
+        <translation>Copyright (C) 2019</translation>
     </message>
 </context>
 <context>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>Nytt &amp; kommande</translation>
     </message>
 </context>
 <context>
@@ -502,34 +502,30 @@
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>Nytt &amp; kommande</translation>
     </message>
 </context>
 <context>
     <name>NewAndFeatured</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>New Releases</source>
-        <translation type="unfinished">Nya släpp</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
+        <translation>Nya släpp</translation>
     </message>
     <message>
         <source>Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>Kommande</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation type="unfinished">Inget hittades</translation>
+        <translation>Inget hittades</translation>
     </message>
     <message>
         <source>Pull down to reload</source>
-        <translation type="unfinished">Dra neråt för att uppdatera</translation>
+        <translation>Dra neråt för att uppdatera</translation>
     </message>
 </context>
 <context>
@@ -1031,7 +1027,7 @@
     </message>
     <message>
         <source>Country Code (2 characters)</source>
-        <translation type="unfinished"></translation>
+        <translation>Landskod (2 tecken)</translation>
     </message>
 </context>
 <context>
