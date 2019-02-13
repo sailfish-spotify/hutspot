@@ -15,7 +15,7 @@ Item {
 
         Rectangle {
             color: Theme.secondaryColor
-            width: parent.width * (app.controller.playbackState.progress_ms / app.controller.playbackState.item.duration_ms)
+            width: app.controller.playbackState ? (parent.width * (app.controller.playbackState.progress_ms / app.controller.playbackState.item.duration_ms)) : 0
             height: Theme.paddingSmall
         }
 

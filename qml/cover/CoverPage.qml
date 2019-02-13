@@ -84,7 +84,9 @@ CoverBackground {
            //wrapMode: Text.WrapAtWordBoundaryOrAnywhere
            maximumLineCount: 3
            elide: Text.ElideRight
-           text: app.controller.playbackState.item.name
+           text: app.controller.playbackState.item
+                 ? app.controller.playbackState.item.name
+                 : ""
        }
        Label {
            anchors.left: parent.left
@@ -93,7 +95,9 @@ CoverBackground {
            //wrapMode: Text.WrapAtWordBoundaryOrAnywhere
            maximumLineCount: 2
            elide: Text.ElideRight
-           text: Util.createItemsString(app.controller.playbackState.item.artists, "")
+           text: app.controller.playbackState.item
+                 ? Util.createItemsString(app.controller.playbackState.item.artists, "")
+                 : ""
            color: Theme.secondaryColor
            visible: text != ""
        }

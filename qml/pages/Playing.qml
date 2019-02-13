@@ -338,7 +338,9 @@ Page {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
-                    maximumValue: app.controller.playbackState.item.duration_ms
+                    maximumValue: app.controller.playbackState.item
+                                  ? app.controller.playbackState.item.duration_ms
+                                  : ""
                     handleVisible: false
                     onPressed: isPressed = true
                     onReleased: {
@@ -361,7 +363,9 @@ Page {
                     id: durationLabel
                     font.pixelSize: Theme.fontSizeSmall
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Util.getDurationString(app.controller.playbackState.item.duration_ms)
+                    text: app.controller.playbackState.item
+                          ? Util.getDurationString(app.controller.playbackState.item.duration_ms)
+                          : ""
                 }
             }
 
