@@ -20,11 +20,6 @@
         <translation>Spotify-kontroll för Sailfish OS</translation>
     </message>
     <message>
-        <source>Copyright (C) 2018</source>
-        <extracomment>I doubt this needs to be translated</extracomment>
-        <translation>Copyright (C) 2018</translation>
-    </message>
-    <message>
         <source>License: MIT</source>
         <translation>Licens: MIT</translation>
     </message>
@@ -35,6 +30,11 @@
     <message>
         <source>Thanks to</source>
         <translation>Tack till</translation>
+    </message>
+    <message>
+        <source>Copyright (C) 2019</source>
+        <extracomment>I doubt this needs to be translated</extracomment>
+        <translation type="unfinished">Copyright (C) 2019</translation>
     </message>
 </context>
 <context>
@@ -402,10 +402,6 @@
 <context>
     <name>NavigationMenu</name>
     <message>
-        <source>New Releases</source>
-        <translation>Nya släpp</translation>
-    </message>
-    <message>
         <source>My Stuff</source>
         <translation>Mina grejer</translation>
     </message>
@@ -448,6 +444,10 @@
     <message>
         <source>Help</source>
         <translation>Hjälp</translation>
+    </message>
+    <message>
+        <source>New &amp; Featured</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -457,10 +457,6 @@
         <translation>Spelas</translation>
     </message>
     <message>
-        <source>New Releases</source>
-        <translation>Nya släpp</translation>
-    </message>
-    <message>
         <source>My Stuff</source>
         <translation>Mina grejer</translation>
     </message>
@@ -504,20 +500,36 @@
         <source>Help</source>
         <translation>Hjälp</translation>
     </message>
+    <message>
+        <source>New &amp; Featured</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>NewRelease</name>
+    <name>NewAndFeatured</name>
+    <message>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>New Releases</source>
-        <translation>Nya släpp</translation>
+        <translation type="unfinished">Nya släpp</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Featured</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation>Inget hittades</translation>
+        <translation type="unfinished">Inget hittades</translation>
     </message>
     <message>
         <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
+        <translation type="unfinished">Dra neråt för att uppdatera</translation>
     </message>
 </context>
 <context>
@@ -1016,6 +1028,10 @@
     <message>
         <source>ControlPanel Show Delay</source>
         <translation>Visningsfördröjning för kontrollpanelen</translation>
+    </message>
+    <message>
+        <source>Country Code (2 characters)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
