@@ -105,6 +105,26 @@ Page {
 Maciej Janiszewski
 rgrnetalk"
             }
+
+            SectionHeader {
+                text: qsTr("Translations")
+            }
+
+            Label {
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.horizontalPageMargin
+                    right: parent.right
+                    rightMargin: Theme.horizontalPageMargin
+                }
+                font.pixelSize: Theme.fontSizeSmall
+                wrapMode: Text.WordWrap
+                text:
+"it: fravaccaro
+sv: eson57
+zh: @dashinfantry"
+            }
+
             SectionHeader {
                 text: qsTr("Thanks to")
             }
