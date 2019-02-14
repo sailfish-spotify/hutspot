@@ -197,14 +197,6 @@ Page {
 
     function addData(obj) {
         obj.nameFirstChar = Util.getFirstCharForSection(obj.name)
-        /*if(!obj.hasOwnProperty('album'))
-            obj.album = {}
-        if(!obj.hasOwnProperty('playlist'))
-            obj.playlist = {}
-        if(!obj.hasOwnProperty('track'))
-            obj.track = {}
-        if(!obj.hasOwnProperty('artist'))
-            obj.artist = {}*/
         if(!obj.hasOwnProperty('played_at'))
             obj.played_at = ""
         if(!obj.hasOwnProperty('following'))
@@ -289,7 +281,7 @@ Page {
             })
             break
         case 1:
-            Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
+            Spotify.getUserPlaylists({offset: searchModel.count, limit: cursorHelper.limit},function(error, data) {
                 if(data) {
                     console.log("number of playlists: " + data.items.length)
                     userPlaylists = data
@@ -324,7 +316,7 @@ Page {
             })
             break
         case 3:
-            Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+            Spotify.getMySavedTracks({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
                 if(data) {
                     console.log("number of SavedTracks: " + data.items.length)
                     savedTracks = data
