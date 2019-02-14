@@ -782,7 +782,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.createPlaylist(options, function(error, data) {
+                Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.CreatedPlaylist,
