@@ -16,6 +16,7 @@ import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
 import "Util.js" as Util
+
 import "cover"
 import "pages"
 import "components"
@@ -26,6 +27,11 @@ ApplicationWindow {
     property alias controller: spotifyController
     SpotifyController {
         id: spotifyController
+    }
+
+    property alias spotifyDataCache: spotifyDataCache
+    SpotifyDataCache {
+        id: spotifyDataCache
     }
 
     GlassyBackground {
@@ -1663,7 +1669,9 @@ ApplicationWindow {
         Component.onCompleted: updateInfo()
     }
 
-    Component.onCompleted: loadFirstPage()
+    Component.onCompleted: {
+        loadFirstPage()
+    }
 
     property var scheduledActions: []
     function scheduleDelayedAction(action) {

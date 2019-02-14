@@ -281,18 +281,11 @@ Page {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
                                                 item: data.artists.items[i],
-                                                following: false})
+                                                following: app.spotifyDataCache.isArtistFollowed(data.artists.items[i].id)})
                             artistIds.push(data.artists.items[i].id)
                         }
                         cursorHelper.offset = data.artists.offset
                         cursorHelper.total = data.artists.total
-
-                        // request additional Info
-                        Spotify.isFollowingArtists(artistIds, function(error, data) {
-                            if(data) {
-                                Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-                            }
-                        })
                     }
 
                     // playlists
@@ -301,7 +294,7 @@ Page {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
                                                 item: data.playlists.items[i],
-                                                following: false})
+                                                following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id)})
                         }
                         cursorHelper.offset = data.playlists.offset
                         cursorHelper.total = data.playlists.total
