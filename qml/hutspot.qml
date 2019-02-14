@@ -1118,8 +1118,21 @@ ApplicationWindow {
     // MediaKeys
     //
 
-    MediaKey {
+    // something like this needed as well?
+    /*property bool _grabKeys: keysResource.acquired
+    Permissions {
         enabled: true
+        applicationClass: "player"
+
+        Resource {
+            id: keysResource
+            type: Resource.HeadsetButtons
+            optional: true
+        }
+    }*/
+
+    MediaKey {
+        enabled: true // _grabKeys
         key: Qt.Key_MediaTogglePlayPause
         onReleased: {
             console.log("MediaKey: TogglePlayPause")
@@ -1156,6 +1169,22 @@ ApplicationWindow {
         onReleased: {
             console.log("MediaKey: MediaStop")
             controller.pause()
+        }
+    }
+    MediaKey {
+        enabled: true;
+        key: Qt.Key_MediaNext;
+        onReleased: {
+            console.log("MediaKey: MediaNext")
+            controller.next()
+        }
+    }
+    MediaKey {
+        enabled: true;
+        key: Qt.Key_MediaPrevious;
+        onReleased: {
+            console.log("MediaKey: MediaPrevious")
+            controller.previous()
         }
     }
 
