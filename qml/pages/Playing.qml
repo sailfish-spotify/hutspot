@@ -334,7 +334,7 @@ Page {
                 Slider {
                     id: progressSlider
                     property bool isPressed: false
-                    height: progressLabel.height * 1.5
+                    //height: progressLabel.height * 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
@@ -371,7 +371,7 @@ Page {
 
             Rectangle {
                 width: parent.width
-                height: Theme.paddingLarge
+                height: Theme.paddingSmall
                 color: "transparent"
             }
 
@@ -439,14 +439,14 @@ Page {
 
             Rectangle {
                 width: parent.width
-                height: Theme.paddingLarge
+                height: Theme.paddingSmall
                 color: "transparent"
             }
 
             Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: spotifyConnectRow.childrenRect.height + Theme.paddingLarge*2
+                height: spotifyConnectRow.childrenRect.height + Theme.paddingSmall*2
                 MouseArea {
                     anchors.fill: spotifyConnectRow
                     onClicked: pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
@@ -454,7 +454,7 @@ Page {
 
                 Row {
                     id: spotifyConnectRow
-                    y: Theme.paddingLarge
+                    y: Theme.paddingSmall
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: Theme.paddingMedium
                     Image {
