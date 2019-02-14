@@ -54,13 +54,13 @@ Item {
         })
     }
 
-    function notifyFollowPlaylist(id, uri) {
+    /*function notifyFollowPlaylist(id, uri) {
         _followedPlaylistsId.insert(id, uri)
     }
 
     function notifyUnfollowPlaylist(id) {
         _followedPlaylistsId.remove(id)
-    }
+    }*/
 
     // Followed Artists
     function loadFollowedArtists() {
@@ -85,13 +85,13 @@ Item {
         })
     }
 
-    function notifyFollowArtist(id, uri) {
+    /*function notifyFollowArtist(id, uri) {
         _followedArtistsId.insert(id, uri)
     }
 
     function notifyUnfollowArtist(id, uri) {
         _followedArtistsId.remove(id)
-    }
+    }*/
 
     Connections {
         target: app
@@ -99,6 +99,22 @@ Item {
             if(app.id !== "") {
                 loadFollowedPlaylists()
                 loadFollowedArtists()
+            }
+        }
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Artist:
+                if(event.isFavorite)
+                    _followedArtistsId.insert(event.id, event.uri)
+                else
+                    _followedArtistsId.remove(event.id)
+                break
+            case Util.SpotifyItemType.Playlist:
+                if(event.isFavorite)
+                    _followedPlaylistsId.insert(event.id, event.uri)
+                else
+                    _followedPlaylistsId.remove(event.id)
+                break
             }
         }
     }
