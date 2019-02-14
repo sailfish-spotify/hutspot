@@ -299,7 +299,7 @@ Page {
             }
 
             onAtYEndChanged: {
-                if(listView.atYEnd) {
+                if(listView.atYEnd && searchModel.count > 0) {
                     // album is already completely loaded
                     if(app.controller.playbackState.context
                        && app.controller.playbackState.context.type === 'playlist')

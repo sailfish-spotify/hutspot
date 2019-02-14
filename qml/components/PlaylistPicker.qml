@@ -93,7 +93,7 @@ Dialog {
             }
         }*/
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && items.count > 0)
                 append()
         }
     }

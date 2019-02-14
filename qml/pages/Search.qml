@@ -192,7 +192,7 @@ Page {
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd) {
+            if(listView.atYEnd && searchModel.count > 0) {
                 if(searchString === "")
                     return
                 if(_itemClass === -1)

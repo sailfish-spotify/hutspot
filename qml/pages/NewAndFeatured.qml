@@ -108,7 +108,7 @@ Page {
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
