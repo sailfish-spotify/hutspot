@@ -513,15 +513,11 @@
     <name>NewAndFeatured</name>
     <message>
         <source></source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>New Releases</source>
         <translation type="unfinished">新發行</translation>
-    </message>
-    <message>
-        <source></source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Featured</source>
@@ -871,10 +867,6 @@
         <translation>id</translation>
     </message>
     <message>
-        <source>[following], </source>
-        <translation>[following]</translation>
-    </message>
-    <message>
         <source>followers</source>
         <translation>關注者</translation>
     </message>
@@ -889,6 +881,10 @@
     <message>
         <source>name not specified</source>
         <translation>名稱未確定</translation>
+    </message>
+    <message>
+        <source>following</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

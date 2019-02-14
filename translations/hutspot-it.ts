@@ -867,10 +867,6 @@
         <translation>ID</translation>
     </message>
     <message>
-        <source>[following], </source>
-        <translation>[following], </translation>
-    </message>
-    <message>
         <source>followers</source>
         <translation>follower</translation>
     </message>
@@ -885,6 +881,10 @@
     <message>
         <source>name not specified</source>
         <translation>nome non specificato</translation>
+    </message>
+    <message>
+        <source>following</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

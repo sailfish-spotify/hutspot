@@ -874,10 +874,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>[following], </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>followers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -891,6 +887,10 @@
     </message>
     <message>
         <source>name not specified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>following</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
