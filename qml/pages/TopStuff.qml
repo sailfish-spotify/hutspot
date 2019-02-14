@@ -139,15 +139,10 @@ Page {
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
                                     name: topArtists.items[i].name,
-                                    following: false,
+                                    following: app.spotifyDataCache.isArtistFollowed(topArtists.items[i].id),
                                     item: topArtists.items[i]})
                 artistIds.push(topArtists.items[i].id)
             }
-            // request additional Info
-            Spotify.isFollowingArtists(artistIds, function(error, data) {
-                if(data)
-                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-            })
         }
     }
 
