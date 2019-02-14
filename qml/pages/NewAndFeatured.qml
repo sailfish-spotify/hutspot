@@ -63,6 +63,7 @@ Page {
 
             SectionHeader {
                 width: parent.width
+                x: 0
                 text: featuredPlaylistsMessage
                 visible: _itemClass == 1
             }
