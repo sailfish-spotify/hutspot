@@ -152,7 +152,7 @@ Row {
         case Util.SpotifyItemType.Artist:
             if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)
-                    s = "[" + qsTr("following") + "], "
+                    s = "<strong>[" + qsTr("following") + "]</strong>, "
             }
             if(typeof(dataModel.item.followers) !== 'undefined')
                 s += Util.abbreviateNumber(dataModel.item.followers.total) + " " + qsTr("followers")
@@ -160,7 +160,7 @@ Row {
         case Util.SpotifyItemType.Playlist:
             if(typeof(following) !== 'undefined') {
                if(following)
-                   s = "[" + qsTr("following") + "], "
+                   s = "<strong>[" + qsTr("following") + "]</strong>, "
             }
             s += dataModel.item.tracks.total + " " + qsTr("tracks")
             return s
