@@ -835,7 +835,7 @@ ApplicationWindow {
     function followPlaylist(playlist, callback) {
         Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, playlist.uri, true)
             favoriteEvent(event)
         })
     }
@@ -843,7 +843,7 @@ ApplicationWindow {
     function _unfollowPlaylist(playlist, callback) {
         Spotify.unfollowPlaylist(playlist.id, function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, playlist.uri, false)
             favoriteEvent(event)
         })
     }
@@ -861,7 +861,7 @@ ApplicationWindow {
     function followArtist(artist, callback) {
         Spotify.followArtists([artist.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, artist.uri, true)
             favoriteEvent(event)
         })
     }
@@ -869,7 +869,7 @@ ApplicationWindow {
     function _unfollowArtist(artist, callback) {
         Spotify.unfollowArtists([artist.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, artist.uri, false)
             favoriteEvent(event)
         })
     }
@@ -892,7 +892,7 @@ ApplicationWindow {
             id = Util.parseSpotifyUri(album.uri).id
         Spotify.addToMySavedAlbums([id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, album.uri, true)
             favoriteEvent(event)
         })
     }
@@ -900,7 +900,7 @@ ApplicationWindow {
     function _unSaveAlbum(album, callback) {
         Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, album.uri, false)
             favoriteEvent(event)
         })
     }
@@ -918,7 +918,7 @@ ApplicationWindow {
     function saveTrack(track, callback) {
         Spotify.addToMySavedTracks([track.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, track.uri, true)
             favoriteEvent(event)
         })
     }
@@ -926,7 +926,7 @@ ApplicationWindow {
     function _unSaveTrack(track, callback) {
         Spotify.removeFromMySavedTracks([track.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, track.uri, false)
             favoriteEvent(event)
         })
     }
