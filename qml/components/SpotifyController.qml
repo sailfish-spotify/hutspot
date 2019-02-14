@@ -60,12 +60,12 @@ Item {
     }
 
     Connections {
-        target: spotify
-        onLinkingSucceeded: {
-            Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
-            refreshPlaybackState();
-            reloadDevices();
+        target: app
+        onHasValidTokenChanged: {
+            if(app.hasValidToken) {
+                refreshPlaybackState()
+                reloadDevices()
+            }
         }
     }
 
