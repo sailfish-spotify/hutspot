@@ -17,8 +17,8 @@ Item {
 
     property var _followedPlaylistsId: ({})   //  key is id, stores uri
     //property var _followedPlaylistsName: ({}) // key is name, stores id
-
     property var _followedArtistsId: ({})   //  key is id, stores uri
+    property var _savedAlbumsId: ({})   //  key is id, stores uri
 
     function isPlaylistFollowed(id) {
         return _followedPlaylistsId.find(id) !== null
@@ -26,6 +26,10 @@ Item {
 
     function isArtistFollowed(id) {
         return _followedArtistsId.find(id) !== null
+    }
+
+    function isAlbumSaved(id) {
+        return _savedAlbumsId.find(id) !== null
     }
 
     // Followed Playlists
@@ -49,18 +53,10 @@ Item {
                 if(nextOffset < data.total)
                     _loadFollowedPlaylistsSet(nextOffset)
                 else
-                    console.log("Loaded info on " + _followedPlaylistsId.items.length + " followed playlists")
+                    console.log("Loaded info of " + _followedPlaylistsId.items.length + " followed playlists")
             }
         })
     }
-
-    /*function notifyFollowPlaylist(id, uri) {
-        _followedPlaylistsId.insert(id, uri)
-    }
-
-    function notifyUnfollowPlaylist(id) {
-        _followedPlaylistsId.remove(id)
-    }*/
 
     // Followed Artists
     function loadFollowedArtists() {
@@ -80,29 +76,53 @@ Item {
                 if(nextOffset < data.artists.total)
                     _loadFollowedPlaylistsSet(nextOffset)
                 else
-                    console.log("Loaded info on " + _followedArtistsId.items.length + " followed artists")
+                    console.log("Loaded info of " + _followedArtistsId.items.length + " followed artists")
             }
         })
     }
 
-    /*function notifyFollowArtist(id, uri) {
-        _followedArtistsId.insert(id, uri)
+    // Saved Albums
+    function loadSavedAlbums() {
+        _savedAlbumsId = new BSALib.BSArray()
+        _loadSavedAlbums(0)
     }
 
-    function notifyUnfollowArtist(id, uri) {
-        _followedArtistsId.remove(id)
-    }*/
+    function _loadSavedAlbums(offset) {
+        Spotify.getMySavedAlbums({offset: offset, limit: 50}, function(error, data) {
+            var i
+            if(data && data.items) {
+                for(i=0;i<data.items.length;i++) {
+                    _savedAlbumsId.insert(
+                        data.items[i].album.id, data.items[i].album.uri)
+                }
+                var nextOffset = data.offset+data.items.length
+                if(nextOffset < data.total)
+                    _loadSavedAlbums(nextOffset)
+                else
+                    console.log("Loaded info of " + _savedAlbumsId.items.length + " saved albums")
+            }
+        })
+    }
 
     Connections {
         target: app
+
         onIdChanged: {
             if(app.id !== "") {
                 loadFollowedPlaylists()
                 loadFollowedArtists()
+                loadSavedAlbums()
             }
         }
+
         onFavoriteEvent: {
             switch(event.type) {
+            case Util.SpotifyItemType.Album:
+                if(event.isFavorite)
+                    _savedAlbumsId.insert(event.id, event.uri)
+                else
+                    _savedAlbumsId.remove(event.id)
+                break
             case Util.SpotifyItemType.Artist:
                 if(event.isFavorite)
                     _followedArtistsId.insert(event.id, event.uri)
