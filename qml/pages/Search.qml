@@ -269,7 +269,8 @@ Page {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
                                                 item: data.albums.items[i],
-                                                following: false})
+                                                following: false,
+                                                saved: app.spotifyDataCache.isAlbumSaved(data.albums.items[i].id)})
                         }
                         cursorHelper.offset = data.albums.offset
                         cursorHelper.total = data.albums.total
@@ -281,7 +282,8 @@ Page {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
                                                 item: data.artists.items[i],
-                                                following: app.spotifyDataCache.isArtistFollowed(data.artists.items[i].id)})
+                                                following: app.spotifyDataCache.isArtistFollowed(data.artists.items[i].id),
+                                                saved: false})
                             artistIds.push(data.artists.items[i].id)
                         }
                         cursorHelper.offset = data.artists.offset
@@ -294,7 +296,8 @@ Page {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
                                                 item: data.playlists.items[i],
-                                                following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id)})
+                                                following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id),
+                                                saved: false})
                         }
                         cursorHelper.offset = data.playlists.offset
                         cursorHelper.total = data.playlists.total
@@ -306,7 +309,7 @@ Page {
                             searchModel.append({type: 3,
                                                 name: data.tracks.items[i].name,
                                                 item: data.tracks.items[i],
-                                                following: false})
+                                                following: false, saved: false})
                         }
                         cursorHelper.offset = data.tracks.offset
                         cursorHelper.total = data.tracks.total
@@ -324,6 +327,19 @@ Page {
             showBusy = false
             _loading = false
         })
+    }
+
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+            case Util.SpotifyItemType.Artist:
+            case Util.SpotifyItemType.Playlist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
     }
 
     // The shared DockedPanel needs mouse events

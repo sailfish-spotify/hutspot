@@ -132,16 +132,14 @@ Page {
             for(i=0;i<topTracks.items.length;i++)
                 searchModel.append({type: 3,
                                     name: topTracks.items[i].name,
-                                    following: false,
-                                    item: topTracks.items[i]})
+                                    item: topTracks.items[i],
+                                    following: false})
         if(topArtists) {
-            var artistIds = []
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
                                     name: topArtists.items[i].name,
-                                    following: app.spotifyDataCache.isArtistFollowed(topArtists.items[i].id),
-                                    item: topArtists.items[i]})
-                artistIds.push(topArtists.items[i].id)
+                                    item: topArtists.items[i],
+                                    following: app.spotifyDataCache.isArtistFollowed(topArtists.items[i].id)})
             }
         }
     }
@@ -222,6 +220,13 @@ Page {
                 refresh()
         }
         onHasValidTokenChanged: refresh()
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Artist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
     }
 
     Component.onCompleted: {

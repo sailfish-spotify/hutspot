@@ -159,7 +159,9 @@ Page {
                             for(i=0;i<data.albums.items.length;i++) {
                                 searchModel.append({type: Util.SpotifyItemType.Album,
                                                     name: data.albums.items[i].name,
-                                                    item: data.albums.items[i]})
+                                                    item: data.albums.items[i],
+                                                    following: false,
+                                                    saved: app.spotifyDataCache.isPlaylistFollowed(data.albums.items[i].id)})
                             }
                         } catch (err) {
                             console.log(err)
@@ -190,7 +192,9 @@ Page {
                             for(i=0;i<data.playlists.items.length;i++) {
                                 searchModel.append({type: Util.SpotifyItemType.Playlist,
                                                     name: data.playlists.items[i].name,
-                                                    item: data.playlists.items[i]})
+                                                    item: data.playlists.items[i],
+                                                    following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id),
+                                                    saved: false})
                             }
                         } catch (err) {
                             console.log(err)
@@ -225,6 +229,16 @@ Page {
                 refresh()
         }
         onHasValidTokenChanged: refresh()
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+            case Util.SpotifyItemType.Playlist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
+        // if this is the first page data might already be loaded before the data cache is ready
+        onSpotifyDataCacheReady: Util.updateFollowingSaved(app.spotifyDataCache, searchModel)
     }
 
     Component.onCompleted: {

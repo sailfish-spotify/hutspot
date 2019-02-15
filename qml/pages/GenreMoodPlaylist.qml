@@ -127,7 +127,8 @@ Page {
                     for(i=0;i<data.playlists.items.length;i++) {
                         searchModel.append({type: 2,
                                             name: data.playlists.items[i].name,
-                                            item: data.playlists.items[i]})
+                                            item: data.playlists.items[i],
+                                            following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id)})
                     }
                 } catch (err) {
                     console.log(err)
@@ -154,6 +155,13 @@ Page {
         onLoggedInChanged: {
             if(app.loggedIn)
                 refresh()
+        }
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Playlist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
         }
         onHasValidTokenChanged: refresh()
     }
