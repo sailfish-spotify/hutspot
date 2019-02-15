@@ -34,11 +34,11 @@
     <message>
         <source>Copyright (C) 2019</source>
         <extracomment>I doubt this needs to be translated</extracomment>
-        <translation type="unfinished">版權所有 (C) 2019</translation>
+        <translation>版權所有 (C) 2019</translation>
     </message>
     <message>
         <source>Translations</source>
-        <translation type="unfinished"></translation>
+        <translation>翻譯</translation>
     </message>
 </context>
 <context>
