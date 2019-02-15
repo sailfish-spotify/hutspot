@@ -146,9 +146,13 @@ Row {
         var s = "";
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
-            if (dataModel.item)
-                return Util.getYearFromReleaseDate(dataModel.item.release_date)
-            return ""
+            if(typeof(dataModel.saved) !== 'undefined') {
+               if(dataModel.saved)
+                    s = "<strong>[" + qsTr("saved") + "]</strong>"
+            }
+            if(dataModel.item)
+                s += (s.length > 0 ? ", " : "") + Util.getYearFromReleaseDate(dataModel.item.release_date)
+            return s
         case Util.SpotifyItemType.Artist:
             if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)
