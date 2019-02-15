@@ -122,7 +122,8 @@ Dialog {
                         items.append({type: 2,
                                       stype: 2,
                                       name: data.items[i].name,
-                                      item: data.items[i]});
+                                      item: data.items[i],
+                                      following: true});
                     }
                 } else
                     console.log("No Data for getUserPlaylists")

@@ -210,12 +210,14 @@ Page {
             for(i=0;i<savedAlbums.items.length;i++)
                 addData({type: 0, stype: 0,
                          name: savedAlbums.items[i].album.name,
-                         item: savedAlbums.items[i].album})
+                         item: savedAlbums.items[i].album,
+                         following: false, saved: true})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
                 addData({type: 2, stype: 2,
                          name: userPlaylists.items[i].name,
-                         item: userPlaylists.items[i]})
+                         item: userPlaylists.items[i],
+                         following: true, saved: false})
             }
         if(recentlyPlayedTracks)
             // context, played_at, track
@@ -223,20 +225,22 @@ Page {
                 addData({type: 3, stype: 3,
                          name: recentlyPlayedTracks.items[i].track.name,
                          item: recentlyPlayedTracks.items[i].track,
+                         following: false, saved: false,
                          played_at: recentlyPlayedTracks.items[i].played_at})
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
                 addData({type: 3, stype: 4,
                          name: savedTracks.items[i].track.name,
-                         item: savedTracks.items[i].track})
+                         item: savedTracks.items[i].track,
+                         following: true, saved: true})
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
                 addData({type: 1, stype: 1,
                          name: followedArtists.artists.items[i].name,
                          item: followedArtists.artists.items[i],
-                         following: true})
+                         following: true, saved: false})
             }
     }
 

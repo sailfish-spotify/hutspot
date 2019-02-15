@@ -409,9 +409,7 @@ Page {
             if(app.loggedIn)
                 refresh()
         }
-
         onHasValidTokenChanged: refresh()
-
     }
 
     Component.onCompleted: {
