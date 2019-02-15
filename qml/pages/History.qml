@@ -115,32 +115,40 @@ Page {
     }
 
     function reload() {
+        console.log("reload")
         searchModel.clear()
 
         for(var p=0;p<parsed.length;p++) {
             for(var i=0;i<retrieved.length;i++) {
                 if(parsed[p].id === retrieved[i].data.id) {
                     switch(retrieved[i].type) {
-                    case 0:
+                    case Util.SpotifyItemType.Album:
                         searchModel.append({type: 0,
                                             name: retrieved[i].data.name,
-                                            item: retrieved[i].data})
+                                            item: retrieved[i].data,
+                                            following: false,
+                                            saved: app.spotifyDataCache.isAlbumSaved(retrieved[i].data.id)})
                         break
-                    case 1:
+                    case Util.SpotifyItemType.Artist:
                         searchModel.append({type: 1,
                                             name: retrieved[i].data.name,
-                                            item: retrieved[i].data})
+                                            item: retrieved[i].data,
+                                            following: app.spotifyDataCache.isArtistFollowed(retrieved[i].data.id),
+                                            saved: false})
                         break
-                    case 2:
+                    case Util.SpotifyItemType.Playlist:
                         searchModel.append({type: 2,
                                             name: retrieved[i].data.name,
-                                            item: retrieved[i].data})
+                                            item: retrieved[i].data,
+                                            following: app.spotifyDataCache.isPlaylistFollowed(retrieved[i].data.id),
+                                            saved: false})
                         break
                     }
                     break
                 }
             }
         }
+        console.log("history reloaded")
     }
 
     function checkReload(count) {
@@ -251,11 +259,18 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
         onHasValidTokenChanged: refresh()
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+            case Util.SpotifyItemType.Artist:
+            case Util.SpotifyItemType.Playlist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
+        // if this is the first page data might already be loaded before the data cache is ready
+        onSpotifyDataCacheReady: Util.updateFollowingSaved(app.spotifyDataCache, searchModel)
     }
 
     Component.onCompleted: {

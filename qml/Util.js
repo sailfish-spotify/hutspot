@@ -169,6 +169,24 @@ function setFollowedInfo(id, following, model) {
     }
 }
 
+function updateFollowingSaved(spotifyDataCache, model) {
+    var i
+    for(i=0;i<model.count;i++) {
+        var obj = model.get(i)
+        switch(obj.type) {
+        case SpotifyItemType.Album:
+            obj.saved = spotifyDataCache.isAlbumSaved(obj.item.id)
+            break
+        case SpotifyItemType.Artist:
+            obj.following = spotifyDataCache.isArtistFollowed(obj.item.id)
+            break
+        case SpotifyItemType.Playlist:
+            obj.following = spotifyDataCache.isPlaylistFollowed(obj.item.id)
+            break
+        }
+    }
+}
+
 Math.log10 = function (x) { return Math.log(x) / Math.LN10; };
 
 function abbreviateNumber(number) {

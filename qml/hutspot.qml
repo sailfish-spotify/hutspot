@@ -115,6 +115,8 @@ ApplicationWindow {
     property alias librespot: librespot
     property string playerName: "Hutspot"
 
+    property var doBeforeStart: doBeforeStart
+
     allowedOrientations: Orientation.All
 
     // seeds for recommendations
@@ -430,14 +432,14 @@ ApplicationWindow {
         id: librespotAtStart
 
         readonly property int validTokenMask: 0x01
-        readonly property int deviceListReadyMask: 0x01
+        readonly property int deviceListReadyMask: 0x02
 
         readonly property int triggerMask: 0x03
         property int happendMask: 0
 
         function notifyHappend(event) {
-            happendMask = happendMask | (0x01 << event)
-            if(happendMask & triggerMask) {
+            happendMask |= event
+            if((happendMask & triggerMask) === triggerMask) {
                 // only do something when wished for
                 if(!start_stop_librespot.value)
                     return
@@ -1667,6 +1669,27 @@ ApplicationWindow {
         }
 
         Component.onCompleted: updateInfo()
+    }
+
+    signal spotifyDataCacheReady()
+
+    Item {
+        id: doBeforeStart
+
+        readonly property int followedPlaylistsMask: 0x01
+        readonly property int followedArtistsMask: 0x02
+        readonly property int savedAlbumsMask: 0x04
+
+        readonly property int triggerMask: 0x07
+        property int happendMask: 0
+
+        function notifyHappend(mask) {
+            happendMask |= mask
+            if((happendMask & triggerMask) === triggerMask) {
+                //loadFirstPage()
+                spotifyDataCacheReady()
+            }
+        }
     }
 
     Component.onCompleted: {

@@ -52,8 +52,10 @@ Item {
                 var nextOffset = data.offset+data.items.length
                 if(nextOffset < data.total)
                     _loadFollowedPlaylistsSet(nextOffset)
-                else
+                else {
+                    app.doBeforeStart.notifyHappend(app.doBeforeStart.followedPlaylistsMask)
                     console.log("Loaded info of " + _followedPlaylistsId.items.length + " followed playlists")
+                }
             }
         })
     }
@@ -75,8 +77,10 @@ Item {
                 var nextOffset = data.offset+data.artists.items.length
                 if(nextOffset < data.artists.total)
                     _loadFollowedPlaylistsSet(nextOffset)
-                else
+                else {
+                    app.doBeforeStart.notifyHappend(app.doBeforeStart.followedArtistsMask)
                     console.log("Loaded info of " + _followedArtistsId.items.length + " followed artists")
+                }
             }
         })
     }
@@ -98,8 +102,10 @@ Item {
                 var nextOffset = data.offset+data.items.length
                 if(nextOffset < data.total)
                     _loadSavedAlbums(nextOffset)
-                else
+                else {
+                    app.doBeforeStart.notifyHappend(app.doBeforeStart.savedAlbumsMask)
                     console.log("Loaded info of " + _savedAlbumsId.items.length + " saved albums")
+                }
             }
         })
     }
