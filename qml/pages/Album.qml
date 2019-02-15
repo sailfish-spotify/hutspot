@@ -172,10 +172,7 @@ Page {
                 albumArtists = data.artists
         })
 
-        Spotify.containsMySavedAlbums([album.id], {}, function(error, data) {
-            if(data)
-                isAlbumSaved = data[0]
-        })
+        isAlbumSaved = app.spotifyDataCache.isAlbumSaved(album.id)
 
         app.notifyHistoryUri(album.uri)
     }
