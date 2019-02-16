@@ -133,7 +133,6 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("Nothing Devices found")
-            hintText: qsTr("Pull down to reload")
         }
 
         VerticalScrollDecorator {}

@@ -97,7 +97,6 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {

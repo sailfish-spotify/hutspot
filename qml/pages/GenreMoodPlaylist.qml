@@ -88,7 +88,6 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("No Playlists found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {

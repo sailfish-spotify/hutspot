@@ -138,7 +138,6 @@ Page {
         ViewPlaceholder {
             enabled: listView.count == 0
             text: qsTr("No Albums found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
