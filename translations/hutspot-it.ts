@@ -63,10 +63,6 @@
         <source>No Albums found</source>
         <translation>Nessun album</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
-    </message>
 </context>
 <context>
     <name>AlbumTrackContextMenu</name>
@@ -107,10 +103,6 @@
     <message>
         <source>No Artists found</source>
         <translation>Nessun artista trovato</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
     </message>
     <message>
         <source>Artist </source>
@@ -231,10 +223,6 @@
         <translation>Nessun dispositivo</translation>
     </message>
     <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
-    </message>
-    <message>
         <source>Register Librespot Credentials</source>
         <translation>Registra credenziali Librespot</translation>
     </message>
@@ -261,20 +249,12 @@
         <source>No Genres or Moods found</source>
         <translation>Nessun genere o mood</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
-    </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
         <source>No Playlists found</source>
         <translation>Nessuna playlist trovata</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
     </message>
 </context>
 <context>
@@ -290,10 +270,6 @@
     <message>
         <source>Nothing found</source>
         <translation>Nessun elemento</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
     </message>
 </context>
 <context>
@@ -367,18 +343,6 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <source>Unfollow</source>
-        <translation>Non seguire</translation>
-    </message>
-    <message>
-        <source>Nothing found</source>
-        <translation>Nessun elemento</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
-    </message>
-    <message>
         <source>My </source>
         <translation>I miei </translation>
     </message>
@@ -402,6 +366,15 @@
         <source>Followed Artists</source>
         <translation>artisti</translation>
     </message>
+    <message>
+        <source>Unfollow</source>
+        <translation>Non seguire</translation>
+    </message>
+    <message>
+        <source>Nothing found</source>
+        <translation>Nessun elemento</translation>
+    </message>
+
 </context>
 <context>
     <name>NavigationMenu</name>
@@ -527,10 +500,6 @@
         <source>Nothing found</source>
         <translation type="unfinished">Nessun elemento</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished">Trascina per ricaricare</translation>
-    </message>
 </context>
 <context>
     <name>PlaybackState</name>
@@ -615,10 +584,6 @@
     <message>
         <source>No tracks found</source>
         <translation>Nessun brano</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
     </message>
     <message>
         <source>tracks</source>
@@ -882,14 +847,6 @@
         <source>name not specified</source>
         <translation>nome non specificato</translation>
     </message>
-    <message>
-        <source>following</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>saved</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -1066,10 +1023,6 @@
     <message>
         <source>Nothing found</source>
         <translation>Nessun elemento</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Trascina per ricaricare</translation>
     </message>
     <message>
         <source>Top </source>

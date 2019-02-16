@@ -63,10 +63,6 @@
         <source>No Albums found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>AlbumTrackContextMenu</name>
@@ -106,10 +102,6 @@
     </message>
     <message>
         <source>No Artists found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -231,10 +223,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Register Librespot Credentials</source>
         <translation type="unfinished"></translation>
     </message>
@@ -261,19 +249,11 @@
         <source>No Genres or Moods found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
         <source>No Playlists found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -289,10 +269,6 @@
     </message>
     <message>
         <source>Nothing found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -367,18 +343,6 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <source>Unfollow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nothing found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>My </source>
         <translation type="unfinished"></translation>
     </message>
@@ -400,6 +364,14 @@
     </message>
     <message>
         <source>Followed Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unfollow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -527,10 +499,6 @@
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>NewRelease</name>
@@ -621,10 +589,6 @@
     </message>
     <message>
         <source>No tracks found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -889,14 +853,6 @@
         <source>name not specified</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>following</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>saved</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -1072,10 +1028,6 @@
     <name>TopStuff</name>
     <message>
         <source>Nothing found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

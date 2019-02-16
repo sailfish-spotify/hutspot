@@ -63,10 +63,6 @@
         <source>No Albums found</source>
         <translation>Inga album hittades</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
-    </message>
 </context>
 <context>
     <name>AlbumTrackContextMenu</name>
@@ -107,10 +103,6 @@
     <message>
         <source>No Artists found</source>
         <translation>Ingen artist hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
     </message>
     <message>
         <source>Artist </source>
@@ -231,10 +223,6 @@
         <translation>Inga enheter hittades</translation>
     </message>
     <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
-    </message>
-    <message>
         <source>Register Librespot Credentials</source>
         <translation>Registrera autentiseringsuppgifter för  Librespot</translation>
     </message>
@@ -261,20 +249,12 @@
         <source>No Genres or Moods found</source>
         <translation>Inga genrer eller stämningar hittades</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
-    </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
         <source>No Playlists found</source>
         <translation>Inga spelningslistor hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
     </message>
 </context>
 <context>
@@ -290,10 +270,6 @@
     <message>
         <source>Nothing found</source>
         <translation>Inget hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
     </message>
 </context>
 <context>
@@ -367,18 +343,6 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <source>Unfollow</source>
-        <translation>Sluta följa</translation>
-    </message>
-    <message>
-        <source>Nothing found</source>
-        <translation>Inget hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
-    </message>
-    <message>
         <source>My </source>
         <translation>Mina </translation>
     </message>
@@ -401,6 +365,14 @@
     <message>
         <source>Followed Artists</source>
         <translation>Följda artister</translation>
+    </message>
+    <message>
+        <source>Unfollow</source>
+        <translation>Sluta följa</translation>
+    </message>
+    <message>
+        <source>Nothing found</source>
+        <translation>Inget hittades</translation>
     </message>
 </context>
 <context>
@@ -527,10 +499,6 @@
         <source>Nothing found</source>
         <translation>Inget hittades</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
-    </message>
 </context>
 <context>
     <name>PlaybackState</name>
@@ -615,10 +583,6 @@
     <message>
         <source>No tracks found</source>
         <translation>Inga spår hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
     </message>
     <message>
         <source>tracks</source>
@@ -882,14 +846,6 @@
         <source>name not specified</source>
         <translation>namn inte specificerat</translation>
     </message>
-    <message>
-        <source>following</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>saved</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -1066,10 +1022,6 @@
     <message>
         <source>Nothing found</source>
         <translation>Inget hittades</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>Dra neråt för att uppdatera</translation>
     </message>
     <message>
         <source>Top </source>

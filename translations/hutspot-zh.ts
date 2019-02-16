@@ -63,10 +63,6 @@
         <source>No Albums found</source>
         <translation>未找到專輯</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
-    </message>
 </context>
 <context>
     <name>AlbumTrackContextMenu</name>
@@ -107,10 +103,6 @@
     <message>
         <source>No Artists found</source>
         <translation>未找到藝術家</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
     </message>
     <message>
         <source>Artist </source>
@@ -231,10 +223,6 @@
         <translation>未找到設備</translation>
     </message>
     <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
-    </message>
-    <message>
         <source>Register Librespot Credentials</source>
         <translation>註冊Librespot憑證</translation>
     </message>
@@ -261,20 +249,12 @@
         <source>No Genres or Moods found</source>
         <translation>未找到體裁及氛圍</translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
-    </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
         <source>No Playlists found</source>
         <translation>未找到播放列表</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
     </message>
 </context>
 <context>
@@ -290,10 +270,6 @@
     <message>
         <source>Nothing found</source>
         <translation>什麼也沒找到</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
     </message>
 </context>
 <context>
@@ -367,18 +343,6 @@
 <context>
     <name>MyStuff</name>
     <message>
-        <source>Unfollow</source>
-        <translation>取消關注</translation>
-    </message>
-    <message>
-        <source>Nothing found</source>
-        <translation>什麼也沒找到</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
-    </message>
-    <message>
         <source>My </source>
         <translation>我的</translation>
     </message>
@@ -402,6 +366,15 @@
         <source>Followed Artists</source>
         <translation>關注的藝術家</translation>
     </message>
+    <message>
+        <source>Unfollow</source>
+        <translation>取消關注</translation>
+    </message>
+    <message>
+        <source>Nothing found</source>
+        <translation>什麼也沒找到</translation>
+    </message>
+
 </context>
 <context>
     <name>NavigationMenu</name>
@@ -527,10 +500,6 @@
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation type="unfinished">下拉以重新載入</translation>
-    </message>
 </context>
 <context>
     <name>PlaybackState</name>
@@ -615,10 +584,6 @@
     <message>
         <source>No tracks found</source>
         <translation>未找到音樂</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
     </message>
     <message>
         <source>tracks</source>
@@ -882,14 +847,6 @@
         <source>name not specified</source>
         <translation>名稱未確定</translation>
     </message>
-    <message>
-        <source>following</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>saved</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Settings</name>
@@ -1066,10 +1023,6 @@
     <message>
         <source>Nothing found</source>
         <translation>什麼也沒發現</translation>
-    </message>
-    <message>
-        <source>Pull down to reload</source>
-        <translation>下拉以重新載入</translation>
     </message>
     <message>
         <source>Top </source>
