@@ -40,13 +40,9 @@ Row {
         source: getImageURL(dataModel)
     }
 
-
     Column {
         id: column
-        //width: parent.width
-        //anchors.leftMargin: Theme.paddingMedium
-        width: parent.width - image.width - Theme.paddingMedium
-        // 'album', 'artist', 'playlist', 'track'
+        width: parent.width - image.width - favorite.width - 2 * Theme.paddingMedium
 
         Label {
             id: nameLabel
@@ -79,6 +75,20 @@ Row {
             enabled: text.length > 0
             visible: enabled
         }
+    }
+
+    Image {
+        id: favorite
+        width: height
+        height: Theme.iconSizeSmall
+        anchors {
+            verticalCenter: parent.verticalCenter
+            //bottom: parent.bottom
+        }
+        asynchronous: true
+        fillMode: Image.PreserveAspectFit
+        source: (dataModel.following || dataModel.saved)
+                ? "image://theme/icon-m-favorite-selected?" : ""
     }
 
     function getImageURL(dataModel) {
@@ -146,33 +156,33 @@ Row {
         var sb = new Util.Classes.StringBuilder()
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
-            if(typeof(dataModel.saved) !== 'undefined') {
+            /*if(typeof(dataModel.saved) !== 'undefined') {
                if(dataModel.saved)
                     sb.append("<strong>[" + qsTr("saved") + "]</strong>")
-            }
+            }*/
             if(dataModel.item)
                 sb.append(Util.getYearFromReleaseDate(dataModel.item.release_date))
             break
         case Util.SpotifyItemType.Artist:
-            if(typeof(dataModel.following) !== 'undefined') {
+            /*if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)
                     sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
-            }
+            }*/
             if(typeof(dataModel.item.followers) !== 'undefined')
                 sb.append(Util.abbreviateNumber(dataModel.item.followers.total) + " " + qsTr("followers"))
             break
         case Util.SpotifyItemType.Playlist:
-            if(typeof(following) !== 'undefined') {
+            /*if(typeof(following) !== 'undefined') {
                if(following)
                    sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
-            }
+            }*/
             sb.append(dataModel.item.tracks.total + " " + qsTr("tracks"))
             break
         case Util.SpotifyItemType.Track:
-            if(typeof(dataModel.saved) !== 'undefined') {
+            /*if(typeof(dataModel.saved) !== 'undefined') {
                if(dataModel.saved)
                    sb.append("<strong>[" + qsTr("saved") + "]</strong>")
-            }
+            }*/
             if(dataModel.item.album) {
                 if(dataModel.item.album.name.length === 0)
                     sb.append(qsTr("name not specified")) // should not happen but it does
