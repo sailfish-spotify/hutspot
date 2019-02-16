@@ -440,6 +440,22 @@ function getPreviousCursorText(offset, limit, total) {
     return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
 }*/
 
+
+var Classes = {
+    StringBuilder : function() {
+        var strings = [];
+        this.append = function(value) {
+            strings.push(value);
+        }
+        this.clear = function() {
+            strings.length = 0
+        }
+        this.toString = function(separator) {
+            return strings.join(separator);
+        }
+    }
+}
+
 // keep in sync with Spotify.js ItemType
 var SpotifyItemType = {
     Album: 0,
