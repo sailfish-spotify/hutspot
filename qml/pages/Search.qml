@@ -306,10 +306,12 @@ Page {
                     // tracks
                     if(data.hasOwnProperty('tracks')) {
                         for(i=0;i<data.tracks.items.length;i++) {
+                            var track = data.tracks.items[i]
                             searchModel.append({type: 3,
-                                                name: data.tracks.items[i].name,
-                                                item: data.tracks.items[i],
-                                                following: false, saved: false})
+                                                name: track.name,
+                                                item: track,
+                                                following: false,
+                                                saved: app.spotifyDataCache.isTrackSaved(track.album.id, track.id)})
                         }
                         cursorHelper.offset = data.tracks.offset
                         cursorHelper.total = data.tracks.total

@@ -133,13 +133,16 @@ Page {
                 searchModel.append({type: 3,
                                     name: topTracks.items[i].name,
                                     item: topTracks.items[i],
-                                    following: false})
+                                    following: false,
+                                    saved: app.spotifyDataCache.isTrackSaved(
+                                                   topTracks.items[i].album.id, topTracks.items[i].id)})
         if(topArtists) {
             for(i=0;i<topArtists.items.length;i++) {
                 searchModel.append({type: 1,
                                     name: topArtists.items[i].name,
                                     item: topArtists.items[i],
-                                    following: app.spotifyDataCache.isArtistFollowed(topArtists.items[i].id)})
+                                    following: app.spotifyDataCache.isArtistFollowed(topArtists.items[i].id),
+                                    saved: false})
             }
         }
     }
