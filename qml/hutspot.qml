@@ -1679,8 +1679,9 @@ ApplicationWindow {
         readonly property int followedPlaylistsMask: 0x01
         readonly property int followedArtistsMask: 0x02
         readonly property int savedAlbumsMask: 0x04
+        readonly property int savedTracksMask: 0x08
 
-        readonly property int triggerMask: 0x07
+        readonly property int triggerMask: 0x0F
         property int happendMask: 0
 
         function notifyHappend(mask) {

@@ -19,6 +19,7 @@ Item {
     //property var _followedPlaylistsName: ({}) // key is name, stores id
     property var _followedArtistsId: ({})   //  key is id, stores uri
     property var _savedAlbumsId: ({})   //  key is id, stores uri
+    property var _savedTracksId: ({})   //  key is id, stores uri, only for tracks not in a saved album
 
     function isPlaylistFollowed(id) {
         return _followedPlaylistsId.find(id) !== null
@@ -30,6 +31,12 @@ Item {
 
     function isAlbumSaved(id) {
         return _savedAlbumsId.find(id) !== null
+    }
+
+    function isTrackSaved(albumId, trackId) {
+        // all tracks of a saved album are saved tracks
+        return _savedAlbumsId.find(albumId) !== null
+               || _savedTracksId.find(trackId) !== null
     }
 
     // Followed Playlists
@@ -105,6 +112,34 @@ Item {
                 else {
                     app.doBeforeStart.notifyHappend(app.doBeforeStart.savedAlbumsMask)
                     console.log("Loaded info of " + _savedAlbumsId.items.length + " saved albums")
+                    loadSavedTracks()
+                }
+            }
+        })
+    }
+
+    // Saved Albums
+    function loadSavedTracks() {
+        _savedTracksId = new BSALib.BSArray()
+        _loadSavedTracks(0)
+    }
+
+    function _loadSavedTracks(offset) {
+        Spotify.getMySavedTracks({offset: offset, limit: 50}, function(error, data) {
+            var i
+            if(data && data.items) {
+                for(i=0;i<data.items.length;i++) {
+                    var track = data.items[i].track
+                    if(isAlbumSaved(track.album.id)) // all tracks of a saved album are saved
+                        continue
+                    _savedTracksId.insert(track.id, track.uri)
+                }
+                var nextOffset = data.offset+data.items.length
+                if(nextOffset < data.total)
+                    _loadSavedTracks(nextOffset)
+                else {
+                    app.doBeforeStart.notifyHappend(app.doBeforeStart.savedTracksMask)
+                    console.log("Loaded info of " + _savedTracksId.items.length + " saved tracks")
                 }
             }
         })
