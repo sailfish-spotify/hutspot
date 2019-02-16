@@ -775,15 +775,25 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
+                    var trackIds = app.cache_followed_saved_info.value ? null: []
                     for(var i=0;i<data.items.length;i++) {
+                        var track =  data.items[i].track
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
-                                            name: data.items[i].track.name,
-                                            saved: false,
-                                            item: data.items[i].track})
+                                            name: track.name,
+                                            item: track,
+                                            saved: app.spotifyDataCache.isTrackSaved(track.album.id, track.id)})
+                        if(trackIds !== null)
+                            trackIds.push(track.id)
                     }
+                    // get info about saved tracks
+                    if(!app.cache_followed_saved_info.value)
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data)
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                        })
                     lastItemOffset = firstItemOffset + searchModel.count - 1
-                    console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
+                    //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
                 } catch (err) {
                     console.log(err)
@@ -820,27 +830,30 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = []
+                    var trackIds = app.cache_followed_saved_info.value ? null: []
                     for(var i=0;i<data.items.length;i++) {
+                        var track =  data.items[i]
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Album,
-                                            name: data.items[i].name,
-                                            saved: false,
-                                            item: data.items[i]})
-                        trackIds.push(data.items[i].id)
+                                            name: track.name,
+                                            item: track,
+                                            saved: app.spotifyDataCache.isTrackSaved(id, track.id)})
+                        if(trackIds !== null)
+                            trackIds.push(track.id)
                     }
-                    console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
+                    //console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
                     // get info about saved tracks
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data)
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                    })
+                    if(!app.cache_followed_saved_info.value)
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data)
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                        })
                     // if the album has more tracks get more
                     if(cursorHelper.total > searchModel.count) {
                         cursorHelper.offset = searchModel.count
                         _loadAlbumTracks(id)
-                    }
-                    updateForCurrentTrack()
+                    } else
+                        updateForCurrentTrack()
                 } catch (err) {
                     console.log(err)
                 }
