@@ -143,42 +143,46 @@ Row {
     }
 
     function getMeta2String() {
-        var s = "";
+        var sb = new Util.Classes.StringBuilder()
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
             if(typeof(dataModel.saved) !== 'undefined') {
                if(dataModel.saved)
-                    s = "<strong>[" + qsTr("saved") + "]</strong>"
+                    sb.append("<strong>[" + qsTr("saved") + "]</strong>")
             }
             if(dataModel.item)
-                s += (s.length > 0 ? ", " : "") + Util.getYearFromReleaseDate(dataModel.item.release_date)
-            return s
+                sb.append(Util.getYearFromReleaseDate(dataModel.item.release_date))
+            break
         case Util.SpotifyItemType.Artist:
             if(typeof(dataModel.following) !== 'undefined') {
                if(dataModel.following)
-                    s = "<strong>[" + qsTr("following") + "]</strong>, "
+                    sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
             }
             if(typeof(dataModel.item.followers) !== 'undefined')
-                s += Util.abbreviateNumber(dataModel.item.followers.total) + " " + qsTr("followers")
-            return s
+                sb.append(Util.abbreviateNumber(dataModel.item.followers.total) + " " + qsTr("followers"))
+            break
         case Util.SpotifyItemType.Playlist:
             if(typeof(following) !== 'undefined') {
                if(following)
-                   s = "<strong>[" + qsTr("following") + "]</strong>, "
+                   sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
             }
-            s += dataModel.item.tracks.total + " " + qsTr("tracks")
-            return s
+            sb.append(dataModel.item.tracks.total + " " + qsTr("tracks"))
+            break
         case Util.SpotifyItemType.Track:
+            if(typeof(dataModel.saved) !== 'undefined') {
+               if(dataModel.saved)
+                   sb.append("<strong>[" + qsTr("saved") + "]</strong>")
+            }
             if(dataModel.item.album) {
                 if(dataModel.item.album.name.length === 0)
-                    s += qsTr("name not specified") // should not happen but it does
+                    sb.append(qsTr("name not specified")) // should not happen but it does
                 else
-                    s += dataModel.item.album.name
+                    sb.append(dataModel.item.album.name)
             }
             if(dataModel.played_at && dataModel.played_at.length>0)
-                s += (s.length>0?", ":"") + qsTr("played at ") + Util.getPlayedAtText(dataModel.played_at)
-            return s
+                sb.append(qsTr("played at ") + Util.getPlayedAtText(dataModel.played_at))
         }
-        return ""
+        return sb.toString(", ")
     }
+
 }
