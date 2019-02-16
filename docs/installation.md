@@ -3,9 +3,9 @@ title: Installation
 nav_order: 2
 layout: default
 ---
-Hutspot is available on [openrepos.net](https://openrepos.net/content/wdehoog/hutspot) 
+### Installation
 
-The package can also be downloaded from [OBS]( https://api.merproject.org/package/binaries/home:wdehoog:hutspot/hutspot?repository=sailfish_latest_armv7hl). 
+Hutspot is available on [openrepos.net](https://openrepos.net/content/wdehoog/hutspot) and can also be downloaded from [OBS]( https://api.merproject.org/package/binaries/home:wdehoog:hutspot/hutspot?repository=sailfish_latest_armv7hl). 
 
 ### Install from rpm file
 Download the latest rpm and install it for example with:

@@ -15,7 +15,8 @@ Main features:
  * Discover and control Connect Devices
  * Control Play/Pause/Next/Previous/Volume/Shuffle/Replay/Seek
  * Create and Edit Playlists
- * Support local Librespot service
+ * Supports local Librespot service
+ * Supports Mpris and Media Keys
 
 ### Librespot on Sailfish
 Playing music on your phone can be done using [Librespot](https://github.com/librespot-org/), an open source Spotify player. 
