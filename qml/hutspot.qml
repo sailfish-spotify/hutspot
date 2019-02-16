@@ -106,6 +106,7 @@ ApplicationWindow {
     property alias controlpanel_show_delay: controlpanel_show_delay
     property alias logging_flags: logging_flags
     property alias locale_config: locale_config
+    property alias cache_followed_saved_info: cache_followed_saved_info
 
     property alias deviceId: deviceId
     property alias deviceName: deviceName
@@ -1364,6 +1365,13 @@ ApplicationWindow {
         property string country: ""
     }
 
+    // currently only makes track info not being cached
+    ConfigurationValue {
+            id: cache_followed_saved_info
+            key: "/hutspot/cache_followed_saved_info"
+            defaultValue: true
+    }
+
     /*ConfigurationValue {
             id: auto_load_lists
             key: "/hutspot/auto_load_lists"
@@ -1687,7 +1695,6 @@ ApplicationWindow {
         function notifyHappend(mask) {
             happendMask |= mask
             if((happendMask & triggerMask) === triggerMask) {
-                //loadFirstPage()
                 spotifyDataCacheReady()
             }
         }

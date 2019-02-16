@@ -112,7 +112,8 @@ Item {
                 else {
                     app.doBeforeStart.notifyHappend(app.doBeforeStart.savedAlbumsMask)
                     console.log("Loaded info of " + _savedAlbumsId.items.length + " saved albums")
-                    loadSavedTracks()
+                    if(app.cache_followed_saved_info)
+                        loadSavedTracks()
                 }
             }
         })

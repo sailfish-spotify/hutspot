@@ -1044,6 +1044,14 @@
         <source>Country Code (2 characters)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Use cached Followed/Saved state data. Can take a lot of memory for large collections.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use Followed/Saved cache for Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>
