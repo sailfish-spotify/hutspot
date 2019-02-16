@@ -374,7 +374,6 @@
         <source>Nothing found</source>
         <translation>什麼也沒找到</translation>
     </message>
-
 </context>
 <context>
     <name>NavigationMenu</name>

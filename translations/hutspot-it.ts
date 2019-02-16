@@ -374,7 +374,6 @@
         <source>Nothing found</source>
         <translation>Nessun elemento</translation>
     </message>
-
 </context>
 <context>
     <name>NavigationMenu</name>
