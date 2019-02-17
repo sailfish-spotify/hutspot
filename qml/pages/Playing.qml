@@ -775,23 +775,21 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = app.cache_followed_saved_info.value ? null: []
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         var track =  data.items[i].track
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
                                             name: track.name,
                                             item: track,
-                                            saved: app.spotifyDataCache.isTrackSaved(track.album.id, track.id)})
-                        if(trackIds !== null)
-                            trackIds.push(track.id)
+                                            saved: false})
+                        trackIds.push(track.id)
                     }
                     // get info about saved tracks
-                    if(!app.cache_followed_saved_info.value)
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data)
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                        })
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data)
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                    })
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
@@ -830,24 +828,22 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = app.cache_followed_saved_info.value ? null: []
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         var track =  data.items[i]
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Album,
                                             name: track.name,
                                             item: track,
-                                            saved: app.spotifyDataCache.isTrackSaved(id, track.id)})
-                        if(trackIds !== null)
+                                            saved: false})
                             trackIds.push(track.id)
                     }
                     //console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
                     // get info about saved tracks
-                    if(!app.cache_followed_saved_info.value)
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data)
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                        })
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data)
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                    })
                     // if the album has more tracks get more
                     if(cursorHelper.total > searchModel.count) {
                         cursorHelper.offset = searchModel.count
