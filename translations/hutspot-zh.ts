@@ -60,8 +60,8 @@
         <translation>音樂</translation>
     </message>
     <message>
-        <source>No Albums found</source>
-        <translation>未找到專輯</translation>
+        <source>No Tracks found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

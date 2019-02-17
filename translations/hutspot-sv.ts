@@ -60,8 +60,8 @@
         <translation>Spår</translation>
     </message>
     <message>
-        <source>No Albums found</source>
-        <translation>Inga album hittades</translation>
+        <source>No Tracks found</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
