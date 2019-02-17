@@ -305,17 +305,23 @@ Page {
 
                     // tracks
                     if(data.hasOwnProperty('tracks')) {
+                        cursorHelper.offset = data.tracks.offset
+                        cursorHelper.total = data.tracks.total
+                        var trackIds = []
                         for(i=0;i<data.tracks.items.length;i++) {
                             var track = data.tracks.items[i]
                             searchModel.append({type: 3,
                                                 name: track.name,
                                                 item: track,
                                                 following: false,
-                                                saved: app.spotifyDataCache.isTrackSaved(track.album.id, track.id)})
+                                                saved: false})
+                            trackIds.push(track.id)
                         }
-                        cursorHelper.offset = data.tracks.offset
-                        cursorHelper.total = data.tracks.total
-                    }
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data) {
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                            }
+                        })                    }
 
                 } catch (err) {
                     console.log("Search.refresh error: " + err)
