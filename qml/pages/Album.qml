@@ -137,7 +137,7 @@ Page {
 
         ViewPlaceholder {
             enabled: listView.count == 0
-            text: qsTr("No Albums found")
+            text: qsTr("No Tracks found")
         }
 
         onAtYEndChanged: {
@@ -197,23 +197,21 @@ Page {
                     console.log("number of AlbumTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = app.cache_followed_saved_info.value ? null: []
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
                         var track = data.items[i]
                         searchModel.append({type: Spotify.ItemType.Track,
                                             name: track.name,
                                             item: track,
                                             following: false,
-                                            saved: app.spotifyDataCache.isTrackSaved(album.id, track.id)})
-                        if(trackIds !== null)
-                            trackIds.push(track.id)
+                                            saved: false})
+                        trackIds.push(track.id)
                     }
-                    if(!app.cache_followed_saved_info.value)
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data) {
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                            }
-                        })
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data) {
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                        }
+                    })
 
                 } catch (err) {
                     console.log(err)
