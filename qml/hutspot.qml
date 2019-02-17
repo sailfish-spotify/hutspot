@@ -501,7 +501,6 @@ ApplicationWindow {
             console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
             app.connectionText = qsTr("Connected")
             loadUser()
-            loggedIn = true
         }
 
         onLinkedChanged: {
@@ -806,6 +805,24 @@ ApplicationWindow {
                 console.log("replaceTracksInPlaylist: snapshot: " + data.snapshot_id)
             } else
                 console.log("No Data while replacing tracks in Playlist " + playlistId)
+        })
+    }
+
+    function loadTracksInModel(data, count, model, getTrack) {
+        var trackIds = []
+        for(var i=0;i<count;i++) {
+            var track = getTrack(data, i)
+            model.append({type: Spotify.ItemType.Track,
+                          name: track.name,
+                          item: track,
+                          following: false,
+                          saved: false})
+            trackIds.push(track.id)
+        }
+        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+            if(data) {
+                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, model)
+            }
         })
     }
 

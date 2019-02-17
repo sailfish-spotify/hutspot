@@ -140,24 +140,10 @@ Page {
             Spotify.getMyTopTracks({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
                 try {
                     if(data) {
-                        console.log("number of TopTracks: " + data.items.length)
+                        //console.log("number of TopTracks: " + data.items.length)
                         cursorHelper.offset = data.offset
                         cursorHelper.total = data.total
-                        var trackIds = []
-                        for(i=0;i<data.items.length;i++) {
-                            var track = data.items[i]
-                            searchModel.append({type: Util.SpotifyItemType.Track,
-                                                name: track.name,
-                                                item: track,
-                                                following: false,
-                                                saved: false})
-                            trackIds.push(track.id)
-                        }
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data) {
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                            }
-                        })
+                        app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i]})
                     } else
                         console.log("No Data for getMyTopTracks")
                 } catch(err) {

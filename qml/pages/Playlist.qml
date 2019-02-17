@@ -263,21 +263,7 @@ Page {
                     //console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = []
-                    for(i=0;i<data.items.length;i++) {
-                        var track = data.items[i].track
-                        searchModel.append({type: 3,
-                                            name: track.name,
-                                            item: track,
-                                            following: false,
-                                            saved: false})
-                        trackIds.push(track.id)
-                    }
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data) {
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                        }
-                    })
+                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i].track})
                 } catch (err) {
                     console.log(err)
                 }

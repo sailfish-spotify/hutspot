@@ -194,25 +194,10 @@ Page {
         Spotify.getAlbumTracks(album.id, options, function(error, data) {
             if(data) {
                 try {
-                    console.log("number of AlbumTracks: " + data.items.length)
+                    //console.log("number of AlbumTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = []
-                    for(var i=0;i<data.items.length;i++) {
-                        var track = data.items[i]
-                        searchModel.append({type: Spotify.ItemType.Track,
-                                            name: track.name,
-                                            item: track,
-                                            following: false,
-                                            saved: false})
-                        trackIds.push(track.id)
-                    }
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data) {
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                        }
-                    })
-
+                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i]})
                 } catch (err) {
                     console.log(err)
                 }

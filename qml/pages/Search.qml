@@ -307,22 +307,8 @@ Page {
                     if(data.hasOwnProperty('tracks')) {
                         cursorHelper.offset = data.tracks.offset
                         cursorHelper.total = data.tracks.total
-                        var trackIds = []
-                        for(i=0;i<data.tracks.items.length;i++) {
-                            var track = data.tracks.items[i]
-                            searchModel.append({type: 3,
-                                                name: track.name,
-                                                item: track,
-                                                following: false,
-                                                saved: false})
-                            trackIds.push(track.id)
-                        }
-                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                            if(data) {
-                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                            }
-                        })                    }
-
+                        app.loadTracksInModel(data, data.tracks.items.length, searchModel, function(data, i) {return data.tracks.items[i]})
+                    }
                 } catch (err) {
                     console.log("Search.refresh error: " + err)
                 }
