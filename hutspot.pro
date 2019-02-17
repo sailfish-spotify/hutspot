@@ -82,7 +82,8 @@ DISTFILES += \
     qml/components/PlaybackState.qml \
     qml/components/ControlPanel.qml \
     qml/components/GlassyBackground.qml \
-    qml/components/NetworkConnection.qml
+    qml/components/NetworkConnection.qml \
+    qml/components/SpotifyDataCache.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

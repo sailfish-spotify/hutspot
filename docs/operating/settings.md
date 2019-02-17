@@ -18,6 +18,7 @@ The Settings page allows to configure:
   * Should Spotify replace tracks in Playlists that cannot be played due to regional restrictions.
   * Delay for the Docked panel to show up again
   * Ask for confirmation of save/follow changes
+  * Use cached Followed/Saved state data (only applies to Tracks for now)
   * Which menu implementation to use
   * Have the player as an attached page
   * Detect Network Connected state.

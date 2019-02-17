@@ -404,14 +404,7 @@ Page {
 
     Connections {
         target: app
-
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
-
         onHasValidTokenChanged: refresh()
-
     }
 
     Component.onCompleted: {

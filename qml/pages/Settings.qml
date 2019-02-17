@@ -247,6 +247,7 @@ Page {
     // The shared DockedPanel needs mouse events
     // and some ListView events
     propagateComposedEvents: true
+
     onStatusChanged: {
         if(status === PageStatus.Activating)
             app.dockedPanel.setHidden()

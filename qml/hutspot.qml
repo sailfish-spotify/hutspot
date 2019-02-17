@@ -16,6 +16,7 @@ import org.hildon.components 1.0
 
 import "Spotify.js" as Spotify
 import "Util.js" as Util
+
 import "cover"
 import "pages"
 import "components"
@@ -26,6 +27,11 @@ ApplicationWindow {
     property alias controller: spotifyController
     SpotifyController {
         id: spotifyController
+    }
+
+    property alias spotifyDataCache: spotifyDataCache
+    SpotifyDataCache {
+        id: spotifyDataCache
     }
 
     GlassyBackground {
@@ -108,6 +114,8 @@ ApplicationWindow {
     property alias playingPage: playingPage
     property alias librespot: librespot
     property string playerName: "Hutspot"
+
+    property var doBeforeStart: doBeforeStart
 
     allowedOrientations: Orientation.All
 
@@ -366,27 +374,10 @@ ApplicationWindow {
         })
     }
 
-    property bool loggedIn: spotify.isLinked()
-    onLoggedInChanged: {
-        // do we need this? isLinked does not mean we have a valid token
-        if(loggedIn) {
-            controller.refreshPlaybackState();
-        }
-    }
-
     function startSpotify() {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
-            /*Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
-            tokenExpireTime = spotify.getExpires()
-            var date = new Date(tokenExpireTime*1000)
-            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
-            app.connectionText = qsTr("Connected")
-            loadUser()
-            loggedIn = true*/
-
             var now = new Date ()
             console.log("Currently it is " + now.toDateString() + " " + now.toTimeString())
             var tokenExpireTime = spotify.getExpires()
@@ -424,14 +415,14 @@ ApplicationWindow {
         id: librespotAtStart
 
         readonly property int validTokenMask: 0x01
-        readonly property int deviceListReadyMask: 0x01
+        readonly property int deviceListReadyMask: 0x02
 
         readonly property int triggerMask: 0x03
         property int happendMask: 0
 
         function notifyHappend(event) {
-            happendMask = happendMask | (0x01 << event)
-            if(happendMask & triggerMask) {
+            happendMask |= event
+            if((happendMask & triggerMask) === triggerMask) {
                 // only do something when wished for
                 if(!start_stop_librespot.value)
                     return
@@ -782,7 +773,7 @@ ApplicationWindow {
                                collaborative: ms.collaborativePL}
                 if(ms.description && ms.description.length > 0)
                     options.description = ms.description
-                Spotify.createPlaylist(options, function(error, data) {
+                Spotify.createPlaylist(id, options, function(error, data) {
                     callback(error, data)
                     if(data) {
                         var ev = new Util.PlayListEvent(Util.PlaylistEventType.CreatedPlaylist,
@@ -829,7 +820,7 @@ ApplicationWindow {
     function followPlaylist(playlist, callback) {
         Spotify.followPlaylist(playlist.id, function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, playlist.uri, true)
             favoriteEvent(event)
         })
     }
@@ -837,7 +828,7 @@ ApplicationWindow {
     function _unfollowPlaylist(playlist, callback) {
         Spotify.unfollowPlaylist(playlist.id, function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Playlist, playlist.id, playlist.uri, false)
             favoriteEvent(event)
         })
     }
@@ -855,7 +846,7 @@ ApplicationWindow {
     function followArtist(artist, callback) {
         Spotify.followArtists([artist.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, artist.uri, true)
             favoriteEvent(event)
         })
     }
@@ -863,7 +854,7 @@ ApplicationWindow {
     function _unfollowArtist(artist, callback) {
         Spotify.unfollowArtists([artist.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Artist, artist.id, artist.uri, false)
             favoriteEvent(event)
         })
     }
@@ -886,7 +877,7 @@ ApplicationWindow {
             id = Util.parseSpotifyUri(album.uri).id
         Spotify.addToMySavedAlbums([id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, album.uri, true)
             favoriteEvent(event)
         })
     }
@@ -894,7 +885,7 @@ ApplicationWindow {
     function _unSaveAlbum(album, callback) {
         Spotify.removeFromMySavedAlbums([album.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Album, album.id, album.uri, false)
             favoriteEvent(event)
         })
     }
@@ -912,7 +903,7 @@ ApplicationWindow {
     function saveTrack(track, callback) {
         Spotify.addToMySavedTracks([track.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, true)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, track.uri, true)
             favoriteEvent(event)
         })
     }
@@ -920,7 +911,7 @@ ApplicationWindow {
     function _unSaveTrack(track, callback) {
         Spotify.removeFromMySavedTracks([track.id], function(error, data) {
             callback(error, data)
-            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, false)
+            var event = new Util.FavoriteEvent(Util.SpotifyItemType.Track, track.id, track.uri, false)
             favoriteEvent(event)
         })
     }
@@ -1118,8 +1109,21 @@ ApplicationWindow {
     // MediaKeys
     //
 
-    MediaKey {
+    // something like this needed as well?
+    /*property bool _grabKeys: keysResource.acquired
+    Permissions {
         enabled: true
+        applicationClass: "player"
+
+        Resource {
+            id: keysResource
+            type: Resource.HeadsetButtons
+            optional: true
+        }
+    }*/
+
+    MediaKey {
+        enabled: true // _grabKeys
         key: Qt.Key_MediaTogglePlayPause
         onReleased: {
             console.log("MediaKey: TogglePlayPause")
@@ -1156,6 +1160,22 @@ ApplicationWindow {
         onReleased: {
             console.log("MediaKey: MediaStop")
             controller.pause()
+        }
+    }
+    MediaKey {
+        enabled: true;
+        key: Qt.Key_MediaNext;
+        onReleased: {
+            console.log("MediaKey: MediaNext")
+            controller.next()
+        }
+    }
+    MediaKey {
+        enabled: true;
+        key: Qt.Key_MediaPrevious;
+        onReleased: {
+            console.log("MediaKey: MediaPrevious")
+            controller.previous()
         }
     }
 
@@ -1634,7 +1654,30 @@ ApplicationWindow {
         Component.onCompleted: updateInfo()
     }
 
-    Component.onCompleted: loadFirstPage()
+    signal spotifyDataCacheReady()
+
+    Item {
+        id: doBeforeStart
+
+        readonly property int followedPlaylistsMask: 0x01
+        readonly property int followedArtistsMask: 0x02
+        readonly property int savedAlbumsMask: 0x04
+        readonly property int savedTracksMask: 0x08
+
+        readonly property int triggerMask: 0x0F
+        property int happendMask: 0
+
+        function notifyHappend(mask) {
+            happendMask |= mask
+            if((happendMask & triggerMask) === triggerMask) {
+                spotifyDataCacheReady()
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        loadFirstPage()
+    }
 
     property var scheduledActions: []
     function scheduleDelayedAction(action) {

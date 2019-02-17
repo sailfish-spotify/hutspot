@@ -299,7 +299,7 @@ Page {
             }
 
             onAtYEndChanged: {
-                if(listView.atYEnd) {
+                if(listView.atYEnd && searchModel.count > 0) {
                     // album is already completely loaded
                     if(app.controller.playbackState.context
                        && app.controller.playbackState.context.type === 'playlist')
@@ -334,7 +334,7 @@ Page {
                 Slider {
                     id: progressSlider
                     property bool isPressed: false
-                    height: progressLabel.height * 1.5
+                    //height: progressLabel.height * 1.5
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - durationLabel.width - progressLabel.width
                     minimumValue: 0
@@ -371,7 +371,7 @@ Page {
 
             Rectangle {
                 width: parent.width
-                height: Theme.paddingLarge
+                height: Theme.paddingSmall
                 color: "transparent"
             }
 
@@ -439,14 +439,14 @@ Page {
 
             Rectangle {
                 width: parent.width
-                height: Theme.paddingLarge
+                height: Theme.paddingSmall
                 color: "transparent"
             }
 
             Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: spotifyConnectRow.childrenRect.height + Theme.paddingLarge*2
+                height: spotifyConnectRow.childrenRect.height + Theme.paddingSmall*2
                 MouseArea {
                     anchors.fill: spotifyConnectRow
                     onClicked: pageStack.push(Qt.resolvedUrl("../pages/Devices.qml"))
@@ -454,7 +454,7 @@ Page {
 
                 Row {
                     id: spotifyConnectRow
-                    y: Theme.paddingLarge
+                    y: Theme.paddingSmall
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: Theme.paddingMedium
                     Image {
@@ -775,15 +775,23 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
+                    var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
+                        var track =  data.items[i].track
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Playlist,
-                                            name: data.items[i].track.name,
-                                            saved: false,
-                                            item: data.items[i].track})
+                                            name: track.name,
+                                            item: track,
+                                            saved: false})
+                        trackIds.push(track.id)
                     }
+                    // get info about saved tracks
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data)
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                    })
                     lastItemOffset = firstItemOffset + searchModel.count - 1
-                    console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
+                    //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
                 } catch (err) {
                     console.log(err)
@@ -822,14 +830,15 @@ Page {
                     cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
+                        var track =  data.items[i]
                         searchModel.append({type: Spotify.ItemType.Track,
                                             stype: Spotify.ItemType.Album,
-                                            name: data.items[i].name,
-                                            saved: false,
-                                            item: data.items[i]})
-                        trackIds.push(data.items[i].id)
+                                            name: track.name,
+                                            item: track,
+                                            saved: false})
+                            trackIds.push(track.id)
                     }
-                    console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
+                    //console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
                     // get info about saved tracks
                     Spotify.containsMySavedTracks(trackIds, function(error, data) {
                         if(data)
@@ -839,8 +848,8 @@ Page {
                     if(cursorHelper.total > searchModel.count) {
                         cursorHelper.offset = searchModel.count
                         _loadAlbumTracks(id)
-                    }
-                    updateForCurrentTrack()
+                    } else
+                        updateForCurrentTrack()
                 } catch (err) {
                     console.log(err)
                 }

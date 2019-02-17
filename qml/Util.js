@@ -130,43 +130,6 @@ function deviceInfoRequestMDNS(mdns, callback) {
     req.send(null);
 }
 
-function deviceInfoRequestAVAHI(avahi, callback) {
-  var req = new XMLHttpRequest();
-    var tmp;
-
-    // address
-    var url = "http://" + avahi.ip + ":" + avahi.port;
-
-    // path ( text also contains \s"VERSION=([^"]*)")
-    if(tmp = avahi.text.match(/"CPath=([^"]*)"/))
-        url += tmp[1]
-    else
-        url += "/"
-    // request
-    url += "?action=getInfo"
-
-    req.open('GET', url);
-
-    req.onreadystatechange = function() {
-      if (req.readyState === 4) {
-        var data = null;
-        try {
-          data = req.responseText ? JSON.parse(req.responseText) : '';
-        } catch (e) {
-          console.error(e);
-        }
-
-        if (req.status >= 200 && req.status < 300) {
-          callback(null, data);
-        } else {
-          callback(data);
-        }
-      }
-    }
-
-    req.send(null);
-}
-
 /**
  * @type type of item
  * @ids array of ids sent to server
@@ -195,33 +158,31 @@ function setSavedInfo(type, ids, data, model) {
     }
 }
 
-/**
- * @type type of item
- * @ids array of ids sent to server
- * @data array of booleans returned by server
- * @model listmodel containing the items to update
- */
-function setFollowedInfo(type, ids, data, model) {
-    var i,j,k;
+function setFollowedInfo(id, following, model) {
+    var i
+    for(i=0;i<model.count;i++) {
+        var v = model.get(i)
+        if(v.item.id === id) {
+            v.following = following
+            break
+        }
+    }
+}
 
-    for(i=0;i<data.length;i++) {
-        if(data[i]) {                        // if followed
-            for(j=0;j<model.count;j++) {     // lookup in current list
-                var v = model.get(j)
-                if(v.type === type) {
-                    var id
-                    switch(type) {
-                    case SpotifyItemType.Artist:
-                        id = v.item.id
-                        break;
-                    case SpotifyItemType.Playlist:
-                        id = v.item.id
-                        break
-                    }
-                    if(ids[i] === id)        // found it
-                        v.following = true
-                }
-            }
+function updateFollowingSaved(spotifyDataCache, model) {
+    var i
+    for(i=0;i<model.count;i++) {
+        var obj = model.get(i)
+        switch(obj.type) {
+        case SpotifyItemType.Album:
+            obj.saved = spotifyDataCache.isAlbumSaved(obj.item.id)
+            break
+        case SpotifyItemType.Artist:
+            obj.following = spotifyDataCache.isArtistFollowed(obj.item.id)
+            break
+        case SpotifyItemType.Playlist:
+            obj.following = spotifyDataCache.isPlaylistFollowed(obj.item.id)
+            break
         }
     }
 }
@@ -479,6 +440,22 @@ function getPreviousCursorText(offset, limit, total) {
     return "(" + lower + ".." + upper + "/" + abbreviateNumber(total) + ")"
 }*/
 
+
+var Classes = {
+    StringBuilder : function() {
+        var strings = [];
+        this.append = function(value) {
+            strings.push(value);
+        }
+        this.clear = function() {
+            strings.length = 0
+        }
+        this.toString = function(separator) {
+            return strings.join(separator);
+        }
+    }
+}
+
 // keep in sync with Spotify.js ItemType
 var SpotifyItemType = {
     Album: 0,
@@ -523,10 +500,11 @@ function PlayListEvent(type, playlistId, snapshotId) {
     this.snapshotId = snapshotId
 }
 
-function FavoriteEvent(type, id, isFavorite) {
+function FavoriteEvent(type, id, uri, isFavorite) {
     this.type = type
     this.id = id
-    this.isFavorite = isFavorite
+    this.uri = uri
+    this.isFavorite = isFavorite    
 }
 
 function hasDeviceChanged(device0, device1) {

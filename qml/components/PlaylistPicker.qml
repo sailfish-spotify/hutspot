@@ -79,21 +79,9 @@ Dialog {
                     }
                 })
             }
-            /*MenuItem {
-                text: qsTr("Load Previous Set")
-                enabled: cursorHelper.canLoadPrevious
-                onClicked: cursorHelper.previous()
-            }*/
         }
-        /*PushUpMenu {
-            MenuItem {
-                text: qsTr("Load Next Set")
-                enabled: cursorHelper.canLoadNext
-                onClicked: cursorHelper.next()
-            }
-        }*/
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && items.count > 0)
                 append()
         }
     }
@@ -134,7 +122,8 @@ Dialog {
                         items.append({type: 2,
                                       stype: 2,
                                       name: data.items[i].name,
-                                      item: data.items[i]});
+                                      item: data.items[i],
+                                      following: true});
                     }
                 } else
                     console.log("No Data for getUserPlaylists")

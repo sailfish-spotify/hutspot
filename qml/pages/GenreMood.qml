@@ -89,11 +89,10 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("No Genres or Moods found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
@@ -148,10 +147,6 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
         onHasValidTokenChanged: refresh()
     }
 

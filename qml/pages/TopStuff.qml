@@ -97,17 +97,14 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
 
-    property var topTracks
-    property var topArtists
     property int _itemClass: app.current_item_classes.topStuff
 
     function nextItemClass() {
@@ -120,41 +117,8 @@ Page {
         refresh()
     }
 
-    function loadData() {
-        var i
-
-        // I don't understand why I have to make the objects being appended
-        // have the same properties. Before I did that the artist property
-        // would be missing in the delegate of the ListView. That did never happen
-        // when both tracks as well as artists were added in this function.
-
-        if(topTracks)
-            for(i=0;i<topTracks.items.length;i++)
-                searchModel.append({type: 3,
-                                    name: topTracks.items[i].name,
-                                    following: false,
-                                    item: topTracks.items[i]})
-        if(topArtists) {
-            var artistIds = []
-            for(i=0;i<topArtists.items.length;i++) {
-                searchModel.append({type: 1,
-                                    name: topArtists.items[i].name,
-                                    following: false,
-                                    item: topArtists.items[i]})
-                artistIds.push(topArtists.items[i].id)
-            }
-            // request additional Info
-            Spotify.isFollowingArtists(artistIds, function(error, data) {
-                if(data)
-                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-            })
-        }
-    }
-
     function refresh() {
         searchModel.clear()
-        topTracks = undefined
-        topArtists = undefined
         append()
     }
 
@@ -177,12 +141,25 @@ Page {
                 try {
                     if(data) {
                         console.log("number of TopTracks: " + data.items.length)
-                        topTracks = data
                         cursorHelper.offset = data.offset
                         cursorHelper.total = data.total
+                        var trackIds = []
+                        for(i=0;i<data.items.length;i++) {
+                            var track = data.items[i]
+                            searchModel.append({type: Util.SpotifyItemType.Track,
+                                                name: track.name,
+                                                item: track,
+                                                following: false,
+                                                saved: false})
+                            trackIds.push(track.id)
+                        }
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data) {
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                            }
+                        })
                     } else
                         console.log("No Data for getMyTopTracks")
-                    loadData()
                 } catch(err) {
                     console.log("getMyTopTracks exception: " + err)
                 } finally {
@@ -195,13 +172,19 @@ Page {
                 try {
                     if(data) {
                         console.log("number of MyTopArtists: " + data.items.length)
-                        topArtists = data
                         cursorHelper.offset = data.offset
                         cursorHelper.total = data.total
+                        for(i=0;i<data.items.length;i++) {
+                            var artist = data.items[i]
+                            searchModel.append({type: 1,
+                                                name: artist.name,
+                                                item: artist,
+                                                following: app.spotifyDataCache.isArtistFollowed(artist.id),
+                                                saved: false})
+                        }
                     } else
                         console.log("No Data for getMyTopArtists")
-                    loadData()
-                } catch(err) {
+                 } catch(err) {
                     console.log("getMyTopArtists exception: " + err)
                 } finally {
                     _loading = false
@@ -222,11 +205,14 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
         onHasValidTokenChanged: refresh()
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Artist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
     }
 
     Component.onCompleted: {

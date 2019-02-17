@@ -192,7 +192,7 @@ Page {
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd) {
+            if(listView.atYEnd && searchModel.count > 0) {
                 if(searchString === "")
                     return
                 if(_itemClass === -1)
@@ -269,7 +269,8 @@ Page {
                             searchModel.append({type: 0,
                                                 name: data.albums.items[i].name,
                                                 item: data.albums.items[i],
-                                                following: false})
+                                                following: false,
+                                                saved: app.spotifyDataCache.isAlbumSaved(data.albums.items[i].id)})
                         }
                         cursorHelper.offset = data.albums.offset
                         cursorHelper.total = data.albums.total
@@ -281,18 +282,12 @@ Page {
                             searchModel.append({type: 1,
                                                 name: data.artists.items[i].name,
                                                 item: data.artists.items[i],
-                                                following: false})
+                                                following: app.spotifyDataCache.isArtistFollowed(data.artists.items[i].id),
+                                                saved: false})
                             artistIds.push(data.artists.items[i].id)
                         }
                         cursorHelper.offset = data.artists.offset
                         cursorHelper.total = data.artists.total
-
-                        // request additional Info
-                        Spotify.isFollowingArtists(artistIds, function(error, data) {
-                            if(data) {
-                                Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-                            }
-                        })
                     }
 
                     // playlists
@@ -301,7 +296,8 @@ Page {
                             searchModel.append({type: 2,
                                                 name: data.playlists.items[i].name,
                                                 item: data.playlists.items[i],
-                                                following: false})
+                                                following: app.spotifyDataCache.isPlaylistFollowed(data.playlists.items[i].id),
+                                                saved: false})
                         }
                         cursorHelper.offset = data.playlists.offset
                         cursorHelper.total = data.playlists.total
@@ -309,15 +305,23 @@ Page {
 
                     // tracks
                     if(data.hasOwnProperty('tracks')) {
-                        for(i=0;i<data.tracks.items.length;i++) {
-                            searchModel.append({type: 3,
-                                                name: data.tracks.items[i].name,
-                                                item: data.tracks.items[i],
-                                                following: false})
-                        }
                         cursorHelper.offset = data.tracks.offset
                         cursorHelper.total = data.tracks.total
-                    }
+                        var trackIds = []
+                        for(i=0;i<data.tracks.items.length;i++) {
+                            var track = data.tracks.items[i]
+                            searchModel.append({type: 3,
+                                                name: track.name,
+                                                item: track,
+                                                following: false,
+                                                saved: false})
+                            trackIds.push(track.id)
+                        }
+                        Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                            if(data) {
+                                Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                            }
+                        })                    }
 
                 } catch (err) {
                     console.log("Search.refresh error: " + err)
@@ -331,6 +335,19 @@ Page {
             showBusy = false
             _loading = false
         })
+    }
+
+    Connections {
+        target: app
+        onFavoriteEvent: {
+            switch(event.type) {
+            case Util.SpotifyItemType.Album:
+            case Util.SpotifyItemType.Artist:
+            case Util.SpotifyItemType.Playlist:
+                Util.setSavedInfo(event.type, [event.id], [event.isFavorite], searchModel)
+                break
+            }
+        }
     }
 
     // The shared DockedPanel needs mouse events

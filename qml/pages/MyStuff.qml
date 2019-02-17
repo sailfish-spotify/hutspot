@@ -134,7 +134,6 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("Nothing found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
@@ -197,14 +196,6 @@ Page {
 
     function addData(obj) {
         obj.nameFirstChar = Util.getFirstCharForSection(obj.name)
-        /*if(!obj.hasOwnProperty('album'))
-            obj.album = {}
-        if(!obj.hasOwnProperty('playlist'))
-            obj.playlist = {}
-        if(!obj.hasOwnProperty('track'))
-            obj.track = {}
-        if(!obj.hasOwnProperty('artist'))
-            obj.artist = {}*/
         if(!obj.hasOwnProperty('played_at'))
             obj.played_at = ""
         if(!obj.hasOwnProperty('following'))
@@ -218,12 +209,14 @@ Page {
             for(i=0;i<savedAlbums.items.length;i++)
                 addData({type: 0, stype: 0,
                          name: savedAlbums.items[i].album.name,
-                         item: savedAlbums.items[i].album})
+                         item: savedAlbums.items[i].album,
+                         following: false, saved: true})
         if(userPlaylists)
             for(i=0;i<userPlaylists.items.length;i++) {
                 addData({type: 2, stype: 2,
                          name: userPlaylists.items[i].name,
-                         item: userPlaylists.items[i]})
+                         item: userPlaylists.items[i],
+                         following: true, saved: false})
             }
         if(recentlyPlayedTracks)
             // context, played_at, track
@@ -231,20 +224,22 @@ Page {
                 addData({type: 3, stype: 3,
                          name: recentlyPlayedTracks.items[i].track.name,
                          item: recentlyPlayedTracks.items[i].track,
+                         following: false, saved: false,
                          played_at: recentlyPlayedTracks.items[i].played_at})
             }
         if(savedTracks)
             for(i=0;i<savedTracks.items.length;i++) {
                 addData({type: 3, stype: 4,
                          name: savedTracks.items[i].track.name,
-                         item: savedTracks.items[i].track})
+                         item: savedTracks.items[i].track,
+                         following: true, saved: true})
             }
         if(followedArtists)
             for(i=0;i<followedArtists.artists.items.length;i++) {
                 addData({type: 1, stype: 1,
                          name: followedArtists.artists.items[i].name,
                          item: followedArtists.artists.items[i],
-                         following: true})
+                         following: true, saved: false})
             }
     }
 
@@ -289,7 +284,7 @@ Page {
             })
             break
         case 1:
-            Spotify.getUserPlaylists({offset: cursorHelper.offset, limit: cursorHelper.limit},function(error, data) {
+            Spotify.getUserPlaylists({offset: searchModel.count, limit: cursorHelper.limit},function(error, data) {
                 if(data) {
                     console.log("number of playlists: " + data.items.length)
                     userPlaylists = data
@@ -324,7 +319,7 @@ Page {
             })
             break
         case 3:
-            Spotify.getMySavedTracks({offset: cursorHelper.offset, limit: cursorHelper.limit}, function(error, data) {
+            Spotify.getMySavedTracks({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
                 if(data) {
                     console.log("number of SavedTracks: " + data.items.length)
                     savedTracks = data
@@ -374,10 +369,6 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
         onHasValidTokenChanged: refresh()
     }
 

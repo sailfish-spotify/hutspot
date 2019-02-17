@@ -138,11 +138,10 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("No Artists found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
@@ -166,38 +165,24 @@ Page {
     function loadData() {
         var i;
 
+        isFollowed = app.spotifyDataCache.isArtistFollowed(currentArtist.id)
+
         if(artistAlbums) {
             for(i=0;i<artistAlbums.items.length;i++) {
                 searchModel.append({type: 0,
                                     name: artistAlbums.items[i].name,
                                     item: artistAlbums.items[i],
-                                    following: false})
+                                    following: app.spotifyDataCache.isArtistFollowed(artistAlbums.items[i].id)})
             }
-            // request additional Info
-            Spotify.isFollowingArtists([currentArtist.id], function(error, data) {
-                if(data)
-                    isFollowed = data[0]
-            })
         }
 
         if(relatedArtists) {
-            var artistIds = [currentArtist.id]
             for(i=0;i<relatedArtists.artists.length;i++) {
                 searchModel.append({type: 1,
                                     name: relatedArtists.artists[i].name,
                                     item: relatedArtists.artists[i],
-                                    following: false})
-                artistIds.push(relatedArtists.artists[i].id)
+                                    following: app.spotifyDataCache.isArtistFollowed(relatedArtists.artists[i].id)})
             }
-            // request additional Info
-            Spotify.isFollowingArtists(artistIds, function(error, data) {
-                if(data) {
-                    // first one is the currentArtist
-                    isFollowed = data[0]
-                    data.shift()
-                    Util.setFollowedInfo(Util.SpotifyItemType.Artist, artistIds, data, searchModel)
-                }
-            })
         }
 
     }
@@ -274,9 +259,10 @@ Page {
         onFavoriteEvent: {
             switch(event.type) {
             case Util.SpotifyItemType.Artist:
-                if(currentArtist.id === event.id) {
+                if(currentArtist.id === event.id)
                     isFollowed = event.isFavorite
-                }
+                else
+                    Util.setFollowedInfo(event.id, event.isFavorite, searchModel)
                 break
             }
         }

@@ -72,7 +72,7 @@ Item {
                 // create the playlist
                 var options = {name: queuePlaylistName}
                 options.description = queuePlaylistDescription
-                Spotify.createPlaylist(options, function(error, data) {
+                Spotify.createPlaylist(id, options, function(error, data) {
                     if(data && data.id) {
                         queuePlaylistId = data.id
                         queuePlaylistUri = data.uri

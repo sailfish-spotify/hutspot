@@ -17,6 +17,7 @@ Item {
 
     width: parent.width
     height: Math.max(labelss.height, savedImage.height)
+    anchors.verticalCenter: parent.verticalCenter
 
     opacity: Util.isTrackPlayable(dataModel.item) ? 1.0 : 0.4
 
@@ -24,6 +25,7 @@ Item {
         id: savedImage
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
+        height: Theme.iconSizeSmall
         asynchronous: true
         fillMode: Image.PreserveAspectFit
         source: {
@@ -49,6 +51,7 @@ Item {
         anchors.left: savedImage.right
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: Theme.paddingMedium
 
         Label {
             id: label

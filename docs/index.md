@@ -15,7 +15,8 @@ Main features:
  * Discover and control Connect Devices
  * Control Play/Pause/Next/Previous/Volume/Shuffle/Replay/Seek
  * Create and Edit Playlists
- * Support local Librespot service
+ * Supports local Librespot service
+ * Supports Mpris and Media Keys
 
 ### Librespot on Sailfish
 Playing music on your phone can be done using [Librespot](https://github.com/librespot-org/), an open source Spotify player. 
@@ -26,6 +27,16 @@ Sources of Hutspot can be found on [github](https://github.com/sailfish-spotify/
 Development is done using the Sailfish OS IDE. Most sources are QML and Javascript. Some part is done in C++.
 
 Please report any problems or requests in the [Github Issue Tracker](https://github.com/sailfish-spotify/hutspot/issues)
+
+### Translations
+
+Translations are welcome. Either through a Pull-Request or using [Transifex](https://www.transifex.com/sailfish-spotify/hutspot/dashboard/).
+
+Current translations:
+
+  * Chinese (zh)
+  * Italian (it)
+  * Swedish (sv)
 
 ### Thanks
  * Spotify for web api

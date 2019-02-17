@@ -137,12 +137,11 @@ Page {
 
         ViewPlaceholder {
             enabled: listView.count == 0
-            text: qsTr("No Albums found")
-            hintText: qsTr("Pull down to reload")
+            text: qsTr("No Tracks found")
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
@@ -172,10 +171,7 @@ Page {
                 albumArtists = data.artists
         })
 
-        Spotify.containsMySavedAlbums([album.id], {}, function(error, data) {
-            if(data)
-                isAlbumSaved = data[0]
-        })
+        isAlbumSaved = app.spotifyDataCache.isAlbumSaved(album.id)
 
         app.notifyHistoryUri(album.uri)
     }
@@ -203,13 +199,14 @@ Page {
                     cursorHelper.total = data.total
                     var trackIds = []
                     for(var i=0;i<data.items.length;i++) {
+                        var track = data.items[i]
                         searchModel.append({type: Spotify.ItemType.Track,
-                                            name: data.items[i].name,
-                                            saved: false,
-                                            item: data.items[i]})
-                        trackIds.push(data.items[i].id)
+                                            name: track.name,
+                                            item: track,
+                                            following: false,
+                                            saved: false})
+                        trackIds.push(track.id)
                     }
-                    // get info about saved tracks
                     Spotify.containsMySavedTracks(trackIds, function(error, data) {
                         if(data) {
                             Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)

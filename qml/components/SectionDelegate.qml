@@ -11,7 +11,7 @@ Component {
             text: section
             font.bold: true
             font.pixelSize: Theme.fontSizeMedium
-            color: Theme.primaryColor //Theme.highlightColor
+            color: Theme.highlightColor
             horizontalAlignment: Text.AlignRight
         }
     }

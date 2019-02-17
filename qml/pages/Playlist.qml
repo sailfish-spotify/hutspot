@@ -151,11 +151,10 @@ Page {
         ViewPlaceholder {
             enabled: listView.count === 0
             text: qsTr("No tracks found")
-            hintText: qsTr("Pull down to reload")
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
@@ -260,16 +259,25 @@ Page {
                               {offset: searchModel.count, limit: cursorHelper.limit},
                               function(error, data) {
             if(data) {
-                //console.log(JSON.stringify(data))
                 try {
-                    console.log("number of PlaylistTracks: " + data.items.length)
+                    //console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
+                    var trackIds = []
                     for(i=0;i<data.items.length;i++) {
+                        var track = data.items[i].track
                         searchModel.append({type: 3,
-                                            name: data.items[i].track.name,
-                                            item: data.items[i].track})
+                                            name: track.name,
+                                            item: track,
+                                            following: false,
+                                            saved: false})
+                        trackIds.push(track.id)
                     }
+                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
+                        if(data) {
+                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
+                        }
+                    })
                 } catch (err) {
                     console.log(err)
                 }
