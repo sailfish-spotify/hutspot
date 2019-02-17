@@ -185,17 +185,6 @@ Page {
                 }
             }
 
-            TextSwitch {
-                id: cache_followed_saved_info
-                text: qsTr("Use Followed/Saved cache for Tracks")
-                description: qsTr("Use cached Followed/Saved state data. Can take a lot of memory for large collections.")
-                checked: app.cache_followed_saved_info.value
-                onCheckedChanged: {
-                    app.cache_followed_saved_info.value = checked
-                    app.cache_followed_saved_info.sync()
-                }
-            }
-
             ComboBox {
                 id: navigation_menu_type
                 label: qsTr("Navigation Menu Type")
