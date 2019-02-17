@@ -151,10 +151,6 @@ Page {
 
     Connections {
         target: app
-        onLoggedInChanged: {
-            if(app.loggedIn)
-                refresh()
-        }
         onFavoriteEvent: {
             switch(event.type) {
             case Util.SpotifyItemType.Playlist:

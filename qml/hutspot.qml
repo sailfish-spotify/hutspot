@@ -375,27 +375,10 @@ ApplicationWindow {
         })
     }
 
-    property bool loggedIn: spotify.isLinked()
-    onLoggedInChanged: {
-        // do we need this? isLinked does not mean we have a valid token
-        if(loggedIn) {
-            controller.refreshPlaybackState();
-        }
-    }
-
     function startSpotify() {
         if (!spotify.isLinked()) {
             spotify.doO2Auth(Spotify._scope, auth_using_browser.value)
         } else {
-            /*Spotify._accessToken = spotify.getToken()
-            Spotify._username = spotify.getUserName()
-            tokenExpireTime = spotify.getExpires()
-            var date = new Date(tokenExpireTime*1000)
-            console.log("expires on: " + date.toDateString() + " " + date.toTimeString())
-            app.connectionText = qsTr("Connected")
-            loadUser()
-            loggedIn = true*/
-
             var now = new Date ()
             console.log("Currently it is " + now.toDateString() + " " + now.toTimeString())
             var tokenExpireTime = spotify.getExpires()
