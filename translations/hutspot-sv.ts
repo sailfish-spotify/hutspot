@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>No Tracks found</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga spår hittades</translation>
     </message>
 </context>
 <context>
