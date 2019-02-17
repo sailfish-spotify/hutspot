@@ -157,7 +157,7 @@ Page {
             Spotify.getMyTopArtists({offset: searchModel.count, limit: cursorHelper.limit}, function(error, data) {
                 try {
                     if(data) {
-                        console.log("number of MyTopArtists: " + data.items.length)
+                        //console.log("number of MyTopArtists: " + data.items.length)
                         cursorHelper.offset = data.offset
                         cursorHelper.total = data.total
                         for(i=0;i<data.items.length;i++) {
@@ -170,7 +170,7 @@ Page {
                         }
                     } else
                         console.log("No Data for getMyTopArtists")
-                 } catch(err) {
+                } catch(err) {
                     console.log("getMyTopArtists exception: " + err)
                 } finally {
                     _loading = false
