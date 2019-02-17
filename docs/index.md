@@ -28,6 +28,16 @@ Development is done using the Sailfish OS IDE. Most sources are QML and Javascri
 
 Please report any problems or requests in the [Github Issue Tracker](https://github.com/sailfish-spotify/hutspot/issues)
 
+### Translations
+
+Translations are welcome. Either through a Pull-Request or using [Transifex](https://www.transifex.com/sailfish-spotify/hutspot/dashboard/).
+
+Current translations:
+
+  * Chinese (zh)
+  * Italian (it)
+  * Swedish (sv)
+
 ### Thanks
  * Spotify for web api
  * JMPerez for [spotify-web-api-js](https://github.com/JMPerez/spotify-web-api-js)
