@@ -92,6 +92,7 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 CONFIG += sailfishapp_i18n
 
 TRANSLATIONS += translations/hutspot.ts \
+    translations/hutspot-fi.ts \
     translations/hutspot-it.ts \
     translations/hutspot-sv.ts \
     translations/hutspot-zh.ts

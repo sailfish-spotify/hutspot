@@ -120,9 +120,10 @@ rgrnetalk"
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
                 text:
-"it: fravaccaro
+"fi: raketti
+it: fravaccaro
 sv: eson57
-zh: @dashinfantry"
+zh: dashinfantry"
             }
 
             SectionHeader {
