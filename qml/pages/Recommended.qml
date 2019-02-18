@@ -380,12 +380,8 @@ Page {
         Spotify.getRecommendations(options, function(error, data) {
             if(data) {
                 try {
-                    console.log("number of Recommendations: " + data.tracks.length)
-                    for(i=0;i<data.tracks.length;i++) {
-                        searchModel.append({type: 3,
-                                            name: data.tracks[i].name,
-                                            item: data.tracks[i]})
-                    }
+                    //console.log("number of Recommendations: " + data.tracks.length)
+                    app.loadTracksInModel(data, data.tracks.length, searchModel, function(data, i) {return data.tracks[i]})
                 } catch (err) {
                     console.log(err)
                 }

@@ -31,6 +31,7 @@ Page {
 
     property string viewMenuText: ""
     property bool showTrackInfo: true
+    property int contextType: 0
 
     property int currentIndex: -1
 
@@ -246,7 +247,7 @@ Page {
                 id: listItem
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
-                contentHeight: stype == 0
+                contentHeight: contextType == 0
                                ? Theme.itemSizeExtraSmall
                                : Theme.itemSizeLarge
 
@@ -255,7 +256,7 @@ Page {
 
                     width: parent.width
 
-                    source: stype > 0
+                    source: contextType > 0
                             ? "../components/SearchResultListItem.qml"
                             : "../components/AlbumTrackListItem.qml"
 
@@ -269,7 +270,7 @@ Page {
                         target: loader.item
                         property: "isFavorite"
                         value: saved
-                        when: stype === 0
+                        when: contextType === 0
                     }
                 }
 
@@ -655,9 +656,11 @@ Page {
         if (app.controller.playbackState.context) {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
+                    contextType = Util.SpotifyItemType.Album
                     loadAlbumTracks(currentId)
                     break
                 case 'artist':
+                    contextType = Util.SpotifyItemType.Artist
                     searchModel.clear()
                     Spotify.isFollowingArtists([currentId], function(error, data) {
                         if(data)
@@ -665,6 +668,7 @@ Page {
                     })
                     break
                 case 'playlist':
+                    contextType = Util.SpotifyItemType.Playlist
                     //cursorHelper.offset = 0
                     loadPlaylistTracks(app.id, currentId)
                     loadPlaylistTrackInfo()
@@ -775,21 +779,7 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = []
-                    for(var i=0;i<data.items.length;i++) {
-                        var track =  data.items[i].track
-                        searchModel.append({type: Spotify.ItemType.Track,
-                                            stype: Spotify.ItemType.Playlist,
-                                            name: track.name,
-                                            item: track,
-                                            saved: false})
-                        trackIds.push(track.id)
-                    }
-                    // get info about saved tracks
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data)
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                    })
+                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i].track})
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
@@ -828,22 +818,7 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    var trackIds = []
-                    for(var i=0;i<data.items.length;i++) {
-                        var track =  data.items[i]
-                        searchModel.append({type: Spotify.ItemType.Track,
-                                            stype: Spotify.ItemType.Album,
-                                            name: track.name,
-                                            item: track,
-                                            saved: false})
-                            trackIds.push(track.id)
-                    }
-                    //console.log("Appended #AlbumTracks: " + data.items.length + ", count: " + searchModel.count)
-                    // get info about saved tracks
-                    Spotify.containsMySavedTracks(trackIds, function(error, data) {
-                        if(data)
-                            Util.setSavedInfo(Spotify.ItemType.Track, trackIds, data, searchModel)
-                    })
+                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i]})
                     // if the album has more tracks get more
                     if(cursorHelper.total > searchModel.count) {
                         cursorHelper.offset = searchModel.count
