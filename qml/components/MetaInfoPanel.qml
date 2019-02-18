@@ -28,8 +28,7 @@ Item {
 
     Column {
         id: labelsColumn
-        anchors.left: parent.left
-        anchors.right: savedImage.left
+        width: parent.width
         spacing: Theme.paddingSmall
 
         Label {
@@ -45,44 +44,54 @@ Item {
                 onClicked: firstLabelClicked()
             }
         }
-        Label {
-            id: secondLabel
-            color: Theme.primaryColor
-            font.pixelSize: Theme.fontSizeSmall
-            truncationMode: TruncationMode.Fade
-            width: parent.width
-            wrapMode: Text.Wrap
-            visible: text.length > 0
-            text:  secondLabelText
-            MouseArea {
-                anchors.fill: parent
-                onClicked: secondLabelClicked()
-            }
-        }
-        Label {
-            id: thirdLabel
-            width: parent.width
-            font.pixelSize: Theme.fontSizeSmall
-            wrapMode: Text.Wrap
-            visible: text.length > 0
-            text: thirdLabelText
-            MouseArea {
-                anchors.fill: parent
-                onClicked: thirdLabelClicked()
-            }
-        }
-    }
 
-    Image {
-        id: savedImage
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        asynchronous: true
-        fillMode: Image.PreserveAspectFit
-        source: isFavorite ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
-        MouseArea {
-             anchors.fill: parent
-             onClicked: toggleFavorite()
+        Row {
+            width: parent.width
+            height: col2.height
+
+            Column {
+                id: col2
+                spacing: Theme.paddingSmall
+                width: parent.width - savedImage.width
+                Label {
+                    id: secondLabel
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    truncationMode: TruncationMode.Fade
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    visible: text.length > 0
+                    text:  secondLabelText
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: secondLabelClicked()
+                    }
+                }
+                Label {
+                    id: thirdLabel
+                    width: parent.width
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.Wrap
+                    visible: text.length > 0
+                    text: thirdLabelText
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: thirdLabelClicked()
+                    }
+                }
+            }
+            Image {
+                id: savedImage
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+                source: isFavorite ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
+                MouseArea {
+                      anchors.fill: parent
+                     onClicked: toggleFavorite()
+                }
+            }
         }
     }
 }
