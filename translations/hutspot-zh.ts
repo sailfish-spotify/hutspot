@@ -61,7 +61,7 @@
     </message>
     <message>
         <source>No Tracks found</source>
-        <translation type="unfinished"></translation>
+        <translation>未找到音樂</translation>
     </message>
 </context>
 <context>
@@ -139,7 +139,7 @@
     <name>ConnectMDNSService</name>
     <message>
         <source>[%1] %2</source>
-        <translation>&quot;&gt;[%1] %2</translation>
+        <translation>[%1] %2</translation>
     </message>
 </context>
 <context>
@@ -173,7 +173,7 @@
     </message>
     <message>
         <source>Public</source>
-        <translation>unfinished</translation>
+        <translation>公開</translation>
     </message>
     <message>
         <source>Collaborative</source>
@@ -181,14 +181,14 @@
     </message>
     <message>
         <source>Description (optional)</source>
-        <translation>描述（可選的）</translation>
+        <translation>描述（可選）</translation>
     </message>
 </context>
 <context>
     <name>Devices</name>
     <message>
         <source>Reload Devices</source>
-        <translation>重新載入設備&gt;</translation>
+        <translation>重新載入設備</translation>
     </message>
     <message>
         <source>Devices</source>
@@ -232,11 +232,11 @@
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>刷新禮券</translation>
+        <translation>刷新 Token</translation>
     </message>
     <message>
         <source>Connect using Authorization Blob</source>
-        <translation>使用授權Blob连接</translation>
+        <translation>使用 Blob 授權连接</translation>
     </message>
 </context>
 <context>
@@ -276,7 +276,7 @@
     <name>Librespot</name>
     <message>
         <source>Librespot seems not available</source>
-        <translation>&quot;&gt;Librespot似乎不工作</translation>
+        <translation>Librespot 似乎不工作</translation>
     </message>
     <message>
         <source>Failed to register credentials for Librespot</source>
@@ -423,7 +423,7 @@
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>新發行及精選</translation>
     </message>
 </context>
 <context>
@@ -446,7 +446,7 @@
     </message>
     <message>
         <source>History</source>
-        <translation>歷史&gt;</translation>
+        <translation>歷史</translation>
     </message>
     <message>
         <source>Recommended</source>
@@ -478,7 +478,7 @@
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>新發行及精選</translation>
     </message>
 </context>
 <context>
@@ -489,15 +489,22 @@
     </message>
     <message>
         <source>New Releases</source>
-        <translation type="unfinished">新發行</translation>
+        <translation>新發行</translation>
     </message>
     <message>
         <source>Featured</source>
-        <translation type="unfinished"></translation>
+        <translation>精選</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation type="unfinished"></translation>
+        <translation>什麼也沒找到</translation>
+    </message>
+</context>
+<context>
+    <name>NewRelease</name>
+    <message>
+        <source/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -624,7 +631,7 @@
     <name>QueueController</name>
     <message>
         <source>Playlist used as a queue by Hutspot</source>
-        <translation>播放列表被用作Hutspot隊列</translation>
+        <translation>播放列表用作 Hutspot 隊列</translation>
     </message>
     <message>
         <source>Hutspot wants to create playlist:&lt;br&gt;&lt;br&gt;&lt;b&gt;</source>
@@ -663,7 +670,7 @@
     </message>
     <message>
         <source>Spotify allows max. 5 seeds</source>
-        <translation>Spotify允許最大5個種子</translation>
+        <translation>Spotify 允許最大5個 seed</translation>
     </message>
     <message>
         <source>No Recommendations found</source>
@@ -695,7 +702,7 @@
     </message>
     <message>
         <source>Enter Seeds/Attributes and Reload</source>
-        <translation>輸入種子、特征及重新載入</translation>
+        <translation>輸入seed、特征及重新載入</translation>
     </message>
     <message>
         <source>Recommended </source>
@@ -723,7 +730,7 @@
     </message>
     <message>
         <source>Seed Tracks</source>
-        <translation>種子音樂</translation>
+        <translation>Seed 音樂</translation>
     </message>
     <message>
         <source>Recommended Tracks</source>
@@ -809,7 +816,7 @@
     </message>
     <message>
         <source>Use as Seeds for Recommendations</source>
-        <translation>用作推薦的種子</translation>
+        <translation>用作推薦 seed </translation>
     </message>
 </context>
 <context>
@@ -855,7 +862,7 @@
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>刷新禮券</translation>
+        <translation>刷新 Token </translation>
     </message>
     <message>
         <source>Settings</source>
@@ -991,7 +998,7 @@
     </message>
     <message>
         <source>Country Code (2 characters)</source>
-        <translation type="unfinished"></translation>
+        <translation>國家代碼(2 個字符)</translation>
     </message>
 </context>
 <context>
@@ -1017,7 +1024,7 @@
     </message>
     <message>
         <source>Top </source>
-        <translation>Top</translation>
+        <translation>熱榜</translation>
     </message>
     <message>
         <source>Tracks</source>
@@ -1051,7 +1058,7 @@
     </message>
     <message>
         <source>Failed to Refresh Authorization Token</source>
-        <translation>刷新授權禮券失敗</translation>
+        <translation>刷新授權 Token失敗</translation>
     </message>
     <message>
         <source>Edit Playlist Details</source>
