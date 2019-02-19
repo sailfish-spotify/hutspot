@@ -169,7 +169,7 @@
     </message>
     <message>
         <source>Name for the new playlist</source>
-        <translation>Uuden soittolistan nimi</translation>
+        <translation>Soittolistan nimi</translation>
     </message>
     <message>
         <source>Public</source>
@@ -177,7 +177,7 @@
     </message>
     <message>
         <source>Collaborative</source>
-        <translation>Yhteistyö</translation>
+        <translation>Jaettu</translation>
     </message>
     <message>
         <source>Description (optional)</source>
@@ -204,7 +204,7 @@
     </message>
     <message>
         <source>inactive</source>
-        <translation>epäaktiivinen</translation>
+        <translation>Ei aktiivinen</translation>
     </message>
     <message>
         <source>restricted</source>
@@ -232,7 +232,7 @@
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>Päivitä tokeni</translation>
+        <translation>Päivitä kirjautumistiedot</translation>
     </message>
     <message>
         <source>Connect using Authorization Blob</source>
@@ -344,7 +344,7 @@
     <name>MyStuff</name>
     <message>
         <source>My </source>
-        <translation>Minun</translation>
+        <translation>Minun </translation>
     </message>
     <message>
         <source>Saved Albums</source>
@@ -522,7 +522,7 @@
     <name>Playing</name>
     <message>
         <source>Playing</source>
-        <translation>Toistaa</translation>
+        <translation>Nyt soitossa</translation>
     </message>
     <message>
         <source>View Album</source>
@@ -566,7 +566,7 @@
     </message>
     <message>
         <source>collaborative</source>
-        <translation>yhteistyö</translation>
+        <translation>jaettu</translation>
     </message>
     <message>
         <source>Scroll to current Track</source>
@@ -593,7 +593,7 @@
     </message>
     <message>
         <source>tracks</source>
-        <translation>kappaleet</translation>
+        <translation>kappale(tta)</translation>
     </message>
     <message>
         <source>by</source>
@@ -609,7 +609,7 @@
     </message>
     <message>
         <source>collaborative</source>
-        <translation>yhteistyö</translation>
+        <translation>jaettu</translation>
     </message>
 </context>
 <context>
@@ -862,7 +862,7 @@
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>Päivitä tokeni</translation>
+        <translation>Päivitä kirjautumistiedot</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -886,7 +886,7 @@
     </message>
     <message>
         <source>Running</source>
-        <translation>Käynissä</translation>
+        <translation>Käynnissä</translation>
     </message>
     <message>
         <source>Not Running</source>
@@ -954,7 +954,7 @@
     </message>
     <message>
         <source>Docked Panel with all Icons</source>
-        <translation>Telakoitu paneli kuvakkeilla</translation>
+        <translation>Telakoitu paneeli kuvakkeilla</translation>
     </message>
     <message>
         <source>Docked Panel with Player Controls and Hamburger button</source>
@@ -978,7 +978,7 @@
     </message>
     <message>
         <source>Show Devices page at startup</source>
-        <translation>Näytä laitteet sivu aloituksessa</translation>
+        <translation>Näytä Laitteet -sivu aloituksessa</translation>
     </message>
     <message>
         <source>So you can watch the devices become available</source>
@@ -1058,7 +1058,7 @@
     </message>
     <message>
         <source>Failed to Refresh Authorization Token</source>
-        <translation>Valtuutustokenin päivtys epäonnistui</translation>
+        <translation>Kirjautumistietojen päivtys epäonnistui</translation>
     </message>
     <message>
         <source>Edit Playlist Details</source>
