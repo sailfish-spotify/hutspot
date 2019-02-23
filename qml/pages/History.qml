@@ -147,6 +147,8 @@ Page {
                 }
             }
         }
+        retrieved = []
+        parsed = []
         console.log("history reloaded")
     }
 

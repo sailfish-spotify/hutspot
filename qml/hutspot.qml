@@ -1097,7 +1097,10 @@ ApplicationWindow {
         var removedIndex = -1
         if(history.length === 0) {
             history.unshift(uri)
-        } else if(history[0] !== uri) {
+        } else if(history[0] === uri) {
+            // already at the top
+            return
+        } else {
             // add to the top
             history.unshift(uri)
             // remove if already present
@@ -1108,12 +1111,12 @@ ApplicationWindow {
                     break
                 }
         }
-        history_store.value = history
         historyModified(0, removedIndex)
         if(history.length > historySize) { // make configurable
             history.pop()
             historyModified(-1, historySize-1)
         }
+        history_store.value = history
     }
 
     function clearHistory() {
