@@ -812,7 +812,7 @@ ApplicationWindow {
         var trackIds = []
         for(var i=0;i<count;i++) {
             var track = getTrack(data, i)
-            console.log(track.id)
+            //console.log(track.id)
             model.append({type: Spotify.ItemType.Track,
                           name: track.name,
                           item: track,
