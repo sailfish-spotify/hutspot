@@ -82,7 +82,7 @@ Item {
             }
             Image {
                 id: savedImage
-                anchors.right: parent.right
+                //anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
