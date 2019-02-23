@@ -812,6 +812,7 @@ ApplicationWindow {
         var trackIds = []
         for(var i=0;i<count;i++) {
             var track = getTrack(data, i)
+            console.log(track.id)
             model.append({type: Spotify.ItemType.Track,
                           name: track.name,
                           item: track,
@@ -1484,11 +1485,6 @@ ApplicationWindow {
             lv.onIsAtBoundaryChanged.disconnect(notifyIsAtYEndChanged)
         }
 
-        /*ControlPanel {
-            id: cp
-            width: parent.width
-            height: implicitHeight
-        }*/
         Item {
             id: cp
             property real itemHeight: 0
@@ -1522,7 +1518,8 @@ ApplicationWindow {
         property bool _atEnd: false
 
         function doAutoStuff() {
-            return app.navigation_menu_type.value >= 2
+            return navigation_menu_type.value >= 2
+                   && controlpanel_show_delay.value > 0
         }
 
         function notifyIsAtYEndChanged() {
