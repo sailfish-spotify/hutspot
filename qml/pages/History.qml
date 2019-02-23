@@ -225,7 +225,7 @@ Page {
 
     function getAlbums(albumIds) {
         // 'market' enables 'track linking'
-        var options = {offset: cursorHelper.offset, limit: cursorHelper.limit}
+        var options = {} // {offset: cursorHelper.offset, limit: cursorHelper.limit}
         if(app.query_for_market.value)
             options.market = "from_token"
         Spotify.getAlbums(albumIds, options, function(error, data) {
@@ -249,14 +249,14 @@ Page {
         })
     }
 
-    property alias cursorHelper: cursorHelper
+    //property alias cursorHelper: cursorHelper
 
-    CursorHelper {
+    /*CursorHelper {
         id: cursorHelper
 
         onLoadNext: refresh()
         onLoadPrevious: refresh()
-    }
+    }*/
 
     Connections {
         target: app
