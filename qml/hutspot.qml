@@ -546,7 +546,8 @@ ApplicationWindow {
             if(!isLibrespotInDevicesList()) {
                 if(logging_flags.discovery)console.log("Librespot is not in the devices list")
                 // maybe the list needs to be updated
-                spotifyController.checkForNewDevices()
+                if(hasValidToken)
+                    spotifyController.checkForNewDevices()
             } else {
                 if(logging_flags.discovery)console.log("Librespot is already in the devices list")
             }
