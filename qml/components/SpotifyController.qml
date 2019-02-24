@@ -54,7 +54,8 @@ Item {
 
             // close to switching tracks so refresh every time
             // also reload playbackState if we haven't done it in a long time
-            if((playbackState.item.duration_ms - playbackState.progress_ms) < 3000) {
+            if(playbackState.is_playing
+               && (playbackState.item.duration_ms - playbackState.progress_ms) < 3000) {
                 refreshPlaybackState()
                 refreshCount = 0
             } else if (++refreshCount >= 5) {
