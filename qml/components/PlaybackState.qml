@@ -35,7 +35,7 @@ Item {
     }
     onItemChanged: {
         artistsString = Util.createItemsString(item.artists, qsTr("no artist known"))
-        if (item.album.images.length > 0)
+        if (item.album.images && item.album.images.length > 0)
             coverArtUrl = item.album.images[0].url;
         else coverArtUrl = "";
 

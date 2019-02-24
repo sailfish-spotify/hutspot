@@ -224,8 +224,12 @@ Page {
 
         itemsModel.clear()
 
-        for(i=0;i<app.controller.devices.count;i++) {
-            var device = app.controller.devices.get(i)
+        var devArr = []
+        for(i=0;i<app.controller.devices.count;i++)
+            devArr[i] =  app.controller.devices.get(i)
+        devArr.sort(function(a,b) {return a.name.localeCompare(b.name)})
+        for(i=0;i<devArr.length;i++) {
+            var device = devArr[i]
             itemsModel.append({deviceId: device.id,
                                name: device.name,
                                deviceIndex: i,
@@ -234,20 +238,24 @@ Page {
                                discovery: 0})
         }
 
-        for(i=0;i<app.foundDevices.length;i++) {
+        devArr.length = 0
+        for(i=0;i<app.foundDevices.length;i++)
+            devArr[i] = app.foundDevices[i]
+        devArr.sort(function(a,b) {return a.remoteName.localeCompare(b.remoteName)})
+        for(i=0;i<devArr.length;i++) {
             var found = 0
             for(j=0;j<itemsModel.count;j++) {
-                if(itemsModel.get(j).name === app.foundDevices[i].remoteName) {
+                if(itemsModel.get(j).name === devArr[i].remoteName) {
                     itemsModel.get(j).discovery = 1
                     found = 1
                     break
                 }
             }
             if(!found) {
-                itemsModel.append({deviceId: app.foundDevices[i].deviceID,
-                                   name: app.foundDevices[i].remoteName,
+                itemsModel.append({deviceId: devArr[i].deviceID,
+                                   name: devArr[i].remoteName,
                                    deviceIndex: i,
-                                   is_active: app.foundDevices[i].activeUser.length > 0,
+                                   is_active: devArr[i].activeUser.length > 0,
                                    sp: 0,
                                    discovery: 1})
             }

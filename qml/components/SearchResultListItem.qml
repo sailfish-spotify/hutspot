@@ -80,7 +80,7 @@ Row {
     Image {
         id: favorite
         width: height
-        height: Theme.iconSizeSmall
+        height: sourceSize.width > 0 ? Theme.iconSizeSmall : 0
         anchors {
             verticalCenter: parent.verticalCenter
             //bottom: parent.bottom

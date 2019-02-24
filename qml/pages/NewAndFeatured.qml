@@ -49,8 +49,8 @@ Page {
                 width: parent.width
                 title: {
                     switch(_itemClass) {
-                    case 0: return Util.createPageHeaderLabel(qsTr(""), qsTr("New Releases"), Theme)
-                    case 1: return Util.createPageHeaderLabel(qsTr(""), qsTr("Featured"), Theme)
+                    case 0: return Util.createPageHeaderLabel("", qsTr("New Releases"), Theme)
+                    case 1: return Util.createPageHeaderLabel("", qsTr("Featured"), Theme)
                     }
                 }
                 MenuButton { z: 1} // set z so you can still click the button

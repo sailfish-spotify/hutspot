@@ -546,7 +546,8 @@ ApplicationWindow {
             if(!isLibrespotInDevicesList()) {
                 if(logging_flags.discovery)console.log("Librespot is not in the devices list")
                 // maybe the list needs to be updated
-                spotifyController.checkForNewDevices()
+                if(hasValidToken)
+                    spotifyController.checkForNewDevices()
             } else {
                 if(logging_flags.discovery)console.log("Librespot is already in the devices list")
             }
@@ -812,6 +813,7 @@ ApplicationWindow {
         var trackIds = []
         for(var i=0;i<count;i++) {
             var track = getTrack(data, i)
+            //console.log(track.id)
             model.append({type: Spotify.ItemType.Track,
                           name: track.name,
                           item: track,
@@ -1097,7 +1099,10 @@ ApplicationWindow {
         var removedIndex = -1
         if(history.length === 0) {
             history.unshift(uri)
-        } else if(history[0] !== uri) {
+        } else if(history[0] === uri) {
+            // already at the top
+            return
+        } else {
             // add to the top
             history.unshift(uri)
             // remove if already present
@@ -1108,12 +1113,12 @@ ApplicationWindow {
                     break
                 }
         }
-        history_store.value = history
         historyModified(0, removedIndex)
         if(history.length > historySize) { // make configurable
             history.pop()
             historyModified(-1, historySize-1)
         }
+        history_store.value = history
     }
 
     function clearHistory() {
@@ -1481,11 +1486,6 @@ ApplicationWindow {
             lv.onIsAtBoundaryChanged.disconnect(notifyIsAtYEndChanged)
         }
 
-        /*ControlPanel {
-            id: cp
-            width: parent.width
-            height: implicitHeight
-        }*/
         Item {
             id: cp
             property real itemHeight: 0
@@ -1519,7 +1519,8 @@ ApplicationWindow {
         property bool _atEnd: false
 
         function doAutoStuff() {
-            return app.navigation_menu_type.value >= 2
+            return navigation_menu_type.value >= 2
+                   && controlpanel_show_delay.value > 0
         }
 
         function notifyIsAtYEndChanged() {

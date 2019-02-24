@@ -573,12 +573,15 @@ Page {
     function updateForCurrentAlbumTrack() {
         // keep current track visible
         currentIndex = -1
-        for(var i=0;i<searchModel.count;i++)
-            if(searchModel.get(i).item.id === currentTrackId) {
+        for(var i=0;i<searchModel.count;i++) {
+            var track = searchModel.get(i).item
+            if(track.id === currentTrackId
+               || (track.linked_from && track.linked_from.id === currentTrackId)) {
                 listView.positionViewAtIndex(i, ListView.Visible)
                 currentIndex = i
                 break
             }
+        }
     }
 
     function updateForCurrentTrack() {
@@ -723,10 +726,11 @@ Page {
                 currentTrackId = app.controller.playbackState.item.id
                 updateForCurrentTrack()
             }
-            //console.log("  currentTrackId: " + currentTrackId)
+            //console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
             if(currentIndex === -1)
                 updateForCurrentTrack()
         }
+
         onIs_playingChanged: {
             //console.log("Playing.onIs_playingChanged ")
             if(!_isPlaying && app.controller.playbackState.is_playing) {
