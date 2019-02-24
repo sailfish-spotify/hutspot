@@ -7,6 +7,8 @@ layout: default
 
 Hutspot is available on [openrepos.net](https://openrepos.net/content/wdehoog/hutspot) and can also be downloaded from [OBS]( https://api.merproject.org/package/binaries/home:wdehoog:hutspot/hutspot?repository=sailfish_latest_armv7hl). 
 
+Stable versions are put on openrepos.net. Development versions are available on the OBS repository. 
+
 ### Install from rpm file
 Download the latest rpm and install it for example with:
 
@@ -42,6 +44,13 @@ Remove the repository
 devel-su ssu dr wdehoog-hutspot
 devel-su ssu rr wdehoog-hutspot
 ```
+
+### Stored data
+Application Settings are saved in ```.config/``` and can be manipulated using dconf (```dconf list /hutspot/```).
+
+Some components store info in various places. See ```.local/share/wdehoog/hutspot/``` and ```.cache/wdehoog/hutspot``` 
+
+Librespot uses ```.cache/librespot``` to store various files.
 
 ### Build it yourself
 See the repository at [github](https://github.com/sailfish-spotify/hutspot).

@@ -4,7 +4,7 @@ nav_order: 1
 layout: default
 ---
 #  Welcome to the Hutspot Documentation
-Hutspot is a Spotify controller for Sailfish-OS. Playing is done on an 'connect' device. It requires a premium Spotify account. 
+Hutspot is a Spotify controller for Sailfish-OS. It uses the [Spotify web-api](https://developer.spotify.com/documentation/web-api/). Playing is done on an 'connect' device. It requires a premium Spotify account. 
 
 Main features:
 
@@ -17,6 +17,8 @@ Main features:
  * Create and Edit Playlists
  * Supports local Librespot service
  * Supports Mpris and Media Keys
+
+It does not support saving tracks nor offline playing
 
 ### Librespot on Sailfish
 Playing music on your phone can be done using [Librespot](https://github.com/librespot-org/), an open source Spotify player. 

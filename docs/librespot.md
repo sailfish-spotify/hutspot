@@ -3,10 +3,11 @@ title: Librespot
 nav_order: 4
 layout: default
 ---
-You can turn your sailfish device into a Spotify Connect Player using Librespot. (For as long as Spotify supports the api it uses.)
+### Librespot
 
-Librespot is available on [openrepos.net](https://openrepos.net/content/wdehoog/librespot) 
+You can turn your sailfish device into a Spotify Connect Player using Librespot. *For as long as Spotify supports the api Librespot uses.*
 
+Librespot is available on [openrepos.net](https://openrepos.net/content/wdehoog/librespot). Stable versions are put on openrepos.net. Development versions are available on the OBS repository. 
 
 ### Built on OBS
 On [OBS](https://api.merproject.org/package/binaries/home:wdehoog:librespot/librespot?repository=sailfishos_armv7hl) you can find a package to install it on Sailfish. For example (*use correct version*):
@@ -23,9 +24,9 @@ systemctl --user restart pulseaudio
 The package also installs a systemd service file but the ```librespot``` service is not started automatically. To launch it use ```systemctl --user start librespot``` (as user nemo). You can edit ```/etc/default/librespot``` to suit your needs. 
 Unfortunately I do not know how to get Librespot service started at boot. See [Issue #11](https://github.com/sailfish-spotify/hutspot/issues/37)
 
-Cargo, the rust builder, cannot download packages on demand on OBS so I needed to create a vendor archive. Unfortunately I could not create one that contained all required package versions so I manually edited the Cargo.toml and Cargo.lock files to 'fix' some dependencies.
+Cargo, the rust builder, cannot download packages on demand on OBS so we need to create a vendor archive. Unfortunately we could not create one that contained all required package versions so the Cargo.toml and Cargo.lock files have been manually edited to 'fix' some dependencies.
 
-Since the kernel on my phone (Oneplus One) is old (3.4.67) I needed to patch librespot see [Librespot for kernel < 3.9](https://github.com/librespot-org/librespot/wiki/Compile-librespot-for-kernel-prior-3.9).
+Since the kernel on the Oneplus One is old (3.4.67) we needed to patch librespot see [Librespot for kernel < 3.9](https://github.com/librespot-org/librespot/wiki/Compile-librespot-for-kernel-prior-3.9).
 
 Due to the version of Rust available on OBS the latest version of Librespot cannot be build anymore. We forked it to revert a commit related to protobuf see the [repository](https://github.com/sailfish-spotify/librespot). The revert is done in the ```sailfish-hutspot``` branch
 

@@ -26,5 +26,4 @@ The Settings page allows to configure:
 
 Application Settings are saved in ```.config/``` and can be manipulated using dconf (```dconf list /hutspot/```).
 
-Some components store info in various places. See ```.local/share/wdehoog/hutspot/``` and ```.cache/wdehoog/hutspot``` 
 
