@@ -5,7 +5,7 @@ Rectangle {
     property alias source: backgroundImage.source
     property alias sourceSize: backgroundImage.sourceSize
     property real dimmedOpacity: 0.15
-    color: "#000"
+    color: app.lightTheme ? "#fff" : "#000"
 
     Image {
         id: backgroundImage
