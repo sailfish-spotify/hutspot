@@ -843,8 +843,8 @@
         <translation>riprodotto </translation>
     </message>
     <message>
-        <source>name not specified</source>
-        <translation>nome non specificato</translation>
+        <source>album not specified</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

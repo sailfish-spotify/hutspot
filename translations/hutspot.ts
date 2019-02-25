@@ -850,7 +850,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>name not specified</source>
+        <source>album not specified</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

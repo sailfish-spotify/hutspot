@@ -24,16 +24,14 @@ function createItemsString(items, noneString) {
     if(items.length === 0)
         return noneString
     var i
-    var str = ""
+    var sb = new Classes.StringBuilder()
     for(i=0;i<items.length;i++) {
-        if(i>0)
-            str += ", "
         if(items[i].name)
-            str += items[i].name
+            sb.append(items[i].name)
         else
-            str += items[i]
+            sb.append(items[i])
     }
-    return str
+    return sb.toString(" & ")
 }
 
 function getIdFromURI(uri) {
@@ -51,6 +49,10 @@ function getPlayedAtText(playedAt) {
     //var date = new Date(playedAt)
     //return date.toLocaleDateString()
     return playedAt.split('T')[0]
+}
+
+function getAddedAtText(addedAt) {
+    return addedAt.split('T')[0]
 }
 
 function deviceAddUserRequest(device, userData, callback) {

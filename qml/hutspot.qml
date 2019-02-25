@@ -817,16 +817,22 @@ ApplicationWindow {
         })
     }
 
-    function loadTracksInModel(data, count, model, getTrack) {
+    function loadTracksInModel(data, count, model, getTrack, getExtraProperties) {
         var trackIds = []
         for(var i=0;i<count;i++) {
             var track = getTrack(data, i)
             //console.log(track.id)
-            model.append({type: Spotify.ItemType.Track,
+            var item = {type: Spotify.ItemType.Track,
                           name: track.name,
                           item: track,
                           following: false,
-                          saved: false})
+                          saved: false}
+            if(getExtraProperties) {
+                var extra = getExtraProperties(data, i)
+                for(var attrname in extra)
+                    item[attrname] = extra[attrname]
+            }
+            model.append(item)
             trackIds.push(track.id)
         }
         Spotify.containsMySavedTracks(trackIds, function(error, data) {

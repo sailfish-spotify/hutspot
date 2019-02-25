@@ -120,6 +120,7 @@ Page {
             SearchResultListItem {
                 id: searchResultListItem
                 dataModel: model
+                contextType: Util.SpotifyItemType.Playlist
             }
 
             menu: SearchResultContextMenu {
@@ -263,7 +264,9 @@ Page {
                     //console.log("number of PlaylistTracks: " + data.items.length)
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i].track})
+                    app.loadTracksInModel(data, data.items.length, searchModel,
+                                          function(data, i) {return data.items[i].track},
+                                          function(data, i) {return {"added_at" :data.items[i].added_at}})
                 } catch (err) {
                     console.log(err)
                 }
