@@ -24,6 +24,14 @@ import "components"
 ApplicationWindow {
     id: app
 
+    property bool lightTheme: {
+	try {
+            if (Theme.colorScheme !== Theme.LightOnDark)
+                return true
+        } catch (e) {}
+        return false
+    }
+
     property alias controller: spotifyController
     SpotifyController {
         id: spotifyController
