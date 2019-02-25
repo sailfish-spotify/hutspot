@@ -53,7 +53,7 @@ CoverBackground {
         y: playbackInfoColumn.y - Theme.paddingLarge*2
         height: playbackInfoColumn.height + Theme.paddingLarge*2 + Theme.iconSizeLauncher
         width: parent.width
-        color: "#000"
+        color: app.lightTheme ? "#fff" : "#000"
         visible: playbackInfoColumn.visible
     }
     OpacityRampEffect {
