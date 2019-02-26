@@ -137,7 +137,7 @@ Page {
         }
 
         onAtYEndChanged: {
-            if(listView.atYEnd)
+            if(listView.atYEnd && searchModel.count > 0)
                 append()
         }
     }
@@ -357,14 +357,14 @@ Page {
         id: cursorHelper
 
         useHas: true
-        onLoadNext: {
+        /*onLoadNext: {
             refreshDirection = 1
             refresh()
         }
         onLoadPrevious: {
             refreshDirection = -1
             refresh()
-        }
+        }*/
     }
 
     Connections {
