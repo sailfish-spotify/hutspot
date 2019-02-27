@@ -68,14 +68,14 @@ Page {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
-                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                        onClicked: positionViewForCurrentIndex()
                     }
                 }
                 PushUpMenu {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
-                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                        onClicked: positionViewForCurrentIndex()
                     }
                 }
 
