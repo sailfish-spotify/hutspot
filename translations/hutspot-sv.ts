@@ -843,8 +843,8 @@
         <translation>spelad </translation>
     </message>
     <message>
-        <source>name not specified</source>
-        <translation>namn inte specificerat</translation>
+        <source>album not specified</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

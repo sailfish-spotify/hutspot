@@ -19,7 +19,9 @@ Row {
     // not used, same as in AlbumTrackListItem so Loader can be used
     property var isFavorite
     property bool saved
-    signal toggleFavorite()
+    property var contextType: -1
+
+    signal toggleFavorite()    
 
     width: parent.width
     //height: column.height
@@ -123,33 +125,43 @@ Row {
     }
 
     function getMeta1String() {
+        var sb = new Util.Classes.StringBuilder()
         var items = []
-        var ts = ""
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
             if(dataModel.item.artists)
                 items = dataModel.item.artists
-            return Util.createItemsString(items, qsTr("no artist known"))
+            sb.append(Util.createItemsString(items, qsTr("no artist known")))
+            break
         case Util.SpotifyItemType.Artist:
             if(dataModel.item.genres)
                 items = dataModel.item.genres
-            return Util.createItemsString(items, qsTr("no genre known"))
+            sb.append(Util.createItemsString(items, qsTr("no genre known")))
+            break
         case Util.SpotifyItemType.Playlist:
             if(dataModel.item.owner.display_name)
-                return dataModel.item.owner.display_name
-            else
-                return qsTr("Id") + ": " + dataModel.item.owner.id
+                sb.append(dataModel.item.owner.display_name)
+            else {
+                sb.append(qsTr("Id"))
+                sb.append(": ")
+                sb.append(dataModel.item.owner.id)
+            }
+            break
         case Util.SpotifyItemType.Track:
-            if(dataModel.item.duration_ms)
-                ts += Util.getDurationString(dataModel.item.duration_ms) + ", "
             if(dataModel.item.item)
                 items = dataModel.item.artists
             else if(dataModel.item.album && dataModel.item.album.artists)
                 items = dataModel.item.album.artists
-            return ts + Util.createItemsString(items, qsTr("no artist known"))
-        default:
-            return ""
+            sb.append(Util.createItemsString(items, qsTr("no artist known")))
+            if(dataModel.item.album) {
+                if(dataModel.item.album.name.length === 0)
+                    sb.append(qsTr("album not specified")) // should not happen but it does
+                else
+                    sb.append(dataModel.item.album.name)
+            }
+            break
         }
+        return sb.toString(", ")
     }
 
     function getMeta2String() {
@@ -183,14 +195,12 @@ Row {
                if(dataModel.saved)
                    sb.append("<strong>[" + qsTr("saved") + "]</strong>")
             }*/
-            if(dataModel.item.album) {
-                if(dataModel.item.album.name.length === 0)
-                    sb.append(qsTr("name not specified")) // should not happen but it does
-                else
-                    sb.append(dataModel.item.album.name)
-            }
+            if(dataModel.item.duration_ms)
+                sb.append(Util.getDurationString(dataModel.item.duration_ms))
             if(dataModel.played_at && dataModel.played_at.length>0)
                 sb.append(qsTr("played at ") + Util.getPlayedAtText(dataModel.played_at))
+            if(contextType === Util.SpotifyItemType.Playlist && dataModel.added_at)
+                sb.append("@" + Util.getAddedAtText(dataModel.added_at)) // qsTr("added on ")
         }
         return sb.toString(", ")
     }

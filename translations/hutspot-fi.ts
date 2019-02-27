@@ -850,8 +850,8 @@
         <translation>soi laittella </translation>
     </message>
     <message>
-        <source>name not specified</source>
-        <translation>nimeä ei ole määritelty</translation>
+        <source>album not specified</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -503,8 +503,8 @@
 <context>
     <name>NewRelease</name>
     <message>
-        <source/>
-        <translation type="unfinished"/>
+        <source></source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -850,8 +850,8 @@
         <translation>播放於</translation>
     </message>
     <message>
-        <source>name not specified</source>
-        <translation>名稱未確定</translation>
+        <source>album not specified</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

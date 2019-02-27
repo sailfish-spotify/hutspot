@@ -46,8 +46,6 @@ Page {
 
     Item {
         id: upper
-        anchors.left: parent.left
-        anchors.top: parent.top
         height: parent.height - controlPanel.height
         width: parent.width
 
@@ -55,9 +53,9 @@ Page {
             id: listView
             model: searchModel
 
-            width: parent.width
-            anchors.fill: parent
             clip: true
+            height: parent.height
+            width: parent.width
 
             header: Column {
                 id: lvColumn
@@ -70,14 +68,14 @@ Page {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
-                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                        onClicked: positionViewForCurrentIndex()
                     }
                 }
                 PushUpMenu {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
                         visible: currentIndex != -1
-                        onClicked: listView.positionViewAtIndex(currentIndex, ListView.Visible)
+                        onClicked: positionViewForCurrentIndex()
                     }
                 }
 
@@ -294,10 +292,10 @@ Page {
                 text: qsTr("Nothing to play")
             }*/
 
-            Connections {
+            /*Connections {
                 target: playingPage
                 onCurrentTrackIdChanged: updateForCurrentTrack()
-            }
+            }*/
 
             onAtYEndChanged: {
                 if(listView.atYEnd && searchModel.count > 0) {
@@ -314,7 +312,6 @@ Page {
     // Item { for transparant controlpanel
         id: controlPanel
         anchors.bottom: parent.bottom
-        anchors.right: parent.right
         width: parent.width
         height: col.height
         opacity: app.dockedPanel.open ? 0.0 : 1.0
@@ -554,6 +551,13 @@ Page {
         return s
     }
 
+    function positionViewForCurrentIndex() {
+        // Would have like to used ListView.Visible but then when the current item
+        // is hidden under the control panel it remains hidden.
+        // As of why there is an item hidden ...
+        listView.positionViewAtIndex(currentIndex, ListView.Center)
+    }
+
     function getContextType() {
         if(!app.controller.playbackState || !app.controller.playbackState.item)
             return -1
@@ -577,8 +581,8 @@ Page {
             var track = searchModel.get(i).item
             if(track.id === currentTrackId
                || (track.linked_from && track.linked_from.id === currentTrackId)) {
-                listView.positionViewAtIndex(i, ListView.Visible)
                 currentIndex = i
+                positionViewForCurrentIndex()
                 break
             }
         }
@@ -615,14 +619,13 @@ Page {
                 if(i >= firstItemOffset && i <= lastItemOffset) {
                     currentIndex = i - firstItemOffset
                     if(onInit)
-                        listView.positionViewAtIndex(currentIndex, ListView.Visible)
-                    break
+                        positionViewForCurrentIndex()
                 } else {
-                    // load set
-                    //cursorHelper.offset = i
+                    // load next set
                     appendPlaylistTracks(app.id, currentId, onInit)
-                    currentIndex = 0
+                    currentIndex = -1
                 }
+                break
             }
         }
     }
