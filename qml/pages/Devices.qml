@@ -226,42 +226,43 @@ Page {
 
         var devArr = []
         for(i=0;i<app.controller.devices.count;i++)
-            devArr[i] =  app.controller.devices.get(i)
-        devArr.sort(function(a,b) {return a.name.localeCompare(b.name)})
+            devArr[i] = {device: app.controller.devices.get(i), deviceIndex: i}
+        devArr.sort(function(a,b) {return a.device.name.localeCompare(b.device.name)})
         for(i=0;i<devArr.length;i++) {
-            var device = devArr[i]
-            itemsModel.append({deviceId: device.id,
-                               name: device.name,
-                               deviceIndex: i,
-                               is_active: device.is_active,
+            var item = devArr[i]
+            itemsModel.append({deviceId: item.device.id,
+                               name: item.device.name,
+                               deviceIndex: item.deviceIndex,
+                               is_active: item.device.is_active,
                                sp: 1,
                                discovery: 0})
         }
 
         devArr.length = 0
         for(i=0;i<app.foundDevices.length;i++)
-            devArr[i] = app.foundDevices[i]
-        devArr.sort(function(a,b) {return a.remoteName.localeCompare(b.remoteName)})
+            devArr[i] = {device: app.foundDevices[i], deviceIndex: i}
+        devArr.sort(function(a,b) {return a.device.remoteName.localeCompare(b.device.remoteName)})
         for(i=0;i<devArr.length;i++) {
             var found = 0
             for(j=0;j<itemsModel.count;j++) {
-                if(itemsModel.get(j).name === devArr[i].remoteName) {
+                if(itemsModel.get(j).name === devArr[i].device.remoteName) {
                     itemsModel.get(j).discovery = 1
                     found = 1
                     break
                 }
             }
             if(!found) {
-                itemsModel.append({deviceId: devArr[i].deviceID,
-                                   name: devArr[i].remoteName,
-                                   deviceIndex: i,
-                                   is_active: devArr[i].activeUser.length > 0,
+                itemsModel.append({deviceId: devArr[i].device.deviceID,
+                                   name: devArr[i].device.remoteName,
+                                   deviceIndex: devArr[i].deviceIndex,
+                                   is_active: devArr[i].device.activeUser.length > 0,
                                    sp: 0,
                                    discovery: 1})
             }
         }
 
-   }
+
+    }
 
     PanelBackground {
         id: controlPanel
@@ -301,7 +302,10 @@ Page {
         }
     }
 
-    Component.onCompleted: refreshDevices()
+    Component.onCompleted: {
+        if(app.hasValidToken)
+            refreshDevices()
+    }
 
     // The shared DockedPanel needs mouse events
     // and some ListView events
