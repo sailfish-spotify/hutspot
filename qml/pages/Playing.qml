@@ -298,11 +298,6 @@ Page {
                 text: qsTr("Nothing to play")
             }*/
 
-            /*Connections {
-                target: playingPage
-                onCurrentTrackIdChanged: updateForCurrentTrack()
-            }*/
-
             onAtYEndChanged: {
                 if(listView.atYEnd && searchModel.count > 0) {
                     // album is already completely loaded
@@ -600,6 +595,9 @@ Page {
             case 'album':
                 updateForCurrentAlbumTrack()
                 break
+            case 'artist':
+                loadCurrentTrack(currentTrackId)
+                break
             case 'playlist':
                 updateForCurrentPlaylistTrack(true)
                 break
@@ -659,9 +657,9 @@ Page {
     }
 
     // called by menus
-    function refresh() {
+    /*function refresh() {
         reloadTracks()
-    }
+    }*/
 
     onCurrentIdChanged: {
         console.log("Playing.onCurrentIdChanged: " + currentId)
@@ -673,6 +671,7 @@ Page {
                     break
                 case 'artist':
                     contextType = Util.SpotifyItemType.Artist
+                    showTrackInfo = false
                     searchModel.clear()
                     Spotify.isFollowingArtists([currentId], function(error, data) {
                         if(data)
@@ -735,7 +734,7 @@ Page {
                 currentTrackId = app.controller.playbackState.item.id
                 updateForCurrentTrack()
             }
-            //console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
+            console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
             if(currentIndex === -1)
                 updateForCurrentTrack()
         }
@@ -755,18 +754,21 @@ Page {
         }
     }
 
-    function reloadTracks() {
+    /*function reloadTracks() {
         switch(app.controller.playbackState.context.type) {
         case 'album':
             loadAlbumTracks(currentId)
             break
+        case 'artist':
+            loadCurrentTrack()
+            break;
         case 'playlist':
             loadPlaylistTracks(app.id, currentId)
             break
         default:
             break
         }
-    }
+    }*/
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
@@ -809,6 +811,33 @@ Page {
         app.isFollowingPlaylist(pid, function(error, data) {
             if(data)
                 isContextFavorite = data[0]
+        })
+    }
+
+    property bool _loadingTrack: false
+    function loadCurrentTrack(id) {
+        if(!id)
+            return
+        if(_loadingTrack)
+            return
+        _loadingTrack = true
+        searchModel.clear()
+        var options = {}
+        if(app.query_for_market.value)
+            options.market = "from_token"
+        Spotify.getTrack(id, options, function(error, data) {
+            if(data) {
+                try {
+                    app.loadTracksInModel([data], 1, searchModel, function(data, i) {return data[i]})
+                    currentIndex = 0
+                    positionViewForCurrentIndex()
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getTrack")
+            }
+            _loadingTrack = false
         })
     }
 
@@ -891,8 +920,8 @@ Page {
     CursorHelper {
         id: cursorHelper
 
-        onLoadNext: reloadTracks()
-        onLoadPrevious: reloadTracks()
+        //onLoadNext: reloadTracks()
+        //onLoadPrevious: reloadTracks()
     }
 
     /*property bool canLoad: {
