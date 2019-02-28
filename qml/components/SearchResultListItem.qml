@@ -19,12 +19,11 @@ Row {
     // not used, same as in AlbumTrackListItem so Loader can be used
     property var isFavorite
     property bool saved
-    property var contextType: -1
+    property int contextType: -1
 
     signal toggleFavorite()    
 
     width: parent.width
-    //height: column.height
     spacing: Theme.paddingMedium
 
     opacity: (dataModel.type !== Util.SpotifyItemType.Track

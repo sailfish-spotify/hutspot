@@ -270,6 +270,12 @@ Page {
                         value: saved
                         when: contextType === 0
                     }
+                    Binding {
+                      target: loader.item
+                      property: "contextType"
+                      value: contextType
+                      when: loader.status == Loader.Ready
+                    }
                 }
 
                 menu: AlbumTrackContextMenu {
@@ -786,7 +792,9 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i].track})
+                    app.loadTracksInModel(data, data.items.length, searchModel,
+                                          function(data, i) {return data.items[i].track},
+                                          function(data, i) {return {"added_at" :data.items[i].added_at}})
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
