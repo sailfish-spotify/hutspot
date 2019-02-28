@@ -12,6 +12,9 @@ import "../Util.js" as Util
 Item {
 
     property var isFavorite
+
+    property int contextType: -1 // not used but needed for Loader in Playing page
+
     property var dataModel
     signal toggleFavorite()
 

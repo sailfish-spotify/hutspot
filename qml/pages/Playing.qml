@@ -270,6 +270,12 @@ Page {
                         value: saved
                         when: contextType === 0
                     }
+                    Binding {
+                      target: loader.item
+                      property: "contextType"
+                      value: contextType
+                      when: loader.status == Loader.Ready
+                    }
                 }
 
                 menu: AlbumTrackContextMenu {
@@ -290,11 +296,6 @@ Page {
             /*ViewPlaceholder {
                 enabled: listView.count === 0
                 text: qsTr("Nothing to play")
-            }*/
-
-            /*Connections {
-                target: playingPage
-                onCurrentTrackIdChanged: updateForCurrentTrack()
             }*/
 
             onAtYEndChanged: {
@@ -551,11 +552,19 @@ Page {
         return s
     }
 
+    NumberAnimation { id: scrollAnim; target: listView; property: "contentY"; duration: 500 }
+
     function positionViewForCurrentIndex() {
-        // Would have like to used ListView.Visible but then when the current item
-        // is hidden under the control panel it remains hidden.
-        // As of why there is an item hidden ...
+        // ListView.Visible: when the current item
+        //   is hidden under the control panel it remains hidden.
+        scrollAnim.running = false
+        var pos = listView.contentY
+        var destPos
         listView.positionViewAtIndex(currentIndex, ListView.Center)
+        destPos = listView.contentY
+        scrollAnim.from = pos
+        scrollAnim.to = destPos
+        scrollAnim.running = true
     }
 
     function getContextType() {
@@ -594,10 +603,14 @@ Page {
             case 'album':
                 updateForCurrentAlbumTrack()
                 break
+            case 'artist':
+                loadCurrentTrack(currentTrackId)
+                break
             case 'playlist':
                 updateForCurrentPlaylistTrack(true)
                 break
             default:
+                console.log("updateForCurrentTrack() with unhandled context: " + app.controller.playbackState.context.type)
                 break
             }
         }
@@ -652,13 +665,8 @@ Page {
             })
     }
 
-    // called by menus
-    function refresh() {
-        reloadTracks()
-    }
-
     onCurrentIdChanged: {
-        console.log("Playing.onCurrentIdChanged: " + currentId)
+        //console.log("Playing.onCurrentIdChanged: " + currentId)
         if (app.controller.playbackState.context) {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
@@ -667,7 +675,7 @@ Page {
                     break
                 case 'artist':
                     contextType = Util.SpotifyItemType.Artist
-                    searchModel.clear()
+                    showTrackInfo = false
                     Spotify.isFollowingArtists([currentId], function(error, data) {
                         if(data)
                             isContextFavorite = data[0]
@@ -739,26 +747,13 @@ Page {
             if(!_isPlaying && app.controller.playbackState.is_playing) {
                 if(currentIndex === -1)
                     updateForCurrentTrack()
-                console.log("Started Playing")
+                //console.log("Started Playing")
             } else if(_isPlaying && !app.controller.playbackState.is_playing) {
-                console.log("Stopped Playing")
+                //console.log("Stopped Playing")
                 pluOnStopped()
             }
 
             _isPlaying = app.controller.playbackState.is_playing
-        }
-    }
-
-    function reloadTracks() {
-        switch(app.controller.playbackState.context.type) {
-        case 'album':
-            loadAlbumTracks(currentId)
-            break
-        case 'playlist':
-            loadPlaylistTracks(app.id, currentId)
-            break
-        default:
-            break
         }
     }
 
@@ -786,7 +781,9 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i].track})
+                    app.loadTracksInModel(data, data.items.length, searchModel,
+                                          function(data, i) {return data.items[i].track},
+                                          function(data, i) {return {"added_at" :data.items[i].added_at}})
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
@@ -801,6 +798,34 @@ Page {
         app.isFollowingPlaylist(pid, function(error, data) {
             if(data)
                 isContextFavorite = data[0]
+        })
+    }
+
+    property bool _loadingTrack: false
+    function loadCurrentTrack(id) {
+        //console.log("loadCurrentTrack: [" + id +"] _loadingTrack: " + _loadingTrack)
+        if(!id)
+            return
+        if(_loadingTrack)
+            return
+        _loadingTrack = true
+        searchModel.clear()
+        var options = {}
+        if(app.query_for_market.value)
+            options.market = "from_token"
+        Spotify.getTrack(id, options, function(error, data) {
+            if(data) {
+                try {
+                    app.loadTracksInModel([data], 1, searchModel, function(data, i) {return data[i]})
+                    currentIndex = 0
+                    positionViewForCurrentIndex()
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                console.log("No Data for getTrack")
+            }
+            _loadingTrack = false
         })
     }
 
@@ -883,14 +908,9 @@ Page {
     CursorHelper {
         id: cursorHelper
 
-        onLoadNext: reloadTracks()
-        onLoadPrevious: reloadTracks()
+        //onLoadNext: reloadTracks()
+        //onLoadPrevious: reloadTracks()
     }
-
-    /*property bool canLoad: {
-        var ct = getContextType()
-        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
-    }*/
 
     //
     // Playlist Utilities
