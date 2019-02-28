@@ -552,11 +552,19 @@ Page {
         return s
     }
 
+    NumberAnimation { id: scrollAnim; target: listView; property: "contentY"; duration: 500 }
+
     function positionViewForCurrentIndex() {
-        // Would have like to used ListView.Visible but then when the current item
-        // is hidden under the control panel it remains hidden.
-        // As of why there is an item hidden ...
+        // ListView.Visible: when the current item
+        //   is hidden under the control panel it remains hidden.
+        scrollAnim.running = false
+        var pos = listView.contentY
+        var destPos
         listView.positionViewAtIndex(currentIndex, ListView.Center)
+        destPos = listView.contentY
+        scrollAnim.from = pos
+        scrollAnim.to = destPos
+        scrollAnim.running = true
     }
 
     function getContextType() {
@@ -810,7 +818,7 @@ Page {
                 try {
                     app.loadTracksInModel([data], 1, searchModel, function(data, i) {return data[i]})
                     currentIndex = 0
-                    //positionViewForCurrentIndex()
+                    positionViewForCurrentIndex()
                 } catch (err) {
                     console.log(err)
                 }
