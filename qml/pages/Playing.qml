@@ -602,6 +602,7 @@ Page {
                 updateForCurrentPlaylistTrack(true)
                 break
             default:
+                console.log("updateForCurrentTrack() with unhandled context: " + app.controller.playbackState.context.type)
                 break
             }
         }
@@ -656,13 +657,8 @@ Page {
             })
     }
 
-    // called by menus
-    /*function refresh() {
-        reloadTracks()
-    }*/
-
     onCurrentIdChanged: {
-        console.log("Playing.onCurrentIdChanged: " + currentId)
+        //console.log("Playing.onCurrentIdChanged: " + currentId)
         if (app.controller.playbackState.context) {
             switch (app.controller.playbackState.context.type) {
                 case 'album':
@@ -672,7 +668,6 @@ Page {
                 case 'artist':
                     contextType = Util.SpotifyItemType.Artist
                     showTrackInfo = false
-                    searchModel.clear()
                     Spotify.isFollowingArtists([currentId], function(error, data) {
                         if(data)
                             isContextFavorite = data[0]
@@ -734,7 +729,7 @@ Page {
                 currentTrackId = app.controller.playbackState.item.id
                 updateForCurrentTrack()
             }
-            console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
+            //console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
             if(currentIndex === -1)
                 updateForCurrentTrack()
         }
@@ -744,31 +739,15 @@ Page {
             if(!_isPlaying && app.controller.playbackState.is_playing) {
                 if(currentIndex === -1)
                     updateForCurrentTrack()
-                console.log("Started Playing")
+                //console.log("Started Playing")
             } else if(_isPlaying && !app.controller.playbackState.is_playing) {
-                console.log("Stopped Playing")
+                //console.log("Stopped Playing")
                 pluOnStopped()
             }
 
             _isPlaying = app.controller.playbackState.is_playing
         }
     }
-
-    /*function reloadTracks() {
-        switch(app.controller.playbackState.context.type) {
-        case 'album':
-            loadAlbumTracks(currentId)
-            break
-        case 'artist':
-            loadCurrentTrack()
-            break;
-        case 'playlist':
-            loadPlaylistTracks(app.id, currentId)
-            break
-        default:
-            break
-        }
-    }*/
 
     function loadPlaylistTracks(id, pid) {
         searchModel.clear()
@@ -816,6 +795,7 @@ Page {
 
     property bool _loadingTrack: false
     function loadCurrentTrack(id) {
+        //console.log("loadCurrentTrack: [" + id +"] _loadingTrack: " + _loadingTrack)
         if(!id)
             return
         if(_loadingTrack)
@@ -830,7 +810,7 @@ Page {
                 try {
                     app.loadTracksInModel([data], 1, searchModel, function(data, i) {return data[i]})
                     currentIndex = 0
-                    positionViewForCurrentIndex()
+                    //positionViewForCurrentIndex()
                 } catch (err) {
                     console.log(err)
                 }
@@ -923,11 +903,6 @@ Page {
         //onLoadNext: reloadTracks()
         //onLoadPrevious: reloadTracks()
     }
-
-    /*property bool canLoad: {
-        var ct = getContextType()
-        return ct === Spotify.ItemType.Album || ct === Spotify.ItemType.Playlist
-    }*/
 
     //
     // Playlist Utilities
