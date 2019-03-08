@@ -120,7 +120,8 @@ rgrnetalk"
                 font.pixelSize: Theme.fontSizeSmall
                 wrapMode: Text.WordWrap
                 text:
-"fi: raketti
+"de: liquidsky
+fi: raketti
 it: fravaccaro
 sv: eson57
 zh: dashinfantry"
