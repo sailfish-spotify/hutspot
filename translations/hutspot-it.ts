@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Sostituisci coda</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">Mostra album</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Mostra artista</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>

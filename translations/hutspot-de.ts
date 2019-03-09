@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Ersetze Warteschlange</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Zeige Künstler</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>

@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Byt kö</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">Visa album</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Visa artist</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>

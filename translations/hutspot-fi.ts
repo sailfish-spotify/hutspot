@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Korvaa jono</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">Näytä albumi</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Näytä artisti</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>

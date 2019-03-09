@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>替換隊列</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">查看專輯</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">查看藝術家</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
