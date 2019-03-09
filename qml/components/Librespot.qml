@@ -20,10 +20,20 @@ Item {
 
     /*onLibrespotServiceEnabled: {
         console.log("onLibrespotServiceEnabled: " + librespotServiceEnabled)
-    }
-    onLibrespotServiceRunningChanged: {
-        console.log("onLibrespotServiceRunningChanged: " + librespotServiceRunning)
     }*/
+
+    onServiceRunningChanged: {
+        if(librespot.serviceRunning)
+            return
+        var ldevName = librespot.getName()
+        var device = spotifyController.playbackState.device
+        if(device.name !== ldevName)
+            return
+        // Librespot is not running anymore and was the current device
+        // Spotify might transfer playing so pause
+        spotifyController.pause()
+        showErrorMessage(null, qsTr("Librespot service stopped. Playing is paused."))
+    }
 
     DBusInterface {
         id: librespotUnit
