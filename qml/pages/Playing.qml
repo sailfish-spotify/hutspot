@@ -783,7 +783,7 @@ Page {
                     cursorHelper.total = data.total
                     app.loadTracksInModel(data, data.items.length, searchModel,
                                           function(data, i) {return data.items[i].track},
-                                          function(data, i) {return {"added_at" :data.items[i].added_at}})
+                                          function(data, i) {return {"added_at" : data.items[i].added_at}})
                     lastItemOffset = firstItemOffset + searchModel.count - 1
                     //console.log("Appended #PlaylistTracks: " + data.items.length + ", count: " + searchModel.count)
                     updateForCurrentPlaylistTrack(onInit)
@@ -816,7 +816,9 @@ Page {
         Spotify.getTrack(id, options, function(error, data) {
             if(data) {
                 try {
-                    app.loadTracksInModel([data], 1, searchModel, function(data, i) {return data[i]})
+                    app.loadTracksInModel([data], 1, searchModel,
+                                          function(data, i) {return data[i]},
+                                          function(data, i) {return {"added_at" : ""}})
                     currentIndex = 0
                     positionViewForCurrentIndex()
                 } catch (err) {
@@ -850,7 +852,9 @@ Page {
                 try {
                     cursorHelper.offset = data.offset
                     cursorHelper.total = data.total
-                    app.loadTracksInModel(data, data.items.length, searchModel, function(data, i) {return data.items[i]})
+                    app.loadTracksInModel(data, data.items.length, searchModel,
+                                          function(data, i) {return data.items[i]},
+                                          function(data, i) {return {"added_at" : ""}})
                     // if the album has more tracks get more
                     if(cursorHelper.total > searchModel.count) {
                         cursorHelper.offset = searchModel.count
