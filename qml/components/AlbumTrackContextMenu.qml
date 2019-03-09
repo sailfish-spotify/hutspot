@@ -14,6 +14,7 @@ import "../Util.js" as Util
 ContextMenu {
     property var context;
     property bool enableQueueItems: true
+    property bool fromPlaying: false
 
     enabled: Util.isTrackPlayable(item)
     visible: enabled
@@ -21,6 +22,20 @@ ContextMenu {
     MenuItem {
         text: qsTr("Play")
         onClicked: app.controller.playTrackInContext(item, context)
+    }
+
+    MenuItem {
+        text: qsTr("View Album")
+        visible: enabled
+        enabled: fromPlaying && type === Util.SpotifyItemType.Track
+        onClicked: app.pushPage(Util.HutspotPage.Album, {album: item.album}, fromPlaying)
+    }
+
+    MenuItem {
+        text: qsTr("View Artist")
+        visible: enabled
+        enabled: fromPlaying && type === Util.SpotifyItemType.Track
+        onClicked: app.loadArtist(item.artists, fromPlaying)
     }
 
     MenuItem {
