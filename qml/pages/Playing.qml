@@ -67,15 +67,23 @@ Page {
                 PullDownMenu {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
-                        visible: currentIndex != -1
-                        onClicked: positionViewForCurrentIndex()
+                        onClicked: {
+                            if(currentIndex == -1)
+                                updateForCurrentTrack()
+                            else
+                                positionViewForCurrentIndex()
+                        }
                     }
                 }
                 PushUpMenu {
                     MenuItem {
                         text: qsTr("Scroll to current Track")
-                        visible: currentIndex != -1
-                        onClicked: positionViewForCurrentIndex()
+                        onClicked: {
+                            if(currentIndex == -1)
+                                updateForCurrentTrack()
+                            else
+                                positionViewForCurrentIndex()
+                        }
                     }
                 }
 
@@ -279,7 +287,9 @@ Page {
                 }
 
                 menu: AlbumTrackContextMenu {
+                    context: app.controller.playbackState.context
                     enableQueueItems: false
+                    fromPlaying: true
                 }
 
                 Connections {
