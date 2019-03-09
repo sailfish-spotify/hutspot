@@ -246,6 +246,14 @@
         <source>Connect using Authorization Blob</source>
         <translation>使用 Blob 授權连接</translation>
     </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation>停止Librespot</translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation>開啟Librespot</translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -309,6 +317,10 @@
     <message>
         <source>Username</source>
         <translation>用戶名</translation>
+    </message>
+    <message>
+        <source>Librespot service stopped. Playing is paused.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

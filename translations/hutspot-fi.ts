@@ -246,6 +246,14 @@
         <source>Connect using Authorization Blob</source>
         <translation>Yhdistä käyttäen valtuutusta</translation>
     </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation>Pysäytä Librespot</translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation>Käynnistä Librespot</translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -309,6 +317,10 @@
     <message>
         <source>Username</source>
         <translation>Käyttäjänimi</translation>
+    </message>
+    <message>
+        <source>Librespot service stopped. Playing is paused.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

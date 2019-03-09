@@ -246,6 +246,14 @@
         <source>Connect using Authorization Blob</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -308,6 +316,10 @@
     </message>
     <message>
         <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Librespot service stopped. Playing is paused.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
