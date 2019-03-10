@@ -57,38 +57,39 @@ Page {
             height: parent.height
             width: parent.width
 
+            PullDownMenu {
+                MenuItem {
+                    text: qsTr("Scroll to current Track")
+                    onClicked: {
+                        if(currentIndex == -1)
+                            updateForCurrentTrack()
+                        else
+                            positionViewForCurrentIndex()
+                    }
+                }
+            }
+
+            PushUpMenu {
+                MenuItem {
+                    text: qsTr("Scroll to current Track")
+                    onClicked: {
+                        if(currentIndex == -1)
+                            updateForCurrentTrack()
+                        else
+                            positionViewForCurrentIndex()
+                    }
+                }
+            }
+
+            //LoadPullMenus {}
+            //LoadPushMenus {}
+
             header: Column {
                 id: lvColumn
 
                 width: parent.width - 2*Theme.paddingMedium
                 x: Theme.paddingMedium
                 anchors.bottomMargin: Theme.paddingLarge
-
-                PullDownMenu {
-                    MenuItem {
-                        text: qsTr("Scroll to current Track")
-                        onClicked: {
-                            if(currentIndex == -1)
-                                updateForCurrentTrack()
-                            else
-                                positionViewForCurrentIndex()
-                        }
-                    }
-                }
-                PushUpMenu {
-                    MenuItem {
-                        text: qsTr("Scroll to current Track")
-                        onClicked: {
-                            if(currentIndex == -1)
-                                updateForCurrentTrack()
-                            else
-                                positionViewForCurrentIndex()
-                        }
-                    }
-                }
-
-                //LoadPullMenus {}
-                //LoadPushMenus {}
 
                 PageHeader {
                     id: pHeader
@@ -205,7 +206,7 @@ Page {
                                 app.loadArtist(app.controller.playbackState.contextDetails.artists, true)
                                 break
                             case Spotify.ItemType.Artist:
-                                app.pushPage(Util.HutspotPage.Artist, {currentArtist: app.controller.playbackState.context}, true)
+                                app.pushPage(Util.HutspotPage.Artist, {currentArtist: app.controller.playbackState.contextDetails}, true)
                                 break
                             case Spotify.ItemType.Track:
                                 app.loadArtist(app.controller.playbackState.item.artists, true)
@@ -623,7 +624,8 @@ Page {
                 console.log("updateForCurrentTrack() with unhandled context: " + app.controller.playbackState.context.type)
                 break
             }
-        }
+        } else
+            loadCurrentTrack(currentTrackId)
     }
 
     // to be able to find the current track and load the correct set of tracks
@@ -707,21 +709,25 @@ Page {
         target: app.controller.playbackState
 
         onContextDetailsChanged: {
-            currentId = app.controller.playbackState.contextDetails.id
             //console.log("Playing.onContextDetailsChanged: " + currentId)
-            /*switch (app.controller.playbackState.context.type) {
-                case 'album':
-                    break
-                case 'artist':
-                    break
-                case 'playlist':
-                    break
-            }*/
+            if(app.controller.playbackState.contextDetails)
+                currentId = app.controller.playbackState.contextDetails.id
+            else
+                currentId = -1
         }
 
         onItemChanged: {
-            //console.log("Playing.onItemChanged")
-            if (app.controller.playbackState.context) {
+            //console.log("Playing.onItemChanged  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
+            if(currentTrackId === app.controller.playbackState.item.id) {
+                if(currentIndex === -1) // we can still miss it
+                    updateForCurrentTrack()
+                return
+            }
+
+            currentTrackId = app.controller.playbackState.item.id
+            updateForCurrentTrack()
+
+            if(app.controller.playbackState.context) {
                 switch (app.controller.playbackState.context.type) {
                     case 'album':
                         pageHeaderDescription = app.controller.playbackState.item.album.name
@@ -740,16 +746,9 @@ Page {
             } else {
                 // no context (a single track?)
                 currentId = app.controller.playbackState.item.id
-                console.log("  no context: " + currentId)
+                //console.log("  no context: " + currentId)
                 pageHeaderDescription = ""
             }
-            if(currentTrackId !== app.controller.playbackState.item.id) {
-                currentTrackId = app.controller.playbackState.item.id
-                updateForCurrentTrack()
-            }
-            //console.log("  currentId: " +currentId + ", currentTrackId: " + currentTrackId + ", currentIndex: " + currentIndex)
-            if(currentIndex === -1)
-                updateForCurrentTrack()
         }
 
         onIs_playingChanged: {
