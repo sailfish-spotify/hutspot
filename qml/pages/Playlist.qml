@@ -121,6 +121,7 @@ Page {
                 id: searchResultListItem
                 dataModel: model
                 contextType: Util.SpotifyItemType.Playlist
+                onToggleFavorite: app.toggleSavedTrack(model)
             }
 
             menu: SearchResultContextMenu {

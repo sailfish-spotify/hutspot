@@ -312,6 +312,8 @@ Item {
                                 playbackState.contextDetails = data
                             })
                             break
+                        default:
+                            playbackState.contextDetails = null
                     }
                 } else {
                     // ToDo why is this?

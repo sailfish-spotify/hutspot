@@ -43,7 +43,7 @@ Row {
 
     Column {
         id: column
-        width: parent.width - image.width - favorite.width - 2 * Theme.paddingMedium
+        width: parent.width - image.width - 2 * Theme.paddingMedium
 
         Label {
             id: nameLabel
@@ -54,44 +54,59 @@ Row {
             text: dataModel.name ? dataModel.name : qsTr("No Name")
         }
 
-        Label {
-            id: meta1Label
+        Row {
             width: parent.width
-            color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
-            font.pixelSize: Theme.fontSizeExtraSmall
-            truncationMode: TruncationMode.Fade
-            text: getMeta1String()
-            enabled: text.length > 0
-            visible: enabled
-        }
+            height: col2.height
 
-        Label {
-            id: meta2Label
-            width: parent.width
-            color: currentIndex === dataModel.index ? Theme.secondaryHighlightColor : Theme.secondaryColor
-            font.pixelSize: Theme.fontSizeExtraSmall
-            textFormat: Text.StyledText
-            truncationMode: TruncationMode.Fade
-            text: getMeta2String()
-            enabled: text.length > 0
-            visible: enabled
+            Column {
+                id: col2
+                spacing: Theme.paddingSmall
+                width: parent.width - favorite.width
+                Label {
+                    id: meta1Label
+                    width: parent.width
+                    color: currentIndex === dataModel.index ? Theme.highlightColor : Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    truncationMode: TruncationMode.Fade
+                    text: getMeta1String()
+                    enabled: text.length > 0
+                    visible: enabled
+                }
+
+                Label {
+                    id: meta2Label
+                    width: parent.width
+                    color: currentIndex === dataModel.index ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    textFormat: Text.StyledText
+                    truncationMode: TruncationMode.Fade
+                    text: getMeta2String()
+                    enabled: text.length > 0
+                    visible: enabled
+                }
+            }
+            Image {
+                id: favorite
+                anchors.verticalCenter: parent.verticalCenter
+                width: height
+                height: sourceSize.width > 0 ? Theme.iconSizeSmall : 0
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+                source: if(dataModel.following || dataModel.saved)
+                            return currentIndex === dataModel.index
+                                    ? "image://theme/icon-m-favorite-selected?" + Theme.highlightColor
+                                    : "image://theme/icon-m-favorite-selected"
+                        else
+                            return currentIndex === dataModel.index
+                                      ? "image://theme/icon-m-favorite?" + Theme.highlightColor
+                                      : "image://theme/icon-m-favorite"
+                MouseArea {
+                     anchors.fill: parent
+                     onClicked: toggleFavorite()
+                }
+            }
         }
     }
-
-    Image {
-        id: favorite
-        width: height
-        height: sourceSize.width > 0 ? Theme.iconSizeSmall : 0
-        anchors {
-            verticalCenter: parent.verticalCenter
-            //bottom: parent.bottom
-        }
-        asynchronous: true
-        fillMode: Image.PreserveAspectFit
-        source: (dataModel.following || dataModel.saved)
-                ? "image://theme/icon-m-favorite-selected?" : ""
-    }
-
     function getImageURL(dataModel) {
         var images
         switch(dataModel.type) {

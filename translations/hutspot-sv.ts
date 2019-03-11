@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Byt kö</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">Visa album</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Visa artist</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
@@ -115,6 +123,10 @@
     <message>
         <source>Related Artists</source>
         <translation>Relaterade artister</translation>
+    </message>
+    <message>
+        <source>Load Artist About Page in Browser</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -238,6 +250,14 @@
         <source>Connect using Authorization Blob</source>
         <translation>Anslut med hjälp av auktoriserings-BLOB</translation>
     </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation>Stoppa Librespot</translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation>Starta Librespot</translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -301,6 +321,10 @@
     <message>
         <source>Username</source>
         <translation>Användarnamn</translation>
+    </message>
+    <message>
+        <source>Librespot service stopped. Playing is paused.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

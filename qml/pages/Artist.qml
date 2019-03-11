@@ -21,6 +21,7 @@ Page {
     property bool showBusy: false
 
     property var currentArtist
+    property var _fullArtist
     property bool isFollowed: false
 
     property int currentIndex: -1
@@ -39,6 +40,14 @@ Page {
         anchors.top: parent.top
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Load Artist About Page in Browser")
+                visible: currentArtist && currentArtist.external_urls["spotify"]
+                onClicked: Qt.openUrlExternally(currentArtist.external_urls["spotify"] + "/about")
+            }
+        }
 
         //LoadPullMenus {}
         //LoadPushMenus {}
@@ -70,8 +79,8 @@ Page {
 
             Image {
                 id: imageItem
-                source: (currentArtist && currentArtist.images)
-                        ? currentArtist.images[0].url : defaultImageSource
+                source: (_fullArtist && _fullArtist.images)
+                        ? _fullArtist.images[0].url : defaultImageSource
                 width: parent.width * 0.75
                 height: width
                 fillMode: Image.PreserveAspectFit
@@ -86,14 +95,20 @@ Page {
             MetaInfoPanel {
                 firstLabelText: currentArtist ? currentArtist.name : qsTr("No Name")
                 secondLabelText: {
+                    if(!_fullArtist)
+                        return ""
                     var s = ""
-                    if(currentArtist.genres && currentArtist.genres.length > 0)
-                        s += Util.createItemsString(currentArtist.genres, "")
+                    if(_fullArtist && _fullArtist.genres && _fullArtist.genres.length > 0)
+                        s += Util.createItemsString(_fullArtist.genres, "")
                     return s
                 }
-                thirdLabelText: currentArtist.followers && currentArtist.followers.total > 0
-                                ? Util.abbreviateNumber(currentArtist.followers.total) + " " + qsTr("followers")
+                thirdLabelText: {
+                    if(!_fullArtist)
+                        return ""
+                    return _fullArtist.followers && _fullArtist.followers.total > 0
+                                ? Util.abbreviateNumber(_fullArtist.followers.total) + " " + qsTr("followers")
                                 : ""
+                }
 
                 isFavorite: isFollowed
                 onToggleFavorite: app.toggleFollowArtist(currentArtist, isFollowed, function(followed) {
@@ -146,7 +161,19 @@ Page {
         }
     }
 
-    onCurrentArtistChanged: refresh()
+    onCurrentArtistChanged: {
+        if(currentArtist && !currentArtist.hasOwnProperty("genres")) {
+            _fullArtist = null
+            Spotify.getArtist(currentArtist.id, {}, function(error, data) {
+                if(data)
+                    _fullArtist = data
+                else
+                    console.log("Failed to load full Artist: " + currentArtist.id)
+            })
+        }
+        _fullArtist = currentArtist
+        refresh()
+    }
 
     property var artistAlbums
     property var relatedArtists

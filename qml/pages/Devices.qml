@@ -41,6 +41,19 @@ Page {
                 text: qsTr("Reload Devices")
                 onClicked: app.controller.reloadDevices()
             }
+            MenuItem {
+                enabled: librespot.serviceEnabled
+                visible: enabled
+                text: librespot.serviceRunning
+                      ? qsTr("Stop Librespot")
+                      : qsTr("Start Librespot")
+                onClicked: {
+                    if(librespot.serviceRunning)
+                        librespot.stop()
+                    else
+                        librespot.start()
+                }
+            }
         }
 
         PushUpMenu {

@@ -15,6 +15,7 @@ layout: default
  * Click on Artists names to open Artist Page
  * Click on Star to toggle Saved state
  * Click on a Track to play it
+ * Click on the star of a Track to toggle Saved state
  * Context Menu of a Track provides: 
    * Play
    * Add to Queue
@@ -22,13 +23,17 @@ layout: default
    * Add to Playlist
 
 ### Artist Page
+ * Pulldown Menu provides
+    * Load Artist About Page in Browser
  * Click on Artist Image to play this artists tracks
  * Click on the Page Header to switch between showing
    * Albums
    * Related Artists
  * Click on Star to toggle Followed state
  * Click on an Album to view it
+ * Click on the star of an Album to toggle Saved state
  * Click on an Artist to view it
+ * Click on the star of an Artist to toggle Followed state
  * Context Menu of an Album provides: 
    * Play
    * View
@@ -41,6 +46,7 @@ layout: default
 
 ### Genres & Mood Playlists Page
  * Click on a Playlist to play it
+ * Click on the star of an Playlist to toggle Followed state
  * Context Menu of a Playlist provides: 
    * Play
    * View
@@ -52,6 +58,7 @@ layout: default
  * Click on an Album to view it
  * Click on an Artist to view it
  * Click on a Playlist to view it
+ * Click on the star of an Item to toggle Followed/Saved state
  * Context Menu of an Album provides: 
    * Play
    * View
@@ -74,6 +81,7 @@ layout: default
  * Click on an Artist to view it
  * Click on a Playlist to view it
  * Click on a Track to view it's Album
+ * Click on the star of an Item to toggle Followed/Saved state
  * Context Menu of an Album provides: 
    * Play
    * View
@@ -98,6 +106,7 @@ layout: default
    * Featured Playlists
  * Click on an Album to view it
  * Click on a Playlist to view it
+ * Click on the star of an Item to toggle Followed/Saved state
  * Context Menu of an Album provides: 
    * Play
    * View
@@ -112,15 +121,18 @@ layout: default
  * Click on Image to switch between
     * Show Track information
     * Show context information (Album/Artist/Playlist)
+ * Click on the star of an Item to toggle Followed/Saved state
  * Click on a Track to play it
  * Context Menu of a Track provides: 
    * Play
+   * View Album
+   * View Artist
    * Add to Playlist
 
 ### Playlist Page
  * Click on Playlist Image to play
  * Click on Playlist details to edit them
- * Click on Star to toggle Followed state
+ * Click on the star of an Item to toggle Followed/Saved state
  * Click on a Track to view it's Album
  * Context Menu of a Track provides: 
    * Play
@@ -144,6 +156,7 @@ layout: default
    * Play as Playlist
  * Click on Genres to select them
  * Use Sliders to set Attribute target values
+ * Click on the star of an Item to toggle Followed/Saved state
  * Click on a Track to view it's Album
  * Context Menu of a Track provides: 
    * Play
@@ -166,6 +179,7 @@ layout: default
  * Click on an Artist to view it
  * Click on a Playlist to view it
  * Click on a Track to view it's Album
+ * Click on the star of an Item to toggle Followed/Saved state
  * Context Menu of an Album provides: 
    * Play
    * View
@@ -190,6 +204,7 @@ layout: default
    * Artists
  * Click on an Artist to view it
  * Click on a Track to view it's Album
+ * Click on the star of an Item to toggle Followed/Saved state
  * Context Menu of an Artist provides: 
    * Play
    * View
@@ -211,6 +226,7 @@ layout: default
  * Pulldown menu provides
    * Register Librespot Credentials
    * Reload Devices
+   * Start/Stop Librespot
  * Pushup menu provides
    * Login
    * Refresh Token

@@ -578,7 +578,7 @@ ApplicationWindow {
                 // If it does not it means we have to transfer.
                 // (first I used 'id' instead of 'name' but that can change due to Spotify)
                 if(device.name !== spotifyController.playbackState.device.name
-                   || !device.is_active) {
+                   && !spotifyController.playbackState.device.is_active) {
                     console.log("Will try to set device to [" + device.name + "] is_active=" + device.is_active + ", pbs.device.name=" + spotifyController.playbackState.device.name)
                     // device still needs to be selected
                     setDevice(device.id, device.name, function(error, data){
@@ -1018,7 +1018,7 @@ ApplicationWindow {
                                     { label: qsTr("View an Artist"), artists: artists } );
             ms.done.connect(function() {
                 if(ms.selectedItem) {
-                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.artist}, fromPlaying)
+                    app.pushPage(Util.HutspotPage.Artist, {currentArtist: ms.selectedItem.item}, fromPlaying)
                 }
             })
         } else if(artists.length === 1) {

@@ -82,6 +82,14 @@
         <source>Replace Queue</source>
         <translation>Sostituisci coda</translation>
     </message>
+    <message>
+        <source>View Album</source>
+        <translation type="unfinished">Mostra album</translation>
+    </message>
+    <message>
+        <source>View Artist</source>
+        <translation type="unfinished">Mostra artista</translation>
+    </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
@@ -115,6 +123,10 @@
     <message>
         <source>Related Artists</source>
         <translation>Artisti correlati</translation>
+    </message>
+    <message>
+        <source>Load Artist About Page in Browser</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -238,6 +250,14 @@
         <source>Connect using Authorization Blob</source>
         <translation>Connetti con blob autorizzazione</translation>
     </message>
+    <message>
+        <source>Stop Librespot</source>
+        <translation>Ferma Librespot</translation>
+    </message>
+    <message>
+        <source>Start Librespot</source>
+        <translation>Avvia Librespot</translation>
+    </message>
 </context>
 <context>
     <name>GenreMood</name>
@@ -301,6 +321,10 @@
     <message>
         <source>Username</source>
         <translation>Nome utente</translation>
+    </message>
+    <message>
+        <source>Librespot service stopped. Playing is paused.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
