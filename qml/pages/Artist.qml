@@ -41,6 +41,14 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Load Artist About Page in Browser")
+                visible: currentArtist && currentArtist.external_urls["spotify"]
+                onClicked: Qt.openUrlExternally(currentArtist.external_urls["spotify"] + "/about")
+            }
+        }
+
         //LoadPullMenus {}
         //LoadPushMenus {}
 

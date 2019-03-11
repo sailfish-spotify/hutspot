@@ -23,6 +23,8 @@ layout: default
    * Add to Playlist
 
 ### Artist Page
+ * Pulldown Menu provides
+    * Load Artist About Page in Browser
  * Click on Artist Image to play this artists tracks
  * Click on the Page Header to switch between showing
    * Albums

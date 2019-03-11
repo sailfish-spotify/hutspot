@@ -124,6 +124,10 @@
         <source>Related Artists</source>
         <translation>Relaterade artister</translation>
     </message>
+    <message>
+        <source>Load Artist About Page in Browser</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ArtistPicker</name>
