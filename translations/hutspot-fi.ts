@@ -53,7 +53,7 @@
     </message>
     <message>
         <source>tracks</source>
-        <translation>kappaleet</translation>
+        <translation>kappale(tta)</translation>
     </message>
     <message>
         <source>track</source>
@@ -84,11 +84,11 @@
     </message>
     <message>
         <source>View Album</source>
-        <translation type="unfinished">Näytä albumi</translation>
+        <translation>Näytä albumi</translation>
     </message>
     <message>
         <source>View Artist</source>
-        <translation type="unfinished">Näytä artisti</translation>
+        <translation>Näytä artisti</translation>
     </message>
 </context>
 <context>
@@ -126,7 +126,7 @@
     </message>
     <message>
         <source>Load Artist About Page in Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Avaa Tietoa Artistista -sivu selaimessa</translation>
     </message>
 </context>
 <context>
@@ -324,7 +324,7 @@
     </message>
     <message>
         <source>Librespot service stopped. Playing is paused.</source>
-        <translation type="unfinished"></translation>
+        <translation>Librespot palvelu pysäytetty. Toisto on pysäytetty.</translation>
     </message>
 </context>
 <context>
@@ -454,7 +454,7 @@
     <name>NavigationMenuDialog</name>
     <message>
         <source>Playing</source>
-        <translation>Soittaa</translation>
+        <translation>Nyt soitossa</translation>
     </message>
     <message>
         <source>My Stuff</source>
@@ -508,8 +508,8 @@
 <context>
     <name>NewAndFeatured</name>
     <message>
-        <source></source>
-        <translation></translation>
+        <source/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>New Releases</source>
@@ -527,8 +527,8 @@
 <context>
     <name>NewRelease</name>
     <message>
-        <source></source>
-        <translation></translation>
+        <source/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -594,7 +594,7 @@
     </message>
     <message>
         <source>Scroll to current Track</source>
-        <translation></translation>
+        <translation>Siirry nykyiseen kappaleeseen</translation>
     </message>
 </context>
 <context>
@@ -659,11 +659,11 @@
     </message>
     <message>
         <source>Hutspot wants to create playlist:&lt;br&gt;&lt;br&gt;&lt;b&gt;</source>
-        <translation>Hutspot haluaa luoda soittolistan::&lt;br&gt;&lt;br&gt;&lt;b&gt;</translation>
+        <translation>Hutspot haluaa luoda soittolistan:&lt;br&gt;&lt;br&gt;&lt;b&gt;</translation>
     </message>
     <message>
         <source>which will be used as it&apos;s player queue. Is that Ok?</source>
-        <translation>jota käytetään käyttäjän &apos; soittojonona. Onko tämä Ok?</translation>
+        <translation>jota käytetään soittojonona. Onko tämä Ok?</translation>
     </message>
     <message>
         <source>Failed to add Track to the Queue</source>
@@ -671,7 +671,7 @@
     </message>
     <message>
         <source>Failed to find Playlist for Queue</source>
-        <translation></translation>
+        <translation>Soittolistajonoa ei löytynyt</translation>
     </message>
 </context>
 <context>
@@ -789,7 +789,7 @@
     </message>
     <message>
         <source>Search text</source>
-        <translation>Hae tekstiä</translation>
+        <translation>Hae...</translation>
     </message>
     <message>
         <source>Search History</source>
@@ -875,7 +875,7 @@
     </message>
     <message>
         <source>album not specified</source>
-        <translation type="unfinished"></translation>
+        <translation>albumia ei ole määritelty</translation>
     </message>
 </context>
 <context>
@@ -1102,7 +1102,7 @@
     </message>
     <message>
         <source>Failed to transfer to</source>
-        <translation></translation>
+        <translation>Siirto epäonnistui kohteeseen</translation>
     </message>
     <message>
         <source>There seems to be no network connection. Quit?</source>
