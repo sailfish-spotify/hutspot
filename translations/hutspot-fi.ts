@@ -851,6 +851,10 @@
         <source>album not specified</source>
         <translation>albumia ei ole määritelty</translation>
     </message>
+    <message>
+        <source>track</source>
+        <translation type="unfinished">kappale</translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>

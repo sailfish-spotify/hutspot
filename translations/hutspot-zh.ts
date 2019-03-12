@@ -851,6 +851,10 @@
         <source>album not specified</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>track</source>
+        <translation type="unfinished">音樂</translation>
+    </message>
 </context>
 <context>
     <name>Settings</name>
