@@ -37,6 +37,8 @@ Translations are welcome. Either through a Pull-Request or using [Transifex](htt
 Current translations:
 
   * Chinese (zh)
+  * Finnish (fi)
+  * German (de)
   * Italian (it)
   * Swedish (sv)
 
