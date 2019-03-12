@@ -182,33 +182,20 @@ Row {
         var sb = new Util.Classes.StringBuilder()
         switch(dataModel.type) {
         case Util.SpotifyItemType.Album:
-            /*if(typeof(dataModel.saved) !== 'undefined') {
-               if(dataModel.saved)
-                    sb.append("<strong>[" + qsTr("saved") + "]</strong>")
-            }*/
-            if(dataModel.item)
-                sb.append(Util.getYearFromReleaseDate(dataModel.item.release_date))
+            if(dataModel.item.tracks)
+                sb.append(getNumTracksText(dataModel.item.tracks.total))
+            else if(dataModel.item.total_tracks) // undocumented?
+                sb.append(getNumTracksText(dataModel.item.total_tracks))
+            sb.append(Util.getYearFromReleaseDate(dataModel.item.release_date))
             break
         case Util.SpotifyItemType.Artist:
-            /*if(typeof(dataModel.following) !== 'undefined') {
-               if(dataModel.following)
-                    sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
-            }*/
             if(typeof(dataModel.item.followers) !== 'undefined')
                 sb.append(Util.abbreviateNumber(dataModel.item.followers.total) + " " + qsTr("followers"))
             break
         case Util.SpotifyItemType.Playlist:
-            /*if(typeof(following) !== 'undefined') {
-               if(following)
-                   sb.append("<strong>[" + qsTr("following") + "]</strong>, ")
-            }*/
-            sb.append(dataModel.item.tracks.total + " " + qsTr("tracks"))
+            sb.append(getNumTracksText(dataModel.item.tracks.total))
             break
         case Util.SpotifyItemType.Track:
-            /*if(typeof(dataModel.saved) !== 'undefined') {
-               if(dataModel.saved)
-                   sb.append("<strong>[" + qsTr("saved") + "]</strong>")
-            }*/
             if(dataModel.item.duration_ms)
                 sb.append(Util.getDurationString(dataModel.item.duration_ms))
             if(dataModel.played_at && dataModel.played_at.length>0)
@@ -219,4 +206,7 @@ Row {
         return sb.toString(", ")
     }
 
+    function getNumTracksText(n) {
+        return n + " " + (n === 1 ? qsTr("track") : qsTr("tracks"))
+    }
 }

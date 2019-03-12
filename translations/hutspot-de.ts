@@ -328,32 +328,6 @@
     </message>
 </context>
 <context>
-    <name>LoadPullMenus</name>
-    <message>
-        <source>Reload</source>
-        <translation>Neu laden</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>Lade letzte Zusammenstellung</translation>
-    </message>
-    <message>
-        <source>Load Next Set</source>
-        <translation>Lade nächste Zusammenstellung</translation>
-    </message>
-</context>
-<context>
-    <name>LoadPushMenus</name>
-    <message>
-        <source>Load Next Set</source>
-        <translation>Lade nächste Zusammenstellung</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>Lade letzte Zusammenstellung</translation>
-    </message>
-</context>
-<context>
     <name>MultiItemPicker</name>
     <message>
         <source>OK</source>
@@ -876,6 +850,10 @@
     <message>
         <source>album not specified</source>
         <translation>Album nicht angegeben</translation>
+    </message>
+    <message>
+        <source>track</source>
+        <translation type="unfinished">Titel</translation>
     </message>
 </context>
 <context>

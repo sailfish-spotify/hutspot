@@ -17,7 +17,7 @@ Item {
     property var before
     property var after
 
-    signal loadNext()
+    /*signal loadNext()
     signal loadPrevious()
 
     function next() {
@@ -30,16 +30,15 @@ Item {
         if(offset < 0)
             offset = 0
         loadPrevious()
-    }
+    }*/
 
-    function update(cursors) {
-        var cinfo = Util.getCursorsInfo(cursors)
-        offset = cinfo.offset
-        total = cinfo.maxTotal
-        hasNext = cinfo.hasNext
-        hasPrevious = cinfo.hasPrevious
-        after = cinfo.after
-        before = cinfo.before
+    function update(cursor) {
+        offset = cursor.offset
+        total = cursor.total
+        hasNext = cursor.hasNext
+        hasPrevious = cursor.hasPrevious
+        after = cursor.after ? cursor.after : 0
+        before = cursor.before ? cursor.before : 0
     }
 }
 

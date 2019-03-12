@@ -49,9 +49,6 @@ Page {
             }
         }
 
-        //LoadPullMenus {}
-        //LoadPushMenus {}
-
         header: Column {
             id: lvColumn
 
@@ -218,9 +215,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     function refresh() {

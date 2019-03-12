@@ -68,9 +68,6 @@ Page {
                 visible: _itemClass == 1
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
         }
 
         delegate: ListItem {
@@ -216,9 +213,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     Connections {

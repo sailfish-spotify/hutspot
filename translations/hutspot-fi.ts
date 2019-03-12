@@ -328,32 +328,6 @@
     </message>
 </context>
 <context>
-    <name>LoadPullMenus</name>
-    <message>
-        <source>Reload</source>
-        <translation>Päivitä</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>Lataa edellinen setti</translation>
-    </message>
-    <message>
-        <source>Load Next Set</source>
-        <translation>Lataa seuraava setti</translation>
-    </message>
-</context>
-<context>
-    <name>LoadPushMenus</name>
-    <message>
-        <source>Load Next Set</source>
-        <translation>Lataa seuraava setti</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>Lataa edellinen setti</translation>
-    </message>
-</context>
-<context>
     <name>MultiItemPicker</name>
     <message>
         <source>OK</source>
@@ -508,8 +482,8 @@
 <context>
     <name>NewAndFeatured</name>
     <message>
-        <source/>
-        <translation type="unfinished"/>
+        <source></source>
+        <translation></translation>
     </message>
     <message>
         <source>New Releases</source>
@@ -527,8 +501,8 @@
 <context>
     <name>NewRelease</name>
     <message>
-        <source/>
-        <translation type="unfinished"/>
+        <source></source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -876,6 +850,10 @@
     <message>
         <source>album not specified</source>
         <translation>albumia ei ole määritelty</translation>
+    </message>
+    <message>
+        <source>track</source>
+        <translation type="unfinished">kappale</translation>
     </message>
 </context>
 <context>

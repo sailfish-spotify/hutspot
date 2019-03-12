@@ -74,9 +74,6 @@ Page {
                 }
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             SearchFieldWithMenu {
                 id: searchField
                 width: parent.width
@@ -206,9 +203,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     // 0: Albums, 1: Artists, 2: Playlists, 3: Tracks

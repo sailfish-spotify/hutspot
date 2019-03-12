@@ -35,9 +35,6 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        //LoadPullMenus {}
-        //LoadPushMenus {}
-
         header: Column {
             id: lvColumn
 
@@ -140,9 +137,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     Connections {

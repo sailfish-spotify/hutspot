@@ -81,9 +81,6 @@ Page {
                 }
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             header: Column {
                 id: lvColumn
 
@@ -920,9 +917,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        //onLoadNext: reloadTracks()
-        //onLoadPrevious: reloadTracks()
     }
 
     //

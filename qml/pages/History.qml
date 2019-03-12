@@ -50,8 +50,6 @@ Page {
                 MenuButton {}
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
             PullDownMenu {
                 MenuItem {
                     text: qsTr("Clear History")
@@ -248,15 +246,6 @@ Page {
             checkReload(artistIds.length)
         })
     }
-
-    //property alias cursorHelper: cursorHelper
-
-    /*CursorHelper {
-        id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
-    }*/
 
     Connections {
         target: app

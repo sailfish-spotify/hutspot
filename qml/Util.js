@@ -242,48 +242,6 @@ function removeFromListModel(model, type, id) {
     return true;
 }
 
-function getCursorsInfo(cursors) {
-    var maxTotal = 0
-    var offset = 0
-    var canNext = false
-    var canPrevious = false
-    var hasNext = false
-    var hasPrevious = false
-    var hasBefore = false
-    var hasAfter = false
-    var before = 0
-    var after = 0
-    for(var i=0;i<cursors.length;i++) {
-        if(cursors[i] === undefined)
-            continue
-        if(cursors[i].total > maxTotal)
-            maxTotal = cursors[i].total
-        if(cursors[i].offset !== 0)
-            offset = cursors[i].offset // ToDo: they will probably all be the same
-        if(cursors[i].canNext)
-            canNext = true
-        if(cursors[i].canPrevious)
-            canPrevious = true
-        if(cursors[i].hasNext)
-            hasNext = true
-        if(cursors[i].hasPrevious)
-            hasPrevious = true
-        if(cursors[i].hasBefore)
-            hasBefore = true
-        if(cursors[i].hasAfter)
-            hasAfter = true
-        if(cursors[i].cursors && cursors[i].cursors.after)
-            after = cursors[i].cursors.after
-        if(cursors[i].cursors && cursors[i].cursors.before)
-            before = cursors[i].cursors.before
-    }
-    return {offset: offset, maxTotal: maxTotal,
-            canPrevious: canPrevious, canNext: canNext,
-            hasPrevious: hasPrevious, hasNext: hasNext,
-            before: before, after: after,
-            hasBefore: hasBefore, hasAfter: hasAfter}
-}
-
 function startsWith(str, start) {
     return str.match("^"+start) !== null;
 }
@@ -423,6 +381,7 @@ function loadCursor(data, cursorType) {
                      || (cursor.hasAfter)
     cursor.hasPrevious = (data.previous && data.previous !== null)
                           || (cursor.hasBefore)
+
     return cursor
 }
 

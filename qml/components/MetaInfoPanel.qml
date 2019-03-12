@@ -88,7 +88,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: isFavorite ? "image://theme/icon-m-favorite-selected" : "image://theme/icon-m-favorite"
                 MouseArea {
-                      anchors.fill: parent
+                     anchors.fill: parent
                      onClicked: toggleFavorite()
                 }
             }

@@ -57,9 +57,6 @@ Page {
                 MenuButton {}
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             Image {
                 id: imageItem
                 source:  (album && album.images)
@@ -152,9 +149,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     function refresh() {
