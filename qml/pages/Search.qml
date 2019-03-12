@@ -74,9 +74,6 @@ Page {
                 }
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             SearchFieldWithMenu {
                 id: searchField
                 width: parent.width

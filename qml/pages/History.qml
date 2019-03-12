@@ -50,8 +50,6 @@ Page {
                 MenuButton {}
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
             PullDownMenu {
                 MenuItem {
                     text: qsTr("Clear History")

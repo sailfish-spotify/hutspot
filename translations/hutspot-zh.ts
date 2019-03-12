@@ -328,32 +328,6 @@
     </message>
 </context>
 <context>
-    <name>LoadPullMenus</name>
-    <message>
-        <source>Reload</source>
-        <translation>重新載入</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>載入前一組</translation>
-    </message>
-    <message>
-        <source>Load Next Set</source>
-        <translation>載入下一組</translation>
-    </message>
-</context>
-<context>
-    <name>LoadPushMenus</name>
-    <message>
-        <source>Load Next Set</source>
-        <translation>載入下一組</translation>
-    </message>
-    <message>
-        <source>Load Previous Set</source>
-        <translation>載入前一組</translation>
-    </message>
-</context>
-<context>
     <name>MultiItemPicker</name>
     <message>
         <source>OK</source>

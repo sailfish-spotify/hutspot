@@ -81,9 +81,6 @@ Page {
                 }
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             header: Column {
                 id: lvColumn
 

@@ -68,9 +68,6 @@ Page {
                 visible: _itemClass == 1
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
         }
 
         delegate: ListItem {

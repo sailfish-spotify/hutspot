@@ -37,9 +37,6 @@ Page {
         height: parent.height - app.dockedPanel.visibleSize
         clip: app.dockedPanel.expanded
 
-        //LoadPullMenus {}
-        //LoadPushMenus {}
-
         header: Column {
             id: lvColumn
 

@@ -57,9 +57,6 @@ Page {
                 MenuButton {}
             }
 
-            //LoadPullMenus {}
-            //LoadPushMenus {}
-
             Image {
                 id: imageItem
                 source:  (album && album.images)
