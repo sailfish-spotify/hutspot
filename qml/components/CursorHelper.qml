@@ -32,14 +32,13 @@ Item {
         loadPrevious()
     }*/
 
-    function update(cursors) {
-        var cinfo = Util.getCursorsInfo(cursors)
-        offset = cinfo.offset
-        total = cinfo.maxTotal
-        hasNext = cinfo.hasNext
-        hasPrevious = cinfo.hasPrevious
-        after = cinfo.after
-        before = cinfo.before
+    function update(cursor) {
+        offset = cursor.offset
+        total = cursor.total
+        hasNext = cursor.hasNext
+        hasPrevious = cursor.hasPrevious
+        after = cursor.after ? cursor.after : 0
+        before = cursor.before ? cursor.before : 0
     }
 }
 

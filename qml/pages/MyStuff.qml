@@ -308,7 +308,7 @@ Page {
                 if(data) {
                     console.log("number of RecentlyPlayedTracks: " + data.items.length)
                     recentlyPlayedTracks = data
-                    cursorHelper.update([Util.loadCursor(data, Util.CursorType.RecentlyPlayed)])
+                    cursorHelper.update(Util.loadCursor(data, Util.CursorType.RecentlyPlayed))
                 } else
                     console.log("No Data for getMyRecentlyPlayedTracks")
                 loadData()
@@ -337,7 +337,7 @@ Page {
                 if(data) {
                     console.log("number of FollowedArtists: " + data.artists.items.length)
                     followedArtists = data
-                    cursorHelper.update([Util.loadCursor(data.artists, Util.CursorType.FollowedArtists)])
+                    cursorHelper.update(Util.loadCursor(data.artists, Util.CursorType.FollowedArtists))
                 } else
                     console.log("No Data for getFollowedArtists")
                 loadData()
