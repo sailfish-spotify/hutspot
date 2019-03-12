@@ -354,14 +354,6 @@ Page {
         id: cursorHelper
 
         useHas: true
-        /*onLoadNext: {
-            refreshDirection = 1
-            refresh()
-        }
-        onLoadPrevious: {
-            refreshDirection = -1
-            refresh()
-        }*/
     }
 
     Connections {

@@ -917,9 +917,6 @@ Page {
 
     CursorHelper {
         id: cursorHelper
-
-        //onLoadNext: reloadTracks()
-        //onLoadPrevious: reloadTracks()
     }
 
     //

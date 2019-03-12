@@ -17,7 +17,7 @@ Item {
     property var before
     property var after
 
-    signal loadNext()
+    /*signal loadNext()
     signal loadPrevious()
 
     function next() {
@@ -30,7 +30,7 @@ Item {
         if(offset < 0)
             offset = 0
         loadPrevious()
-    }
+    }*/
 
     function update(cursors) {
         var cinfo = Util.getCursorsInfo(cursors)

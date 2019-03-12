@@ -88,9 +88,6 @@ Dialog {
 
     CursorHelper {
         id: cursorHelper
-
-        onLoadNext: refresh()
-        onLoadPrevious: refresh()
     }
 
     onLabelChanged: refresh() // ToDo come up with a better trigger
