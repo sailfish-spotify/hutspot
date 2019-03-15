@@ -351,12 +351,14 @@ Item {
         })
     }
 
-    function playTrackInContext(track, context) {
+    function playTrackInContext(track, context, position) {
+        // does not work for some tracks.
         if (playbackState.device) {
             Spotify.play({
                 "device_id": getDeviceId(),
                 "context_uri": context.uri,
-                "offset": {"uri": track.uri}
+                "offset": {"position": position}
+                //"offset": {"uri": track.uri} does not always work see https://github.com/spotify/web-api/issues/1040
             }, function (error, data) {
                 if (!error) {
                     playbackState.item = track
