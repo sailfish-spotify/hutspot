@@ -21,7 +21,7 @@ ContextMenu {
 
     MenuItem {
         text: qsTr("Play")
-        onClicked: app.controller.playTrackInContext(item, context)
+        onClicked: app.controller.playTrackInContext(item, context, index)
     }
 
     MenuItem {

@@ -27,10 +27,10 @@ ContextMenu {
             case Util.SpotifyItemType.Track:
                 switch(contextType) {
                 case Util.SpotifyItemType.Album:
-                    app.controller.playTrackInContext(item, album)
+                    app.controller.playTrackInContext(item, album, index)
                     break
                 case Util.SpotifyItemType.Playlist:
-                    app.controller.playTrackInContext(item, playlist)
+                    app.controller.playTrackInContext(item, playlist, index)
                     break
                 default:
                     app.controller.playTrack(item)

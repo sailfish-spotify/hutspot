@@ -296,7 +296,7 @@ Page {
                 }
 
                 // play track
-                onClicked: app.controller.playTrackInContext(item, app.controller.playbackState.context)
+                onClicked: app.controller.playTrackInContext(item, app.controller.playbackState.context, index)
             }
 
             VerticalScrollDecorator {}

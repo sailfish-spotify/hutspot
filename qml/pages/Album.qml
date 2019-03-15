@@ -127,7 +127,7 @@ Page {
                 context: album
             }
 
-            onClicked: app.controller.playTrackInContext(item, album)
+            onClicked: app.controller.playTrackInContext(item, album, index)
         }
 
         VerticalScrollDecorator {}
