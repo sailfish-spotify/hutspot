@@ -357,8 +357,9 @@ Item {
             Spotify.play({
                 "device_id": getDeviceId(),
                 "context_uri": context.uri,
-                "offset": {"position": position}
-                //"offset": {"uri": track.uri} does not always work see https://github.com/spotify/web-api/issues/1040
+                //"offset": {"position": position}
+                "offset": {"uri": track.linked_from
+                                  ? track.linked_from.uri : track.uri}
             }, function (error, data) {
                 if (!error) {
                     playbackState.item = track
