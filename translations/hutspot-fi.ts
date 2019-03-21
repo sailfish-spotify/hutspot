@@ -853,7 +853,7 @@
     </message>
     <message>
         <source>track</source>
-        <translation type="unfinished">kappale</translation>
+        <translation>kappale</translation>
     </message>
 </context>
 <context>
