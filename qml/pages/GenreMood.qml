@@ -53,15 +53,14 @@ Page {
 
         delegate: ListItem {
             id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             contentHeight: Theme.itemSizeLarge
 
             Image {
                 id: categoryIcon
                 width: Theme.iconSizeLarge
                 height: width
-                anchors.left: parent.left
+                x: Theme.horizontalPageMargin
                 anchors.verticalCenter: parent.verticalCenter
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
@@ -72,6 +71,7 @@ Page {
                 id: categoryName
                 anchors.left: categoryIcon.right
                 anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
                 anchors.leftMargin: Theme.paddingMedium
                 anchors.verticalCenter: parent.verticalCenter
                 color: Theme.primaryColor

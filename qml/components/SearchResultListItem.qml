@@ -13,7 +13,6 @@ import "../Util.js" as Util
 
 Row {
     id: row
-
     property var dataModel
 
     // not used, same as in AlbumTrackListItem so Loader can be used
@@ -23,7 +22,8 @@ Row {
 
     signal toggleFavorite()    
 
-    width: parent.width
+    width: parent.width - 2 * Theme.horizontalPageMargin
+    x: Theme.horizontalPageMargin
     spacing: Theme.paddingMedium
 
     opacity: (dataModel.type !== Util.SpotifyItemType.Track
@@ -33,9 +33,7 @@ Row {
         id: image
         width: height
         height: column.height
-        anchors {
-            verticalCenter: parent.verticalCenter
-        }
+        anchors.verticalCenter: parent.verticalCenter
         asynchronous: true
         fillMode: Image.PreserveAspectFit
         source: getImageURL(dataModel)
@@ -43,7 +41,7 @@ Row {
 
     Column {
         id: column
-        width: parent.width - image.width - 2 * Theme.paddingMedium
+        width: parent.width - image.width - parent.spacing
 
         Label {
             id: nameLabel

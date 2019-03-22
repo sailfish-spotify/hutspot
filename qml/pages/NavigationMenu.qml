@@ -87,14 +87,13 @@ Page {
          }
 
          delegate: ListItem {
-             width: parent.width - 2*Theme.paddingLarge
-             x: Theme.paddingLarge
+             width: parent.width
 
              Image {
                  id: image
                  width: Theme.iconSizeMedium
                  height: width
-                 anchors.left: parent.left
+                 x: Theme.horizontalPageMargin
                  anchors.verticalCenter: parent.verticalCenter
                  fillMode: Image.PreserveAspectFit
                  source: model.icon
@@ -104,6 +103,7 @@ Page {
                  anchors.left: image.right
                  anchors.leftMargin: Theme.paddingLarge
                  anchors.right: parent.right
+                 anchors.rightMargin: Theme.horizontalPageMargin
                  anchors.verticalCenter: parent.verticalCenter
                  color: _currentIndex === index ? Theme.highlightColor : Theme.primaryColor
                  text: model.name

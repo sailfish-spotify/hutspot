@@ -3,8 +3,8 @@ import Sailfish.Silica 1.0
 
 Component {
     Item {
-        width: parent.width - 2*Theme.paddingMedium
-        x: Theme.paddingMedium
+        width: parent.width - 2 * Theme.horizontalPageMargin
+        x: Theme.horizontalPageMargin
         height: childrenRect.height
         Text {
             width: parent.width

@@ -86,14 +86,11 @@ Dialog {
          }
 
          delegate: ListItem {
-             width: parent.width - 2*Theme.paddingLarge
-             x: Theme.paddingLarge
-
              Image {
                  id: image
                  width: Theme.iconSizeMedium
                  height: width
-                 anchors.left: parent.left
+                 x: Theme.horizontalPageMargin
                  anchors.verticalCenter: parent.verticalCenter
                  fillMode: Image.PreserveAspectFit
                  source: model.icon

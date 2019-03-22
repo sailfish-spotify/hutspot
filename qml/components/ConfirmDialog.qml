@@ -24,8 +24,8 @@ Dialog {
 
             Label {
                 id: msgTextArea
-                x: Theme.paddingMedium
-                width: parent.width - 2*Theme.paddingMedium
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2*Theme.horizontalPageMargin
                 textFormat: Text.RichText
                 truncationMode: TruncationMode.Fade
                 text: confirmMessageText

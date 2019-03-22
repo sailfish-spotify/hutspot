@@ -61,8 +61,7 @@ Page {
 
         delegate: ListItem {
             id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             //height: searchResultListItem.height
             contentHeight: Theme.itemSizeLarge
 

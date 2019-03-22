@@ -80,13 +80,13 @@ Page {
 
         delegate: ListItem {
             id: delegate
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             opacity: sp == 1 ? 1.0 : 0.4
 
             Column {
                 id: column
-                width: parent.width
+                x: Theme.horizontalPageMargin
+                width: parent.width - 2 * Theme.horizontalPageMargin
                 Label {
                     id: nameLabel
                     //color: is_active ? Theme.highlightColor : Theme.primaryColor
