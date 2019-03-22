@@ -40,9 +40,7 @@ Dialog {
 
         delegate: ListItem {
             id: delegateItem
-
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             contentHeight: Theme.itemSizeLarge
 
             onClicked: {

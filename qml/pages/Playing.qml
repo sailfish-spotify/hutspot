@@ -249,8 +249,7 @@ Page {
 
             delegate: ListItem {
                 id: listItem
-                width: parent.width - 2*Theme.paddingMedium
-                x: Theme.paddingMedium
+                width: parent.width
                 contentHeight: contextType == 0
                                ? Theme.itemSizeExtraSmall
                                : Theme.itemSizeLarge

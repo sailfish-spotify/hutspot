@@ -56,15 +56,14 @@ Page {
 
         delegate: ListItem {
             id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             contentHeight: Theme.itemSizeLarge
 
             Image {
+                x: Theme.horizontalPageMargin
                 id: categoryIcon
                 width: Theme.iconSizeLarge
                 height: width
-                anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit

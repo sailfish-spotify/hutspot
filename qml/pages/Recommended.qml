@@ -180,8 +180,7 @@ Page {
                 }
                 delegate: ListItem {
                     id: seedListItem
-                    width: parent.width //- 2*Theme.paddingMedium
-                    //x: Theme.paddingMedium
+                    width: parent.width
                     contentHeight: Theme.itemSizeLarge
                     SearchResultListItem {
                         id: seedResultListItem
@@ -305,8 +304,7 @@ Page {
 
         delegate: ListItem {
             id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             contentHeight: Theme.itemSizeLarge
 
             SearchResultListItem {

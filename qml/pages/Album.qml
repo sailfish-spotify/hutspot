@@ -112,8 +112,7 @@ Page {
 
         delegate: ListItem {
             id: listItem
-            width: parent.width - 2*Theme.paddingMedium
-            x: Theme.paddingMedium
+            width: parent.width
             contentHeight: Theme.itemSizeExtraSmall
 
             AlbumTrackListItem {

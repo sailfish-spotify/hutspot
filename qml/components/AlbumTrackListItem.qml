@@ -18,7 +18,8 @@ Item {
     property var dataModel
     signal toggleFavorite()
 
-    width: parent.width
+    width: parent.width - 2 * Theme.horizontalPageMargin
+    x: Theme.horizontalPageMargin
     height: Math.max(labelss.height, savedImage.height)
     anchors.verticalCenter: parent.verticalCenter
 
@@ -26,7 +27,7 @@ Item {
 
     Image {
         id: savedImage
-        anchors.left: parent.left
+        x: Theme.horizontalPageMargin
         anchors.verticalCenter: parent.verticalCenter
         height: Theme.iconSizeSmall
         asynchronous: true
@@ -53,6 +54,7 @@ Item {
         id: labelss
         anchors.left: savedImage.right
         anchors.right: parent.right
+        anchors.rightMargin: Theme.horizontalPageMargin
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: Theme.paddingMedium
 
