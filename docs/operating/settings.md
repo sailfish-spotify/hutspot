@@ -9,6 +9,7 @@ The Settings page allows to configure:
 
   * The number of results per request. Spotify seems to have a maximum of 50.
   * Number of items to save in the History list.
+  * Maximum length of Sorted Lists. For lists that need to be sorted by the app all items need to be downloaded. When a lists total number of items is larger then this threshold the list is not sorted.
   * Enable Device Discovery, looking for Spotify Players on the network
   * Start Librespot when launched and stop it on exit.
   * Start Librespot or stop it.

@@ -1,35 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
 <context>
-    <name></name>
+    <name/>
     <message id="components-ph-search">
         <source>Search</source>
         <extracomment>Placeholder text of SearchField</extracomment>
-        <translation>Suche</translation>
+        <translation>Etsi</translation>
     </message>
 </context>
 <context>
     <name>About</name>
     <message>
         <source>About</source>
-        <translation>Über</translation>
+        <translation>Tietoja</translation>
     </message>
     <message>
         <source>Spotify controller for Sailfish OS</source>
-        <translation>Spotifysteuerung für Sailfish OS</translation>
+        <translation>Soptify ohjain Sailfish OS:lle</translation>
     </message>
     <message>
         <source>License: MIT</source>
-        <translation>Lizenz: MIT</translation>
+        <translation>Lisenssi: MIT</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation>Beitragende</translation>
+        <translation>Osallistujat</translation>
     </message>
     <message>
         <source>Thanks to</source>
-        <translation>Dank an</translation>
+        <translation>Kiitokset</translation>
     </message>
     <message>
         <source>Copyright (C) 2019</source>
@@ -38,113 +36,113 @@
     </message>
     <message>
         <source>Translations</source>
-        <translation>Übersetzungen</translation>
+        <translation>Käännökset</translation>
     </message>
 </context>
 <context>
     <name>Album</name>
     <message>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation>Albumi</translation>
     </message>
     <message>
         <source>no artist known</source>
-        <translation>Kein Künstler bekannt</translation>
+        <translation>ei tunnettuja artisteja</translation>
     </message>
     <message>
         <source>tracks</source>
-        <translation>Titel</translation>
+        <translation>kappale(tta)</translation>
     </message>
     <message>
         <source>track</source>
-        <translation>Titel</translation>
+        <translation>kappale</translation>
     </message>
     <message>
         <source>No Tracks found</source>
-        <translation>Keine Titel gefunden</translation>
+        <translation>Kappaleita ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>AlbumTrackContextMenu</name>
     <message>
         <source>Play</source>
-        <translation>Wiedergabe</translation>
+        <translation>Toista</translation>
     </message>
     <message>
         <source>Add to Playlist</source>
-        <translation>Zur Wiedergabeliste hinzufügen</translation>
+        <translation>Lisää soittolistaan</translation>
     </message>
     <message>
         <source>Add to Queue</source>
-        <translation>Zur Warteschlange hinzufügen</translation>
+        <translation>Lisää jonoon</translation>
     </message>
     <message>
         <source>Replace Queue</source>
-        <translation>Ersetze Warteschlange</translation>
+        <translation>Korvaa jono</translation>
     </message>
     <message>
         <source>View Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Näytä albumi</translation>
     </message>
     <message>
         <source>View Artist</source>
-        <translation type="unfinished">Zeige Künstler</translation>
+        <translation>Näytä artisti</translation>
     </message>
 </context>
 <context>
     <name>AlbumTrackListItem</name>
     <message>
         <source>No Name</source>
-        <translation>Kein Name</translation>
+        <translation>Ei nimeä</translation>
     </message>
 </context>
 <context>
     <name>Artist</name>
     <message>
         <source>No Name</source>
-        <translation>Kein Name</translation>
+        <translation>Ei nimeä</translation>
     </message>
     <message>
         <source>followers</source>
-        <translation>Follower</translation>
+        <translation>seuraajat</translation>
     </message>
     <message>
         <source>No Artists found</source>
-        <translation>Kein Künstler gefunden</translation>
+        <translation>Artisteja ei löytyny</translation>
     </message>
     <message>
         <source>Artist </source>
-        <translation>Künstler </translation>
+        <translation>Artisti</translation>
     </message>
     <message>
         <source>Albums</source>
-        <translation>Alben</translation>
+        <translation>Albumit</translation>
     </message>
     <message>
         <source>Related Artists</source>
-        <translation>Ähnliche Künstler</translation>
+        <translation>Vastaavat esittäjät</translation>
     </message>
     <message>
         <source>Load Artist About Page in Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>Avaa Tietoa Artistista -sivu selaimessa</translation>
     </message>
 </context>
 <context>
     <name>ArtistPicker</name>
     <message>
         <source>Choose Artist</source>
-        <translation>Wähle Künstler</translation>
+        <translation>Valitse esittäjä</translation>
     </message>
 </context>
 <context>
     <name>ConfirmDialog</name>
     <message>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Peruuta</translation>
     </message>
 </context>
 <context>
@@ -158,678 +156,678 @@
     <name>CoverPage</name>
     <message>
         <source>Nothing is playing</source>
-        <translation>Keine Wiedergabe</translation>
+        <translation>Toisto pysäytetty</translation>
     </message>
     <message>
         <source>Tap here to play something</source>
-        <translation>Drücken um etwas abzuspielen</translation>
+        <translation>Kosketa tästä soittaaksesi jotain</translation>
     </message>
 </context>
 <context>
     <name>CreatePlaylist</name>
     <message>
         <source>Create Playlist</source>
-        <translation>Wiedergabeliste erstellen</translation>
+        <translation>Luo soittolista</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Peruuta</translation>
     </message>
     <message>
         <source>Name for the new playlist</source>
-        <translation>Name für die neue Wiedergabeliste</translation>
+        <translation>Soittolistan nimi</translation>
     </message>
     <message>
         <source>Public</source>
-        <translation>Öffentlich</translation>
+        <translation>Julkinen</translation>
     </message>
     <message>
         <source>Collaborative</source>
-        <translation>Kollaborativ</translation>
+        <translation>Jaettu</translation>
     </message>
     <message>
         <source>Description (optional)</source>
-        <translation>Beschreibung (optional)</translation>
+        <translation>Kuvaus (valinnainen)</translation>
     </message>
 </context>
 <context>
     <name>Devices</name>
     <message>
         <source>Reload Devices</source>
-        <translation>Aktualisiere Geräteliste</translation>
+        <translation>Päivitä laitteet</translation>
     </message>
     <message>
         <source>Devices</source>
-        <translation>Geräte</translation>
+        <translation>Laitteet</translation>
     </message>
     <message>
         <source>Unknown Name</source>
-        <translation>Unbekannter Name</translation>
+        <translation>Tuntematon nimi</translation>
     </message>
     <message>
         <source>active</source>
-        <translation>aktiv</translation>
+        <translation>aktiivinen</translation>
     </message>
     <message>
         <source>inactive</source>
-        <translation>inaktiv</translation>
+        <translation>Ei aktiivinen</translation>
     </message>
     <message>
         <source>restricted</source>
-        <translation>eingeschränkt</translation>
+        <translation>rajoitettu</translation>
     </message>
     <message>
         <source>unrestricted</source>
-        <translation>uneingeschränkt</translation>
+        <translation>rajoittamaton</translation>
     </message>
     <message>
         <source>Set as Current</source>
-        <translation>Als aktuelles Gerät einstellen</translation>
+        <translation>Aseta nykyiseksi</translation>
     </message>
     <message>
         <source>Nothing Devices found</source>
-        <translation>Keine Geräte gefunden</translation>
+        <translation>Ei laitteita</translation>
     </message>
     <message>
         <source>Register Librespot Credentials</source>
-        <translation>Librespot Anmeldedaten eintragen</translation>
+        <translation>Rekisteröi Librespot tunnukset</translation>
     </message>
     <message>
         <source>Login</source>
-        <translation>Anmelden</translation>
+        <translation>Kirjaudu</translation>
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>Token aktualisieren</translation>
+        <translation>Päivitä kirjautumistiedot</translation>
     </message>
     <message>
         <source>Connect using Authorization Blob</source>
-        <translation>Mittels Autorisierungs-Blob verbinden</translation>
+        <translation>Yhdistä käyttäen valtuutusta</translation>
     </message>
     <message>
         <source>Stop Librespot</source>
-        <translation>Stoppe Librespot</translation>
+        <translation>Pysäytä Librespot</translation>
     </message>
     <message>
         <source>Start Librespot</source>
-        <translation>Starte Librespot</translation>
+        <translation>Käynnistä Librespot</translation>
     </message>
 </context>
 <context>
     <name>GenreMood</name>
     <message>
         <source>Genres &amp; Moods</source>
-        <translation>Genres &amp; Stimmungen</translation>
+        <translation>Genret &amp; Tunnelmat</translation>
     </message>
     <message>
         <source>No Genres or Moods found</source>
-        <translation>Keine Genres oder Stimmungen gefunden</translation>
+        <translation>Genrejä ta Tunnnelmia ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>GenreMoodPlaylist</name>
     <message>
         <source>No Playlists found</source>
-        <translation>Keine Wiedergabelisten gefunden</translation>
+        <translation>Soittolistoja ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>History</name>
     <message>
         <source>History</source>
-        <translation>Verlauf</translation>
+        <translation>Historia</translation>
     </message>
     <message>
         <source>Clear History</source>
-        <translation>Lösche Verlauf</translation>
+        <translation>Poista historia</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation>Nichts gefunden</translation>
+        <translation>Ei tuloksia</translation>
     </message>
 </context>
 <context>
     <name>Librespot</name>
     <message>
         <source>Librespot seems not available</source>
-        <translation>Librespot scheint nicht verfügbar zu sein</translation>
+        <translation>Librespot ei ole saatavilla</translation>
     </message>
     <message>
         <source>Failed to register credentials for Librespot</source>
-        <translation>Fehler bei Registrierung der Anmeldedaten für Librespot</translation>
+        <translation>Tunnusten rekisteröinti Librespotia varten epäonnistui</translation>
     </message>
     <message>
         <source>Registered credentials for Librespot</source>
-        <translation>Registrierte Anmeldedaten für Librespot</translation>
+        <translation>Librespot tunnukset rekisteröity</translation>
     </message>
     <message>
         <source>Enter Spotify credentials</source>
-        <translation>Spotify Anmeldedaten angeben</translation>
+        <translation>Syötä Spotify tunnukset</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Peruuta</translation>
     </message>
     <message>
         <source>Username</source>
-        <translation>Benutzername</translation>
+        <translation>Käyttäjänimi</translation>
     </message>
     <message>
         <source>Librespot service stopped. Playing is paused.</source>
-        <translation type="unfinished"></translation>
+        <translation>Librespot palvelu pysäytetty. Toisto on pysäytetty.</translation>
     </message>
 </context>
 <context>
     <name>MultiItemPicker</name>
     <message>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Peruuta</translation>
     </message>
 </context>
 <context>
     <name>MyStuff</name>
     <message>
         <source>My </source>
-        <translation>Meine </translation>
+        <translation>Minun </translation>
     </message>
     <message>
         <source>Saved Albums</source>
-        <translation>Gespeicherten Alben</translation>
+        <translation>Tallennetut albumit</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation>Wiedergabelisten</translation>
+        <translation>Soittolistat</translation>
     </message>
     <message>
         <source>Recently Played</source>
-        <translation>Zuletzt Gespielten Titel</translation>
+        <translation>Viimeksi soitetut</translation>
     </message>
     <message>
         <source>Saved Tracks</source>
-        <translation>Gespeicherten Titel</translation>
+        <translation>Tallennetut kappaleet</translation>
     </message>
     <message>
         <source>Followed Artists</source>
-        <translation>Folgenden Künstler</translation>
+        <translation>Seuratut artistit</translation>
     </message>
     <message>
         <source>Unfollow</source>
-        <translation>Entfolgen</translation>
+        <translation>Lopeta seuraus</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation>Nichts gefunden</translation>
+        <translation>Mitään ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>NavigationMenu</name>
     <message>
         <source>My Stuff</source>
-        <translation>Meine Musik</translation>
+        <translation>Oma kirjasto</translation>
     </message>
     <message>
         <source>Top Stuff</source>
-        <translation>Top Titel</translation>
+        <translation>Suositut</translation>
     </message>
     <message>
         <source>Genre &amp; Mood</source>
-        <translation>Genre &amp; Stimmung</translation>
+        <translation>Genret &amp; Tunnelmat</translation>
     </message>
     <message>
         <source>History</source>
-        <translation>Verlauf</translation>
+        <translation>Historia</translation>
     </message>
     <message>
         <source>Recommended</source>
-        <translation>Empfohlen</translation>
+        <translation>Suositukset</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Suche</translation>
+        <translation>Haku</translation>
     </message>
     <message>
         <source>Devices</source>
-        <translation>Geräte</translation>
+        <translation>Laitteet</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Asetukset</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>Über</translation>
+        <translation>Tietoja</translation>
     </message>
     <message>
         <source>Menu</source>
-        <translation>Menü</translation>
+        <translation>Valikko</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Hilfe</translation>
+        <translation>Ohjeet</translation>
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation>Neu &amp; Vorgestellt</translation>
+        <translation>Uudet &amp; Kiinnostavat</translation>
     </message>
 </context>
 <context>
     <name>NavigationMenuDialog</name>
     <message>
         <source>Playing</source>
-        <translation>Spiele</translation>
+        <translation>Nyt soitossa</translation>
     </message>
     <message>
         <source>My Stuff</source>
-        <translation>Meine Musik</translation>
+        <translation>Oma kirjasto</translation>
     </message>
     <message>
         <source>Top Stuff</source>
-        <translation>Top Titel</translation>
+        <translation>Suositut</translation>
     </message>
     <message>
         <source>Genre &amp; Mood</source>
-        <translation>Genre &amp; Stimmung</translation>
+        <translation>Genret &amp; Tunnelmat</translation>
     </message>
     <message>
         <source>History</source>
-        <translation>Verlauf</translation>
+        <translation>Historia</translation>
     </message>
     <message>
         <source>Recommended</source>
-        <translation>Empfohlen</translation>
+        <translation>Suositukset</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Suche</translation>
+        <translation>Haku</translation>
     </message>
     <message>
         <source>Devices</source>
-        <translation>Geräte</translation>
+        <translation>Laitteet</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Asetukset</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>Über</translation>
+        <translation>Tietoja</translation>
     </message>
     <message>
         <source>Menu</source>
-        <translation>Menü</translation>
+        <translation>Valikko</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Hilfe</translation>
+        <translation>Ohjeet</translation>
     </message>
     <message>
         <source>New &amp; Featured</source>
-        <translation>Neu &amp; Vorgestellt</translation>
+        <translation>Uudet &amp; Kiinnostavat</translation>
     </message>
 </context>
 <context>
     <name>NewAndFeatured</name>
     <message>
-        <source></source>
-        <translation></translation>
+        <source/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>New Releases</source>
-        <translation>Neue Veröffentlichungen</translation>
+        <translation>Uudet julkaisut</translation>
     </message>
     <message>
         <source>Featured</source>
-        <translation>Vorgestellt</translation>
+        <translation>Kiinnostavat</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation>Nichts gefunden</translation>
+        <translation>Mitään ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>NewRelease</name>
     <message>
-        <source></source>
-        <translation></translation>
+        <source/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>PlaybackState</name>
     <message>
         <source>Simple Spotify Controller</source>
-        <translation>Einfache Spotifysteuerung</translation>
+        <translation>Yksinkertainen Spotify-ohjain</translation>
     </message>
     <message>
         <source>no artist known</source>
-        <translation>Kein Künstler bekannt</translation>
+        <translation>ei tunnettua artistia</translation>
     </message>
 </context>
 <context>
     <name>Playing</name>
     <message>
         <source>Playing</source>
-        <translation>Spiele</translation>
+        <translation>Nyt soitossa</translation>
     </message>
     <message>
         <source>View Album</source>
-        <translation>Zeige Album</translation>
+        <translation>Näytä albumi</translation>
     </message>
     <message>
         <source>View Artist</source>
-        <translation>Zeige Künstler</translation>
+        <translation>Näytä artisti</translation>
     </message>
     <message>
         <source>View Playlist</source>
-        <translation>Zeige Wiedergabeliste</translation>
+        <translation>Näytä soittolista</translation>
     </message>
     <message>
         <source>no artist known</source>
-        <translation>kein Künstler bekannt</translation>
+        <translation>ei tunnettua artistia</translation>
     </message>
     <message>
         <source>no genre known</source>
-        <translation>kein Genre bekannt</translation>
+        <translation>ei tunnettua genreä</translation>
     </message>
     <message>
         <source>tracks</source>
-        <translation>Titel</translation>
+        <translation>kappaleet</translation>
     </message>
     <message>
         <source>track</source>
-        <translation>Titel</translation>
+        <translation>kappale</translation>
     </message>
     <message>
         <source>followers</source>
-        <translation>Follower</translation>
+        <translation>seuraajat</translation>
     </message>
     <message>
         <source>by</source>
-        <translation>von</translation>
+        <translation>tekijä</translation>
     </message>
     <message>
         <source>public</source>
-        <translation>Öffentlich</translation>
+        <translation>julkinen</translation>
     </message>
     <message>
         <source>collaborative</source>
-        <translation>Kollaborativ</translation>
+        <translation>jaettu</translation>
     </message>
     <message>
         <source>Scroll to current Track</source>
-        <translation>Gehe zum aktuellen Titel</translation>
+        <translation>Siirry nykyiseen kappaleeseen</translation>
     </message>
 </context>
 <context>
     <name>Playlist</name>
     <message>
         <source>Playlist</source>
-        <translation>Wiedergabeliste</translation>
+        <translation>Soittolista</translation>
     </message>
     <message>
         <source>Remove from Playlist</source>
-        <translation>Lösche von aktueller Wiedergabeliste</translation>
+        <translation>Poista soittolistalta</translation>
     </message>
     <message>
         <source>Add to another Playlist</source>
-        <translation>Hinzufügen zur aktuellen Wiedergabeliste</translation>
+        <translation>Lisää toiseen soittolistaan</translation>
     </message>
     <message>
         <source>No tracks found</source>
-        <translation>Keine Titel gefunden</translation>
+        <translation>Kappaleita ei löytynyt</translation>
     </message>
     <message>
         <source>tracks</source>
-        <translation>Titel</translation>
+        <translation>kappale(tta)</translation>
     </message>
     <message>
         <source>by</source>
-        <translation>von</translation>
+        <translation>tekijä</translation>
     </message>
     <message>
         <source>followers</source>
-        <translation>Follower</translation>
+        <translation>seuraajat</translation>
     </message>
     <message>
         <source>public</source>
-        <translation>Öffentlich</translation>
+        <translation>julkinen</translation>
     </message>
     <message>
         <source>collaborative</source>
-        <translation>Kollaborativ</translation>
+        <translation>jaettu</translation>
     </message>
 </context>
 <context>
     <name>PlaylistPicker</name>
     <message>
         <source>OK</source>
-        <translation>Ok</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation>Peruuta</translation>
     </message>
     <message>
         <source>Create New Playlist</source>
-        <translation>Neue Wiedergabeliste erstellen</translation>
+        <translation>Luo uusi soittolista</translation>
     </message>
 </context>
 <context>
     <name>QueueController</name>
     <message>
         <source>Playlist used as a queue by Hutspot</source>
-        <translation>Wiedergabeliste wird von Hutspot als Warteschlange verwendet</translation>
+        <translation>Hutspotin käyttämä soittolista jonolle</translation>
     </message>
     <message>
         <source>Hutspot wants to create playlist:&lt;br&gt;&lt;br&gt;&lt;b&gt;</source>
-        <translation>Hutspot möchte eine Wiedergabeliste erstellen:&lt;br&gt;&lt;br&gt;&lt;b&gt;</translation>
+        <translation>Hutspot haluaa luoda soittolistan:&lt;br&gt;&lt;br&gt;&lt;b&gt;</translation>
     </message>
     <message>
         <source>which will be used as it&apos;s player queue. Is that Ok?</source>
-        <translation>welche als Abspielwarteschlange verwendet wird. Ist dies okay?</translation>
+        <translation>jota käytetään soittojonona. Onko tämä Ok?</translation>
     </message>
     <message>
         <source>Failed to add Track to the Queue</source>
-        <translation>Titel konnte nicht zur Warteschlange hinzugefügt werden</translation>
+        <translation>Kappaleen lisääminen jonoon epäonnistui</translation>
     </message>
     <message>
         <source>Failed to find Playlist for Queue</source>
-        <translation>Wiedergabeliste nicht für die Warteschlange gefunden</translation>
+        <translation>Soittolistajonoa ei löytynyt</translation>
     </message>
 </context>
 <context>
     <name>Recommended</name>
     <message>
         <source>Reload</source>
-        <translation>Neu laden</translation>
+        <translation>Virkistä</translation>
     </message>
     <message>
         <source>Play as Playlist</source>
-        <translation>Als Wiedergabeliste abspielen</translation>
+        <translation>Toista soittolistana</translation>
     </message>
     <message>
         <source>Genres</source>
-        <translation>Genres</translation>
+        <translation>Genret</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nichts</translation>
+        <translation>Ei mitään</translation>
     </message>
     <message>
         <source>Spotify allows max. 5 seeds</source>
-        <translation>Spotify erlaubt max. 5 Attribute</translation>
+        <translation>Spotify sallii max. 5 lähdettä</translation>
     </message>
     <message>
         <source>No Recommendations found</source>
-        <translation>Keine Empfehlungen gefunden</translation>
+        <translation>Suosituksia ei löytyny</translation>
     </message>
     <message>
         <source>Energy</source>
-        <translation>Energie</translation>
+        <translation>Energia</translation>
     </message>
     <message>
         <source>Danceability</source>
-        <translation>Tanzbar</translation>
+        <translation>Tanssittavuus</translation>
     </message>
     <message>
         <source>Instrumentalness</source>
-        <translation>Instrumental</translation>
+        <translation>Instrumentaalisuus</translation>
     </message>
     <message>
         <source>Speechiness</source>
-        <translation>Sprache</translation>
+        <translation>Puheisuus</translation>
     </message>
     <message>
         <source>Acousticness</source>
-        <translation>Akustik</translation>
+        <translation>Akustisuus</translation>
     </message>
     <message>
         <source>Positiveness</source>
-        <translation>Positiv</translation>
+        <translation>Positiivisuus</translation>
     </message>
     <message>
         <source>Enter Seeds/Attributes and Reload</source>
-        <translation>Gebe Anfragen/Attribute ein und lade neu</translation>
+        <translation>Syötä tiedot ja virkistä</translation>
     </message>
     <message>
         <source>Recommended </source>
-        <translation>Empfohlen </translation>
+        <translation>Suositukset</translation>
     </message>
     <message>
         <source>Liveness</source>
-        <translation>Lebendig</translation>
+        <translation>Livemäisyys</translation>
     </message>
     <message>
         <source>Popularity</source>
-        <translation>Populär</translation>
+        <translation>Suosio</translation>
     </message>
     <message>
         <source>Genres+Attributes</source>
-        <translation>Genre+Attribute</translation>
+        <translation>Genret+attribuutit</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation>Titel</translation>
+        <translation>Raidat</translation>
     </message>
     <message>
         <source>Tracks+Attributes</source>
-        <translation>Titel+Attribute</translation>
+        <translation>Kappaleet+attribuutit</translation>
     </message>
     <message>
         <source>Seed Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaa kappaleita</translation>
     </message>
     <message>
         <source>Recommended Tracks</source>
-        <translation>Empfohlene Titel</translation>
+        <translation>Suositut kappaleet</translation>
     </message>
 </context>
 <context>
     <name>Search</name>
     <message>
         <source>Albums</source>
-        <translation>Alben</translation>
+        <translation>Albumeita</translation>
     </message>
     <message>
         <source>Artists</source>
-        <translation>Künstler</translation>
+        <translation>Artisteja</translation>
     </message>
     <message>
         <source>Playlists</source>
-        <translation>Wiedergabelisten</translation>
+        <translation>Soittolistoja</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation>Titel</translation>
+        <translation>Kappaleita</translation>
     </message>
     <message>
         <source>Nothing found</source>
-        <translation>Nichts gefunden</translation>
+        <translation>Ei tuloksia</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation>Suche</translation>
+        <translation>Hae</translation>
     </message>
     <message>
         <source>Search text</source>
-        <translation>Suchtext</translation>
+        <translation>Hae...</translation>
     </message>
     <message>
         <source>Search History</source>
-        <translation>Suchverlauf</translation>
+        <translation>Hakuhistoria</translation>
     </message>
     <message>
         <source>Please confirm Clearing the Search History</source>
-        <translation>Bitte bestätige das Löschen des Suchverlaufs</translation>
+        <translation>Vahvista hakuhistorian tyhjennys</translation>
     </message>
     <message>
         <source>Search Failed</source>
-        <translation>Suche fehlgeschlagen</translation>
+        <translation>Haku epäonnistui</translation>
     </message>
     <message>
         <source>Search </source>
-        <translation>Suchen </translation>
+        <translation>Hae</translation>
     </message>
     <message>
         <source>Clear Current Text</source>
-        <translation>Aktuellen Text löschen</translation>
+        <translation>Tyhjennä teksti</translation>
     </message>
     <message>
         <source>Select Recently Used Query</source>
-        <translation>Zuletzt ausgewählte Suche auswählen</translation>
+        <translation>Valitse viimeisin haku</translation>
     </message>
     <message>
         <source>Clear Recently Used Queries</source>
-        <translation>Zuletzt verwendeten Suchanfragen löschen</translation>
+        <translation>Tyhjennä viimeisimmät haut</translation>
     </message>
 </context>
 <context>
     <name>SearchResultContextMenu</name>
     <message>
         <source>Play</source>
-        <translation>Abspielen</translation>
+        <translation>Toista</translation>
     </message>
     <message>
         <source>View</source>
-        <translation>Ansehen</translation>
+        <translation>Näytä</translation>
     </message>
     <message>
         <source>View Album</source>
-        <translation>Album ansehen</translation>
+        <translation>Näytä albumi</translation>
     </message>
     <message>
         <source>Add to Playlist</source>
-        <translation>Zur Wiedergabeliste hinzufügen</translation>
+        <translation>Lisää soittolistaan</translation>
     </message>
     <message>
         <source>Use as Seeds for Recommendations</source>
-        <translation>Als Seed für Empfehlungen verwenden</translation>
+        <translation>Käytä suositusten lähteenä</translation>
     </message>
 </context>
 <context>
     <name>SearchResultListItem</name>
     <message>
         <source>No Name</source>
-        <translation>Kein Name</translation>
+        <translation>Tuntematon</translation>
     </message>
     <message>
         <source>no artist known</source>
-        <translation>Kein Künstler bekannt</translation>
+        <translation>Ei tunnettua artistia</translation>
     </message>
     <message>
         <source>no genre known</source>
-        <translation>Kein Genre bekannt</translation>
+        <translation>Ei tunnettua genreä</translation>
     </message>
     <message>
         <source>Id</source>
@@ -837,258 +835,254 @@
     </message>
     <message>
         <source>followers</source>
-        <translation>Followers</translation>
+        <translation>seuraajat</translation>
     </message>
     <message>
         <source>tracks</source>
-        <translation>Titel</translation>
+        <translation>kappaleet</translation>
     </message>
     <message>
         <source>played at </source>
-        <translation type="unfinished">gespielt an </translation>
+        <translation>soi laittella </translation>
     </message>
     <message>
         <source>album not specified</source>
-        <translation>Album nicht angegeben</translation>
+        <translation>albumia ei ole määritelty</translation>
     </message>
     <message>
         <source>track</source>
-        <translation type="unfinished">Titel</translation>
+        <translation>kappale</translation>
     </message>
 </context>
 <context>
     <name>Settings</name>
     <message>
         <source>Login</source>
-        <translation>Anmelden</translation>
+        <translation>Kirjaudu</translation>
     </message>
     <message>
         <source>Refresh Token</source>
-        <translation>Token aktualisieren</translation>
+        <translation>Päivitä kirjautumistiedot</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Asetukset</translation>
     </message>
     <message>
         <source>Number of results per request (limit)</source>
-        <translation>Anzahl von Ergebnissen pro Anfrage (Limit)</translation>
+        <translation>Tulosten määrä per pyyntö (raja)</translation>
     </message>
     <message>
         <source>Authorize using Browser</source>
-        <translation>Benutze Browser zur Autorisierung</translation>
+        <translation>Autorisoi selaimella</translation>
     </message>
     <message>
         <source>Use external Browser to login at Spotify</source>
-        <translation>Benutze externen Browser zur Anmeldung bei Spotify</translation>
+        <translation>Käytä ulkoista selainta kirjautuaaksesi Spotifyhin</translation>
     </message>
     <message>
         <source>Start Librespot when launched and stop it on exit</source>
-        <translation>Starte Librespot bei Programmstart und stoppe bei beenden</translation>
+        <translation>Käynnistä ja sulje Librespot sovelluksen kanssa</translation>
     </message>
     <message>
         <source>Running</source>
-        <translation>Läuft</translation>
+        <translation>Käynnissä</translation>
     </message>
     <message>
         <source>Not Running</source>
-        <translation>Läuft nicht</translation>
+        <translation>Ei käynnissä</translation>
     </message>
     <message>
         <source>Hutspot Queue Playlist name</source>
-        <translation>Hutspot Warteschlangenname</translation>
+        <translation>Hutspot soittolistajonon nimi</translation>
     </message>
     <message>
         <source>Confirm Un-Save/Follow</source>
-        <translation>Bestätige löschen/entfolgen</translation>
+        <translation>Vahvista tallennuksen/seurannan poisto</translation>
     </message>
     <message>
         <source>Ask for confirmation for un-save and un-follow</source>
-        <translation>Fragt nach Bestätigung für das Löschen und Entfolgen</translation>
+        <translation>Pyydä vahvistusta seurannan ja tallennuksen lopetuksesta</translation>
     </message>
     <message>
         <source>Navigation Menu Type</source>
-        <translation>Art des Navigationsmenüs</translation>
+        <translation>Navigointivalikon tyyppi</translation>
     </message>
     <message>
         <source>Page with List of Menu Items</source>
-        <translation>Seite mit Liste der Menüeinträge</translation>
+        <translation>Valikkolistasivu</translation>
     </message>
     <message>
         <source>Playing as Attached Page</source>
-        <translation>Abspielseite als angefügte Seite</translation>
+        <translation>Toisto liitettynä sivuna</translation>
     </message>
     <message>
         <source>Have the Playing page as an Attached Page (available on the Right)</source>
-        <translation>Habe die Abspielseite als angefügte Seite (auf der rechten Seite verfügbar)</translation>
+        <translation>Nyt soitossa -sivu liitteenä (saatavilla oikealla)</translation>
     </message>
     <message>
         <source>Maximum size of Search History</source>
-        <translation>Maximale Größe des Suchverlaufs</translation>
+        <translation>Hakuhistorian suurin koko</translation>
     </message>
     <message>
         <source>Control Librespot</source>
-        <translation>Librespot steuern</translation>
+        <translation>Kontrolloi Librespotia</translation>
     </message>
     <message>
         <source>Cannot start Librespot</source>
-        <translation>Kann Librespot nicht starten</translation>
+        <translation>Librespotia ei voitu käynnistää</translation>
     </message>
     <message>
         <source>Stop Librespot</source>
-        <translation>Stoppe Librespot</translation>
+        <translation>Pysäytä Librespot</translation>
     </message>
     <message>
         <source>Start Librespot</source>
-        <translation>Starte Librespot</translation>
+        <translation>Käynnistä Librespot</translation>
     </message>
     <message>
         <source>Query for Market</source>
-        <translation>Inhaltsanfragen nach Verfügbarkeit filtern</translation>
+        <translation>Kysele markkinoita</translation>
     </message>
     <message>
         <source>Show only content playable in the country associated with the user account</source>
-        <translation>Zeigt nur Inhalt, welcher in dem Land welches mit dem Benutzerkonto verbunden ist, verfügbar ist</translation>
+        <translation>Soita vain sisältöä joka on saatavilla käyttäjätilin kohdemaassa</translation>
     </message>
     <message>
         <source>Menu Page attached to Playing Page</source>
-        <translation>Menüseite an Abspielseite anfügen</translation>
+        <translation>Valikko liitettynä Nyt soitossa -sivuun</translation>
     </message>
     <message>
         <source>Docked Panel with all Icons</source>
-        <translation>Angedocktes Panel mit allen Symbolen</translation>
+        <translation>Telakoitu paneeli kuvakkeilla</translation>
     </message>
     <message>
         <source>Docked Panel with Player Controls and Hamburger button</source>
-        <translation>Angedocktes Panel mit Abspielkontrolle und Hamburgerknopf</translation>
+        <translation>Telakoitu paneli soittimen ohjaimilla ja hampurilaisvalikolla</translation>
     </message>
     <message>
         <source>Librespot is not available</source>
-        <translation>Librespot ist nicht verfügbar</translation>
+        <translation>Librespot ei ole tavoitettavissa</translation>
     </message>
     <message>
         <source>Enable Device Discovery</source>
-        <translation>Aktiviere Geräteentdeckung</translation>
+        <translation>Salli laitteiden löytäminen</translation>
     </message>
     <message>
         <source>Discover Spotify Connect Devices on your network.</source>
-        <translation>Entdecke Spotify Connect Geräte in Ihrem Netzwerk.</translation>
+        <translation>Löydä Spotify Connect laitteita verkostasi.</translation>
     </message>
     <message>
         <source>Register Librespot Credentials</source>
-        <translation>Librespot Anmeldedaten eintragen</translation>
+        <translation>Rekisteröi Librespot tunnukset</translation>
     </message>
     <message>
         <source>Show Devices page at startup</source>
-        <translation>Zeige Geräteliste beim starten</translation>
+        <translation>Näytä Laitteet -sivu aloituksessa</translation>
     </message>
     <message>
         <source>So you can watch the devices become available</source>
-        <translation>damit Sie sehen können das die Gertäte verfügbar werden</translation>
+        <translation>Näin näet kun laitteet tulevat saataville</translation>
     </message>
     <message>
         <source>Detect network connect/disconnect and act on it.</source>
-        <translation>Erkenne Netzwerk-verbindungen/trennung und handle entsprechend.</translation>
+        <translation>Tunnista verkkoyhteyden tila ja reagoi siihen.</translation>
     </message>
     <message>
         <source>Handle Network Connection</source>
-        <translation>Netzwerkverbindungen handhaben</translation>
+        <translation>Hallitse verkkoyhteyttä</translation>
     </message>
     <message>
         <source>ControlPanel Show Delay</source>
-        <translation>Kontrollpanel anzeigen nach Verzögerung</translation>
+        <translation>Ohjauspaneelin näytön viive</translation>
     </message>
     <message>
         <source>Country Code (2 characters)</source>
-        <translation>Ländercode (2 Zeichen)</translation>
-    </message>
-    <message>
-        <source>Maximum length of Sorted Lists.</source>
-        <translation type="unfinished"></translation>
+        <translation>Maakoodi (2 merkkiä)</translation>
     </message>
 </context>
 <context>
     <name>SpotifyController</name>
     <message>
         <source>Play Failed</source>
-        <translation>Abspielen fehlgeschlagen</translation>
+        <translation>Toisto epäonnistui</translation>
     </message>
     <message>
         <source>Play failed</source>
-        <translation>Abspielen fehlgeschlagen</translation>
+        <translation>Toisto epäonnistui</translation>
     </message>
     <message>
         <source>No device selected</source>
-        <translation>Kein Gerät ausgewählt</translation>
+        <translation>Ei valittua laitetta</translation>
     </message>
 </context>
 <context>
     <name>TopStuff</name>
     <message>
         <source>Nothing found</source>
-        <translation>Nichts gefunden</translation>
+        <translation>Ei tuloksia</translation>
     </message>
     <message>
         <source>Top </source>
-        <translation>Top </translation>
+        <translation>Suosituimmat</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation>Titel</translation>
+        <translation>Kappaleet</translation>
     </message>
     <message>
         <source>Artists</source>
-        <translation>Künstler</translation>
+        <translation>Artistit</translation>
     </message>
 </context>
 <context>
     <name>WebAuth</name>
     <message>
         <source>Authorization</source>
-        <translation>Autorisierung</translation>
+        <translation>Valtuutus</translation>
     </message>
 </context>
 <context>
     <name>hutspot</name>
     <message>
         <source>connecting</source>
-        <translation>verbinde</translation>
+        <translation>yhdistää</translation>
     </message>
     <message>
         <source>Disconnected</source>
-        <translation>getrennt</translation>
+        <translation>Ei yhdistetty</translation>
     </message>
     <message>
         <source>Connected</source>
-        <translation>verbunden</translation>
+        <translation>Yhdistetty</translation>
     </message>
     <message>
         <source>Failed to Refresh Authorization Token</source>
-        <translation>Konnte Autorisierungs-Token nicht erneuern</translation>
+        <translation>Kirjautumistietojen päivtys epäonnistui</translation>
     </message>
     <message>
         <source>Edit Playlist Details</source>
-        <translation>Bearbeite Wiedergabelistendetails</translation>
+        <translation>Muokkaa soittolistan tietoja</translation>
     </message>
     <message>
         <source>Select a Playlist</source>
-        <translation>Wiedergabeliste auswählen</translation>
+        <translation>Valitse soittolista</translation>
     </message>
     <message>
         <source>View an Artist</source>
-        <translation>Einen Künstler anzeigen</translation>
+        <translation>Näytä artisti</translation>
     </message>
     <message>
         <source>Lost Network Connection. Quit?</source>
-        <translation>Netzwerkverbindung verloren. Beenden?</translation>
+        <translation>Verkkoyhteys katkesi. Lopeta?</translation>
     </message>
     <message>
         <source>Failed to transfer to</source>
-        <translation type="unfinished"></translation>
+        <translation>Siirto epäonnistui kohteeseen</translation>
     </message>
     <message>
         <source>There seems to be no network connection. Quit?</source>
-        <translation>Es scheint keine Netzwerkverbindung zu bestehen. Beenden?</translation>
+        <translation>Verkkoyhteyttä ei havaittu. Lopeta?</translation>
     </message>
 </context>
 </TS>

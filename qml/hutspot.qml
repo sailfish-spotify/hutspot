@@ -93,7 +93,7 @@ ApplicationWindow {
 
     property string connectionText: qsTr("connecting")
     property alias searchLimit: searchLimit
-
+    property alias sorted_list_limit: sorted_list_limit
     property alias selected_search_targets: selected_search_targets
     property alias auth_using_browser: auth_using_browser
     property alias start_stop_librespot: start_stop_librespot
@@ -1235,6 +1235,12 @@ ApplicationWindow {
         id: searchLimit
         key: "/hutspot/search_limit"
         defaultValue: 50
+    }
+
+    ConfigurationValue {
+        id: sorted_list_limit
+        key: "/hutspot/sorted_list_limit"
+        defaultValue: 1000
     }
 
     ConfigurationValue {

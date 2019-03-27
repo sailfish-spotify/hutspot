@@ -30,6 +30,8 @@ Page {
 
     SilicaListView {
         id: listView
+        property alias sectionDelegate: sectionDelegate
+
         model: searchModel
 
         width: parent.width
@@ -202,6 +204,34 @@ Page {
 
     function loadData() {
         var i
+
+        // if total too high disable sorting
+        if(searchModel.count == 0) {
+            if(cursorHelper.total <= app.sorted_list_limit.value) {
+                searchModel.sortKey = _itemClass != 2 ? "name" : ""
+                listView.section.delegate = listView.sectionDelegate
+            } else {
+                searchModel.sortKey = ""
+                listView.section.delegate = null
+            }
+        }
+
+        // more to load?
+        var count = searchModel.count
+        if(savedAlbums)
+            count += savedAlbums.items.length
+        else if(userPlaylists)
+            count += userPlaylists.items.length
+        else if(recentlyPlayedTracks)
+            count += recentlyPlayedTracks.items.length
+        else if(savedTracks)
+            count += savedTracks.items.length
+        else if(followedArtists)
+            count += followedArtists.artists.items
+        if(count < cursorHelper.total)
+            append()
+
+        // add data
         if(savedAlbums)
             for(i=0;i<savedAlbums.items.length;i++)
                 addData({type: 0, stype: 0,
