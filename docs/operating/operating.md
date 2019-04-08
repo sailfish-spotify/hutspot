@@ -35,6 +35,8 @@ Hutspot loads items per set using a configured number (max. 50). When there are 
 
 Various actions can triggered using the context menu (long press) of a List Item.
 
+Lists that need to be sorted in the app, for example Favorite Artists, need to be loaded in full. As this can result in large amounts of downloaded data the length above which the list will not be sorted anymore can be configured.
+
 ### Player Queue
 The Spotify Web-API does not support a player queue. Therefore Hutspot uses it's own special queue playlist. This special *Queue Playlist* is used for :
 

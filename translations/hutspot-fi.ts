@@ -853,7 +853,7 @@
     </message>
     <message>
         <source>track</source>
-        <translation type="unfinished">kappale</translation>
+        <translation>kappale</translation>
     </message>
 </context>
 <context>
@@ -1001,6 +1001,10 @@
     <message>
         <source>Country Code (2 characters)</source>
         <translation>Maakoodi (2 merkkiä)</translation>
+    </message>
+    <message>
+        <source>Maximum length of Sorted Lists.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

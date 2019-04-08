@@ -1002,6 +1002,10 @@
         <source>Country Code (2 characters)</source>
         <translation>國家代碼(2 個字符)</translation>
     </message>
+    <message>
+        <source>Maximum length of Sorted Lists.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SpotifyController</name>

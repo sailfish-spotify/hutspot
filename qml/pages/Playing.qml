@@ -737,6 +737,7 @@ Page {
                         break
                     default:
                         pageHeaderDescription = ""
+                        console.log("onItemChanged unknown context: " + app.controller.playbackState.context.type)
                         break
                 }
             } else {
