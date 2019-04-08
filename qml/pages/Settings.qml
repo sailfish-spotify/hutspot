@@ -64,6 +64,15 @@ Page {
                 validator: IntValidator {bottom: 1; top: 50;}
             }
 
+            TextField {
+                id: sortedListLimit
+                label: qsTr("Maximum length of Sorted Lists.")
+                inputMethodHints: Qt.ImhDigitsOnly
+                width: parent.width
+                onTextChanged: app.sorted_list_limit.value = Math.floor(text)
+                validator: IntValidator {bottom: 1;}
+            }
+
             TextSwitch {
                 id: enable_connect_discovery
                 text: qsTr("Enable Device Discovery")
@@ -257,6 +266,7 @@ Page {
         if (status === PageStatus.Activating) {
             searchLimit.text = app.searchLimit.value
             searchHistoryLimit.text = app.search_history_max_size.value
+            sortedListLimit.text = app.sorted_list_limit.value
             navigation_menu_type.currentIndex = app.navigation_menu_type.value
             hutspotQueueName.text = app.hutspot_queue_playlist_name.value
             delayPanelSlider.value = app.controlpanel_show_delay.value
