@@ -60,7 +60,7 @@ Page {
             x: Theme.paddingMedium
             contentHeight: Theme.itemSizeLarge
 
-            Image {
+            Image { // ToDo: remove this
                 id: categoryIcon
                 width: Theme.iconSizeLarge
                 height: width
