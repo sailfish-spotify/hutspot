@@ -148,6 +148,7 @@ HEADERS += \
 
 INCLUDEPATH += src/qmdnsengine
 
-QMAKE_LFLAGS += -lssl -lcrypto
+#QMAKE_LFLAGS += -lssl -lcrypto
+LIBS += -lssl -lcrypto
 
 CONFIG += console
