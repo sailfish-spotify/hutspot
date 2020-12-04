@@ -1252,7 +1252,7 @@ ApplicationWindow {
     ConfigurationValue {
             id: auth_using_browser
             key: "/hutspot/auth_using_browser"
-            defaultValue: false
+            defaultValue: true
     }
 
     ConfigurationValue {
