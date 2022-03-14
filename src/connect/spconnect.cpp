@@ -3,6 +3,8 @@
 #include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
+#include <openssl/dh.h>
+#include <openssl/modes.h>
 
 #include <QCryptographicHash>
 #include <QDebug>
@@ -28,9 +30,15 @@ void read_blob_bytes(QByteArray &blob, unsigned int * pos, QByteArray &data);
 
 SPConnect::SPConnect(QObject *parent) : QObject(parent) {
     mdnsService = nullptr;
+    const BIGNUM  * pub_key=BN_new();
 
     // setup dh keys
     dh = get_dh();
+    // Librespot uses 95 byte keys
+    if(1 != DH_set_length(dh, 760)) {
+        qDebug() << "Failed to set length of private key";
+        return;
+    }
     if(1 != DH_generate_key(dh)) {
         qDebug() << "Failed to generate DH key pair";
         return;
@@ -38,14 +46,10 @@ SPConnect::SPConnect(QObject *parent) : QObject(parent) {
 
     // Librespot uses 95 byte keys, openssl generated a 96 byte one
     // so reduce by one byte
-    BN_rshift(dh->priv_key, dh->priv_key, 8);
-
-    // generate public key
-    powm(dh->g, dh->priv_key, dh->p, dh->pub_key);
-
-    int publicKeyLength = BN_num_bytes(dh->pub_key);
+    // BN_rshift(dh->priv_key, dh->priv_key, 8);
+    int publicKeyLength = BN_num_bytes(pub_key);
     unsigned char * publicKeyBytes = (unsigned char *)malloc(publicKeyLength);
-    BN_bn2bin(dh->pub_key, publicKeyBytes);
+    BN_bn2bin(pub_key, publicKeyBytes);
     QByteArray publicKey = QByteArray((const char*)publicKeyBytes, publicKeyLength);
     publicKey64 = publicKey.toBase64();
     //qDebug() << "publicKey: " << publicKey64;
@@ -135,9 +139,21 @@ QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
     // create shared_key
     BIGNUM * clientKeyBN;
     BIGNUM * sharedKeyBN = BN_new();
+    const BIGNUM * priv_key;
+    const BIGNUM * pub_key;
+    const BIGNUM * p;
+    BIGNUM * priv_keyd = BN_new();
+    BIGNUM * pub_keyd = BN_new();
+    BIGNUM * pd = BN_new();
+
+    DH_get0_pqg(dh, &p, NULL, NULL);
+    DH_get0_key(dh, &pub_key, &priv_key);
+    priv_keyd = BN_dup(priv_key);
+    pub_keyd = BN_dup(pub_key);
+    pd = BN_dup(p);
     QByteArray decClientKey = QByteArray::fromBase64(clientKey.toUtf8());
     clientKeyBN = BN_bin2bn((unsigned char *)decClientKey.data(), decClientKey.length(), nullptr);
-    powm(clientKeyBN, dh->priv_key, dh->p, sharedKeyBN);
+    powm(clientKeyBN, priv_keyd, pd, sharedKeyBN);
     unsigned char * sharedKeyBytes = (unsigned char *)malloc(BN_num_bytes(sharedKeyBN));
     BN_bn2bin(sharedKeyBN, sharedKeyBytes);
     QByteArray sharedKey = QByteArray((const char*)sharedKeyBytes, BN_num_bytes(sharedKeyBN));
@@ -170,13 +186,14 @@ QString SPConnect::createBlobToSend(QString deviceName, QString clientKey) {
     memset(ecount,0,sizeof(ecount));
     len = encrypted_blob64.length();
     unsigned char * encrypted_part = new unsigned char[len];
-    AES_ctr128_encrypt((const unsigned char *)encrypted_blob64.data(),
+    CRYPTO_ctr128_encrypt((const unsigned char *)encrypted_blob64.data(),
                         encrypted_part,
                         len,
                         &aes_key,
                         iv,
                         ecount,
-                        &num);
+                        &num,
+                        (block128_f)AES_encrypt);
     QByteArray encrypted_blob_part  = QByteArray((const char*)encrypted_part, len);
     //qDebug() << "  encrypted_blob_part: " << encrypted_blob_part.toBase64();
 
@@ -290,11 +307,16 @@ DH * get_dh() {
         0x02,
         };
     DH *dh;
+    BIGNUM * p;
+    BIGNUM * g;
+
+    p = BN_new();
+    g = BN_new();
 
     if ((dh=DH_new()) == NULL) return(NULL);
-    dh->p=BN_bin2bn(dh1024_p,sizeof(dh1024_p),NULL);
-    dh->g=BN_bin2bn(dh1024_g,sizeof(dh1024_g),NULL);
-    if ((dh->p == NULL) || (dh->g == NULL))
+    p=BN_bin2bn(dh1024_p,sizeof(dh1024_p),NULL);
+    g=BN_bin2bn(dh1024_g,sizeof(dh1024_g),NULL);
+    if (1!=DH_set0_pqg(dh, p, NULL, g))
         { DH_free(dh); return(NULL); }
     return(dh);
 }
