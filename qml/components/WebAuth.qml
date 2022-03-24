@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-//import QtWebKit.experimental 1.0
+import Sailfish.WebView 1.0
+import Sailfish.WebEngine 1.0
 
 Page {
     id: webAuth
@@ -26,7 +27,7 @@ Page {
         }
     }*/
 
-    SilicaWebView {
+    WebView {
         id: webView
 
         y: pHeader.height + Theme.paddingLarge
@@ -36,22 +37,6 @@ Page {
         //experimental.preferences.developerExtrasEnabled: true
         //experimental.preferences.navigatorQtObjectEnabled: true
 
-        Component.onCompleted: {
-            webAuth.scale = scale
-        }
 
-        // copied from webcat to get scaling of Spotify authentication html
-        // usable on phone screen
-        property variant devicePixelRatio: {//1.5
-            if (Screen.width <= 540) return 1.5;
-            else if (Screen.width > 540 && Screen.width <= 768) return 2.0;
-            else if (Screen.width > 768) return 3.0;
-        }
-        experimental.customLayoutWidth: width / devicePixelRatio
-        experimental.deviceWidth: width / devicePixelRatio
-        experimental.overview: true
-        experimental.userScripts: [
-            Qt.resolvedUrl("DevicePixelRatioHack.js")
-        ]
     }
 }
