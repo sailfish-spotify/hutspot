@@ -148,6 +148,8 @@ HEADERS += \
 
 INCLUDEPATH += src/qmdnsengine
 
-QMAKE_LFLAGS += -lssl -lcrypto
+#QMAKE_LFLAGS += -lssl -lcrypto
+
+PKGCONFIG += openssl
 
 CONFIG += console
