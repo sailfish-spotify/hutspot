@@ -268,7 +268,7 @@ Page {
                 itemsModel.append({deviceId: devArr[i].device.deviceID,
                                    name: devArr[i].device.remoteName,
                                    deviceIndex: devArr[i].deviceIndex,
-                                   is_active: devArr[i].device.activeUser.length > 0,
+                                   is_active: (devArr[i].device.activeUser || "").length > 0,
                                    sp: 0,
                                    discovery: 1})
             }
