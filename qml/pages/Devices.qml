@@ -116,10 +116,11 @@ Page {
                         enabled: sp == 1
                         text: qsTr("Set as Current")
                         onClicked: {
+                            var page = devicesPage
                             if(spotify)
                                 app.setDevice(model.deviceId, model.name, function(error, data){
                                     if(!error)
-                                        refreshDevices()
+                                        page.refreshDevices()
                                 })
                         }
                     }
