@@ -202,7 +202,7 @@ Page {
                     ? qsTr("restricted") : qsTr("unrestricted")
             return str
         } else {
-            str = app.foundDevices[deviceIndex].activeUser.length > 0
+            str = (app.foundDevices[deviceIndex].activeUser || "").length > 0
                     ? qsTr("inactive") : qsTr("inactive")
         }
         return str

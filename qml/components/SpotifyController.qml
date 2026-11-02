@@ -111,7 +111,7 @@ Item {
                     added = false
                     for(i=0; i < data.devices.length; i++) {
                         found = false
-                        for(j=0; i < devicesModel.count; j++) {
+                        for(j=0; j < devicesModel.count; j++) {
                             device = devicesModel.get(j)
                             if(data.devices[i].id === device.id) {
                                 found = true
@@ -128,8 +128,8 @@ Item {
                     for(i=0; i < devicesModel.count; i++) {
                         found = false
                         device = devicesModel.get(i)
-                        for(j=0; i < data.devices.length; j++) {
-                            if(data.devices[i].id === device.id) {
+                        for(j=0; j < data.devices.length; j++) {
+                            if(data.devices[j].id === device.id) {
                                 found = true
                                 break
                             }
@@ -142,7 +142,7 @@ Item {
                     // changed
                     changed = false
                     for(i=0; i < data.devices.length; i++) {
-                        for(j=0; i < devicesModel.count; j++) {
+                        for(j=0; j < devicesModel.count; j++) {
                             device = devicesModel.get(j)
                             if(data.devices[i].id === device.id) {
                                 if(Util.hasDeviceChanged(data.devices[i], device))
